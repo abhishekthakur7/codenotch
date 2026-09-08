@@ -187,6 +187,44 @@ final class ClaudeUsageCLITests: XCTestCase {
         XCTAssertNil(ClaudeUsageCLI.locate(home: home, root: home))
     }
 
+    // MARK: - Where it runs
+
+    /// One directory, reused. Claude Code files a transcript folder per working
+    /// directory, so a fresh one per call left a folder behind every five
+    /// minutes.
+    func testTheScratchDirectoryIsOneFixedPlace() throws {
+        let support = try makeHome(executableAt: nil)
+
+        let first = try ClaudeUsageCLI.scratchDirectory(applicationSupport: support)
+        let second = try ClaudeUsageCLI.scratchDirectory(applicationSupport: support)
+
+        XCTAssertEqual(first, second)
+        XCTAssertEqual(first.path, support.appendingPathComponent("Codenotch/usage-scratch").path)
+        var isDirectory: ObjCBool = false
+        XCTAssertTrue(FileManager.default.fileExists(atPath: first.path, isDirectory: &isDirectory))
+        XCTAssertTrue(isDirectory.boolValue)
+    }
+
+    /// A place that cannot be made is an error for the caller to fall back
+    /// from, not a silent run in whatever directory the app was launched in.
+    func testAScratchDirectoryThatCannotBeMadeThrows() throws {
+        let support = try makeHome(executableAt: nil)
+        // A file where the parent directory has to go.
+        FileManager.default.createFile(atPath: support.appendingPathComponent("Codenotch").path,
+                                       contents: Data())
+
+        XCTAssertThrowsError(try ClaudeUsageCLI.scratchDirectory(applicationSupport: support))
+    }
+
+    /// Print mode without a transcript: the two flags are what stop Claude Code
+    /// filing a session for every poll, and `/usage` still has to be what is
+    /// asked.
+    func testItAsksInPrintModeWithoutATranscript() {
+        XCTAssertTrue(ClaudeUsageCLI.arguments.contains("--print"))
+        XCTAssertTrue(ClaudeUsageCLI.arguments.contains("--no-session-persistence"))
+        XCTAssertEqual(ClaudeUsageCLI.arguments.last, "/usage")
+    }
+
     private func makeHome(executableAt path: String?, executable: Bool = true) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("ClaudeUsageCLITests.\(UUID().uuidString)")

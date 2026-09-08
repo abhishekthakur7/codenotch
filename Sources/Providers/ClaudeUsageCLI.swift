@@ -31,6 +31,35 @@ struct ClaudeUsageCLI: Sendable {
     /// wedged process cannot hold a refresh open. A timeout kills the process.
     static let timeout: TimeInterval = 20
 
+    /// Print mode, and no transcript. Started interactively, `/usage` also
+    /// files a session under `<config>/projects/`, one per call, and can put
+    /// up the workspace-trust dialogue for a directory Claude Code has not
+    /// seen. `--print` skips the dialogue, and `--no-session-persistence`,
+    /// which only exists in print mode, skips the transcript. The lines this
+    /// reads are the same either way.
+    static let arguments = ["--print", "--no-session-persistence", "/usage"]
+
+    /// Where `/usage` is run from: one directory, kept for the life of the
+    /// install.
+    ///
+    /// Claude Code keys the transcript folder it writes under
+    /// `<config>/projects/` on the working directory. A fresh temporary
+    /// directory per call, which is what this did before, therefore left a
+    /// new, never-revisited project folder behind on every poll: twelve an
+    /// hour, indefinitely. One fixed directory means at most one folder, and
+    /// with `arguments` above no transcript at all.
+    static func scratchDirectory(
+        applicationSupport: URL = FileManager.default.urls(for: .applicationSupportDirectory,
+                                                           in: .userDomainMask)[0],
+        fileManager: FileManager = .default
+    ) throws -> URL {
+        let directory = applicationSupport
+            .appendingPathComponent("Codenotch", isDirectory: true)
+            .appendingPathComponent("usage-scratch", isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory
+    }
+
     // MARK: - Finding the binary
 
     /// Every path Claude Code installs itself to, newest installer first.
@@ -82,13 +111,10 @@ struct ClaudeUsageCLI: Sendable {
     }
 
     private static func run(binary: URL, profile: ClaudeProfile) throws -> String {
-        // A directory of its own, so a session artifact written on the way past
-        // lands somewhere disposable rather than in whatever directory the app
-        // happened to be launched from.
-        let scratch = FileManager.default.temporaryDirectory
-            .appendingPathComponent("codenotch-usage-\(UUID().uuidString)", isDirectory: true)
-        try? FileManager.default.createDirectory(at: scratch, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: scratch) }
+        // A directory of its own, so nothing Claude Code writes on the way
+        // past lands in whatever directory the app happened to be launched
+        // from. See `scratchDirectory` for why it is the same one every time.
+        let scratch = try scratchDirectory()
 
         var environment = ProcessInfo.processInfo.environment
         // Only for a named profile. Pointing the variable at `~/.claude`
@@ -103,7 +129,7 @@ struct ClaudeUsageCLI: Sendable {
 
         let process = Process()
         process.executableURL = binary
-        process.arguments = ["/usage"]
+        process.arguments = Self.arguments
         process.currentDirectoryURL = scratch
         process.environment = environment
         // Never a terminal. Left inheriting the app's stdin, `claude` waits for

@@ -225,6 +225,14 @@ final class ClaudeUsageCLITests: XCTestCase {
         XCTAssertEqual(ClaudeUsageCLI.arguments.last, "/usage")
     }
 
+    /// No MCP servers for a usage poll. `--strict-mcp-config` on its own is
+    /// the whole switch; a `--mcp-config` beside it would eat `/usage` as a
+    /// second config path, so it must stay absent.
+    func testItStartsNoMCPServers() {
+        XCTAssertTrue(ClaudeUsageCLI.arguments.contains("--strict-mcp-config"))
+        XCTAssertFalse(ClaudeUsageCLI.arguments.contains("--mcp-config"))
+    }
+
     private func makeHome(executableAt path: String?, executable: Bool = true) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("ClaudeUsageCLITests.\(UUID().uuidString)")

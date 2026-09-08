@@ -31,13 +31,27 @@ struct ClaudeUsageCLI: Sendable {
     /// wedged process cannot hold a refresh open. A timeout kills the process.
     static let timeout: TimeInterval = 20
 
-    /// Print mode, and no transcript. Started interactively, `/usage` also
-    /// files a session under `<config>/projects/`, one per call, and can put
-    /// up the workspace-trust dialogue for a directory Claude Code has not
-    /// seen. `--print` skips the dialogue, and `--no-session-persistence`,
-    /// which only exists in print mode, skips the transcript. The lines this
-    /// reads are the same either way.
-    static let arguments = ["--print", "--no-session-persistence", "/usage"]
+    /// Print mode, no transcript, no MCP servers. Started interactively,
+    /// `/usage` also files a session under `<config>/projects/`, one per call,
+    /// and can put up the workspace-trust dialogue for a directory Claude Code
+    /// has not seen. `--print` skips the dialogue, and
+    /// `--no-session-persistence`, which only exists in print mode, skips the
+    /// transcript. The lines this reads are the same either way.
+    ///
+    /// `--strict-mcp-config` with no `--mcp-config` means no MCP server at all.
+    /// Without it every poll starts whatever the user has configured in
+    /// `~/.claude.json` and their settings, which on a busy machine is a dozen
+    /// Node processes and their connections to GitHub, Cloudflare and the like,
+    /// none of which `/usage` needs. Measured on Claude Code 2.1.259: with the
+    /// flag the process talks to api.anthropic.com and Claude Code's own
+    /// feature-gate host only. (`--mcp-config '{}'` is not an option: the flag
+    /// is variadic and swallows `/usage` as a second config path.)
+    ///
+    /// Telemetry is deliberately left on. `DISABLE_TELEMETRY` and
+    /// `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also stop the feature-gate
+    /// fetch, and the per-model weekly line (`Current week (Fable)`) is behind
+    /// one of those gates: with either set, `/usage` no longer prints it.
+    static let arguments = ["--print", "--no-session-persistence", "--strict-mcp-config", "/usage"]
 
     /// Where `/usage` is run from: one directory, kept for the life of the
     /// install.

@@ -152,6 +152,37 @@ final class NotchWindowController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in self?.relocate() }
             .store(in: &cancellables)
+
+        // No `receive(on:)`: the appearance has to be on the window before the
+        // next draw, or the frame's hexes and the glass would be resolved
+        // against the appearance the panel is about to stop having.
+        model.$surfaceStyle
+            .removeDuplicates()
+            .sink { [weak self] style in
+                MainActor.assumeIsolated { self?.applyPanelAppearance(style) }
+            }
+            .store(in: &cancellables)
+
+        // Reduce transparency resolves the glass style to the solid one, so
+        // turning it on or off in System Settings changes what the panel's
+        // appearance has to be. Nothing else republishes that: the style the
+        // model holds has not changed.
+        NSWorkspace.shared.notificationCenter.publisher(
+            for: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification
+        )
+        .sink { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.applyPanelAppearance(self.model.surfaceStyle)
+            }
+        }
+        .store(in: &cancellables)
+    }
+
+    private func applyPanelAppearance(_ style: NotchSurfaceStyle) {
+        panel?.appearance = style.panelAppearance(
+            reduceTransparency: NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+        )
     }
 
     func stop() {
@@ -199,6 +230,9 @@ final class NotchWindowController {
             panel.setFrame(frame, display: true)
         } else {
             let panel = NotchPanel(contentRect: frame)
+            panel.appearance = model.surfaceStyle.panelAppearance(
+                reduceTransparency: NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+            )
             let hosting = NotchHostingView(rootView: NotchRootView(model: model))
             panel.contextMenuProvider = { [weak self] in self?.contextMenu() }
             panel.onClick = { [weak self] point in self?.handleClick(at: point) }

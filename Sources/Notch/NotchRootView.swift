@@ -3,6 +3,7 @@ import SwiftUI
 struct NotchRootView: View {
     @ObservedObject var model: NotchViewModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
     var body: some View {
         // Measured rather than assumed: the panel's real size is whatever
@@ -87,6 +88,7 @@ struct NotchRootView: View {
         .animation(motion(NotchMotion.unfold), value: model.isExpanded)
         .tint(model.accentColor.color)
         .environment(\.codenotchAccentColor, model.accentColor.color)
+        .environment(\.notchSurfaceStyle, model.surfaceStyle)
     }
 
     /// Opening and closing are not mirror images. Appearing, the arc waits its
@@ -100,8 +102,61 @@ struct NotchRootView: View {
     }
 
     private func notch(_ place: NotchPlacement) -> some View {
-        SideNotchShape(edge: model.edge, joining: model.joinedNotch)
-            .fill(Palette.notch)
+        let shape = SideNotchShape(edge: model.edge, joining: model.joinedNotch)
+        // Glass is for the open notch only. Folded, the pill has to read as
+        // part of the bezel — and as the hardware notch itself on a MacBook —
+        // so it stays black; and glass under a `.statusBar` panel at rest
+        // would only be sampling the desktop for nothing.
+        //
+        // Reduce transparency means "no see-through chrome", which for the
+        // notch is the solid style — the same precedence the Settings window
+        // applies to its own translucent chrome.
+        let glassy = model.surfaceStyle.effective == .glass
+            && !reduceTransparency
+            && model.isExpanded
+
+        return ZStack {
+            // Nothing of ours underneath: a wash of our own would override the
+            // Clear/Tinted choice in Appearance settings, which is the whole
+            // point of handing this surface to the system.
+            //
+            // No `else`: the solid fill below is mounted in every style anyway,
+            // and below macOS 26 `glassy` is always false, so it is simply left
+            // at full opacity.
+            if #available(macOS 26.0, *) {
+                Color.clear
+                    .glassEffect(.regular, in: shape)
+                    .opacity(glassy ? 1 : 0)
+            }
+
+            shape.fill(Palette.notch).opacity(glassy ? 0 : 1)
+
+            // The band at the hardware's height is the strip beside a hole in
+            // the screen. Glass there makes the cutout read as a black
+            // rectangle set into a sheet of glass; black there makes the hole
+            // and the shape we draw one wide notch again, and the glass begins
+            // below it, where the readings begin. A hardware notch only ever
+            // joins the top edge, so `.top` is the right alignment; the band is
+            // clipped by the `.clipShape(shape)` below, which keeps the bezel
+            // fillets at its corners.
+            //
+            // Deeper than the hardware by the bleed below, and undoing the
+            // scale on that one number: the whole shape is pushed `bezelBleed`
+            // points past the screen edge after it is scaled, so a band drawn
+            // exactly `contentInset` deep ends that far short of the hole and
+            // leaves a strip of glass along the bottom of the cutout.
+            if model.joinedNotch != nil {
+                Rectangle()
+                    .fill(Palette.notch)
+                    .frame(height: model.contentInset + Self.bezelBleed / model.sizeScale)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            }
+        }
+            // The glass and the fill both stay mounted so folding keeps
+            // animating one shape rather than swapping one view for another
+            // mid-flight; the crossfade rides on the unfold animation already
+            // on the root. The band above them is opaque in every state and
+            // takes no part in it.
             .frame(width: model.notchSize.width, height: model.notchSize.height)
             // Aligned to the corner where the stack starts *and* the bezel is,
             // then pushed clear of any hardware notch. Centring the contents in
@@ -114,7 +169,7 @@ struct NotchRootView: View {
             // the cells simply sit on top of a shrinking shape and appear to
             // slide out of the end of it; clipped, they are swallowed by the
             // outline as it closes, which is what a notch should do.
-            .clipShape(SideNotchShape(edge: model.edge, joining: model.joinedNotch))
+            .clipShape(shape)
             // The size choice, applied to the notch and the cells it carries —
             // and to nothing else. Drawn at design-frame size and scaled from
             // there, so `NotchLayout` keeps measuring the one thing it is

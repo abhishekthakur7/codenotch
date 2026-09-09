@@ -445,10 +445,15 @@ final class OrbOnAFlushBarTests: XCTestCase {
 /// should meet the screen's frame with a corner rather than a raw edge.
 @MainActor
 final class HardwareClearanceTests: XCTestCase {
-    private func model(cells: Int = 4) -> NotchViewModel {
+    private func model(cells: Int = 4, style: NotchSurfaceStyle = .solid) -> NotchViewModel {
         let model = NotchViewModel()
         model.edge = .top
         model.isExpanded = true
+        // The solid style is the default here because `ImageRenderer` has no
+        // desktop behind it to refract, so glass renders as very little. The
+        // glass style still gets its own case: there the band is painted by a
+        // layer of its own, so it can regress on its own too.
+        model.surfaceStyle = style
         model.snapshots = (0..<cells).map { index in
             ProviderSnapshot(id: "p\(index)", displayName: "P", glyph: .claude,
                              fidelity: .official, status: .ok,
@@ -464,7 +469,19 @@ final class HardwareClearanceTests: XCTestCase {
     /// up 19pt from the top instead of 38, so the top of every ring was inside
     /// the hole — which is what "the notch is blocking the rings" looks like.
     func testTheHardwaresBandHoldsNothingButBlack() {
-        let m = model()
+        assertTheBandHoldsNothingButBlack(model())
+    }
+
+    /// The glass surface paints the band with a layer of its own, so it can go
+    /// wrong on its own: without it the cutout reads as a black rectangle set
+    /// into a sheet of glass.
+    func testTheHardwaresBandStaysBlackInTheGlassStyle() {
+        assertTheBandHoldsNothingButBlack(model(style: .glass))
+    }
+
+    private func assertTheBandHoldsNothingButBlack(
+        _ m: NotchViewModel, file: StaticString = #filePath, line: UInt = #line
+    ) {
         let size = m.notchSize
         let renderer = ImageRenderer(
             content: NotchRootView(model: m).frame(width: m.panelSize.width,
@@ -472,7 +489,7 @@ final class HardwareClearanceTests: XCTestCase {
         )
         renderer.scale = 1
         guard let image = renderer.cgImage, let rep = NSBitmapImageRep(cgImage: image).cgImage
-        else { return XCTFail("nothing rendered") }
+        else { return XCTFail("nothing rendered", file: file, line: line) }
         let bitmap = NSBitmapImageRep(cgImage: rep)
 
         let place = NotchPlacement(edge: .top, panelSize: m.panelSize)
@@ -485,7 +502,8 @@ final class HardwareClearanceTests: XCTestCase {
                 // or a label drawn where the display has a hole in it.
                 XCTAssertLessThan(
                     colour.brightnessComponent, 0.05,
-                    "something is drawn inside the hardware notch at (\(along), \(across))"
+                    "something is drawn inside the hardware notch at (\(along), \(across))",
+                    file: file, line: line
                 )
             }
         }

@@ -128,6 +128,9 @@ final class NotchViewModel: ObservableObject {
     /// Mirrors the persisted Appearance choice so the separate notch window
     /// redraws immediately when Settings changes it.
     @Published var accentColor: AccentColorChoice = .system
+    /// Mirrors the persisted Appearance choice so the separate notch window
+    /// redraws immediately when Settings changes it.
+    @Published var surfaceStyle: NotchSurfaceStyle = .glass
     /// The display's own notch, when this edge has to share the bezel with one.
     ///
     /// Set by the window controller from the screen the panel is on, because

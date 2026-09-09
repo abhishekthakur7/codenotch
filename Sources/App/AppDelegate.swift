@@ -293,6 +293,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.apply(accentColor: $0) }
                 .store(in: &cancellables)
 
+            preferences.$notchSurfaceStyle
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
+                .store(in: &cancellables)
+
             preferences.$disconnectedProviders
                 .receive(on: RunLoop.main)
                 .sink { [weak store] in store?.disconnected = $0 }
@@ -463,6 +468,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(scale: preferences.notchScale)
         fleet.apply(resetTimeFormat: preferences.resetTimeFormat)
         fleet.apply(accentColor: preferences.accentColor)
+        fleet.apply(surfaceStyle: preferences.notchSurfaceStyle)
         fleet.show()
     }
 

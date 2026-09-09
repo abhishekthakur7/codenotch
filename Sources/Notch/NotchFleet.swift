@@ -41,6 +41,7 @@ final class NotchFleet {
     private var displayPreference: DisplayPreference = .followActiveWindow
     private var resetTimeFormat: ResetTimeFormat = .automatic
     private var accentColor: AccentColorChoice = .system
+    private var surfaceStyle: NotchSurfaceStyle = .glass
     /// The ⌥-drag nudge along the current edge. One value for the whole
     /// fleet, the same as `edge` itself — displays do not each get their own
     /// edge, so they do not each get their own nudge either.
@@ -143,6 +144,13 @@ final class NotchFleet {
         self.accentColor = accentColor
         for controller in controllers.values {
             controller.model.accentColor = accentColor
+        }
+    }
+
+    func apply(surfaceStyle: NotchSurfaceStyle) {
+        self.surfaceStyle = surfaceStyle
+        for controller in controllers.values {
+            controller.model.surfaceStyle = surfaceStyle
         }
     }
 
@@ -305,6 +313,7 @@ final class NotchFleet {
         controller.model.sizeScale = scale
         controller.model.resetTimeFormat = resetTimeFormat
         controller.model.accentColor = accentColor
+        controller.model.surfaceStyle = surfaceStyle
         controller.onRefresh = onRefresh
         controller.onRefreshProvider = onRefreshProvider
         controller.onOpenSettings = onOpenSettings

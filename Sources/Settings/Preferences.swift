@@ -140,6 +140,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(accentColor.rawValue, forKey: Keys.accentColor) }
     }
 
+    /// The material the expanded notch, tooltip and settings orb are painted with.
+    @Published var notchSurfaceStyle: NotchSurfaceStyle {
+        didSet { defaults.set(notchSurfaceStyle.rawValue, forKey: Keys.notchSurfaceStyle) }
+    }
+
     /// The language the app itself speaks.
     ///
     /// `.system` follows the Mac. Written through `L10n.apply` so the store
@@ -250,6 +255,7 @@ final class Preferences: ObservableObject {
         static let resetTimeFormat = "resetTimeFormat"
         static let scope = "notchScope"
         static let accentColor = "accentColor"
+        static let notchSurfaceStyle = "notchSurfaceStyle"
         static let lastSeenVersion = "lastSeenVersion"
         static let order = "providerOrder"
         static let announceSessionEnd = "announceSessionEnd"
@@ -375,6 +381,8 @@ final class Preferences: ObservableObject {
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
         self.accentColor = defaults.string(forKey: Keys.accentColor)
             .flatMap(AccentColorChoice.init(rawValue:)) ?? .system
+        self.notchSurfaceStyle = defaults.string(forKey: Keys.notchSurfaceStyle)
+            .flatMap(NotchSurfaceStyle.init(rawValue:)) ?? .glass
         // Absent means never chosen, which is follow-the-Mac.
         self.language = defaults.string(forKey: L10n.languageDefaultsKey)
             .flatMap(AppLanguage.init(rawValue:)) ?? .system

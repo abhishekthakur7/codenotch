@@ -21,8 +21,13 @@ two never disagree.
 
 ## Download
 
-[**Latest release**](../../releases/latest) — signed, notarized, and updating
-itself from then on. Take this one unless you have a reason not to.
+[![Download for macOS](docs/design/download-macos.svg)](../../releases/latest/download/Codenotch.dmg)
+
+That button is the disk image itself, not the page it sits on — the asset is
+named `Codenotch.dmg` in every release, so `releases/latest/download/` always
+resolves to the newest one and the link never needs updating. Signed,
+notarized, and updating itself from then on. Take this one unless you have a
+reason not to; the [release page](../../releases/latest) has the notes.
 
 To try unreleased `main` without an Xcode install, the [preview
 build](../../releases/tag/preview) is rebuilt from every commit, and the

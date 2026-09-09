@@ -16,6 +16,9 @@ struct UsageArchive {
         let fetchedAt: Date
         /// Optional so archives written before this field still decode.
         let headlineID: String?
+        /// Optional for the same reason: an archive written before the weekly
+        /// ring existed has no second window to name, and must still open.
+        let weeklyID: String?
         /// Optional so archives written before Codex token activity existed
         /// continue to open and show their last quota reading.
         let tokenUsage: CodexTokenUsage?
@@ -84,6 +87,7 @@ struct UsageArchive {
                 status: .stale(since: entry.fetchedAt),
                 windows: entry.windows,
                 headlineID: entry.headlineID,
+                weeklyID: entry.weeklyID,
                 tokenUsage: entry.tokenUsage
             )
             result[entry.id] = (snapshot, entry.fetchedAt)
@@ -101,6 +105,7 @@ struct UsageArchive {
                 windows: $0.snapshot.windows,
                 fetchedAt: $0.fetchedAt,
                 headlineID: $0.snapshot.headlineID,
+                weeklyID: $0.snapshot.weeklyID,
                 tokenUsage: $0.snapshot.tokenUsage
             )
         }

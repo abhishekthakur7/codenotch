@@ -186,6 +186,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// first", and a window dropping out of the response silently promotes
     /// another one — the ring keeps its shape and quietly changes its subject.
     var headlineID: String?
+    /// Which window the weekly ring draws, when it is switched on. Declared
+    /// rather than derived — see `weeklyWindow`.
+    var weeklyID: String?
     /// Set when something is blocked right now. Deliberately separate from the
     /// windows: it is not a measurement, it is a door being shut.
     var block: UsageBlock?
@@ -232,6 +235,31 @@ struct ProviderSnapshot: Identifiable, Equatable {
     }
 
     var usedFraction: Double? { headline?.usedFraction }
+
+    /// The window the second ring draws, when one is switched on.
+    ///
+    /// Declared by the provider, exactly like `headlineID`, and for the same
+    /// reason: the weekly window is called something different by everyone who
+    /// has one — `weekly_all`, `secondary`, `weekly`, `gemini-weekly` — and a
+    /// rule that guessed from durations would silently skip whichever provider
+    /// had not filled that field in, with nothing on screen to say why.
+    ///
+    /// Nil means this provider has no second window worth a ring, which is a
+    /// real answer rather than a missing one.
+    var weeklyWindow: LimitWindow? {
+        guard let weeklyID else { return nil }
+        // Never the window the headline is already drawing. Providers that pick
+        // their headline by which limit is tightest — Antigravity does — will
+        // sometimes land on the weekly one, and two rings reporting the same
+        // number is worse than one: it reads as a second fact that happens to
+        // agree, rather than as the same fact twice.
+        guard weeklyID != headlineID else { return nil }
+        return windows.first { $0.id == weeklyID }
+    }
+
+    /// Nil when there is no weekly window, or when the provider reports one
+    /// without a denominator — the same rule the headline ring follows.
+    var weeklyFraction: Double? { weeklyWindow?.usedFraction }
 
     /// What the cell prints under the ring.
     var headlineText: String {

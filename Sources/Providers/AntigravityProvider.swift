@@ -95,7 +95,8 @@ actor AntigravityProvider: UsageProvider {
             let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: mostConstrained?.id ?? "gemini-5h",
+                                    weeklyID: "gemini-weekly")
         }
 
         if localQuotaOverride != nil && everBridged {
@@ -110,7 +111,8 @@ actor AntigravityProvider: UsageProvider {
             let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: mostConstrained?.id ?? "gemini-5h",
+                                    weeklyID: "gemini-weekly")
         }
 
         // 2. Fallback to OMP SQLite store if offline or direct call fails
@@ -119,7 +121,8 @@ actor AntigravityProvider: UsageProvider {
             let mostConstrained = ompWindows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: ompWindows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: mostConstrained?.id ?? "gemini-5h",
+                                    weeklyID: "gemini-weekly")
         }
 
         if everBridged { throw UsageProviderError.credentialExpired }

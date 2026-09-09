@@ -102,7 +102,8 @@ actor ClaudeOAuthProvider: UsageProvider {
                 fidelity: .official,
                 status: .ok,
                 windows: windows,
-                headlineID: "session"
+                headlineID: "session",
+                weeklyID: "weekly_all"
             )
         }
         if let retryNoEarlierThan, retryNoEarlierThan > Date() {
@@ -218,7 +219,8 @@ actor ClaudeOAuthProvider: UsageProvider {
             fidelity: .official,
             status: .ok,
             windows: payload.limitWindows(),
-            headlineID: "session"
+            headlineID: "session",
+            weeklyID: "weekly_all"
         )
     }
 

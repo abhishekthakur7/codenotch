@@ -135,6 +135,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(showUsagePace, forKey: Self.showUsagePaceKey) }
     }
 
+    /// Whether the weekly limit gets a ring of its own, and where it sits.
+    @Published var weeklyRing: WeeklyRing {
+        didSet { defaults.set(weeklyRing.rawValue, forKey: Keys.weeklyRing) }
+    }
+
     /// The colour used for positive usage and active-work indicators.
     @Published var accentColor: AccentColorChoice {
         didSet { defaults.set(accentColor.rawValue, forKey: Keys.accentColor) }
@@ -250,6 +255,8 @@ final class Preferences: ObservableObject {
         static let resetTimeFormat = "resetTimeFormat"
         static let scope = "notchScope"
         static let accentColor = "accentColor"
+        // A new key, so there is nothing under the old app name to migrate.
+        static let weeklyRing = "weeklyRing"
         static let lastSeenVersion = "lastSeenVersion"
         static let order = "providerOrder"
         static let announceSessionEnd = "announceSessionEnd"
@@ -373,6 +380,10 @@ final class Preferences: ObservableObject {
         self.notchScope = defaults.string(forKey: Keys.scope)
             .flatMap(NotchScreenScope.init(rawValue:)) ?? .mainDisplay
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
+        // Off by default: an extra arc in a 44pt circle is a change to how
+        // every reading looks, and nobody asked for it on their behalf.
+        self.weeklyRing = defaults.string(forKey: Keys.weeklyRing)
+            .flatMap(WeeklyRing.init(rawValue:)) ?? .off
         self.accentColor = defaults.string(forKey: Keys.accentColor)
             .flatMap(AccentColorChoice.init(rawValue:)) ?? .system
         // Absent means never chosen, which is follow-the-Mac.

@@ -285,19 +285,15 @@ final class NotchWindowController {
         )
     }
 
-    /// What wakes the folded notch. Deliberately larger than the pill it
-    /// surrounds — a 10pt target on a screen edge is a fiddly thing to hit, and
-    /// the cost of being generous is only that it opens a little eagerly.
+    /// What wakes the folded notch. Larger than the pill it surrounds, and
+    /// exactly the hardware notch when it is joined to one — see
+    /// `NotchViewModel.wakeLength` for both halves of that.
     private var pillRect: CGRect {
-        // Whatever the resting shape is — the pill, or the display's own notch
-        // when it is joining one — the region that wakes it is that plus a
-        // generous band, because both are small targets on a screen edge.
-        let length = max(model.restingLength * model.sizeScale, NotchLayout.pillHotZone)
-        return placement.rect(
-            along: model.slack + (model.shapeLength * model.sizeScale - length) / 2,
+        placement.rect(
+            along: model.slack + (model.shapeLength * model.sizeScale - model.wakeLength) / 2,
             across: 0,
-            length: length,
-            depth: model.restingDepth * model.sizeScale + NotchLayout.pillHotZone
+            length: model.wakeLength,
+            depth: model.wakeDepth
         )
     }
 

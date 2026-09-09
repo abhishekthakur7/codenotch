@@ -66,6 +66,35 @@ final class NotchLayoutTests: XCTestCase {
         XCTAssertGreaterThan(innerEdge, NotchLayout.glyphSize / 2)
     }
 
+    /// The weekly ring is placed against what is already inside the circle
+    /// rather than quoted from the design frame, which draws one ring — so the
+    /// clearances are what the test states, not the numbers.
+    func testTheInsideWeeklyRingClearsTheGlyphAndTheWorkingIndicator() {
+        let outer = NotchLayout.weeklyInsideRadius + NotchLayout.weeklyRingStroke / 2
+        let inner = NotchLayout.weeklyInsideRadius - NotchLayout.weeklyRingStroke / 2
+        XCTAssertGreaterThan(inner, NotchLayout.glyphSize / 2,
+                             "the weekly ring is drawn over the glyph")
+        XCTAssertLessThan(outer,
+                          NotchLayout.activityDiameter / 2 - NotchLayout.activityStroke / 2,
+                          "the weekly ring collides with the working indicator")
+    }
+
+    /// Outside, the two things it must not touch are the track it sits beyond
+    /// and the bezel the notch keeps clear of.
+    func testTheOutsideWeeklyRingClearsTheTrackAndTheBezel() {
+        let inner = NotchLayout.weeklyOutsideRadius - NotchLayout.weeklyRingStroke / 2
+        let outer = NotchLayout.weeklyOutsideRadius + NotchLayout.weeklyRingStroke / 2
+        XCTAssertGreaterThan(inner, NotchLayout.ringDiameter / 2,
+                             "the weekly ring overlaps the track it is meant to sit outside")
+        XCTAssertLessThan(outer, NotchLayout.ringDiameter / 2 + NotchLayout.ringMargin(for: .right),
+                          "the weekly ring reaches past the bezel")
+    }
+
+    /// Thinner than the headline arc: same kind of fact, lesser claim on the eye.
+    func testTheWeeklyRingIsThinnerThanTheHeadline() {
+        XCTAssertLessThan(NotchLayout.weeklyRingStroke, NotchLayout.progressStroke)
+    }
+
     /// Every cell's tooltip has to fit inside the panel, or the card would be
     /// clipped for the first and last providers.
     func testTooltipFitsThePanelForEveryCell() {

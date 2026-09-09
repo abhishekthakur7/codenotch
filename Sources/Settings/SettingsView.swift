@@ -1332,6 +1332,25 @@ private struct AccountRow: View {
     private var detail: some View {
         VStack(alignment: .leading, spacing: 6) {
             accountDetail
+            
+            // Antigravity limit dropdown
+            if isConnected, provider.id == "gemini" {
+                HStack(spacing: 8) {
+                    Text(L10n.t("Notch reads"))
+                        .foregroundStyle(.secondary)
+                    Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
+                        ForEach(AntigravityHeadlineLimit.allCases) { limit in
+                            Text(limit.explanation).tag(limit)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(width: 140)
+                }
+                .padding(.top, 2)
+                .help(L10n.t("Choose which limit appears in the main notch for Antigravity."))
+            }
+
             // Google publishes no limit for a bare API key, so the ring has
             // nothing to fill against until the user names a ceiling itself.
             if isConnected, provider.id == "gemini-api" {

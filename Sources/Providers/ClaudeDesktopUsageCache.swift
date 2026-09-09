@@ -44,8 +44,9 @@ struct ClaudeDesktopUsageCache: Sendable {
         /// a cache entry is by nature already old, and how old is the whole
         /// question of whether it may be shown as live.
         let capturedAt: Date
-        /// The entry it was read from, so the next read can go straight there
-        /// instead of scanning the directory again.
+        /// The entry it was read from. Logged by the caller: which of the two
+        /// alternating keys answered is the first thing worth knowing when a
+        /// reading looks wrong.
         let entry: URL
 
         /// Whether these numbers may still be presented as live.
@@ -105,31 +106,29 @@ struct ClaudeDesktopUsageCache: Sendable {
     /// key carries the organization's UUID and Claude Code records the same UUID
     /// per profile, so the two can simply be required to match.
     ///
-    /// `hint` is the entry a previous call succeeded on. Chromium names an entry
-    /// file after a hash of its key and rewrites that same file in place on every
-    /// refresh, so going straight back to it makes the steady state one small
-    /// read instead of a scan of several thousand files.
+    /// Always scans rather than remembering the last winning file. An earlier
+    /// version did remember it, trusted it as long as it was not yet stale, and
+    /// was wrong: Desktop asks for both `…/usage` and `…/usage?skip_spend=1` —
+    /// two keys, two files — and alternates which one it refreshes. Caught live,
+    /// on a real cache: the remembered file sat at 83%, unchanged and still
+    /// "fresh" by the 30-minute clock, while its sibling had already moved to
+    /// 86% five minutes earlier. Trusting one file's own age said nothing about
+    /// whether a *different* file had since become the newer answer.
     ///
-    /// The hint is trusted only while what it holds is still fresh, and that
-    /// condition is not paranoia: the key carries the query string, and Desktop
-    /// asks for both `…/usage` and `…/usage?skip_spend=1`. Those are two keys and
-    /// two files, and which one is being refreshed changes. A hint checked only
-    /// for "is this still a usage entry" would happily read the abandoned one
-    /// forever, and it would look exactly like Desktop having gone quiet. So a
-    /// stale hint is not a hit — it falls through to the scan, as on the first
-    /// call and after the account changes.
-    func read(hint: URL? = nil,
-              organization: String,
-              freshFor freshness: TimeInterval,
-              now: Date = Date()) -> Reading? {
-        if let hint,
-           let reading = reading(from: hint, organization: organization, now: now),
-           reading.isFresh(at: now, within: freshness) {
-            return reading
-        }
-
-        // Newest first, so in practice this finds the live entry within a handful
-        // of files and the cap is never reached.
+    /// The fix is simply to stop skipping the scan. `FileManager` fetches the
+    /// modification date and size for every entry in one batched call rather
+    /// than one syscall each, so scanning this directory whole — measured at
+    /// ~8,600 entries — costs on the order of tens of milliseconds, off the
+    /// main actor, at most once per poll. There was no measured cost this was
+    /// ever saving; there was a real reading it was getting wrong.
+    ///
+    /// Freshness is deliberately not judged here. This returns the newest
+    /// reading there is, with the timestamp it actually has; whether that is
+    /// recent enough to show as live is the caller's call, and only the caller
+    /// knows what it would fall through to.
+    func read(organization: String, now: Date = Date()) -> Reading? {
+        // Newest first, so in practice this finds the live entry within a
+        // handful of files and the cap is never reached.
         return recentEntries()
             .lazy
             .compactMap { reading(from: $0, organization: organization, now: now) }

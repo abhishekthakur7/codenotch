@@ -367,7 +367,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
 
         let directory = makeCacheDirectory(["a_0": entry.data()])
         XCTAssertNil(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
     }
 
     // MARK: - Size caps
@@ -394,7 +394,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
                           count: ClaudeDesktopUsageCache.maxEntryBytes + 1 - bytes.count))
         let directory = makeCacheDirectory(["big_0": bytes])
         XCTAssertNil(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
     }
 
     // MARK: - Scanning a directory
@@ -404,13 +404,13 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         let missing = FileManager.default.temporaryDirectory
             .appendingPathComponent("codenotch-tests-absent-\(UUID().uuidString)")
         XCTAssertNil(ClaudeDesktopUsageCache(directory: missing)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
     }
 
     func testAnEmptyCacheDirectoryReadsAsNothing() {
         let directory = makeCacheDirectory([:])
         XCTAssertNil(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
     }
 
     func testFilesThatAreNotCacheEntriesAreIgnored() {
@@ -420,7 +420,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
             "somefile_1": Entry().data()   // a stream file that is not `_0`
         ])
         XCTAssertNil(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
     }
 
     func testAnEntryForAnotherOrganizationIsIgnored() {
@@ -429,8 +429,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         // signed into one account while Codenotch may draw a ring per profile,
         // so the wrong account's session percentage must not reach the wrong ring.
         XCTAssertNil(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: "99999999-8888-7777-6666-555555555555",
-                  freshFor: .greatestFiniteMagnitude))
+            .read(organization: "99999999-8888-7777-6666-555555555555"))
     }
 
     func testTheMostRecentOfSeveralUsageEntriesWins() throws {
@@ -452,7 +451,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
                             of: directory.appendingPathComponent("newer_0"))
 
         let reading = try XCTUnwrap(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
         XCTAssertEqual(reading.windows.first?.usedFraction, 0.30)
         XCTAssertEqual(reading.entry.lastPathComponent, "newer_0")
     }
@@ -467,7 +466,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         setModificationDate(written, of: directory.appendingPathComponent("a_0"))
 
         let reading = try XCTUnwrap(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
         XCTAssertEqual(reading.capturedAt.timeIntervalSince1970,
                        written.timeIntervalSince1970, accuracy: 1)
     }
@@ -490,7 +489,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         try FileManager.default.removeItem(at: directory.appendingPathComponent("doomed_0"))
 
         let reading = try XCTUnwrap(ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude))
+            .read(organization: Self.organization))
         XCTAssertEqual(reading.entry.lastPathComponent, "survivor_0")
     }
 
@@ -521,55 +520,73 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         XCTAssertTrue(reading.isFresh(within: 30 * 60))
     }
 
-    // MARK: - The hint
+    // MARK: - The two alternating keys
 
-    func testAFreshHintIsReadWithoutScanning() throws {
-        var entry = Entry(); entry.responseDate = nil
-        let directory = makeCacheDirectory(["a_0": entry.data()])
-        let hinted = directory.appendingPathComponent("a_0")
-        setModificationDate(Date(), of: hinted)
+    /// The regression this reader actually hit on a real cache. Desktop asks for
+    /// both `…/usage` and `…/usage?skip_spend=1` — two keys, two files — and
+    /// refreshes them independently. An earlier version of this reader
+    /// remembered whichever file last answered and kept trusting it as long as
+    /// *that file* had not gone stale, which is not the same question as "is
+    /// this still the newest answer" — caught live: the remembered file sat at
+    /// 83%, itself only minutes old, while its sibling had already moved to 86%
+    /// five minutes earlier. Every call must find the true newest across both
+    /// keys, not just revalidate whichever one it saw last.
+    func testTheNewerOfTheTwoAlternatingKeysWinsEvenWhenBothAreFresh() throws {
+        var bare = Entry()
+        bare.key = "1/0/https://claude.ai/api/organizations/\(Self.organization)/usage"
+        bare.body = Body.full                    // 30%
+        bare.responseDate = nil
 
-        let cache = ClaudeDesktopUsageCache(directory: directory)
-        let reading = try XCTUnwrap(cache.read(hint: hinted,
-                                              organization: Self.organization,
-                                              freshFor: 30 * 60))
-        XCTAssertEqual(reading.entry, hinted)
-    }
+        var scoped = Entry()   // the default key already carries ?skip_spend=1
+        scoped.body = Body.fiveHourOnly           // 7%
+        scoped.responseDate = nil
 
-    /// The important half. The hint is a *file*, and which file holds the live
-    /// reading changes — Desktop alternates between two keys. A hint accepted
-    /// merely for still being a usage entry would pin the ring to an abandoned
-    /// file and look exactly like Desktop having gone quiet.
-    func testAStaleHintFallsThroughToTheScanAndFindsTheLiveEntry() throws {
-        var abandoned = Entry()
-        abandoned.key = "1/0/https://claude.ai/api/organizations/\(Self.organization)/usage"
-        abandoned.body = Body.fiveHourOnly      // 7%
-        abandoned.responseDate = nil
-
-        var live = Entry(); live.body = Body.full   // 30%
-        live.responseDate = nil
-
-        let directory = makeCacheDirectory(["abandoned_0": abandoned.data(),
-                                           "live_0": live.data()])
-        let abandonedURL = directory.appendingPathComponent("abandoned_0")
-        setModificationDate(Date().addingTimeInterval(-4 * 3600), of: abandonedURL)
-        setModificationDate(Date(), of: directory.appendingPathComponent("live_0"))
+        let directory = makeCacheDirectory(["bare_0": bare.data(), "scoped_0": scoped.data()])
+        // Both comfortably "fresh" by any reasonable window — the point is that
+        // one being fresh must not stop the other, newer one from being found.
+        setModificationDate(Date().addingTimeInterval(-5 * 60),
+                            of: directory.appendingPathComponent("scoped_0"))
+        setModificationDate(Date(), of: directory.appendingPathComponent("bare_0"))
 
         let reading = try XCTUnwrap(ClaudeDesktopUsageCache(directory: directory)
-            .read(hint: abandonedURL, organization: Self.organization, freshFor: 30 * 60))
-        XCTAssertEqual(reading.entry.lastPathComponent, "live_0")
+            .read(organization: Self.organization))
+        XCTAssertEqual(reading.entry.lastPathComponent, "bare_0")
         XCTAssertEqual(reading.windows.first?.usedFraction, 0.30)
     }
 
-    func testAHintThatNoLongerExistsFallsThroughToTheScan() throws {
-        var entry = Entry(); entry.responseDate = nil
-        let directory = makeCacheDirectory(["a_0": entry.data()])
-        setModificationDate(Date(), of: directory.appendingPathComponent("a_0"))
+    /// And a call made shortly after must find the *new* newest once the keys
+    /// swap — nothing may be remembered between calls that could pin the answer
+    /// to whichever file happened to win last time.
+    func testASecondCallFindsANewlyUpdatedKey() throws {
+        var bare = Entry()
+        bare.key = "1/0/https://claude.ai/api/organizations/\(Self.organization)/usage"
+        bare.body = Body.fiveHourOnly              // 7%, older
+        bare.responseDate = nil
 
-        let reading = try XCTUnwrap(ClaudeDesktopUsageCache(directory: directory)
-            .read(hint: directory.appendingPathComponent("gone_0"),
-                  organization: Self.organization, freshFor: 30 * 60))
-        XCTAssertEqual(reading.entry.lastPathComponent, "a_0")
+        var scoped = Entry()
+        scoped.body = Body.full                    // 30%, older too
+        scoped.responseDate = nil
+
+        let directory = makeCacheDirectory(["bare_0": bare.data(), "scoped_0": scoped.data()])
+        setModificationDate(Date().addingTimeInterval(-120), of: directory.appendingPathComponent("bare_0"))
+        setModificationDate(Date().addingTimeInterval(-120), of: directory.appendingPathComponent("scoped_0"))
+
+        let cache = ClaudeDesktopUsageCache(directory: directory)
+        let first = try XCTUnwrap(cache.read(organization: Self.organization))
+        XCTAssertEqual(first.entry.lastPathComponent, "scoped_0")
+
+        // "bare" is refreshed with a new value and becomes the newest entry.
+        var updatedBare = Entry()
+        updatedBare.key = bare.key
+        updatedBare.body = Body.scoped              // a third, distinct value
+        updatedBare.responseDate = nil
+        try updatedBare.data().write(to: directory.appendingPathComponent("bare_0"))
+        setModificationDate(Date(), of: directory.appendingPathComponent("bare_0"))
+
+        let second = try XCTUnwrap(cache.read(organization: Self.organization))
+        XCTAssertEqual(second.entry.lastPathComponent, "bare_0")
+        // Body.scoped's session window, distinct from either older value (7%, 30%).
+        XCTAssertEqual(second.windows.first?.usedFraction, 0.12)
     }
 
     // MARK: - Helpers
@@ -579,7 +596,7 @@ final class ClaudeDesktopUsageCacheTests: XCTestCase {
         let directory = makeCacheDirectory(["a_0": entry.data()])
         setModificationDate(modified, of: directory.appendingPathComponent("a_0"))
         return ClaudeDesktopUsageCache(directory: directory)
-            .read(organization: Self.organization, freshFor: .greatestFiniteMagnitude)
+            .read(organization: Self.organization)
     }
 
     /// A throwaway directory shaped like `Cache_Data`, removed when the test ends.

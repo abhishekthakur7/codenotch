@@ -80,14 +80,12 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// re-shows the last good reading, undimmed for its own fifteen minutes and
     /// dimmed and dated after that. Nothing here has to re-implement any of it.
     private let desktopFreshness: TimeInterval
-    /// The entry the last successful Desktop read came from, so the next one is
-    /// a single small file read rather than a directory scan.
-    private var desktopEntry: URL?
     /// Stamped whenever a Desktop read came up short. Without it, a machine with
     /// no Claude Desktop — or one whose Desktop has gone quiet — pays for a scan
     /// of a few thousand directory entries on every 60s tick, forever. The same
-    /// reason `lastCLIAttempt` exists, and it never delays a *working* source: a
-    /// hit clears it, and a hit is served from `desktopEntry` without a scan.
+    /// reason `lastCLIAttempt` exists. A working source never sees this: every
+    /// successful read scans (the scan is cheap and always accurate; see
+    /// `ClaudeDesktopUsageCache.read`), and only a miss ever sets it.
     private var lastDesktopMiss: Date?
     /// How long a miss suppresses the next scan.
     private let desktopRescanInterval: TimeInterval
@@ -221,33 +219,26 @@ actor ClaudeOAuthProvider: UsageProvider {
             return nil
         }
 
-        let hint = desktopEntry
-        let freshness = desktopFreshness
-        // Off the actor, exactly as the CLI read is. A cold scan stats a few
+        // Off the actor, exactly as the CLI read is. The scan stats a few
         // thousand directory entries, and the actor's other work — the token path
         // this falls through to — has no business queueing behind that.
         let reading = await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .utility).async {
-                continuation.resume(
-                    returning: desktopCache.read(hint: hint, organization: organization,
-                                                 freshFor: freshness)
-                )
+                continuation.resume(returning: desktopCache.read(organization: organization))
             }
         }
         guard let reading else {
-            desktopEntry = nil
             lastDesktopMiss = now
             return nil
         }
 
-        desktopEntry = reading.entry
-        guard reading.isFresh(at: now, within: freshness) else {
+        guard reading.isFresh(at: now, within: desktopFreshness) else {
             lastDesktopMiss = now
             Log.usage.debug("\(self.id, privacy: .public): claude desktop snapshot is too old to show as live")
             return nil
         }
         lastDesktopMiss = nil
-        Log.usage.debug("\(self.id, privacy: .public): read \(reading.windows.count) windows from the claude desktop cache")
+        Log.usage.debug("\(self.id, privacy: .public): read \(reading.windows.count) windows from the claude desktop cache entry \(reading.entry.lastPathComponent, privacy: .public)")
         return reading.windows
     }
 

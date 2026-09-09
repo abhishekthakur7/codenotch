@@ -161,15 +161,13 @@ struct UsageBlock: Equatable {
         let formatter = ResetCopy.formatter(for: calendar)
         formatter.locale = locale
         // The same clock the vendor's own banner uses — "4:13 PM" — rather
-        // than a countdown, because that is what you are waiting for.
+        // than a countdown, because that is what you are waiting for. `j`
+        // rather than `h` so the hour cycle is the region's, as in
+        // `ResetCopy`; a 12-hour region still reads "4:13 PM".
         let template = ResetCopy.daysApart(from: now, to: resetsAt,
                                            calendar: calendar) >= 1
-            ? "E h:mm a" : "h:mm a"
-        if locale.language.languageCode?.identifier == "en" {
-            formatter.dateFormat = template
-        } else {
-            formatter.setLocalizedDateFormatFromTemplate(template)
-        }
+            ? "E j:mm" : "j:mm"
+        formatter.setLocalizedDateFormatFromTemplate(template)
         return L10n.t("\(reason) until \(formatter.string(from: resetsAt))", locale: locale)
     }
 }

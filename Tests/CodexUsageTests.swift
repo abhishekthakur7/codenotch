@@ -308,6 +308,24 @@ final class UsageBlockTests: XCTestCase {
         XCTAssertFalse(text.contains("min"), "a countdown, not the time it lifts")
     }
 
+    /// The clock keeps the locale's hour cycle, as the reset line does: a
+    /// 24-hour region reads "Paused until 16:13", not "4:13 PM".
+    func testTheClockFollowsTheLocalesHourCycle() {
+        let now = Date(timeIntervalSince1970: 1_788_000_000)
+        let block = UsageBlock(reason: "Paused", resetsAt: now.addingTimeInterval(90 * 60))
+        for id in ["fr_FR", "de_DE", "ja_JP", "en_GB"] {
+            let locale = Locale(identifier: id)
+            let text = block.summary(now: now, locale: locale)
+            let symbols = DateFormatter()
+            symbols.locale = locale
+            XCTAssertFalse(text.contains(symbols.amSymbol) || text.contains(symbols.pmSymbol),
+                           "\(id) got a 12-hour clock: \(text)")
+        }
+        let american = block.summary(now: now, locale: Locale(identifier: "en_US"))
+        XCTAssertTrue(american.contains("AM") || american.contains("PM"),
+                      "en_US lost its AM/PM: \(american)")
+    }
+
     /// With no reset time there is nothing to promise, so it says only what it
     /// knows.
     func testWithoutAResetItSaysOnlyTheReason() {

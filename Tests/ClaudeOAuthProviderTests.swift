@@ -89,7 +89,11 @@ final class ClaudeOAuthProviderTests: XCTestCase {
 
     private func makeProvider(source: CredentialSource,
                               cli: ClaudeUsageCLI? = nil,
-                              cliRefreshInterval: TimeInterval = 5 * 60) -> ClaudeOAuthProvider {
+                              cliRefreshInterval: TimeInterval = 5 * 60,
+                              profile: ClaudeProfile = .default(),
+                              desktopCache: ClaudeDesktopUsageCache? = nil,
+                              desktopFreshness: TimeInterval = 30 * 60,
+                              desktopRescanInterval: TimeInterval = 5 * 60) -> ClaudeOAuthProvider {
         // A private defaults suite per test: the archive persists the 429 back-off
         // deadline, and a leaked one would silently skip fetches in the next test.
         let name = "ClaudeOAuthProviderTests.\(UUID().uuidString)"
@@ -101,11 +105,20 @@ final class ClaudeOAuthProviderTests: XCTestCase {
         // Claude Code installed and off the endpoint on one that does not, and
         // every assertion below about retries and back-off would depend on the
         // developer's own setup rather than on the code.
-        return ClaudeOAuthProvider(session: StubEndpoint.session(),
+        // No desktop cache by default, for exactly the reason there is no CLI by
+        // default: left to find the real one, these tests would answer off
+        // whatever Claude Desktop happened to have cached on the machine running
+        // them, and every assertion about retries and back-off would depend on
+        // the developer's own setup rather than on the code.
+        return ClaudeOAuthProvider(profile: profile,
+                                   session: StubEndpoint.session(),
                                    archive: UsageArchive(defaults: defaults),
                                    loadCredentials: { try source.read() },
                                    cli: cli,
-                                   cliRefreshInterval: cliRefreshInterval)
+                                   cliRefreshInterval: cliRefreshInterval,
+                                   desktopCache: desktopCache,
+                                   desktopFreshness: desktopFreshness,
+                                   desktopRescanInterval: desktopRescanInterval)
     }
 
     // MARK: - The CLI path
@@ -170,6 +183,199 @@ final class ClaudeOAuthProviderTests: XCTestCase {
         _ = try await provider.fetchSnapshot()
 
         XCTAssertEqual(spawns.value, 2)
+    }
+
+    // MARK: - The Claude Desktop cache path
+
+    /// Why the whole source exists. On this machine `claude "/usage"` prints a
+    /// cost summary and no windows at all, and the keychain token has not been
+    /// re-minted since Claude Code last ran — so both existing paths fail while
+    /// Claude Desktop sits there displaying the real numbers. Reading its cache
+    /// has to be enough on its own, without a keychain read and without a request.
+    func testAFreshDesktopSnapshotNeedsNoKeychainAndNoRequest() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let source = CredentialSource(readable: true)
+        let provider = makeProvider(source: source, profile: desktopProfile(),
+                                    desktopCache: desktopCache(age: 0))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        XCTAssertEqual(snapshot.status, .ok)
+        XCTAssertEqual(snapshot.windows.map(\.id), ["session", "weekly_all"])
+        XCTAssertEqual(snapshot.usedFraction, 0.30, "the headline is not Desktop's session window")
+        XCTAssertEqual(source.reads, 0, "the keychain was read even though the cache answered")
+        XCTAssertEqual(StubEndpoint.requestCount, 0,
+                       "the endpoint was called even though the cache answered")
+    }
+
+    /// Desktop is preferred over the CLI, not merely over the token: it is the
+    /// cheaper of the two and cannot be refused, and on the machine this was
+    /// written for the CLI is the source that lies by omission.
+    func testDesktopIsPreferredOverTheCLI() async throws {
+        let spawns = Counter()
+        let provider = makeProvider(source: CredentialSource(readable: true),
+                                    cli: Self.cli { spawns.increment(); return Self.cliUsage },
+                                    profile: desktopProfile(),
+                                    desktopCache: desktopCache(age: 0))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        // 30% is Desktop's; 38% would be the CLI's.
+        XCTAssertEqual(snapshot.usedFraction, 0.30)
+        XCTAssertEqual(spawns.value, 0, "a subprocess was spawned even though the cache answered")
+    }
+
+    /// The honesty requirement. Once Desktop stops updating, its numbers may not
+    /// keep being presented as live — so a snapshot past the window is not
+    /// returned at all, and the existing sources take over. Whatever the last
+    /// good reading was is then `UsageStore`'s to re-show, dimmed and dated.
+    func testAStaleDesktopSnapshotFallsThroughToTheExistingSources() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let source = CredentialSource(readable: true)
+        let provider = makeProvider(source: source, profile: desktopProfile(),
+                                    desktopCache: desktopCache(age: 4 * 3600))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        // The endpoint's fixture is 42%; Desktop's stale one is 30%.
+        XCTAssertEqual(snapshot.usedFraction, 0.42, "a stale cache reading was shown as live")
+        XCTAssertEqual(source.reads, 1, "the token path was not reached")
+        XCTAssertEqual(StubEndpoint.requestCount, 1)
+    }
+
+    /// Claude Desktop is signed into one account; Codenotch draws a ring per
+    /// Claude Code profile. A profile whose organization does not match the
+    /// cached URL gets nothing from Desktop — the alternative is the personal
+    /// account's session percentage on the work ring.
+    func testACacheForAnotherOrganizationIsNotUsed() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let source = CredentialSource(readable: true)
+        let provider = makeProvider(
+            source: source,
+            profile: desktopProfile(organization: "99999999-8888-7777-6666-555555555555"),
+            desktopCache: desktopCache(age: 0))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        XCTAssertEqual(snapshot.usedFraction, 0.42, "another account's reading reached this ring")
+        XCTAssertEqual(source.reads, 1)
+    }
+
+    /// A profile Claude Code has never signed in to has no organization to match
+    /// on, and must not fall back to "whatever is in the cache".
+    func testAProfileWithNoRecordedOrganizationIsNotMatched() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let source = CredentialSource(readable: true)
+        let home = FileManager.default.temporaryDirectory
+            .appendingPathComponent("codenotch-nohome-\(UUID().uuidString)", isDirectory: true)
+        let provider = makeProvider(source: source, profile: .default(home: home),
+                                    desktopCache: desktopCache(age: 0))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        XCTAssertEqual(snapshot.usedFraction, 0.42)
+        XCTAssertEqual(source.reads, 1)
+    }
+
+    /// With no Claude Desktop at all — no directory, nothing cached — the
+    /// provider behaves exactly as it did before this source existed.
+    func testNoDesktopCacheLeavesTheOldBehaviourIntact() async throws {
+        StubEndpoint.reset([.init(status: 200, body: Self.usagePayload)])
+        let source = CredentialSource(readable: true)
+        let absent = FileManager.default.temporaryDirectory
+            .appendingPathComponent("codenotch-absent-\(UUID().uuidString)", isDirectory: true)
+        let provider = makeProvider(source: source, profile: desktopProfile(),
+                                    desktopCache: ClaudeDesktopUsageCache(directory: absent))
+
+        let snapshot = try await provider.fetchSnapshot()
+
+        XCTAssertEqual(snapshot.usedFraction, 0.42)
+        XCTAssertEqual(source.reads, 1)
+        XCTAssertEqual(StubEndpoint.requestCount, 1)
+    }
+
+    /// `UsageStore` polls every 60s while a session is busy, and a miss means a
+    /// scan of a few thousand directory entries. Missing once must not mean
+    /// scanning on every tick afterwards.
+    ///
+    /// Asserted by behaviour rather than by counting: an entry that appears
+    /// during the interval is not picked up, which is only true if no scan
+    /// happened. It is also the cost of the throttle, stated plainly — a Desktop
+    /// that has just started writing again waits out one interval.
+    func testAMissSuppressesTheNextScan() async throws {
+        StubEndpoint.reset(Array(repeating: .init(status: 200, body: Self.usagePayload), count: 3))
+        let directory = makeCacheDirectory()
+        let provider = makeProvider(source: CredentialSource(readable: true),
+                                    profile: desktopProfile(),
+                                    desktopCache: ClaudeDesktopUsageCache(directory: directory))
+
+        // Nothing cached yet: a miss, which arms the throttle.
+        _ = try await provider.fetchSnapshot()
+        writeUsageEntry(into: directory, age: 0)
+
+        let snapshot = try await provider.fetchSnapshot()
+        XCTAssertEqual(snapshot.usedFraction, 0.42, "the cache was rescanned inside the interval")
+    }
+
+    /// And the scan does happen once the interval has passed, or a Desktop that
+    /// comes back would never be noticed.
+    func testTheScanHappensAgainOnceTheIntervalPasses() async throws {
+        StubEndpoint.reset(Array(repeating: .init(status: 200, body: Self.usagePayload), count: 3))
+        let directory = makeCacheDirectory()
+        let provider = makeProvider(source: CredentialSource(readable: true),
+                                    profile: desktopProfile(),
+                                    desktopCache: ClaudeDesktopUsageCache(directory: directory),
+                                    desktopRescanInterval: 0)
+
+        _ = try await provider.fetchSnapshot()
+        writeUsageEntry(into: directory, age: 0)
+
+        let snapshot = try await provider.fetchSnapshot()
+        XCTAssertEqual(snapshot.usedFraction, 0.30, "the cache was never looked at again")
+    }
+
+    // MARK: - Desktop helpers
+
+    /// A profile whose `.claude.json` records `organization`, so the provider has
+    /// something to match a cache entry against. Nothing else about it is real.
+    private func desktopProfile(
+        organization: String = ClaudeDesktopUsageCacheTests.organization
+    ) -> ClaudeProfile {
+        let home = FileManager.default.temporaryDirectory
+            .appendingPathComponent("codenotch-home-\(UUID().uuidString)", isDirectory: true)
+        let config = home.appendingPathComponent(".claude")
+        try? FileManager.default.createDirectory(at: config, withIntermediateDirectories: true)
+        let json = #"{"oauthAccount":{"emailAddress":"someone@example.com","organizationUuid":"\#(organization)"}}"#
+        try? Data(json.utf8).write(to: home.appendingPathComponent(".claude.json"))
+        addTeardownBlock { try? FileManager.default.removeItem(at: home) }
+        return .default(home: home)
+    }
+
+    /// A cache directory holding one usage entry, written `age` seconds ago.
+    private func desktopCache(age: TimeInterval) -> ClaudeDesktopUsageCache {
+        let directory = makeCacheDirectory()
+        writeUsageEntry(into: directory, age: age)
+        return ClaudeDesktopUsageCache(directory: directory)
+    }
+
+    /// An empty throwaway directory shaped like `Cache_Data`.
+    private func makeCacheDirectory() -> URL {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("codenotch-cache-\(UUID().uuidString)", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: directory) }
+        return directory
+    }
+
+    private func writeUsageEntry(into directory: URL, age: TimeInterval) {
+        var entry = ClaudeDesktopUsageCacheTests.Entry()
+        // No `Date:` header, so the entry's modification time is what dates it —
+        // which is the half a test can control.
+        entry.responseDate = nil
+        let file = directory.appendingPathComponent("entry_0")
+        try? entry.data().write(to: file)
+        try? FileManager.default.setAttributes(
+            [.modificationDate: Date().addingTimeInterval(-age)], ofItemAtPath: file.path)
     }
 
     private static let cliUsage = """

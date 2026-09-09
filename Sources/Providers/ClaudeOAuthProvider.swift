@@ -4,13 +4,17 @@ import os
 /// One Claude account's limits, read from whichever source can answer without
 /// interrupting anyone.
 ///
-/// Two sources, in order. `claude "/usage"` is asked first where the binary is
-/// installed: it reports the same figures off a credential Claude Code already
-/// holds, and needs no keychain access from this app — which matters because
-/// Claude Code files a new keychain item on every token rotation, so a grant
-/// the user gives against the old item is good for about an hour. Where that
-/// fails or Claude Code is not installed, the usage endpoint is called directly
-/// with the OAuth token from the keychain, exactly as before.
+/// Three sources, in order. Claude Desktop's HTTP cache is read first, because
+/// it is the one that costs nothing and cannot be refused: no subprocess, no
+/// keychain, no network — see `ClaudeDesktopUsageCache`. It answers only while
+/// Desktop is running, and only for the account Desktop is signed into, so where
+/// it is silent `claude "/usage"` is asked next: it reports the same figures off
+/// a credential Claude Code already holds, and needs no keychain access from
+/// this app — which matters because Claude Code files a new keychain item on
+/// every token rotation, so a grant the user gives against the old item is good
+/// for about an hour. Where that fails or Claude Code is not installed, the
+/// usage endpoint is called directly with the OAuth token from the keychain,
+/// exactly as before.
 ///
 /// One instance per `ClaudeProfile`: a work login kept under `~/.claude-work`
 /// has its own token, its own limits and its own ring, and this reads exactly
@@ -59,6 +63,35 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// when someone installs or removes Claude Code, and the app is relaunched
     /// either way.
     nonisolated private let cli: ClaudeUsageCLI?
+    /// Claude Desktop's cache, or nil to leave that source out. Nil in tests
+    /// about the other two: left in, whichever cache the developer's own Desktop
+    /// happens to hold would decide whether they pass.
+    nonisolated private let desktopCache: ClaudeDesktopUsageCache?
+    /// How recent a Desktop snapshot has to be to stand in for a live reading.
+    ///
+    /// Thirty minutes, from watching a real cache: while Claude Desktop is open it
+    /// rewrites this entry every five to fifteen minutes, with the occasional
+    /// half-hour gap when it is left in the background. So thirty minutes rides
+    /// out an ordinary gap without ever presenting a number that could be far
+    /// wrong — the session window moved eleven points in fifteen minutes on the
+    /// day this was measured, which is why it is not an hour.
+    ///
+    /// Past it the source simply drops through, and `UsageStore` does the rest: it
+    /// re-shows the last good reading, undimmed for its own fifteen minutes and
+    /// dimmed and dated after that. Nothing here has to re-implement any of it.
+    private let desktopFreshness: TimeInterval
+    /// The entry the last successful Desktop read came from, so the next one is
+    /// a single small file read rather than a directory scan.
+    private var desktopEntry: URL?
+    /// Stamped whenever a Desktop read came up short. Without it, a machine with
+    /// no Claude Desktop — or one whose Desktop has gone quiet — pays for a scan
+    /// of a few thousand directory entries on every 60s tick, forever. The same
+    /// reason `lastCLIAttempt` exists, and it never delays a *working* source: a
+    /// hit clears it, and a hit is served from `desktopEntry` without a scan.
+    private var lastDesktopMiss: Date?
+    /// How long a miss suppresses the next scan.
+    private let desktopRescanInterval: TimeInterval
+
     /// A subprocess is far more expensive than an HTTP call, and `UsageStore`
     /// polls every 60s while a session is busy. The windows barely move in a
     /// minute, so the last answer is reused in between.
@@ -73,9 +106,15 @@ actor ClaudeOAuthProvider: UsageProvider {
          archive: UsageArchive = UsageArchive(),
          loadCredentials: (@Sendable () throws -> ClaudeCredentials)? = nil,
          cli: ClaudeUsageCLI? = ClaudeUsageCLI.locate(),
-         cliRefreshInterval: TimeInterval = 5 * 60) {
+         cliRefreshInterval: TimeInterval = 5 * 60,
+         desktopCache: ClaudeDesktopUsageCache? = ClaudeDesktopUsageCache(),
+         desktopFreshness: TimeInterval = 30 * 60,
+         desktopRescanInterval: TimeInterval = 5 * 60) {
         self.cli = cli
         self.cliRefreshInterval = cliRefreshInterval
+        self.desktopCache = desktopCache
+        self.desktopFreshness = desktopFreshness
+        self.desktopRescanInterval = desktopRescanInterval
         self.profile = profile
         self.id = profile.id
         self.displayName = profile.displayName
@@ -90,20 +129,18 @@ actor ClaudeOAuthProvider: UsageProvider {
     }
 
     func fetchSnapshot() async throws -> ProviderSnapshot {
+        // Ahead of both the CLI and the back-off check. This is the cheapest
+        // source and the only one that can never interrupt anyone: it reads a
+        // file Claude Desktop has already written.
+        if let windows = await desktopWindows() {
+            return snapshot(windows: windows)
+        }
         // Ahead of the back-off check on purpose. That deadline is the
         // endpoint's, and the CLI does not share the endpoint's rate limit —
         // there is no reason for a 429 on one to darken a ring the other can
         // still fill.
         if let windows = await cliWindows() {
-            return ProviderSnapshot(
-                id: id,
-                displayName: displayName,
-                glyph: glyph,
-                fidelity: .official,
-                status: .ok,
-                windows: windows,
-                headlineID: "session"
-            )
+            return snapshot(windows: windows)
         }
         if let retryNoEarlierThan, retryNoEarlierThan > Date() {
             let remaining = retryNoEarlierThan.timeIntervalSinceNow
@@ -138,6 +175,80 @@ actor ClaudeOAuthProvider: UsageProvider {
             }
             throw error
         }
+    }
+
+    /// The snapshot shape every source produces. One place, so a window order or
+    /// a headline changed for the endpoint cannot quietly differ from the CLI's or
+    /// Desktop's — the three are the same reading taken from three places.
+    private func snapshot(windows: [LimitWindow]) -> ProviderSnapshot {
+        ProviderSnapshot(
+            id: id,
+            displayName: displayName,
+            glyph: glyph,
+            fidelity: .official,
+            status: .ok,
+            windows: windows,
+            headlineID: "session"
+        )
+    }
+
+    /// What Claude Desktop's cache holds for *this* profile's account, or nil.
+    ///
+    /// Deliberately cannot throw, for the reason `cliWindows` cannot: every way
+    /// this can come up empty — Desktop not installed, closed, signed into
+    /// another account, a snapshot too old to call live, a format that has moved
+    /// on — is a reason to ask the next source, not a reason to fail the refresh
+    /// and put an invented status on the ring.
+    ///
+    /// A snapshot past `desktopFreshness` is *not* returned. That is what keeps
+    /// the ring honest without any new state: dropping through leaves the last
+    /// good reading to `UsageStore`, which already re-shows it with the age it
+    /// actually has and dims it — where returning it here would present numbers
+    /// from an hour ago as a live `.ok`.
+    private func desktopWindows() async -> [LimitWindow]? {
+        guard let desktopCache else { return nil }
+        let now = Date()
+        // A recent miss means the next read would be a full scan for something
+        // that was not there a moment ago. Wait it out.
+        if let lastDesktopMiss, now.timeIntervalSince(lastDesktopMiss) < desktopRescanInterval {
+            return nil
+        }
+        // Read per refresh rather than held: switching account in Claude Code
+        // rewrites this, and a held copy would keep matching the old
+        // organization's cache entry.
+        guard let organization = profile.organizationID() else {
+            lastDesktopMiss = now
+            return nil
+        }
+
+        let hint = desktopEntry
+        let freshness = desktopFreshness
+        // Off the actor, exactly as the CLI read is. A cold scan stats a few
+        // thousand directory entries, and the actor's other work — the token path
+        // this falls through to — has no business queueing behind that.
+        let reading = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .utility).async {
+                continuation.resume(
+                    returning: desktopCache.read(hint: hint, organization: organization,
+                                                 freshFor: freshness)
+                )
+            }
+        }
+        guard let reading else {
+            desktopEntry = nil
+            lastDesktopMiss = now
+            return nil
+        }
+
+        desktopEntry = reading.entry
+        guard reading.isFresh(at: now, within: freshness) else {
+            lastDesktopMiss = now
+            Log.usage.debug("\(self.id, privacy: .public): claude desktop snapshot is too old to show as live")
+            return nil
+        }
+        lastDesktopMiss = nil
+        Log.usage.debug("\(self.id, privacy: .public): read \(reading.windows.count) windows from the claude desktop cache")
+        return reading.windows
     }
 
     /// What `claude "/usage"` last said, or nil to mean "use the token path".
@@ -210,16 +321,8 @@ actor ClaudeOAuthProvider: UsageProvider {
             throw UsageProviderError.badResponse(status: status)
         }
 
-        let payload = try Self.decoder.decode(UsageResponse.self, from: data)
-        return ProviderSnapshot(
-            id: id,
-            displayName: displayName,
-            glyph: glyph,
-            fidelity: .official,
-            status: .ok,
-            windows: payload.limitWindows(),
-            headlineID: "session"
-        )
+        let payload = try UsageResponse.decoder.decode(UsageResponse.self, from: data)
+        return snapshot(windows: payload.limitWindows())
     }
 
     private func currentToken() throws -> String {
@@ -333,25 +436,6 @@ actor ClaudeOAuthProvider: UsageProvider {
             manageURL: manageURL
         )
     }
-
-    private static let decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        // Timestamps come back with fractional seconds and an offset, which
-        // `.iso8601` alone will not parse.
-        let withFraction = ISO8601DateFormatter()
-        withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let plain = ISO8601DateFormatter()
-        plain.formatOptions = [.withInternetDateTime]
-        decoder.dateDecodingStrategy = .custom { decoder in
-            let text = try decoder.singleValueContainer().decode(String.self)
-            if let date = withFraction.date(from: text) ?? plain.date(from: text) { return date }
-            throw DecodingError.dataCorrupted(
-                .init(codingPath: decoder.codingPath, debugDescription: "Unparseable date \(text)")
-            )
-        }
-        return decoder
-    }()
 }
 
 /// The shape of `GET /api/oauth/usage`.
@@ -407,6 +491,30 @@ struct UsageResponse: Decodable {
     let limits: [Limit]?
     let fiveHour: Window?
     let sevenDay: Window?
+
+    /// How this response is read, wherever it is read from.
+    ///
+    /// Shared rather than one per source: the endpoint and Claude Desktop's cache
+    /// carry the *same* response, so two decoders would be two chances for one of
+    /// them to drift and silently start dropping windows.
+    static let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        // Timestamps come back with fractional seconds and an offset, which
+        // `.iso8601` alone will not parse.
+        let withFraction = ISO8601DateFormatter()
+        withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let plain = ISO8601DateFormatter()
+        plain.formatOptions = [.withInternetDateTime]
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let text = try decoder.singleValueContainer().decode(String.self)
+            if let date = withFraction.date(from: text) ?? plain.date(from: text) { return date }
+            throw DecodingError.dataCorrupted(
+                .init(codingPath: decoder.codingPath, debugDescription: "Unparseable date \(text)")
+            )
+        }
+        return decoder
+    }()
 
     /// `limits` is the forward-compatible shape — it grows new kinds as
     /// Anthropic adds them — so it is preferred, with the two named windows as

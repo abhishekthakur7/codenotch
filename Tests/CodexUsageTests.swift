@@ -201,13 +201,24 @@ final class CodexActivityTests: XCTestCase {
     }
 
     func testTheBoundaryIsInclusive() {
-        XCTAssertNotNil(CodexActivityMonitor.session(
+        XCTAssertEqual(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
             modified: now.addingTimeInterval(-8), staleAfter: 8, now: now
-        ))
+        )?.state, .busy)
+
+        XCTAssertEqual(CodexActivityMonitor.session(
+            id: "codex.x", name: "Codex",
+            modified: now.addingTimeInterval(-15), staleAfter: 8, now: now
+        )?.state, .success)
+
+        XCTAssertEqual(CodexActivityMonitor.session(
+            id: "codex.x", name: "Codex",
+            modified: now.addingTimeInterval(-20), staleAfter: 8, now: now
+        )?.state, .idle)
+
         XCTAssertNil(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
-            modified: now.addingTimeInterval(-8.1), staleAfter: 8, now: now
+            modified: now.addingTimeInterval(-24), staleAfter: 8, now: now
         ))
     }
 }

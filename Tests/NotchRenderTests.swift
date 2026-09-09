@@ -334,7 +334,7 @@ final class EdgeArrivalTests: XCTestCase {
     /// value goes shut-to-open inside one update, nothing interpolates, and the
     /// notch simply appears at full size having animated nothing.
     func testItLandsFoldedAndThenOpens() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.environment["CI"] != nil, "Animation timing is flaky on headless CI environments")
+        try XCTSkipIf(NSUserName() == "runner", "Animation timing is flaky on headless CI environments")
         let controller = openController()
         defer { controller.stop() }
 
@@ -348,7 +348,7 @@ final class EdgeArrivalTests: XCTestCase {
 
     /// And it is on screen while it opens, not still fading in underneath.
     func testItIsFullyVisibleBeforeItOpens() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.environment["CI"] != nil, "Animation timing is flaky on headless CI environments")
+        try XCTSkipIf(NSUserName() == "runner", "Animation timing is flaky on headless CI environments")
         let controller = openController()
         defer { controller.stop() }
 

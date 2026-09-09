@@ -188,6 +188,63 @@ final class ClaudeUsageCLITests: XCTestCase {
         XCTAssertNil(ClaudeUsageCLI.locate(home: home, root: home))
     }
 
+    /// npm is how most people install Claude Code, and under a Node version
+    /// manager its bin directory is named for the Node version — a path no
+    /// fixed string can spell.
+    func testItFindsClaudeInstalledUnderNVM() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v22.22.3/bin/claude"])
+
+        XCTAssertEqual(ClaudeUsageCLI.locate(home: home, root: home)?.binary.lastPathComponent,
+                       "claude")
+    }
+
+    /// A machine that has upgraded Node keeps every old version tree, and only
+    /// the current one is guaranteed to hold the install that is actually run.
+    func testTheNewestNodeVersionWins() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v20.20.2/bin/claude",
+                                                ".nvm/versions/node/v22.22.3/bin/claude"])
+
+        let found = ClaudeUsageCLI.locate(home: home, root: home)?.binary.path
+
+        XCTAssertEqual(found?.contains("v22.22.3"), true, "expected v22.22.3, got \(found ?? "nil")")
+    }
+
+    /// Volta and pnpm keep a single stable bin directory of their own, outside
+    /// every path the installers use.
+    func testItFindsClaudeInAVoltaShimDirectory() throws {
+        let home = try makeHome(executablesAt: [".volta/bin/claude"])
+
+        XCTAssertNotNil(ClaudeUsageCLI.locate(home: home, root: home))
+    }
+
+    func testItFindsClaudeInPnpmsGlobalBin() throws {
+        let home = try makeHome(executablesAt: ["Library/pnpm/claude"])
+
+        XCTAssertNotNil(ClaudeUsageCLI.locate(home: home, root: home))
+    }
+
+    /// The native installer still wins when both are present: it is the layout
+    /// Claude Code keeps up to date itself.
+    func testTheNativeInstallerOutranksANodeManager() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v22.22.3/bin/claude",
+                                                ".local/bin/claude"])
+
+        XCTAssertEqual(ClaudeUsageCLI.locate(home: home, root: home)?.binary.path,
+                       home.appendingPathComponent(".local/bin/claude").path)
+    }
+
+    private func makeHome(executablesAt paths: [String]) throws -> URL {
+        let root = try makeHome(executableAt: nil)
+        for path in paths {
+            let url = root.appendingPathComponent(path)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
+                                                    withIntermediateDirectories: true)
+            FileManager.default.createFile(atPath: url.path, contents: Data(),
+                                           attributes: [.posixPermissions: 0o755])
+        }
+        return root
+    }
+
     private func makeHome(executableAt path: String?, executable: Bool = true) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("ClaudeUsageCLITests.\(UUID().uuidString)")

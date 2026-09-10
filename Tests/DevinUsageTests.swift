@@ -199,6 +199,23 @@ final class DevinUsageTests: XCTestCase {
         XCTAssertEqual(DevinEndpoint.requestCount, 0)
     }
 
+    /// When the Desktop database is absent, the CLI credentials file is the
+    /// fallback. A valid key there must produce a snapshot, not needsAuth.
+    func testCLICredentialsAreUsedWhenDesktopDatabaseIsAbsent() async throws {
+        let cli = FileManager.default.temporaryDirectory.appendingPathComponent("cli-\(UUID().uuidString).toml")
+        try #"windsurf_api_key = "devin-session-token$test-key""#.write(to: cli, atomically: true, encoding: .utf8)
+        defer { try? FileManager.default.removeItem(at: cli) }
+        DevinEndpoint.reset([(200, recorded)])
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [DevinEndpoint.self]
+        let provider = DevinLocalProvider(
+            database: FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString),
+            cliCredentials: cli, session: URLSession(configuration: configuration))
+        let snapshot = try await provider.fetchSnapshot()
+        XCTAssertEqual(snapshot.status, .ok)
+        XCTAssertEqual(DevinEndpoint.requestCount, 1)
+    }
+
     func testLiveDevinUsageWhenExplicitlyEnabled() async throws {
         guard ProcessInfo.processInfo.environment["CODENOTCH_TEST_DEVIN_LIVE"] == "1" else {
             throw XCTSkip("Opt-in live check requires a signed-in Devin Desktop")
@@ -216,7 +233,11 @@ final class DevinUsageTests: XCTestCase {
     private func makeProvider(database: URL) -> DevinLocalProvider {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [DevinEndpoint.self]
-        return DevinLocalProvider(database: database, session: URLSession(configuration: configuration))
+        // A non-existent CLI path so the fallback is not triggered by the
+        // developer's own credentials file during tests.
+        let cli = FileManager.default.temporaryDirectory.appendingPathComponent("nonexistent-\(UUID().uuidString).toml")
+        return DevinLocalProvider(database: database, cliCredentials: cli,
+                                  session: URLSession(configuration: configuration))
     }
 
     private func makeDatabase() throws -> URL {

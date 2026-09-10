@@ -34,8 +34,15 @@ HAS_DEVELOPER_ID := $(shell security find-identity -v -p codesigning 2>/dev/null
 # build. Read its team from a valid signing identity: a certificate can remain
 # in the keychain without its private key, and choosing it would fail the
 # build. With nothing parsed, ad-hoc is the fallback and needs no Apple account.
-DEV_TEAM := $(shell security find-identity -v -p codesigning 2>/dev/null \
-	| sed -n 's/.*"Apple Development: .* (\([A-Z0-9]*\))".*/\1/p' | head -1)
+# The team is the certificate subject's OU, not the bracketed value in the CN
+# — that bracketed value is the developer's own id, which only coincides with
+# the Team ID on some accounts. On a personal team it does not, so reading it
+# had Xcode look for a certificate of a team that does not exist.
+DEV_IDENTITY := $(shell security find-identity -v -p codesigning 2>/dev/null \
+	| sed -n 's/.*"\(Apple Development: [^"]*\)".*/\1/p' | head -1)
+DEV_TEAM := $(if $(DEV_IDENTITY),$(shell security find-certificate -c "$(DEV_IDENTITY)" -p 2>/dev/null \
+	| openssl x509 -noout -subject -nameopt sep_multiline 2>/dev/null \
+	| sed -n 's/^ *OU=\([A-Z0-9]*\)$$/\1/p' | head -1))
 
 ifeq (,$(HAS_DEVELOPER_ID))
 ifeq (,$(DEV_TEAM))

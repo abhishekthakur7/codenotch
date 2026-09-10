@@ -84,6 +84,40 @@ struct CodexTokenUsage: Codable, Equatable, Sendable {
     }
 }
 
+/// Unused rate-limit resets on the Codex account.
+///
+/// The ChatGPT backend lists credits that can still reset a rate limit, under
+/// the same credential as `/wham/usage`.
+struct CodexResetCredits: Equatable, Sendable {
+    struct Credit: Equatable, Sendable, Identifiable {
+        let id: String
+        let status: String
+        let expiresAt: Date?
+
+        init(id: String, status: String, expiresAt: Date? = nil) {
+            self.id = id
+            self.status = status
+            self.expiresAt = expiresAt
+        }
+    }
+
+    let availableCount: Int
+    let credits: [Credit]
+
+    init(availableCount: Int, credits: [Credit] = []) {
+        self.availableCount = availableCount
+        self.credits = credits
+    }
+
+    /// Credits still available, soonest expiry first.
+    var available: [Credit] {
+        credits.filter { $0.status == "available" }
+            .sorted { ($0.expiresAt ?? .distantFuture) < ($1.expiresAt ?? .distantFuture) }
+    }
+
+    var nextExpiry: Date? { available.compactMap(\.expiresAt).min() }
+}
+
 /// Only the account's main rate-limit windows belong in the usage rings —
 /// `additional_rate_limits` and `code_review_rate_limit` meter something else
 /// and are deliberately left out.
@@ -120,6 +154,54 @@ enum CodexUsage {
         let used_percent: Double?
         let reset_at: Double?
         let reset_after_seconds: Double?
+    }
+
+    private struct ResetCreditsResponse: Decodable {
+        let credits: [ResetCredit]
+        let availableCount: Int?
+
+        private enum CodingKeys: String, CodingKey {
+            case credits
+            case available_count
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            availableCount = try? container.decode(Int.self, forKey: .available_count)
+            // One unreadable credit must not discard the rest of a valid list.
+            let items = (try? container.decode([FailableResetCredit].self, forKey: .credits)) ?? []
+            credits = items.compactMap(\.value)
+        }
+    }
+
+    private struct FailableResetCredit: Decodable {
+        let value: ResetCredit?
+        init(from decoder: Decoder) throws {
+            value = try? ResetCredit(from: decoder)
+        }
+    }
+
+    private struct ResetCredit: Decodable {
+        let id: String
+        let status: String
+        let expiresAt: Date?
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case status
+            case expires_at
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+            status = try container.decodeIfPresent(String.self, forKey: .status) ?? ""
+            if let text = try? container.decode(String.self, forKey: .expires_at) {
+                expiresAt = parseISO8601(text)
+            } else {
+                expiresAt = nil
+            }
+        }
     }
 
     static func windows(from data: Data, now: Date = Date()) throws -> [LimitWindow] {
@@ -176,6 +258,39 @@ enum CodexUsage {
         } catch {
             throw UsageProviderError.badResponse(status: 0)
         }
+    }
+
+    /// Decode the ChatGPT backend list of unused rate-limit resets.
+    ///
+    /// Same credential as `/wham/usage`. `available_count` is trusted even when
+    /// the `credits` array is truncated. Throws only when the body is not JSON
+    /// at all, so an unfamiliar payload cannot fail the usage fetch.
+    static func resetCredits(from data: Data) throws -> CodexResetCredits {
+        let response: ResetCreditsResponse
+        do {
+            response = try JSONDecoder().decode(ResetCreditsResponse.self, from: data)
+        } catch {
+            if (try? JSONSerialization.jsonObject(with: data)) != nil {
+                return CodexResetCredits(availableCount: 0, credits: [])
+            }
+            throw UsageProviderError.badResponse(status: 0)
+        }
+
+        let credits = response.credits.map {
+            CodexResetCredits.Credit(id: $0.id, status: $0.status, expiresAt: $0.expiresAt)
+        }
+        let availableCount = response.availableCount
+            ?? credits.filter { $0.status == "available" }.count
+        return CodexResetCredits(availableCount: availableCount, credits: credits)
+    }
+
+    /// The backend mixes whole-second and fractional ISO-8601 stamps; each
+    /// formatter rejects the other form.
+    private static func parseISO8601(_ text: String) -> Date? {
+        let fractional = ISO8601DateFormatter()
+        fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = fractional.date(from: text) { return date }
+        return ISO8601DateFormatter().date(from: text)
     }
 
     /// The plan an account is on decides what its primary window actually is

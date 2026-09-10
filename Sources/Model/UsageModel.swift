@@ -215,6 +215,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// endpoint; it never changes the profile token buckets. Other providers
     /// leave this nil because they do not expose the same account-level data.
     var tokenUsage: CodexTokenUsage? = nil
+    /// Unused rate-limit resets on this Codex account, listed by the same
+    /// backend as usage.
+    var resetCredits: CodexResetCredits? = nil
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.

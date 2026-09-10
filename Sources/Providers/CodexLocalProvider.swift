@@ -72,6 +72,8 @@ actor CodexLocalProvider: UsageProvider {
 
         let windows = try CodexUsage.windows(from: data)
 
+        async let resetCredits = Self.fetchResetCredits(session: session, credential: credential)
+
         // The profile page's token statistics are the source for the chart and
         // totals.
         let profileUsage = try? await Self.fetchProfileUsage(
@@ -84,7 +86,8 @@ actor CodexLocalProvider: UsageProvider {
             fidelity: .official, status: .ok, windows: windows,
             headlineID: windows.first?.id,
             weeklyID: "secondary",
-            tokenUsage: profileUsage
+            tokenUsage: profileUsage,
+            resetCredits: await resetCredits
         )
     }
 
@@ -110,6 +113,34 @@ actor CodexLocalProvider: UsageProvider {
             throw UsageProviderError.badResponse(status: status)
         }
         return try CodexUsage.profileUsage(from: data)
+    }
+
+    /// Unused rate-limit resets on this Codex account, listed by the same
+    /// backend as usage.
+    private static func fetchResetCredits(
+        session: URLSession,
+        credential: CodexCredentials.Credential
+    ) async -> CodexResetCredits? {
+        var request = URLRequest(
+            url: URL(string: "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits")!,
+            cachePolicy: .reloadIgnoringLocalCacheData,
+            timeoutInterval: 15
+        )
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(credential.accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue(credential.accountID, forHTTPHeaderField: "ChatGPT-Account-Id")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("no-cache, no-store", forHTTPHeaderField: "Cache-Control")
+        request.setValue("codex-1", forHTTPHeaderField: "OpenAI-Beta")
+
+        do {
+            let (data, response) = try await session.data(for: request)
+            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+            guard (200..<300).contains(status) else { return nil }
+            return try CodexUsage.resetCredits(from: data)
+        } catch {
+            return nil
+        }
     }
 
     private static func retryAfter(from response: HTTPURLResponse?, now: Date) -> TimeInterval? {

@@ -546,6 +546,19 @@ final class UsageStore: ObservableObject {
         }
     }
 
+    func reevaluate(providerID: String) {
+        guard let provider = providers.first(where: { $0.id == providerID }) else { return }
+        if let idx = snapshots.firstIndex(where: { $0.id == providerID }) {
+            var snapshot = snapshots[idx]
+            if let ag = provider as? AntigravityProvider {
+                snapshot.headlineID = ag.resolveHeadlineID(for: snapshot.windows)
+                snapshot.weeklyID = ag.resolveWeeklyID(for: snapshot.windows)
+                snapshots[idx] = snapshot
+                updateNotchSnapshots()
+            }
+        }
+    }
+
     private func snapshot(from provider: UsageProvider, generation: Int) async -> ProviderSnapshot? {
         // A scheduled task can be disconnected before it begins; avoid reading
         // its credential at all, as well as rejecting an obsolete response.

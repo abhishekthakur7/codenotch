@@ -55,6 +55,7 @@ final class NotchFleet {
 
     /// Hooked up by the app delegate; driven by the notch's own chrome.
     var onRefresh: (() -> Void)?
+    var onToggleKeepOpen: (() -> Void)?
     var onRefreshProvider: ((String) async -> Void)?
     var onOpenSettings: (() -> Void)?
     var signInItems: [(title: String, action: () -> Void)] = []
@@ -330,6 +331,7 @@ final class NotchFleet {
         controller.onOpenSettings = onOpenSettings
         controller.model.onOpenSettings = onOpenSettings
         controller.onReposition = onReposition
+        controller.onToggleKeepOpen = onToggleKeepOpen
         controller.signInItems = signInItems
         controller.model.updateSnapshots(snapshots)
         controller.model.thinkingModels = thinkingModels

@@ -439,6 +439,7 @@ struct SettingsView: View {
                     AccountRow(provider: account, preferences: preferences,
                                signOut: signOut, signIn: signIn,
                                switchAccount: switchAccount, retry: retry,
+                               refresh: { usageStore?.reevaluate(providerID: $0) },
                                isOrderable: true,
                                drag: drag,
                                cursorRefresh: cursorRefresh,
@@ -473,6 +474,7 @@ struct SettingsView: View {
                         AccountRow(provider: account, preferences: preferences,
                                    signOut: signOut, signIn: signIn,
                                    switchAccount: switchAccount, retry: retry,
+                                   refresh: { usageStore?.reevaluate(providerID: $0) },
                                    isOrderable: false,
                                    drag: drag,
                                    cursorRefresh: cursorRefresh,
@@ -1131,6 +1133,7 @@ private struct AccountRow: View {
     let signIn: (String) -> Bool
     let switchAccount: (String) -> Bool
     let retry: (String) -> Void
+    let refresh: (String) -> Void
     /// Whether this row has a place in the notch to argue about. A provider
     /// switched off draws no ring, so there is nothing for a drag to arrange.
     let isOrderable: Bool
@@ -1360,20 +1363,41 @@ private struct AccountRow: View {
             
             // Antigravity limit dropdown
             if isConnected, provider.id == "gemini" {
-                HStack(spacing: 8) {
-                    Text(L10n.t("Notch reads"))
-                        .foregroundStyle(.secondary)
-                    Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
-                        ForEach(AntigravityHeadlineLimit.allCases) { limit in
-                            Text(limit.explanation).tag(limit)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Text(L10n.t("Notch reads"))
+                            .foregroundStyle(.secondary)
+                        Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
+                            ForEach(AntigravityHeadlineLimit.allCases) { limit in
+                                Text(limit.explanation).tag(limit)
+                            }
                         }
+                        .labelsHidden()
+                        .pickerStyle(.menu)
+                        .frame(width: 140)
                     }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
-                    .frame(width: 140)
+                    
+                    HStack(spacing: 8) {
+                        Text(L10n.t("Model data"))
+                            .foregroundStyle(.secondary)
+                        Picker(L10n.t("Model data"), selection: $preferences.antigravityHeadlineModel) {
+                            ForEach(AntigravityHeadlineModel.allCases) { model in
+                                Text(model.explanation).tag(model)
+                            }
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.menu)
+                        .frame(width: 140)
+                    }
                 }
                 .padding(.top, 2)
                 .help(L10n.t("Choose which limit appears in the main notch for Antigravity."))
+                .onChange(of: preferences.antigravityHeadlineLimit) { _ in
+                    refresh(provider.id)
+                }
+                .onChange(of: preferences.antigravityHeadlineModel) { _ in
+                    refresh(provider.id)
+                }
             }
 
             // Google publishes no limit for a bare API key, so the ring has

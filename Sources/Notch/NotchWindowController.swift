@@ -20,6 +20,8 @@ final class NotchWindowController {
     var onRefresh: (() -> Void)?
     /// One "Sign in to …" item per provider that needs a browser session.
     var signInItems: [(title: String, action: () -> Void)] = []
+    /// Driven by the notch's own chrome.
+    var onToggleKeepOpen: (() -> Void)?
     /// Refetch a single provider, asked for by clicking its ring.
     var onRefreshProvider: ((String) async -> Void)?
     /// Open the settings window, asked for by clicking the handle.
@@ -866,19 +868,8 @@ final class NotchWindowController {
     }
 
     /// Clicking the open notch pins it, so it stays put while you read it.
-    ///
-    /// A no-op while Settings says Always show: there the notch is already
-    /// held open by a standing choice, and letting a click release it meant
-    /// the setting said one thing and the notch did another.
     func togglePinned() {
-        guard !model.isAlwaysOn else { return }
-        model.isPinned.toggle()
-        if model.isPinned {
-            foldWork?.cancel()
-            foldWork = nil
-            withAnimation(NotchMotion.unfold) { model.isExpanded = true }
-        }
-        updateInteractiveRects()
+        onToggleKeepOpen?()
     }
 
     func cellIndex(along: CGFloat) -> Int? {
@@ -917,11 +908,8 @@ final class NotchWindowController {
         // when it is the click that is holding it — the setting is Settings'
         // to change, and a menu item that silently loses is worse than one
         // that says it is not yours to press.
-        keepOpen.state = model.staysOpen ? .on : .off
-        keepOpen.isEnabled = !model.isAlwaysOn
-        keepOpen.toolTip = model.isAlwaysOn
-            ? L10n.t("Codenotch is set to Always show. Change it in Settings.")
-            : nil
+        keepOpen.state = model.isAlwaysOn ? .on : .off
+        keepOpen.isEnabled = true
         menu.addItem(keepOpen)
         menu.addItem(.separator())
 

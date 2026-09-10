@@ -170,6 +170,26 @@ struct ClaudeProfile: Equatable, Hashable {
             : configDirectory.appendingPathComponent(".claude.json")
     }
 
+    /// As much of Claude Code's own record of the account as is read here.
+    private struct AccountFile: Decodable {
+        struct Account: Decodable {
+            let emailAddress: String?
+            let organizationUuid: String?
+        }
+        let oauthAccount: Account?
+    }
+
+    /// Claude Code's record of who is signed in for this profile, or nil.
+    ///
+    /// Readable without a keychain prompt, which is the whole point of asking
+    /// here rather than of the token.
+    private func account() -> AccountFile.Account? {
+        guard let data = try? Data(contentsOf: accountFileURL),
+              let config = try? JSONDecoder().decode(AccountFile.self, from: data)
+        else { return nil }
+        return config.oauthAccount
+    }
+
     /// Who is signed in, read from that file.
     ///
     /// Worth having because the keychain token does not carry an address, so
@@ -177,16 +197,20 @@ struct ClaudeProfile: Equatable, Hashable {
     /// — the one question two Claude rings actually raise. It is also readable
     /// without a keychain prompt, which is the whole point of asking here.
     func signedInAddress() -> String? {
-        struct Config: Decodable {
-            struct Account: Decodable { let emailAddress: String? }
-            let oauthAccount: Account?
-        }
-        guard let data = try? Data(contentsOf: accountFileURL),
-              let config = try? JSONDecoder().decode(Config.self, from: data),
-              let address = config.oauthAccount?.emailAddress,
-              !address.isEmpty
-        else { return nil }
+        guard let address = account()?.emailAddress, !address.isEmpty else { return nil }
         return address
+    }
+
+    /// Which Anthropic organization this profile's account belongs to.
+    ///
+    /// The one thing that can tie a Claude *Desktop* cache entry to a Claude
+    /// *Code* profile: the cached usage URL is `/api/organizations/<uuid>/usage`,
+    /// and this is the same uuid. Without it, Desktop's numbers would be handed
+    /// to whichever ring asked first — the personal account's session percentage
+    /// drawn on the work ring. See `ClaudeDesktopUsageCache`.
+    func organizationID() -> String? {
+        guard let uuid = account()?.organizationUuid, !uuid.isEmpty else { return nil }
+        return uuid
     }
 
     /// Every keychain service a profile's token might be filed under, in the

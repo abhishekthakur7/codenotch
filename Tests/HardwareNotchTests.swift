@@ -135,6 +135,31 @@ final class MergedTopNotchTests: XCTestCase {
         XCTAssertEqual(m.notchDepth, NotchLayout.pillWidth, accuracy: 0.001)
     }
 
+    /// Nothing below the hardware wakes it.
+    ///
+    /// The pill's band exists because a 10pt sliver is hard to hit. The notch
+    /// is 220 by 38 and needs no help — and the band it inherited ran 34pt
+    /// below the menu bar, across the title bar of a window tiled to the
+    /// centre of the screen. Aiming at that window's close button opened the
+    /// notch on top of the button.
+    func testWhatWakesItIsExactlyTheHardwareNotch() {
+        let m = model(cells: 4)
+        m.isExpanded = false
+        XCTAssertEqual(m.wakeLength, realNotch.width, accuracy: 0.001,
+                       "the wake region is wider than the hardware")
+        XCTAssertEqual(m.wakeDepth, realNotch.height, accuracy: 0.001,
+                       "the wake region reaches below the hardware, into the window under it")
+    }
+
+    /// The pill keeps its band: it is the small target the band was made for.
+    func testThePillIsStillWokenByABandAroundIt() {
+        let m = model(cells: 4, screen: plain)
+        m.isExpanded = false
+        XCTAssertGreaterThan(m.wakeDepth, m.restingDepth,
+                             "the pill lost the band that makes it hittable")
+        XCTAssertGreaterThanOrEqual(m.wakeLength, m.restingLength)
+    }
+
     func testAScreenWithoutOneInsetsNothing() {
         XCTAssertEqual(model(cells: 4, screen: plain).contentInset, 0, accuracy: 0.001)
         for edge in [NotchEdge.right, .left, .bottom] {

@@ -84,6 +84,15 @@ final class NotchWindowController {
     /// When returning to a desktop space with `isAlwaysOn`, restores the unfolded state.
     func handleActiveSpaceOrAppChange() {
         if isFullScreenActive() {
+            if let panel {
+                let local = localCursor(in: panel.frame)
+                let overTooltip = model.hoveredIndex
+                    .flatMap(tooltipRect(index:))
+                    .map { model.isExpanded && $0.contains(local) } ?? false
+                if liveRect.contains(local) || overTooltip {
+                    return
+                }
+            }
             foldForFullScreen()
         } else if model.isAlwaysOn && !model.isExpanded {
             withAnimation(NotchMotion.unfold) {
@@ -93,13 +102,11 @@ final class NotchWindowController {
         }
     }
 
-    /// Immediately folds the notch and clears pending peek/hover timers when a full-screen app takes focus.
+    /// Immediately folds the notch and clears pending hover timers when a full-screen app takes focus.
     func foldForFullScreen() {
+        if let peekUntil, peekUntil > Date() { return }
         foldWork?.cancel()
         foldWork = nil
-        peekWork?.cancel()
-        peekWork = nil
-        peekUntil = nil
         model.isPinned = false
         guard model.isExpanded else { return }
         withAnimation(NotchMotion.unfold) {
@@ -421,6 +428,7 @@ final class NotchWindowController {
     private func startWatchingCursor() {
         let poll = Timer(timeInterval: 0.3, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
+                self?.handleActiveSpaceOrAppChange()
                 self?.cursorMoved()
             }
         }
@@ -453,7 +461,7 @@ final class NotchWindowController {
         let overTooltip = model.hoveredIndex
             .flatMap(tooltipRect(index:))
             .map { model.isExpanded && $0.contains(local) } ?? false
-        setExpanded(liveRect.contains(local) || overTooltip)
+        setExpanded(liveRect.contains(local) || overTooltip, ignoreAlwaysOn: isFullScreenActive())
 
         var target: Int?
         if model.isExpanded, notchRect.contains(local) {
@@ -497,7 +505,7 @@ final class NotchWindowController {
 
     /// Opens on contact, folds shut after a pause — unless it has been pinned
     /// open, in which case the pointer is not what decides.
-    private func setExpanded(_ wanted: Bool) {
+    private func setExpanded(_ wanted: Bool, ignoreAlwaysOn: Bool = false) {
         if wanted {
             foldWork?.cancel()
             foldWork = nil
@@ -509,12 +517,14 @@ final class NotchWindowController {
         // A peek holds the notch open for its own duration; only after that
         // does the pointer get a say again.
         if let peekUntil, peekUntil > Date() { return }
-        guard model.isExpanded, !model.staysOpen, foldWork == nil else { return }
+        let holdsOpen = ignoreAlwaysOn ? model.isPinned : model.staysOpen
+        guard model.isExpanded, !holdsOpen, foldWork == nil else { return }
         let work = DispatchWorkItem { [weak self] in
             MainActor.assumeIsolated {
                 guard let self else { return }
                 self.foldWork = nil
-                guard !self.model.staysOpen else { return }
+                let stillHoldsOpen = ignoreAlwaysOn ? self.model.isPinned : self.model.staysOpen
+                guard !stillHoldsOpen else { return }
                 withAnimation(NotchMotion.unfold) {
                     self.model.isExpanded = false
                     self.model.hoveredIndex = nil

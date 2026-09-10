@@ -18,6 +18,28 @@ final class FullScreenAutoFoldTests: XCTestCase {
         XCTAssertTrue(FullScreenDetector.isFullScreen(screenBounds: screen, frontmostPID: pid, windows: windows))
     }
 
+    func testDetectorFindsFullScreenWindowOnNotchedDisplay() {
+        // On a MacBook with camera notch, CoreGraphics screen origin is (0, 0)
+        // and full-screen windows start below the notch/menu bar (e.g. y=44)
+        // extending to the bottom edge (height = 1117 - 44 = 1073).
+        let screen = CGRect(x: 0, y: 0, width: 1728, height: 1117)
+        let pid: pid_t = 12345
+        let windows: [(pid: pid_t, layer: Int, bounds: CGRect)] = [
+            (pid: pid, layer: 0, bounds: CGRect(x: 0, y: 44, width: 1728, height: 1073))
+        ]
+
+        XCTAssertTrue(
+            FullScreenDetector.isFullScreen(
+                screenBounds: screen,
+                frontmostPID: pid,
+                windows: windows,
+                safeAreaTopInset: 44
+            ),
+            "Full-screen window starting below the notch and reaching screen bottom must be detected"
+        )
+    }
+
+
     func testDetectorRejectsWindowWhenNotMatchingScreenBounds() {
         let screen = CGRect(x: 0, y: 0, width: 1728, height: 1117)
         let pid: pid_t = 12345

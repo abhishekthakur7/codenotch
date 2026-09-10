@@ -20,8 +20,28 @@ enum LMStudioCredentials {
     /// authenticate again with whatever is there now rather than at relaunch.
     static let didChange = Notification.Name("LMStudioCredentialsDidChange")
 
+    /// Held until the item moves, for the reason spelled out in
+    /// `CredentialCache`: a data read can prompt, and this is reached every
+    /// second from the local-runtime timer, every 2 s from `LMStudioLink`'s
+    /// reconnect loop while the server is down, and twice per render of
+    /// `LMStudioSettingsRow` — an uncached read there turns one prompt into
+    /// one every few seconds. A stored token never expires on its own.
+    private static let cache = CredentialCache<String> { _ in false }
+
+    private static func cachedKeychainToken() -> String? {
+        try? cache.value(
+            itemModifiedAt: { KeychainItem.modifiedAt(service: keychainService, account: keychainAccount) },
+            reload: {
+                guard let token = KeychainItem.read(service: keychainService, account: keychainAccount) else {
+                    throw UsageProviderError.needsAuth
+                }
+                return token
+            }
+        )
+    }
+
     static func load(environment: [String: String] = ProcessInfo.processInfo.environment,
-                     keychain: () -> String? = { KeychainItem.read(service: keychainService, account: keychainAccount) }) -> String? {
+                     keychain: () -> String? = cachedKeychainToken) -> String? {
         if let env = environment[environmentKey]?.trimmingCharacters(in: .whitespacesAndNewlines),
            !env.isEmpty {
             return env
@@ -29,10 +49,17 @@ enum LMStudioCredentials {
         return keychain()
     }
 
-    static var isPresent: Bool { load() != nil }
+    /// Whether a token is available, judged without a data read: the
+    /// environment variable, else the item's attributes, which are free to
+    /// ask about unlike its contents. Never the cache — that would not
+    /// reflect a `store`/`delete` that just happened.
+    static var isPresent: Bool {
+        load(keychain: { nil }) != nil || KeychainItem.modifiedAt(service: keychainService, account: keychainAccount) != nil
+    }
 
     @discardableResult
     static func store(_ token: String) -> Bool {
+        cache.forget()
         let stored = KeychainItem.store(service: keychainService, account: keychainAccount,
                                         value: token.trimmingCharacters(in: .whitespacesAndNewlines))
         if stored { NotificationCenter.default.post(name: didChange, object: nil) }
@@ -41,10 +68,13 @@ enum LMStudioCredentials {
 
     @discardableResult
     static func delete() -> Bool {
+        cache.forget()
         let deleted = KeychainItem.delete(service: keychainService, account: keychainAccount)
         if deleted { NotificationCenter.default.post(name: didChange, object: nil) }
         return deleted
     }
+
+    static func forgetCached() { cache.forget() }
 
     /// The two halves LM Studio reads a token as.
     ///

@@ -331,6 +331,21 @@ ad-hoc build gets a new identity every rebuild and the prompt would come back
 after every `make run`. Click **Always Allow** once and it sticks. A refusal
 backs the provider off for five minutes so a denied prompt cannot spam.
 
+### Own items prompt too after an ad-hoc rebuild
+
+Items this app stores itself (`lmstudio-api-token`, `ollama-api-key`) are
+ACL-bound to the signing identity just like a borrowed one — an ad-hoc Debug
+build is a new identity every time, so the app goes back to being a stranger
+to its own item. `LMStudioCredentials`/`OllamaCredentials` were reading it
+uncached from the 1 s local-runtime timer, the 2 s `LMStudioLink` reconnect
+loop, and twice per render of `LMStudioSettingsRow.isPresent` — one prompt
+turned into one every few seconds. Both now sit behind `CredentialCache` +
+`KeychainItem.modifiedAt`, `isPresent` is an attribute probe rather than a
+data read, and `store`/`delete`/`forgetCachedCredential()` call
+`forgetCached()`. A free `Apple Development` certificate makes the `Makefile`
+sign Debug builds with a stable identity, so "Always Allow" survives rebuilds
+the same way it does for Claude/Cursor/Antigravity.
+
 ## M4b — Is it working? (agent activity)
 
 Answers "do I need to go and look" without going and looking. Claude Code and

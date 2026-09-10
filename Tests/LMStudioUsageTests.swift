@@ -157,4 +157,19 @@ final class LMStudioEndpointTests: XCTestCase {
                        "a blank export is no token")
         XCTAssertNil(LMStudioCredentials.load(environment: [:], keychain: { nil }))
     }
+
+    func testTheKeychainClosureIsNotCachedBetweenCalls() {
+        var calls = 0
+        _ = LMStudioCredentials.load(environment: [:], keychain: { calls += 1; return "stored" })
+        _ = LMStudioCredentials.load(environment: [:], keychain: { calls += 1; return "stored" })
+        XCTAssertEqual(calls, 2, "the injectable path must bypass the cache")
+    }
+
+    func testForgetCachedIsHarmlessWhenNothingIsHeld() {
+        LMStudioCredentials.forgetCached()
+        XCTAssertEqual(
+            LMStudioCredentials.load(environment: ["LM_API_TOKEN": "x"],
+                                     keychain: { XCTFail("keychain must not be read when the environment has a token"); return nil }),
+            "x")
+    }
 }

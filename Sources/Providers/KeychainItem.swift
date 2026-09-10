@@ -98,8 +98,10 @@ enum KeychainItem {
     }
 
     /// Reads the data from the newest item under a service. The one call that
-    /// can trigger a keychain prompt for items owned by another app — but for
-    /// items this app created itself (`store`), no prompt is involved.
+    /// can trigger a keychain prompt. Items this app created itself (`store`)
+    /// do not prompt either — but only as long as the binary keeps the same
+    /// signing identity that stored them; an ad-hoc rebuild is a new identity,
+    /// which is why even own-item readers go through `CredentialCache`.
     static func read(service: String, account: String? = nil) -> String? {
         guard let match = newest(service: service, account: account) else { return nil }
         var query: [CFString: Any] = [

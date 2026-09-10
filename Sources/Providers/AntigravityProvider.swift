@@ -67,7 +67,7 @@ actor AntigravityProvider: UsageProvider {
     nonisolated func account() -> ProviderAccount? {
         if AntigravityCredentials.isSignedIn(), let held = AntigravityCredentials.held {
             let email = held.email
-            let plan = held.authMethod == "consumer" ? "Personal" : held.authMethod
+            let plan = held.authMethod == "consumer" ? L10n.t("Personal") : held.authMethod
             return ProviderAccount(
                 label: email,
                 plan: plan,
@@ -267,29 +267,20 @@ actor AntigravityProvider: UsageProvider {
                 (group.buckets ?? []).compactMap { bucket in
                     let rawID = bucket.bucketId ?? bucket.modelId ?? bucket.name ?? group.displayName ?? "quota"
                     if let remaining = bucket.remainingFraction, remaining >= 0, remaining <= 1 {
-                        var bucketLabel = bucket.displayName ?? L10n.t("Usage")
-                        if bucketLabel.hasSuffix(" Remaining") {
-                            bucketLabel = String(bucketLabel.dropLast(" Remaining".count))
-                        }
-                        if bucketLabel == "Five Hour Limit" {
-                            bucketLabel = "5-hour Limit"
-                        }
-                        let groupLabel = group.displayName ?? ""
                         return LimitWindow(
                             id: rawID,
-                            group: groupLabel.isEmpty ? nil : groupLabel,
-                            label: bucketLabel,
+                            group: quotaGroupName(group.displayName),
+                            label: quotaWindowLabel(bucket.displayName ?? L10n.t("Usage")),
                             usedFraction: 1 - remaining,
                             resetsAt: bucket.resetTime.flatMap(AntigravityCredentials.parse),
                             duration: bucket.window == "weekly" ? 7 * 86400 : nil
                         )
                     }
                     if let limit = bucket.limit, limit > 0, let used = bucket.used, used >= 0, used <= limit * 1.5 {
-                        let label = bucket.displayName ?? rawID
                         return LimitWindow(
                             id: rawID,
-                            group: group.displayName,
-                            label: label,
+                            group: quotaGroupName(group.displayName),
+                            label: quotaWindowLabel(bucket.displayName ?? rawID),
                             usedFraction: used / limit,
                             resetsAt: bucket.resetTime.flatMap(AntigravityCredentials.parse)
                         )
@@ -309,10 +300,9 @@ actor AntigravityProvider: UsageProvider {
                       let used = bucket.used, used >= 0, used <= limit * 1.5
                 else { return nil }
                 let rawID = bucket.name ?? bucket.modelId ?? bucket.bucketId ?? "quota"
-                let label = bucket.displayName ?? rawID
                 return LimitWindow(
                     id: rawID,
-                    label: label,
+                    label: quotaWindowLabel(bucket.displayName ?? rawID),
                     usedFraction: used / limit,
                     resetsAt: bucket.resetTime.flatMap(AntigravityCredentials.parse)
                 )
@@ -360,16 +350,16 @@ actor AntigravityProvider: UsageProvider {
         }
 
         var windows: [LimitWindow] = []
-        if let w = aggregate(candidates: geminiHourly, id: "gemini-hourly", group: "Gemini Models", label: "5-hour Limit", isWeekly: false) {
+        if let w = aggregate(candidates: geminiHourly, id: "gemini-hourly", group: L10n.t("Gemini Models"), label: L10n.t("5-hour Limit"), isWeekly: false) {
             windows.append(w)
         }
-        if let w = aggregate(candidates: geminiWeekly, id: "gemini-weekly", group: "Gemini Models", label: "Weekly Limit", isWeekly: true) {
+        if let w = aggregate(candidates: geminiWeekly, id: "gemini-weekly", group: L10n.t("Gemini Models"), label: L10n.t("Weekly Limit"), isWeekly: true) {
             windows.append(w)
         }
-        if let w = aggregate(candidates: thirdPartyHourly, id: "3p-hourly", group: "Claude and GPT models", label: "5-hour Limit", isWeekly: false) {
+        if let w = aggregate(candidates: thirdPartyHourly, id: "3p-hourly", group: L10n.t("Claude and GPT models"), label: L10n.t("5-hour Limit"), isWeekly: false) {
             windows.append(w)
         }
-        if let w = aggregate(candidates: thirdPartyWeekly, id: "3p-weekly", group: "Claude and GPT models", label: "Weekly Limit", isWeekly: true) {
+        if let w = aggregate(candidates: thirdPartyWeekly, id: "3p-weekly", group: L10n.t("Claude and GPT models"), label: L10n.t("Weekly Limit"), isWeekly: true) {
             windows.append(w)
         }
         return windows
@@ -430,9 +420,9 @@ actor AntigravityProvider: UsageProvider {
             let resetsAt = (resetsAtMs > 0) ? Date(timeIntervalSince1970: resetsAtMs / 1000.0) : nil
 
             let isGemini = limitId.contains(":google:") || rawLabel.contains("Google")
-            let groupName = isGemini ? "Gemini Models" : "Claude and GPT models"
+            let groupName = isGemini ? L10n.t("Gemini Models") : L10n.t("Claude and GPT models")
             let isWeekly = windowLabel.contains("weekly")
-            let labelName = isWeekly ? "Weekly Limit" : "5-hour Limit"
+            let labelName = isWeekly ? L10n.t("Weekly Limit") : L10n.t("5-hour Limit")
             let standardID = isGemini ? (isWeekly ? "gemini-weekly" : "gemini-hourly") : (isWeekly ? "3p-weekly" : "3p-hourly")
 
             if latestByID[standardID] == nil {
@@ -441,10 +431,10 @@ actor AntigravityProvider: UsageProvider {
         }
 
         let standardSlots: [(id: String, group: String, label: String, isWeekly: Bool)] = [
-            ("gemini-hourly", "Gemini Models", "5-hour Limit", false),
-            ("gemini-weekly", "Gemini Models", "Weekly Limit", true),
-            ("3p-hourly", "Claude and GPT models", "5-hour Limit", false),
-            ("3p-weekly", "Claude and GPT models", "Weekly Limit", true)
+            ("gemini-hourly", L10n.t("Gemini Models"), L10n.t("5-hour Limit"), false),
+            ("gemini-weekly", L10n.t("Gemini Models"), L10n.t("Weekly Limit"), true),
+            ("3p-hourly", L10n.t("Claude and GPT models"), L10n.t("5-hour Limit"), false),
+            ("3p-weekly", L10n.t("Claude and GPT models"), L10n.t("Weekly Limit"), true)
         ]
 
         var windows: [LimitWindow] = []
@@ -471,6 +461,30 @@ actor AntigravityProvider: UsageProvider {
         }
         return windows
     }
+
+    /// Known quota group names, so an English API value still localizes.
+    private static func quotaGroupName(_ name: String?) -> String? {
+        guard let name, !name.isEmpty else { return nil }
+        switch name {
+        case "Gemini Models": return L10n.t("Gemini Models")
+        case "Claude and GPT models": return L10n.t("Claude and GPT models")
+        default: return name
+        }
+    }
+
+    /// Known window titles, including the wording the language server uses.
+    private static func quotaWindowLabel(_ name: String) -> String {
+        var label = name
+        if label.hasSuffix(" Remaining") {
+            label = String(label.dropLast(" Remaining".count))
+        }
+        switch label {
+        case "Five Hour Limit", "5-hour Limit": return L10n.t("5-hour Limit")
+        case "Weekly Limit": return L10n.t("Weekly Limit")
+        default: return label
+        }
+    }
+
     /// The plan's display name, for the message the cell shows.
     static func tier(in data: Data) -> String {
         struct Response: Decodable {

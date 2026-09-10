@@ -122,9 +122,9 @@ struct AntigravityActivity: Equatable {
     /// unnoticed. Saying when it *was* last used tells the two apart.
     func label(now: Date = Date()) -> String {
         guard requestsToday == 0, let lastRequest else {
-            return "Requests today · no limit published"
+            return L10n.t("Requests today · no limit published")
         }
-        return "Requests today · last used \(Self.lastUsed(lastRequest, now: now))"
+        return L10n.t("Requests today · last used \(Self.lastUsed(lastRequest, now: now))")
     }
 
     /// Counted in calendar days, not in elapsed time, because the number beside
@@ -148,8 +148,8 @@ struct AntigravityActivity: Equatable {
 
         switch days {
         case ..<1:  return ElapsedCopy.ago(since: date, now: now)
-        case 1:     return "yesterday"
-        default:    return "\(days) days ago"
+        case 1:     return L10n.t("yesterday")
+        default:    return L10n.t("\(days) days ago")
         }
     }
 }

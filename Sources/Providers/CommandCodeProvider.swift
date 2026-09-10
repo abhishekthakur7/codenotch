@@ -104,7 +104,7 @@ actor CommandCodeProvider: UsageProvider {
                 windows: windows,
                 headlineID: "monthly",
                 weeklyID: "weekly",
-                plan: SubscriptionPlan.display(lastKnownPlan)
+                plan: lastKnownPlan?.nonEmptyPlan
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             consecutiveRateLimits += 1

@@ -20,7 +20,7 @@ struct ProviderAccount: Equatable {
 
     /// One line for the settings row.
     var summary: String {
-        [label, SubscriptionPlan.display(plan), L10n.t("via \(source)")]
+        [label, plan.map { $0.capitalized }, L10n.t("via \(source)")]
             .compactMap { $0 }
             .joined(separator: " · ")
     }

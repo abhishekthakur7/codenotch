@@ -2,6 +2,14 @@ import Foundation
 
 /// How much to trust a provider's numbers. The UI never presents a derived or
 /// manual figure as if a vendor had published it.
+extension String {
+    /// Nil when this would be an empty plan line on the card.
+    var nonEmptyPlan: String? {
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+}
+
 enum Fidelity: String, Codable, Equatable {
     case official
     case derived
@@ -218,6 +226,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// The account's named tier, when the provider publishes one. Shown under
     /// the tooltip title. Nil when there is nothing to name.
     var plan: String? = nil
+
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.

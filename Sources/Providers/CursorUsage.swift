@@ -46,7 +46,7 @@ enum CursorUsage {
         guard let data = json.data(using: .utf8),
               let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
         else { return nil }
-        return SubscriptionPlan.display(root["membershipType"] as? String)
+        return (root["membershipType"] as? String)?.nonEmptyPlan
     }
 
     static func headlineID(in windows: [LimitWindow]) -> String {

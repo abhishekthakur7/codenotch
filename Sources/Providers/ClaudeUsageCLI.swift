@@ -154,19 +154,18 @@ struct ClaudeUsageCLI: Sendable {
         return try Self.parse(text, now: now)
     }
 
-    /// The named tier `/usage` prints above the windows, when it names one.
+    /// The named tier `/usage` prints above the windows, copied as printed.
     static func plan(in text: String) -> String? {
-        let head = text.split(whereSeparator: \.isNewline).prefix(4).joined(separator: "\n").lowercased()
-        if head.contains("extra usage") { return SubscriptionPlan.display("extra_usage") }
-        if head.contains("max 20x") || head.contains("max20x") { return SubscriptionPlan.display("max_20x") }
-        if head.contains("max 5x") || head.contains("max5x") { return SubscriptionPlan.display("max_5x") }
-        if head.contains("max subscription") || head.contains("using max") {
-            return SubscriptionPlan.display("max")
+        let head = text.split(whereSeparator: \.isNewline).prefix(4).joined(separator: "\n")
+        for phrase in ["Max 20x", "Max 5x", "extra usage", "Max", "Pro", "Team"] {
+            if let match = head.range(of: phrase, options: .caseInsensitive) {
+                if phrase == "Max", head.range(of: "Max 5x", options: .caseInsensitive) != nil
+                    || head.range(of: "Max 20x", options: .caseInsensitive) != nil {
+                    continue
+                }
+                return String(head[match])
+            }
         }
-        if head.contains("pro subscription") || head.contains("using pro") {
-            return SubscriptionPlan.display("pro")
-        }
-        if head.contains("team subscription") { return SubscriptionPlan.display("team") }
         return nil
     }
 

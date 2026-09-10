@@ -172,9 +172,7 @@ enum GitHubCopilotUsage {
         guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             return nil
         }
-        return SubscriptionPlan.display(
-            (root["copilot_plan"] as? String) ?? (root["plan"] as? String)
-        )
+        return ((root["copilot_plan"] as? String) ?? (root["plan"] as? String))?.nonEmptyPlan
     }
 
     static func windows(from data: Data) throws -> [LimitWindow] {

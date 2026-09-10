@@ -40,7 +40,7 @@ final class CodexUsageTests: XCTestCase {
         XCTAssertEqual(CodexUsage.plan(from: Data("""
         {"rate_limit":{"primary_window":{"used_percent":16,"limit_window_seconds":2592000}},
          "plan_type":"free"}
-        """.utf8)), "Free")
+        """.utf8)), "free")
         XCTAssertEqual(result.first?.label, "Monthly limit")
         XCTAssertEqual(result.first?.usedFraction ?? -1, 0.16, accuracy: 0.0001)
     }

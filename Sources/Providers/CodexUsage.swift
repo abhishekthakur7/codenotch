@@ -157,7 +157,7 @@ enum CodexUsage {
 
     /// The account tier the usage payload names, when it names one.
     static func plan(from data: Data) -> String? {
-        SubscriptionPlan.display((try? JSONDecoder().decode(Response.self, from: data))?.plan_type)
+        (try? JSONDecoder().decode(Response.self, from: data))?.plan_type?.nonEmptyPlan
     }
 
     /// Decode the profile endpoint's token statistics.

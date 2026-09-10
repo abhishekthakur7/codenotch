@@ -36,7 +36,7 @@ final class ClaudeUsageCLITests: XCTestCase {
 
         Current session: 10% used · resets Sep 7 at 2:59pm (Asia/Jakarta)
         """
-        XCTAssertEqual(ClaudeUsageCLI.plan(in: extra), "Extra")
+        XCTAssertEqual(ClaudeUsageCLI.plan(in: extra), "extra usage")
         XCTAssertNil(ClaudeUsageCLI.plan(in: live))
         XCTAssertEqual(ClaudeUsageCLI.plan(in: """
         You are currently using Max 5x

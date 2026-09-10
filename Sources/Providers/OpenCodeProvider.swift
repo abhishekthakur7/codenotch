@@ -84,7 +84,7 @@ actor OpenCodeProvider: UsageProvider {
                 windows: read,
                 headlineID: "rolling",
                 weeklyID: "weekly",
-                plan: SubscriptionPlan.display("Go")
+                plan: "Go"
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             // Bookkeeping where the answer was, not down in `fetch`: the wait

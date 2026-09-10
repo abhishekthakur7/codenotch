@@ -85,8 +85,7 @@ actor CodexLocalProvider: UsageProvider {
             headlineID: windows.first?.id,
             weeklyID: "secondary",
             tokenUsage: profileUsage,
-            plan: CodexUsage.plan(from: data)
-                ?? SubscriptionPlan.display(account()?.plan)
+            plan: CodexUsage.plan(from: data) ?? account()?.plan?.nonEmptyPlan
         )
     }
 

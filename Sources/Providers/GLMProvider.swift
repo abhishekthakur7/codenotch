@@ -86,7 +86,7 @@ actor GLMProvider: UsageProvider {
                 windows: payload.windows,
                 headlineID: "session",
                 weeklyID: "weekly",
-                plan: SubscriptionPlan.display(payload.level)
+                plan: payload.level?.nonEmptyPlan
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             // Bookkeeping where the answer was, not down in `fetch`: the wait

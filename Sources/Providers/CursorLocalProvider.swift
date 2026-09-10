@@ -74,8 +74,7 @@ actor CursorLocalProvider: UsageProvider {
             status: .ok,
             windows: windows,
             headlineID: CursorUsage.headlineID(in: windows),
-            plan: CursorUsage.plan(fromJSON: body)
-                ?? SubscriptionPlan.display(account()?.plan)
+            plan: CursorUsage.plan(fromJSON: body) ?? account()?.plan?.nonEmptyPlan
         )
     }
 }

@@ -192,7 +192,7 @@ actor ClaudeOAuthProvider: UsageProvider {
             // #102's second ring. The helper is the only place a Claude
             // snapshot is built now, so this is the only place it can go.
             weeklyID: "weekly_all",
-            plan: SubscriptionPlan.display(plan)
+            plan: plan?.nonEmptyPlan
         )
     }
 

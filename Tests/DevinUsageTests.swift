@@ -113,7 +113,7 @@ final class DevinUsageTests: XCTestCase {
             XCTAssertThrowsError(try windows("{\"userStatus\":{\"planStatus\":{\"dailyQuotaRemainingPercent\":\(value)}}}"))
         }
         XCTAssertThrowsError(try windows(#"{"dailyRemainingPercent":100}"#))
-        XCTAssertThrowsError(try windows(#"{"userStatus":{"planStatus":{"overageBalanceMicros":1}}}"#))
+        XCTAssertThrowsError(try windows(#"{"userStatus":{"planStatus":{}}}"#))
         XCTAssertThrowsError(try windows("not json"))
     }
 
@@ -122,6 +122,18 @@ final class DevinUsageTests: XCTestCase {
             let json = recorded.replacingOccurrences(of: #""14277951""#, with: value)
             XCTAssertEqual(try windows(json).map(\.id), ["daily", "weekly"])
         }
+    }
+
+    /// The service drops *QuotaRemainingPercent at 0 (fully used) but keeps the
+    /// reset timestamp. A missing percent with a reset is 100% used, not absent.
+    func testMissingRemainingWithResetMeansFullyUsed() throws {
+        let json = #"{"userStatus":{"planStatus":{"dailyQuotaResetAtUnix":"1789113600","weeklyQuotaResetAtUnix":"1789286400","overageBalanceMicros":"4632524"}}}"#
+        let w = try windows(json)
+        XCTAssertEqual(w.map(\.id), ["daily", "weekly", "overage"])
+        XCTAssertEqual(try XCTUnwrap(w[0].usedFraction), 1.0)    // daily 100% used
+        XCTAssertEqual(try XCTUnwrap(w[1].usedFraction), 1.0)    // weekly 100% used
+        XCTAssertEqual(w[0].resetsAt, Date(timeIntervalSince1970: 1789113600))
+        XCTAssertEqual(w[2].usedText, "$4.63")
     }
 
     func testRefreshFetchesChangedUsageInsteadOfLocalCache() async throws {

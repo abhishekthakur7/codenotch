@@ -66,6 +66,35 @@ final class NotchLayoutTests: XCTestCase {
         XCTAssertGreaterThan(innerEdge, NotchLayout.glyphSize / 2)
     }
 
+    /// The weekly ring is placed against what is already inside the circle
+    /// rather than quoted from the design frame, which draws one ring — so the
+    /// clearances are what the test states, not the numbers.
+    func testTheInsideWeeklyRingClearsTheGlyphAndTheWorkingIndicator() {
+        let outer = NotchLayout.weeklyInsideRadius + NotchLayout.weeklyRingStroke / 2
+        let inner = NotchLayout.weeklyInsideRadius - NotchLayout.weeklyRingStroke / 2
+        XCTAssertGreaterThan(inner, NotchLayout.glyphSize / 2,
+                             "the weekly ring is drawn over the glyph")
+        XCTAssertLessThan(outer,
+                          NotchLayout.activityDiameter / 2 - NotchLayout.activityStroke / 2,
+                          "the weekly ring collides with the working indicator")
+    }
+
+    /// Outside, the two things it must not touch are the track it sits beyond
+    /// and the bezel the notch keeps clear of.
+    func testTheOutsideWeeklyRingClearsTheTrackAndTheBezel() {
+        let inner = NotchLayout.weeklyOutsideRadius - NotchLayout.weeklyRingStroke / 2
+        let outer = NotchLayout.weeklyOutsideRadius + NotchLayout.weeklyRingStroke / 2
+        XCTAssertGreaterThan(inner, NotchLayout.ringDiameter / 2,
+                             "the weekly ring overlaps the track it is meant to sit outside")
+        XCTAssertLessThan(outer, NotchLayout.ringDiameter / 2 + NotchLayout.ringMargin(for: .right),
+                          "the weekly ring reaches past the bezel")
+    }
+
+    /// Thinner than the headline arc: same kind of fact, lesser claim on the eye.
+    func testTheWeeklyRingIsThinnerThanTheHeadline() {
+        XCTAssertLessThan(NotchLayout.weeklyRingStroke, NotchLayout.progressStroke)
+    }
+
     /// Every cell's tooltip has to fit inside the panel, or the card would be
     /// clipped for the first and last providers.
     func testTooltipFitsThePanelForEveryCell() {
@@ -399,6 +428,16 @@ final class SettingsOrbTests: XCTestCase {
     func testTheHitRegionIsLargerThanTheOrb() {
         XCTAssertGreaterThan(NotchLayout.orbHotZone, NotchLayout.orbDiameter)
     }
+
+    /// The glass arc is masked by this path inside the view's bounds, so a band
+    /// running along the frame's edge would lose the outer half of its stroke.
+    func testTheArcBandStaysInsideItsFrame() {
+        let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let path = ArcBand(trim: 0...0.25, lineWidth: NotchLayout.orbStroke).path(in: frame)
+        XCTAssertFalse(path.isEmpty)
+        XCTAssertTrue(frame.insetBy(dx: -0.5, dy: -0.5).contains(path.boundingRect),
+                      "\(path.boundingRect) escapes the band's frame")
+    }
 }
 
 /// Hiding a provider is stored as the hidden set, so one added in a later
@@ -491,6 +530,28 @@ final class PreferencesTests: XCTestCase {
         defaults.set("ultraviolet", forKey: "accentColor")
 
         XCTAssertEqual(Preferences(defaults: defaults).accentColor, .system)
+    }
+
+    func testSurfaceStyleDefaultsToLiquidGlass() {
+        XCTAssertEqual(preferences().notchSurfaceStyle, .glass)
+    }
+
+    func testSurfaceStyleSurvivesARestart() {
+        let name = "PreferencesSurfaceStyleTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+
+        Preferences(defaults: defaults).notchSurfaceStyle = .solid
+        XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .solid)
+    }
+
+    func testAnUnknownSurfaceStyleFallsBackToLiquidGlass() {
+        let name = "PreferencesSurfaceStyleFallbackTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+        defaults.set("frosted", forKey: "notchSurfaceStyle")
+
+        XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .glass)
     }
 
     /// The key is deliberately unchanged across the rename, so choices made

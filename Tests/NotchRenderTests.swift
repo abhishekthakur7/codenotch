@@ -11,6 +11,17 @@ final class NotchRenderTests: XCTestCase {
         let model = NotchViewModel()
         model.edge = edge
         model.isExpanded = true
+        // A saturated accent, not the default `.system`.
+        //
+        // `colouredFraction` finds an arc by its saturation, and `.system`
+        // resolves to `NSColor.controlAccentColor` — the *Mac's* accent
+        // colour. On a machine set to Graphite the arcs render grey and the
+        // measurement reads zero whether the ring was drawn or not, so a
+        // developer's System Settings decided whether the suite passed.
+        model.accentColor = .blue
+        // `ImageRenderer` has no desktop behind it to refract; these tests
+        // measure the outline, which both styles share.
+        model.surfaceStyle = .solid
         model.snapshots = (0..<cells).map { index in
             ProviderSnapshot(
                 id: "p\(index)", displayName: "P\(index)", glyph: .claude,
@@ -22,10 +33,21 @@ final class NotchRenderTests: XCTestCase {
         return model
     }
 
-    private func render(_ model: NotchViewModel) -> NSBitmapImageRep? {
+    private func render(_ model: NotchViewModel, reduceTransparency: Bool = false)
+        -> NSBitmapImageRep? {
         let size = model.panelSize
         let renderer = ImageRenderer(
-            content: NotchRootView(model: model).frame(width: size.width, height: size.height)
+            content: NotchRootView(model: model)
+                .frame(width: size.width, height: size.height)
+                .environment(\.codenotchReduceTransparency, reduceTransparency)
+                // Dark, the scheme the solid style pins its own panel to.
+                //
+                // `Palette.ringTrack` and its neighbours became translucent
+                // and resolve against the scheme they are drawn in. An
+                // `ImageRenderer` with none defaults to light, where the track
+                // is black at 16% over a black body — invisible — so
+                // `greyFraction` read zero whether it was drawn or not.
+                .environment(\.colorScheme, .dark)
         )
         renderer.scale = 1
         guard let image = renderer.cgImage else { return nil }
@@ -57,6 +79,104 @@ final class NotchRenderTests: XCTestCase {
                 "\(edge): the panel came out blank — the notch drew nothing"
             )
         }
+    }
+
+    /// The weekly ring has to actually appear, and only when asked for.
+    ///
+    /// Counted by colour rather than by ink: the arcs are drawn on top of the
+    /// notch's own black, which is already opaque, so `inkedFraction` cannot
+    /// see them at all — it answers the same number to three decimal places
+    /// whether the ring is there or not. Saturation is what separates an arc
+    /// from the body behind it and the grey track beside it.
+    func testTheWeeklyRingPaintsOnlyWhenSwitchedOn() {
+        func colour(_ ring: WeeklyRing) -> Double {
+            let model = model(edge: .right)
+            model.weeklyRing = ring
+            model.snapshots = model.snapshots.map { snapshot in
+                ProviderSnapshot(
+                    id: snapshot.id, displayName: snapshot.displayName,
+                    glyph: snapshot.glyph, fidelity: snapshot.fidelity,
+                    status: snapshot.status,
+                    windows: snapshot.windows + [
+                        LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0.9)
+                    ],
+                    headlineID: snapshot.headlineID,
+                    weeklyID: "weekly_all"
+                )
+            }
+            guard let rep = render(model) else { return -1 }
+            return colouredFraction(rep)
+        }
+
+        let off = colour(.off)
+        XCTAssertGreaterThan(off, 0, "the headline arc is missing too — this measures nothing")
+        XCTAssertGreaterThan(colour(.inside), off, "inside painted no arc")
+        XCTAssertGreaterThan(colour(.outside), off, "outside painted no arc")
+    }
+
+    /// A week nobody has spent yet still has to be visible.
+    ///
+    /// At 0% the arc has no length, so without a track behind it the ring is
+    /// indistinguishable from the feature being missing — which is exactly how
+    /// Codex read when its week opened empty.
+    func testAnEmptyWeeklyRingStillDrawsItsTrack() {
+        func ink(_ ring: WeeklyRing) -> Double {
+            let model = model(edge: .right)
+            model.weeklyRing = ring
+            model.snapshots = model.snapshots.map { snapshot in
+                ProviderSnapshot(
+                    id: snapshot.id, displayName: snapshot.displayName,
+                    glyph: snapshot.glyph, fidelity: snapshot.fidelity,
+                    status: snapshot.status,
+                    // Nothing used yet: the arc is zero length, the track is all
+                    // there is to see.
+                    windows: snapshot.windows + [
+                        LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0)
+                    ],
+                    headlineID: snapshot.headlineID,
+                    weeklyID: "weekly_all"
+                )
+            }
+            guard let rep = render(model) else { return -1 }
+            return greyFraction(rep)
+        }
+
+        XCTAssertGreaterThan(ink(.outside), ink(.off),
+                             "an empty week drew nothing at all")
+    }
+
+    /// Fraction of sampled pixels that are the ring track's own grey — the way
+    /// to see a track, which carries no hue and so is invisible to
+    /// `colouredFraction`.
+    private func greyFraction(_ rep: NSBitmapImageRep) -> Double {
+        var grey = 0, total = 0
+        for x in stride(from: 0, to: rep.pixelsWide, by: 2) {
+            for y in stride(from: 0, to: rep.pixelsHigh, by: 2) {
+                total += 1
+                guard let colour = rep.colorAt(x: x, y: y), colour.alphaComponent > 0.5,
+                      let rgb = colour.usingColorSpace(.sRGB) else { continue }
+                let channels = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent]
+                let neutral = (channels.max()! - channels.min()!) < 0.06
+                if neutral, channels.max()! > 0.10, channels.max()! < 0.45 { grey += 1 }
+            }
+        }
+        return total == 0 ? 0 : Double(grey) / Double(total)
+    }
+
+    /// Fraction of sampled pixels carrying a hue — an arc rather than the black
+    /// body, the grey track or white type.
+    private func colouredFraction(_ rep: NSBitmapImageRep) -> Double {
+        var coloured = 0, total = 0
+        for x in stride(from: 0, to: rep.pixelsWide, by: 2) {
+            for y in stride(from: 0, to: rep.pixelsHigh, by: 2) {
+                total += 1
+                guard let colour = rep.colorAt(x: x, y: y), colour.alphaComponent > 0.5,
+                      let rgb = colour.usingColorSpace(.sRGB) else { continue }
+                let channels = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent]
+                if (channels.max()! - channels.min()!) > 0.15 { coloured += 1 }
+            }
+        }
+        return total == 0 ? 0 : Double(coloured) / Double(total)
     }
 
     /// And it paints it against the bezel, not somewhere in the middle of the
@@ -130,6 +250,65 @@ final class NotchRenderTests: XCTestCase {
                                         "\(size.rawValue): something is painted before the near end")
         }
     }
+
+    /// The glass style only reaches the notch once it is open. At rest the pill
+    /// has to read as part of the bezel — as the hardware notch itself, on a
+    /// MacBook — and a translucent one would not.
+    func testTheFoldedPillIsOpaqueInTheGlassStyle() {
+        for edge in NotchEdge.allCases {
+            let m = model(edge: edge)
+            m.surfaceStyle = .glass
+            m.isExpanded = false
+            guard let rep = render(m) else {
+                XCTFail("\(edge): no image")
+                continue
+            }
+            let place = NotchPlacement(edge: edge, panelSize: m.panelSize)
+            // The same centre line the expanded body is probed on: folded or
+            // open, the shape is centred on it.
+            let onBezel = place.point(
+                along: m.slack + m.shapeLength / 2, across: 1
+            )
+            let colour = rep.colorAt(
+                x: min(rep.pixelsWide - 1, max(0, Int(onBezel.x))),
+                y: min(rep.pixelsHigh - 1, max(0, Int(onBezel.y)))
+            )
+            XCTAssertEqual(
+                colour?.alphaComponent ?? 0, 1, accuracy: 0.01,
+                "\(edge): the folded pill is see-through in the glass style"
+            )
+        }
+    }
+
+    /// Reduce transparency wins over the chosen style: the open notch is
+    /// painted solid black even when the preference says glass, the way the
+    /// Settings window prefers an opaque fill to its own translucent chrome.
+    func testReduceTransparencyPaintsTheGlassStyleSolid() {
+        for edge in NotchEdge.allCases {
+            let m = model(edge: edge)
+            m.surfaceStyle = .glass
+            guard let rep = render(m, reduceTransparency: true) else {
+                XCTFail("\(edge): no image")
+                continue
+            }
+            let place = NotchPlacement(edge: edge, panelSize: m.panelSize)
+            let onBezel = place.point(
+                along: m.slack + m.shapeLength / 2, across: 1
+            )
+            let colour = rep.colorAt(
+                x: min(rep.pixelsWide - 1, max(0, Int(onBezel.x))),
+                y: min(rep.pixelsHigh - 1, max(0, Int(onBezel.y)))
+            )
+            XCTAssertEqual(
+                colour?.alphaComponent ?? 0, 1, accuracy: 0.01,
+                "\(edge): the body is see-through with Reduce transparency on"
+            )
+            XCTAssertLessThan(
+                colour?.brightnessComponent ?? 1, 0.05,
+                "\(edge): the body is not black with Reduce transparency on"
+            )
+        }
+    }
 }
 
 /// The panel's size is worked out by `NotchGeometry` and by nobody else.
@@ -176,6 +355,53 @@ final class PanelSizingIntegrityTests: XCTestCase {
         }
         XCTAssertEqual(hosting.frame.size, content.bounds.size,
                        "the hosting view stopped filling the panel after a re-frame")
+    }
+
+    /// The solid style is the frame's white-on-black, and a Mac in light mode
+    /// must not be able to turn it into black-on-white. Glass is the opposite
+    /// bargain: no appearance of ours, so Appearance settings decide.
+    func testTheSolidStyleForcesTheDarkAppearance() {
+        let controller = NotchWindowController()
+        controller.model.surfaceStyle = .solid
+        controller.show()
+        defer { controller.stop() }
+
+        guard let window = controller.panelContentViewForTesting?.window else {
+            return XCTFail("no panel")
+        }
+        XCTAssertEqual(window.appearance?.name, .darkAqua,
+                       "the solid style left the panel following the Mac's appearance")
+
+        controller.model.surfaceStyle = .glass
+        // Only where glass is what actually gets painted: below macOS 26, and
+        // with Reduce transparency on, the glass style resolves to the solid
+        // one and the panel keeps its dark appearance on purpose.
+        if NotchSurfaceStyle.glassAvailable,
+           !NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency {
+            XCTAssertNil(window.appearance,
+                         "the glass style pinned an appearance instead of inheriting one")
+        }
+    }
+
+    /// Reduce transparency means "no see-through chrome", and the window has to
+    /// know: the light palette resolved against a black surface would be
+    /// unreadable. Pure function, so this holds whatever the test Mac's own
+    /// accessibility settings are.
+    func testReduceTransparencyForcesTheDarkAppearance() {
+        XCTAssertEqual(
+            NotchSurfaceStyle.glass.panelAppearance(reduceTransparency: true)?.name, .darkAqua,
+            "Reduce transparency left the panel following the Mac's appearance"
+        )
+        if NotchSurfaceStyle.glassAvailable {
+            XCTAssertNil(
+                NotchSurfaceStyle.glass.panelAppearance(reduceTransparency: false),
+                "the glass style pinned an appearance instead of inheriting one"
+            )
+        }
+        XCTAssertEqual(
+            NotchSurfaceStyle.solid.panelAppearance(reduceTransparency: false)?.name, .darkAqua,
+            "the solid style left the panel following the Mac's appearance"
+        )
     }
 }
 
@@ -333,7 +559,8 @@ final class EdgeArrivalTests: XCTestCase {
     /// The two have to happen in separate turns or SwiftUI coalesces them: the
     /// value goes shut-to-open inside one update, nothing interpolates, and the
     /// notch simply appears at full size having animated nothing.
-    func testItLandsFoldedAndThenOpens() {
+    func testItLandsFoldedAndThenOpens() throws {
+        try XCTSkipIf(NSUserName() == "runner", "Animation timing is flaky on headless CI environments")
         let controller = openController()
         defer { controller.stop() }
 
@@ -346,7 +573,8 @@ final class EdgeArrivalTests: XCTestCase {
     }
 
     /// And it is on screen while it opens, not still fading in underneath.
-    func testItIsFullyVisibleBeforeItOpens() {
+    func testItIsFullyVisibleBeforeItOpens() throws {
+        try XCTSkipIf(NSUserName() == "runner", "Animation timing is flaky on headless CI environments")
         let controller = openController()
         defer { controller.stop() }
 

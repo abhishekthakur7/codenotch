@@ -14,8 +14,72 @@ final class ClaudeCLITests: XCTestCase {
         XCTAssertFalse(ClaudeCLI.isDesktopOwned(URL(fileURLWithPath: "/opt/homebrew/bin/claude")))
     }
 
-    func testNothingInstalledIsNotAnError() {
-        XCTAssertNil(ClaudeCLI.standalone(candidates: ["/nowhere/claude"]))
+    /// An empty home rather than the developer's own: `standalone` also looks
+    /// in the Node version trees now, and left pointing at the real home this
+    /// passed or failed depending on whether the person running it happened to
+    /// have installed Claude Code with npm.
+    func testNothingInstalledIsNotAnError() throws {
+        let home = try makeHome(executablesAt: [])
+
+        XCTAssertNil(ClaudeCLI.standalone(candidates: ["/nowhere/claude"], home: home.path))
+    }
+
+    /// npm is still how most people install Claude Code, and under a Node
+    /// version manager the binary sits in a directory named for the Node
+    /// version — a path no entry in `candidates` can spell. Without it,
+    /// `standalone` returns nil on those machines and the renewal that keeps
+    /// the ring alive simply never runs.
+    func testItFindsAnNpmInstallUnderNVM() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v22.22.3/bin/claude"])
+
+        XCTAssertNotNil(ClaudeCLI.standalone(candidates: [], home: home.path))
+    }
+
+    /// Upgrading Node leaves every older tree in place; only the current one is
+    /// certainly the install being run.
+    func testTheNewestNodeVersionWins() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v20.20.2/bin/claude",
+                                                ".nvm/versions/node/v22.22.3/bin/claude"])
+
+        let found = ClaudeCLI.standalone(candidates: [], home: home.path)?.path
+
+        XCTAssertEqual(found?.contains("v22.22.3"), true, "expected v22.22.3, got \(found ?? "nil")")
+    }
+
+    func testItFindsAVoltaShim() throws {
+        let home = try makeHome(executablesAt: [".volta/bin/claude"])
+
+        XCTAssertNotNil(ClaudeCLI.standalone(candidates: [], home: home.path))
+    }
+
+    /// The fixed locations still come first: a copy Claude Code's own installer
+    /// maintains is the one to renew with.
+    func testAnInstallerCopyOutranksANodeManager() throws {
+        let home = try makeHome(executablesAt: [".nvm/versions/node/v22.22.3/bin/claude",
+                                                "installer/claude"])
+
+        let found = ClaudeCLI.standalone(
+            candidates: [home.appendingPathComponent("installer/claude").path],
+            home: home.path
+        )?.path
+
+        XCTAssertEqual(found?.hasSuffix("installer/claude"), true)
+    }
+
+    private func makeHome(executablesAt paths: [String]) throws -> URL {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ClaudeCLITests.\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: root) }
+
+        for path in paths {
+            let url = root.appendingPathComponent(path)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
+                                                    withIntermediateDirectories: true)
+            FileManager.default.createFile(atPath: url.path, contents: Data(),
+                                           attributes: [.posixPermissions: 0o755])
+        }
+        return root
     }
 }
 

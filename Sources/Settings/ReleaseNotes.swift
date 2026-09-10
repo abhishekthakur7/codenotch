@@ -32,6 +32,52 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.8.0",
+                headline: L10n.t("A second ring for the week, Liquid Glass, French, and Claude Desktop read straight from its own cache."),
+                changes: [
+                    ReleaseNote.Change(
+                        title: L10n.t("The week gets a ring of its own"),
+                        detail: L10n.t("A second arc, inside the headline ring or outside it, for providers that publish a weekly limit as well as a session one. Off by default; Appearance has the switch.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Liquid Glass"),
+                        detail: L10n.t("The open notch, its tooltip and the settings orb take the system's own glass surface, so they refract what is behind them instead of sitting on it. Reduce Transparency turns it solid.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Français"),
+                        detail: L10n.t("A third language in Appearance, alongside English and 简体中文.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Claude Desktop usage, read from its own cache"),
+                        detail: L10n.t("A third way to read a Claude account, used when the CLI and the token cannot answer. Nothing is sent anywhere: the cache is on this Mac and is only decompressed.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Claude Code found where npm puts it"),
+                        detail: L10n.t("An install under nvm, Volta or pnpm is discovered like any other, which also restores the background sign-in renewal for those setups.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("No more transcript folders left behind"),
+                        detail: L10n.t("Reading Claude usage ran in a fresh directory every poll, and Claude Code filed a transcript folder for each one. It now runs from a single place, in print mode, writing no session at all.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Reset times follow the Mac's clock"),
+                        detail: L10n.t("A 24-hour Mac gets 24-hour reset times instead of AM and PM.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("A finished session says so"),
+                        detail: L10n.t("Agent sessions carry a success state, so a run that has completed reads differently from one still going.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Antigravity: choose which limit leads"),
+                        detail: L10n.t("The headline ring can follow a named limit rather than whichever happens to be tightest, and a CLI-only install counts as a real account.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Only the hardware notch wakes a notch joined to it"),
+                        detail: L10n.t("A notch merged with the camera housing no longer wakes from a pointer anywhere along the whole top edge.")
+                    ),
+                ]
+            ),
+            ReleaseNote(
                 version: "1.7.0",
                 headline: L10n.t("Speaks Chinese, watches local models think, and stays welded to the edge."),
                 changes: [

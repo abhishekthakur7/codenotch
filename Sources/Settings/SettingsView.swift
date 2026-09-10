@@ -531,6 +531,16 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
+                Picker(L10n.t("Weekly ring"), selection: $preferences.weeklyRing) {
+                    ForEach(WeeklyRing.allCases) { Text($0.title).tag($0) }
+                }
+                .pickerStyle(.segmented)
+
+                Text(preferences.weeklyRing.explanation)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 Picker(L10n.t("Show"), selection: $preferences.notchVisibility) {
                     ForEach(NotchVisibility.allCases) { Text($0.title).tag($0) }
                 }
@@ -550,6 +560,21 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+
+                // Offered only where there is a glass to choose. Below macOS 26
+                // the choice has one possible answer, and a picker that cannot
+                // be moved is worse than no picker at all.
+                if #available(macOS 26.0, *) {
+                    Picker(L10n.t("Surface"), selection: $preferences.notchSurfaceStyle) {
+                        ForEach(NotchSurfaceStyle.allCases) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+
+                    Text(preferences.notchSurfaceStyle.explanation)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 // Two ways to answer the same question, because they suit
                 // different people: three named sizes for anyone who wants a
@@ -1345,6 +1370,25 @@ private struct AccountRow: View {
     private var detail: some View {
         VStack(alignment: .leading, spacing: 6) {
             accountDetail
+            
+            // Antigravity limit dropdown
+            if isConnected, provider.id == "gemini" {
+                HStack(spacing: 8) {
+                    Text(L10n.t("Notch reads"))
+                        .foregroundStyle(.secondary)
+                    Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
+                        ForEach(AntigravityHeadlineLimit.allCases) { limit in
+                            Text(limit.explanation).tag(limit)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(width: 140)
+                }
+                .padding(.top, 2)
+                .help(L10n.t("Choose which limit appears in the main notch for Antigravity."))
+            }
+
             // Google publishes no limit for a bare API key, so the ring has
             // nothing to fill against until the user names a ceiling itself.
             if isConnected, provider.id == "gemini-api" {

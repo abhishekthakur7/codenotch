@@ -27,9 +27,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// for real. Without this guard every test run put a live request on the
     /// usage endpoint — which is both wrong on its own terms and, on an endpoint
     /// that rate-limits, actively harmful.
-    private var isRunningTests: Bool {
-        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-            || NSClassFromString("XCTestCase") != nil
+    private var isRunningTests: Bool { Runtime.isUnderTest }
+
+    /// Quit any copy of Codenotch that was already running.
+    ///
+    /// Every notch is a window on the screen edge, so a second copy is not a
+    /// harmless duplicate the way a second text editor is: it draws a second
+    /// notch over the first, and a developer with a build in `DerivedData`, a
+    /// staged release and `/Applications` could end up with the screen ringed
+    /// by them. They are separate bundles at separate paths, so the system
+    /// launches each as its own process rather than activating the one that is
+    /// already up.
+    ///
+    /// The newcomer wins, deliberately. Quitting the *new* copy instead would
+    /// be the wrong way round while developing: the whole point of launching a
+    /// fresh build is to replace the one already running.
+    ///
+    /// Only strictly older instances are asked to go, which is what keeps two
+    /// simultaneous launches from each terminating the other and leaving none.
+    private static func retireOlderInstances() {
+        guard let identifier = Bundle.main.bundleIdentifier else { return }
+        let mine = ProcessInfo.processInfo.processIdentifier
+        let launched = NSRunningApplication.current.launchDate ?? Date()
+        for other in NSRunningApplication.runningApplications(withBundleIdentifier: identifier)
+        where other.processIdentifier != mine && (other.launchDate ?? .distantPast) < launched {
+            Log.usage.info("retiring an older instance (pid \(other.processIdentifier, privacy: .public))")
+            if !other.terminate() { other.forceTerminate() }
+        }
     }
 
     /// Every Claude Code configuration directory on this Mac — `~/.claude` and
@@ -51,6 +75,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // replaces this a moment later, once preferences exist.
         NSApp.setActivationPolicy(.regular)
         guard !isRunningTests else { return }
+        Self.retireOlderInstances()
 
         // Before Preferences reads anything, or the first launch flag and
         // every choice would be read from an empty domain.
@@ -332,6 +357,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.apply(accentColor: $0) }
                 .store(in: &cancellables)
 
+            preferences.$weeklyRing
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(weeklyRing: $0) }
+            preferences.$notchSurfaceStyle
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
+                .store(in: &cancellables)
+
             preferences.$disconnectedProviders
                 .receive(on: RunLoop.main)
                 .sink { [weak store] in store?.disconnected = $0 }
@@ -514,6 +547,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(scale: preferences.notchScale)
         fleet.apply(resetTimeFormat: preferences.resetTimeFormat)
         fleet.apply(accentColor: preferences.accentColor)
+        fleet.apply(weeklyRing: preferences.weeklyRing)
+        fleet.apply(surfaceStyle: preferences.notchSurfaceStyle)
         fleet.show()
     }
 

@@ -24,6 +24,11 @@ struct ProviderRing: View {
     /// A local model's arc: how full its context was on the last request. Nil
     /// draws the whole ring, which is what a runtime that does not say gets.
     var localContextFraction: Double?
+    /// The weekly limit, when the provider has one. Nil is the ordinary case
+    /// for a provider with a single window, and draws nothing.
+    var weeklyFraction: Double?
+    /// Where the user asked for it, if at all.
+    var weeklyRing: WeeklyRing = .off
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
@@ -35,6 +40,20 @@ struct ProviderRing: View {
     }
     private var sweep: CGFloat { CGFloat(min(max(usedFraction ?? 0, 0), 1)) }
     private var localSweep: CGFloat { CGFloat(min(max(localContextFraction ?? 1, 0), 1)) }
+
+    private var weeklyBand: UsageBand {
+        isBlocked ? .exhausted : UsageBand.band(for: weeklyFraction ?? 0)
+    }
+    private var weeklySweep: CGFloat { CGFloat(min(max(weeklyFraction ?? 0, 0), 1)) }
+
+    /// Inside, the weekly ring and the working indicator want the same band —
+    /// 1.03pt apart, one of them spinning. Rather than shave both until neither
+    /// is legible, the transient one wins: while a provider is working that is
+    /// the more urgent fact, and the week is still a hover away. Outside there
+    /// is no contest, so nothing is given up there.
+    private var isWorking: Bool {
+        weeklyRing == .inside && activity != nil && activity?.state != .idle
+    }
 
     var body: some View {
         ZStack {
@@ -80,6 +99,44 @@ struct ProviderRing: View {
                         // that sweeps reads as a measurement being taken.
                         .animation(NotchMotion.reading, value: sweep)
                         .animation(NotchMotion.reading, value: band)
+                }
+
+                // The weekly limit, when there is one and it has been asked
+                // for. Same start and direction as the headline arc, so the
+                // two are read the same way round; thinner and at its own
+                // radius, so which is which never has to be worked out.
+                //
+                // It carries its own band colour rather than borrowing the
+                // headline's: a session at 12% beside a week at 91% is exactly
+                // the case this exists for, and painting them the same colour
+                // would hide it. Held slightly back in opacity so the headline
+                // stays the one the eye lands on first.
+                if let radius = weeklyRing.radius, weeklyFraction != nil, !isWorking {
+                    let inset = NotchLayout.ringDiameter / 2 - radius
+
+                    // A track of its own, for the same reason the headline has
+                    // one: a week nobody has spent yet draws an arc of zero
+                    // length, and without something behind it that is
+                    // indistinguishable from the feature being broken. Codex
+                    // opened its week at 0% and read as missing.
+                    Circle()
+                        .inset(by: inset)
+                        .stroke(Palette.ringTrack,
+                                style: StrokeStyle(lineWidth: NotchLayout.weeklyRingStroke))
+                        .opacity(reduceTransparency ? 1 : 0.7)
+
+                    Circle()
+                        .inset(by: inset)
+                        .trim(from: 0, to: weeklySweep)
+                        .stroke(
+                            weeklyBand.color(accent: accentColor),
+                            style: StrokeStyle(lineWidth: NotchLayout.weeklyRingStroke,
+                                               lineCap: .round)
+                        )
+                        .opacity(reduceTransparency ? 1 : 0.8)
+                        .rotationEffect(.degrees(-90))
+                        .animation(NotchMotion.reading, value: weeklySweep)
+                        .animation(NotchMotion.reading, value: weeklyBand)
                 }
 
                 ProviderGlyphView(glyph: glyph)
@@ -141,7 +198,7 @@ private struct ActivityArc: View {
         Group {
             switch summary.state {
             case .working: spinner
-            case .waiting: pulse
+            case .waiting, .success: pulse
             case .idle:    EmptyView()
             }
         }
@@ -191,6 +248,7 @@ struct ProviderCell: View {
     let snapshot: ProviderSnapshot
     var activity: ActivitySummary?
     var isRefreshing: Bool = false
+    var weeklyRing: WeeklyRing = .off
 
     /// A dash, not "0%": nothing read is not the same as nothing used.
     private var readingText: String {
@@ -207,7 +265,9 @@ struct ProviderCell: View {
                 activity: activity,
                 isRefreshing: isRefreshing,
                 localPerformance: snapshot.localPerformance,
-                localContextFraction: snapshot.localContextFraction
+                localContextFraction: snapshot.localContextFraction,
+                weeklyFraction: snapshot.hasReading ? snapshot.weeklyFraction : nil,
+                weeklyRing: weeklyRing
             )
             Text(readingText)
                 .font(Typography.percent)

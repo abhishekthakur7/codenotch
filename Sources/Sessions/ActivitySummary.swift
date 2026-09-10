@@ -6,6 +6,7 @@ struct ActivitySummary: Equatable {
     enum State: Equatable {
         case working
         case waiting
+        case success
         case idle
     }
 
@@ -31,6 +32,8 @@ struct ActivitySummary: Equatable {
             state = .waiting
         } else if sessions.contains(where: { $0.state == .busy }) {
             state = .working
+        } else if sessions.contains(where: { $0.state == .success }) {
+            state = .success
         } else {
             state = .idle
         }
@@ -41,6 +44,7 @@ struct ActivitySummary: Equatable {
         switch state {
         case .working: return L10n.t("working")
         case .waiting: return L10n.t("waiting")
+        case .success: return L10n.t("complete")
         case .idle:    return L10n.t("idle")
         }
     }
@@ -53,6 +57,7 @@ struct ActivitySummary: Equatable {
         switch state {
         case .working: return Palette.textPrimary
         case .waiting: return Palette.watch
+        case .success: return Palette.ample
         case .idle:    return Palette.ringTrack
         }
     }

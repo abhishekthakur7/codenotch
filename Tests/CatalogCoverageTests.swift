@@ -23,15 +23,20 @@ final class CatalogCoverageTests: XCTestCase {
 
     /// Repo `Tests/`, so the catalog is `../Sources/Localizable.xcstrings`.
     private func catalogURL() -> URL {
-        URL(fileURLWithPath: #file)
+        URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .appendingPathComponent("../Sources/Localizable.xcstrings")
             .standardizedFileURL
     }
 
     private func loadCatalog() throws -> (raw: String, json: CatalogFile) {
-        let data = try Data(contentsOf: catalogURL())
-        return (String(decoding: data, as: UTF8.self), try JSONDecoder().decode(CatalogFile.self, from: data))
+        let url = catalogURL()
+        do {
+            let data = try Data(contentsOf: url)
+            return (String(decoding: data, as: UTF8.self), try JSONDecoder().decode(CatalogFile.self, from: data))
+        } catch let error as NSError where error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoPermissionError {
+            throw XCTSkip("macOS privacy restricts reading the source catalog at \(url.path)")
+        }
     }
 }
 

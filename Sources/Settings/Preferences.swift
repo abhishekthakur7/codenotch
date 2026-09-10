@@ -118,6 +118,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(notchScope.rawValue, forKey: Keys.scope) }
     }
 
+    /// The preferred limit window to show for Antigravity provider (automatic, 5h, or weekly).
+    @Published var antigravityHeadlineLimit: AntigravityHeadlineLimit {
+        didSet { defaults.set(antigravityHeadlineLimit.rawValue, forKey: Keys.antigravityHeadlineLimit) }
+    }
+
     /// Where along that edge the notch sits, nudged from the centred default
     /// by ⌥-dragging the pill. One value per edge — moving it on the right
     /// should not silently relocate it on the top too — so this is read and
@@ -141,9 +146,19 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(showUsagePace, forKey: Self.showUsagePaceKey) }
     }
 
+    /// Whether the weekly limit gets a ring of its own, and where it sits.
+    @Published var weeklyRing: WeeklyRing {
+        didSet { defaults.set(weeklyRing.rawValue, forKey: Keys.weeklyRing) }
+    }
+
     /// The colour used for positive usage and active-work indicators.
     @Published var accentColor: AccentColorChoice {
         didSet { defaults.set(accentColor.rawValue, forKey: Keys.accentColor) }
+    }
+
+    /// The material the expanded notch, tooltip and settings orb are painted with.
+    @Published var notchSurfaceStyle: NotchSurfaceStyle {
+        didSet { defaults.set(notchSurfaceStyle.rawValue, forKey: Keys.notchSurfaceStyle) }
     }
 
     /// The language the app itself speaks.
@@ -257,6 +272,9 @@ final class Preferences: ObservableObject {
         static let resetTimeFormat = "resetTimeFormat"
         static let scope = "notchScope"
         static let accentColor = "accentColor"
+        // A new key, so there is nothing under the old app name to migrate.
+        static let weeklyRing = "weeklyRing"
+        static let notchSurfaceStyle = "notchSurfaceStyle"
         static let lastSeenVersion = "lastSeenVersion"
         static let order = "providerOrder"
         static let announceSessionEnd = "announceSessionEnd"
@@ -266,6 +284,7 @@ final class Preferences: ObservableObject {
         static let sessionBlockedSoundName = "sessionBlockedSoundName"
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
+        static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -280,6 +299,15 @@ final class Preferences: ObservableObject {
               budget > 0
         else { return nil }
         return budget
+    }
+    
+    nonisolated static func storedAntigravityHeadlineLimit(
+        defaults: UserDefaults = .standard
+    ) -> AntigravityHeadlineLimit {
+        guard let value = defaults.string(forKey: Keys.antigravityHeadlineLimit),
+              let limit = AntigravityHeadlineLimit(rawValue: value)
+        else { return .automatic }
+        return limit
     }
 
     /// True the very first time this copy runs, and never again.
@@ -385,9 +413,17 @@ final class Preferences: ObservableObject {
         // would put notches where none were expected.
         self.notchScope = defaults.string(forKey: Keys.scope)
             .flatMap(NotchScreenScope.init(rawValue:)) ?? .mainDisplay
+        self.antigravityHeadlineLimit = defaults.string(forKey: Keys.antigravityHeadlineLimit)
+            .flatMap(AntigravityHeadlineLimit.init(rawValue:)) ?? .automatic
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
+        // Off by default: an extra arc in a 44pt circle is a change to how
+        // every reading looks, and nobody asked for it on their behalf.
+        self.weeklyRing = defaults.string(forKey: Keys.weeklyRing)
+            .flatMap(WeeklyRing.init(rawValue:)) ?? .off
         self.accentColor = defaults.string(forKey: Keys.accentColor)
             .flatMap(AccentColorChoice.init(rawValue:)) ?? .system
+        self.notchSurfaceStyle = defaults.string(forKey: Keys.notchSurfaceStyle)
+            .flatMap(NotchSurfaceStyle.init(rawValue:)) ?? .glass
         // Absent means never chosen, which is follow-the-Mac.
         self.language = defaults.string(forKey: L10n.languageDefaultsKey)
             .flatMap(AppLanguage.init(rawValue:)) ?? .system

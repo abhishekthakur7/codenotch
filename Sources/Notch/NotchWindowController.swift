@@ -152,6 +152,37 @@ final class NotchWindowController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in self?.relocate() }
             .store(in: &cancellables)
+
+        // No `receive(on:)`: the appearance has to be on the window before the
+        // next draw, or the frame's hexes and the glass would be resolved
+        // against the appearance the panel is about to stop having.
+        model.$surfaceStyle
+            .removeDuplicates()
+            .sink { [weak self] style in
+                MainActor.assumeIsolated { self?.applyPanelAppearance(style) }
+            }
+            .store(in: &cancellables)
+
+        // Reduce transparency resolves the glass style to the solid one, so
+        // turning it on or off in System Settings changes what the panel's
+        // appearance has to be. Nothing else republishes that: the style the
+        // model holds has not changed.
+        NSWorkspace.shared.notificationCenter.publisher(
+            for: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification
+        )
+        .sink { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.applyPanelAppearance(self.model.surfaceStyle)
+            }
+        }
+        .store(in: &cancellables)
+    }
+
+    private func applyPanelAppearance(_ style: NotchSurfaceStyle) {
+        panel?.appearance = style.panelAppearance(
+            reduceTransparency: NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+        )
     }
 
     func stop() {
@@ -199,6 +230,9 @@ final class NotchWindowController {
             panel.setFrame(frame, display: true)
         } else {
             let panel = NotchPanel(contentRect: frame)
+            panel.appearance = model.surfaceStyle.panelAppearance(
+                reduceTransparency: NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency
+            )
             let hosting = NotchHostingView(rootView: NotchRootView(model: model))
             panel.contextMenuProvider = { [weak self] in self?.contextMenu() }
             panel.onClick = { [weak self] point in self?.handleClick(at: point) }
@@ -229,7 +263,7 @@ final class NotchWindowController {
             container.addSubview(hosting)
             panel.contentView = container
             panel.ignoresMouseEvents = true
-            panel.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel.orderFrontRegardless() }
             self.panel = panel
             self.hostingView = hosting
         }
@@ -285,19 +319,15 @@ final class NotchWindowController {
         )
     }
 
-    /// What wakes the folded notch. Deliberately larger than the pill it
-    /// surrounds — a 10pt target on a screen edge is a fiddly thing to hit, and
-    /// the cost of being generous is only that it opens a little eagerly.
+    /// What wakes the folded notch. Larger than the pill it surrounds, and
+    /// exactly the hardware notch when it is joined to one — see
+    /// `NotchViewModel.wakeLength` for both halves of that.
     private var pillRect: CGRect {
-        // Whatever the resting shape is — the pill, or the display's own notch
-        // when it is joining one — the region that wakes it is that plus a
-        // generous band, because both are small targets on a screen edge.
-        let length = max(model.restingLength * model.sizeScale, NotchLayout.pillHotZone)
-        return placement.rect(
-            along: model.slack + (model.shapeLength * model.sizeScale - length) / 2,
+        placement.rect(
+            along: model.slack + (model.shapeLength * model.sizeScale - model.wakeLength) / 2,
             across: 0,
-            length: length,
-            depth: model.restingDepth * model.sizeScale + NotchLayout.pillHotZone
+            length: model.wakeLength,
+            depth: model.wakeDepth
         )
     }
 
@@ -725,7 +755,7 @@ final class NotchWindowController {
         peekUntil = nil
         switch visibility {
         case .alwaysShow:
-            panel?.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel?.orderFrontRegardless() }
             model.isAlwaysOn = true
             // Any pin made by hand is subsumed by the setting; leaving it set
             // would outlive a later switch back to hover.
@@ -734,7 +764,7 @@ final class NotchWindowController {
             foldWork = nil
             withAnimation(NotchMotion.unfold) { model.isExpanded = true }
         case .onHover:
-            panel?.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel?.orderFrontRegardless() }
             model.isAlwaysOn = false
             model.isPinned = false
             // Fold now rather than waiting for the pointer to leave: it may
@@ -784,7 +814,7 @@ final class NotchWindowController {
         }
         peekUntil = Date().addingTimeInterval(duration)
 
-        panel.orderFrontRegardless()
+        if !Runtime.isUnderTest { panel.orderFrontRegardless() }
         foldWork?.cancel()
         foldWork = nil
         peekWork?.cancel()

@@ -82,7 +82,8 @@ actor OpenCodeProvider: UsageProvider {
                 fidelity: .official,
                 status: .ok,
                 windows: read,
-                headlineID: "rolling"
+                headlineID: "rolling",
+                weeklyID: "weekly"
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             // Bookkeeping where the answer was, not down in `fetch`: the wait

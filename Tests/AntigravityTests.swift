@@ -929,11 +929,11 @@ final class AntigravityActivityMonitorTests: XCTestCase {
     }
 
     @discardableResult
-    private func transcript(_ name: String, modified: Date) throws -> URL {
+    private func transcript(_ name: String, modified: Date, content: String = "{\"type\": \"USER_INPUT\"}") throws -> URL {
         let dir = root.appendingPathComponent("\(name)/.system_generated/logs")
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let file = dir.appendingPathComponent("transcript.jsonl")
-        try "{}".write(to: file, atomically: true, encoding: .utf8)
+        try content.write(to: file, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.modificationDate: modified],
                                               ofItemAtPath: file.path)
         return file
@@ -960,6 +960,21 @@ final class AntigravityActivityMonitorTests: XCTestCase {
         let sessions = AntigravityActivityMonitor.read(root: root, staleAfter: 45)
         XCTAssertEqual(sessions.count, 1)
         XCTAssertEqual(sessions.first?.id, "antigravity.live")
+    }
+
+    func testAnIdleTranscriptIsCleanedUpQuickly() throws {
+        try transcript("idle", modified: Date().addingTimeInterval(-10), content: "{\"type\": \"PLANNER_RESPONSE\"}")
+        let sessions = AntigravityActivityMonitor.read(root: root, staleAfter: 45)
+        XCTAssertTrue(sessions.isEmpty)
+    }
+
+    func testAWaitingTranscriptPersists() throws {
+        let waitingJSON = "{\"type\": \"PLANNER_RESPONSE\", \"tool_calls\": [{\"name\": \"ask_question\"}]}"
+        try transcript("waiting", modified: Date().addingTimeInterval(-600), content: waitingJSON)
+        let sessions = AntigravityActivityMonitor.read(root: root, staleAfter: 45)
+        XCTAssertEqual(sessions.count, 1)
+        XCTAssertEqual(sessions.first?.state, .waiting)
+        XCTAssertEqual(sessions.first?.detail, "Question")
     }
 
     func testNoTranscriptsIsQuietRatherThanAnError() {

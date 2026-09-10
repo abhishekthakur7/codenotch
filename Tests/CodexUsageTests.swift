@@ -201,13 +201,24 @@ final class CodexActivityTests: XCTestCase {
     }
 
     func testTheBoundaryIsInclusive() {
-        XCTAssertNotNil(CodexActivityMonitor.session(
+        XCTAssertEqual(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
             modified: now.addingTimeInterval(-8), staleAfter: 8, now: now
-        ))
+        )?.state, .busy)
+
+        XCTAssertEqual(CodexActivityMonitor.session(
+            id: "codex.x", name: "Codex",
+            modified: now.addingTimeInterval(-15), staleAfter: 8, now: now
+        )?.state, .success)
+
+        XCTAssertEqual(CodexActivityMonitor.session(
+            id: "codex.x", name: "Codex",
+            modified: now.addingTimeInterval(-20), staleAfter: 8, now: now
+        )?.state, .idle)
+
         XCTAssertNil(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
-            modified: now.addingTimeInterval(-8.1), staleAfter: 8, now: now
+            modified: now.addingTimeInterval(-24), staleAfter: 8, now: now
         ))
     }
 }
@@ -306,6 +317,24 @@ final class UsageBlockTests: XCTestCase {
         let text = block.summary(now: now)
         XCTAssertTrue(text.hasPrefix("Paused until "), text)
         XCTAssertFalse(text.contains("min"), "a countdown, not the time it lifts")
+    }
+
+    /// The clock keeps the locale's hour cycle, as the reset line does: a
+    /// 24-hour region reads "Paused until 16:13", not "4:13 PM".
+    func testTheClockFollowsTheLocalesHourCycle() {
+        let now = Date(timeIntervalSince1970: 1_788_000_000)
+        let block = UsageBlock(reason: "Paused", resetsAt: now.addingTimeInterval(90 * 60))
+        for id in ["fr_FR", "de_DE", "ja_JP", "en_GB"] {
+            let locale = Locale(identifier: id)
+            let text = block.summary(now: now, locale: locale)
+            let symbols = DateFormatter()
+            symbols.locale = locale
+            XCTAssertFalse(text.contains(symbols.amSymbol) || text.contains(symbols.pmSymbol),
+                           "\(id) got a 12-hour clock: \(text)")
+        }
+        let american = block.summary(now: now, locale: Locale(identifier: "en_US"))
+        XCTAssertTrue(american.contains("AM") || american.contains("PM"),
+                      "en_US lost its AM/PM: \(american)")
     }
 
     /// With no reset time there is nothing to promise, so it says only what it

@@ -193,12 +193,20 @@ final class CursorActivityMonitor: ObservableObject, AgentActivityMonitor {
             return now.timeIntervalSince(stamp) <= staleAfter
         }()
 
+        let isSuccess: Bool = {
+            guard let runStart, let cursorLaunchedAt else { return false }
+            let stamp = lastWrite ?? runStart
+            guard stamp >= cursorLaunchedAt else { return false }
+            let age = now.timeIntervalSince(stamp)
+            return age > staleAfter && age <= staleAfter + 9
+        }()
+
         let isRecentlyFinished: Bool = {
             guard let runStart, let cursorLaunchedAt else { return false }
             let stamp = lastWrite ?? runStart
             guard stamp >= cursorLaunchedAt else { return false }
             let age = now.timeIntervalSince(stamp)
-            return age > staleAfter && age <= staleAfter + 15
+            return age > staleAfter + 9 && age <= staleAfter + 15
         }()
 
         let isWaiting = blocked && isCurrentWait(
@@ -211,6 +219,7 @@ final class CursorActivityMonitor: ObservableObject, AgentActivityMonitor {
         let state: AgentSession.State
         if isWaiting { state = .waiting }
         else if isRunning { state = .busy }
+        else if isSuccess { state = .success }
         else if isRecentlyFinished { state = .idle }
         else { return nil }
 

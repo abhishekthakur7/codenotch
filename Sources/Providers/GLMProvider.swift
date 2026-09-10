@@ -84,7 +84,8 @@ actor GLMProvider: UsageProvider {
                 fidelity: .official,
                 status: .ok,
                 windows: payload.windows,
-                headlineID: "session"
+                headlineID: "session",
+                weeklyID: "weekly"
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             // Bookkeeping where the answer was, not down in `fetch`: the wait

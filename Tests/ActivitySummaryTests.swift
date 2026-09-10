@@ -253,7 +253,11 @@ final class CursorActivityTests: XCTestCase {
         
         let justPastEdge = try XCTUnwrap(session(fixture, staleAfter: 60,
                                                  now: runAt.addingTimeInterval(61)))
-        XCTAssertEqual(justPastEdge.state, .idle)
+        XCTAssertEqual(justPastEdge.state, .success)
+
+        let wayPastEdge = try XCTUnwrap(session(fixture, staleAfter: 60,
+                                                 now: runAt.addingTimeInterval(70)))
+        XCTAssertEqual(wayPastEdge.state, .idle)
         
         XCTAssertNil(session(fixture, staleAfter: 60, now: runAt.addingTimeInterval(76)))
     }

@@ -66,6 +66,59 @@ private struct TooltipTail: Shape {
     }
 }
 
+/// The card and its tail as a single outline.
+///
+/// One glass shape, not two: separate ones each grow their own rim highlight
+/// and the seam shows where the tail leaves the card. Internal so the tests can
+/// measure the outline.
+struct TooltipSilhouette: Shape {
+    /// Which side of the notch the card is on, so the tail goes on the other one.
+    let direction: NotchEdge.TooltipDirection
+    /// The same nudge `TooltipShell` applies to the tail view, along the card's
+    /// own axis. The glass is masked by this outline, so a tail that has slid
+    /// along the card to stay on its cell would otherwise be left unpainted.
+    var tailOffset: CGFloat = 0
+
+    func path(in rect: CGRect) -> Path {
+        // The two pieces are placed out of `rect` exactly the way
+        // `TooltipShell.body` stacks them, so the outline keeps following the
+        // card while its height animates.
+        let tail = TooltipTail.size(for: direction)
+        let cardRect: CGRect
+        var tailRect: CGRect
+        switch direction {
+        case .leading:
+            cardRect = CGRect(x: rect.minX, y: rect.minY,
+                              width: rect.width - tail.width, height: rect.height)
+            tailRect = CGRect(x: cardRect.maxX, y: rect.midY - tail.height / 2,
+                              width: tail.width, height: tail.height)
+        case .trailing:
+            tailRect = CGRect(x: rect.minX, y: rect.midY - tail.height / 2,
+                              width: tail.width, height: tail.height)
+            cardRect = CGRect(x: rect.minX + tail.width, y: rect.minY,
+                              width: rect.width - tail.width, height: rect.height)
+        case .down:
+            tailRect = CGRect(x: rect.midX - tail.width / 2, y: rect.minY,
+                              width: tail.width, height: tail.height)
+            cardRect = CGRect(x: rect.minX, y: rect.minY + tail.height,
+                              width: rect.width, height: rect.height - tail.height)
+        case .up:
+            cardRect = CGRect(x: rect.minX, y: rect.minY,
+                              width: rect.width, height: rect.height - tail.height)
+            tailRect = CGRect(x: rect.midX - tail.width / 2, y: cardRect.maxY,
+                              width: tail.width, height: tail.height)
+        }
+        switch direction {
+        case .leading, .trailing: tailRect.origin.y += tailOffset
+        case .up, .down:          tailRect.origin.x += tailOffset
+        }
+
+        return RoundedRectangle(cornerRadius: NotchLayout.cardCorner, style: .circular)
+            .path(in: cardRect)
+            .union(TooltipTail(direction: direction).path(in: tailRect))
+    }
+}
+
 /// The card chrome every tooltip shares: fixed width, the frame's padding and
 /// corner, and the tail welded on so there is no seam between them.
 private struct TooltipShell<Content: View>: View {
@@ -81,6 +134,16 @@ private struct TooltipShell<Content: View>: View {
     @ViewBuilder let content: Content
 
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
+    @Environment(\.notchSurfaceStyle) private var surfaceStyle
+
+    /// Reduce transparency means "no see-through chrome", which for this card
+    /// is the solid style — the same precedence the Settings window applies to
+    /// its own translucent chrome.
+    private var glassy: Bool { surfaceStyle.effective == .glass && !reduceTransparency }
+
+    /// Clear on glass: anything of ours under it would override the Clear or
+    /// Tinted choice in Appearance settings.
+    private var surfaceFill: Color { glassy ? .clear : Palette.card }
 
     private var card: some View {
         // The same arrangement that makes the notch fold work: the contents
@@ -94,7 +157,7 @@ private struct TooltipShell<Content: View>: View {
         // except the boundary.
         ZStack(alignment: .top) {
             RoundedRectangle(cornerRadius: NotchLayout.cardCorner, style: .circular)
-                .fill(Palette.card)
+                .fill(surfaceFill)
                 .frame(width: NotchLayout.cardWidth, height: height)
 
             content
@@ -118,13 +181,32 @@ private struct TooltipShell<Content: View>: View {
         // The tail is deliberately outside the clip: it is part of the card's
         // silhouette, not of its contents.
         return TooltipTail(direction: direction)
-            .fill(Palette.card)
+            .fill(surfaceFill)
             .frame(width: size.width, height: size.height)
             .offset(x: direction == .up || direction == .down ? tailOffset : 0,
                     y: direction == .leading || direction == .trailing ? tailOffset : 0)
     }
 
     var body: some View {
+        stack
+            // The background takes the stack's bounds — card plus tail — and is
+            // re-solved as `height` animates, so one piece of glass covers both
+            // pieces however tall the card is.
+            .background {
+                // `effective` is only ever `.glass` where `glassEffect` exists;
+                // the availability check is what tells the compiler so. Below
+                // that, `surfaceFill` has already painted the card opaque.
+                if glassy {
+                    if #available(macOS 26.0, *) {
+                        Color.clear
+                            .glassEffect(.regular, in: TooltipSilhouette(direction: direction,
+                                                                         tailOffset: tailOffset))
+                    }
+                }
+            }
+    }
+
+    @ViewBuilder private var stack: some View {
         // Card first or tail first, laid out along whichever axis the tail
         // points. The pair is one silhouette either way.
         switch direction {
@@ -235,9 +317,10 @@ private struct StatusRing: View {
                             .rotationEffect(.degrees(angle(at: context.date)))
                     }
                 }
-            case .waiting:
-                // Half a ring, held still: blocked, not progressing.
-                ring(trim: 0.5)
+            case .waiting, .success:
+                // Half a ring, held still: blocked, not progressing. (Or a full ring for success).
+                // Wait, if we want success to be a full ring, we can use 1.0 trim for success.
+                ring(trim: state == .success ? 1.0 : 0.5)
             case .idle:
                 ring(trim: 1)
             }
@@ -659,8 +742,9 @@ private struct SessionRow: View {
 
     private var stateColor: Color {
         switch session.state {
-        case .busy:    return accentColor
+        case .busy:    return Palette.textPrimary
         case .waiting: return Palette.watch
+        case .success: return Palette.ample
         case .idle:    return Palette.textSecondary
         }
     }
@@ -669,6 +753,7 @@ private struct SessionRow: View {
         switch session.state {
         case .busy:    return L10n.t("working")
         case .waiting: return L10n.t("waiting")
+        case .success: return L10n.t("complete")
         case .idle:    return L10n.t("idle")
         }
     }
@@ -709,7 +794,7 @@ private struct SessionList: View {
     private var ordered: [AgentSession] {
         summary.sessions.sorted { a, b in
             let rank: (AgentSession) -> Int = {
-                switch $0.state { case .waiting: 0; case .busy: 1; case .idle: 2 }
+                switch $0.state { case .waiting: 0; case .busy: 1; case .success: 2; case .idle: 3 }
             }
             return rank(a) == rank(b) ? a.since > b.since : rank(a) < rank(b)
         }

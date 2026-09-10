@@ -805,7 +805,7 @@ hundredths of a point wide; that is a fact about arcs, not a bug.
 - [ ] Threshold notifications (80% / 100%), per-provider mute
 - [ ] Auto-hide: never / on fullscreen / on overlap
 - [ ] Multi-display follow + unplug handling
-- [ ] Reduced-motion / reduced-transparency
+- [ ] Reduced-motion / reduced-transparency — reduced transparency is now the system's on the glass surface; see "The glass surface"
 - [ ] App icon, final name, README screenshots
 
 ## Managing accounts from Settings
@@ -1555,6 +1555,83 @@ Not an icon problem at all: the app had no Dock tile for an icon to sit on.
       window they had just opened.
 - [x] Clicking the Dock icon opens settings, via the `applicationShouldHandle
       Reopen` hook added for the Hide option. The notch stays where it is.
+
+## The glass surface
+
+### One glass, nothing underneath
+
+The expanded notch body, the tooltip and the settings orb are all painted, in
+the glass style, with `.glassEffect(.regular)` and nothing else — no tint, no
+colour underneath. That is deliberate: a wash of our own would sit under the
+glass and override the Clear/Tinted choice, light/dark mode and Reduce
+Transparency that the Mac's Appearance settings already control, so leaving
+the layer empty is what lets those settings reach the notch untouched. The
+tooltip is one shape, `TooltipSilhouette`, covering the card and the tail
+together rather than two separate glass shapes — two shapes each get their
+own rim highlight and show a seam where the tail meets the card.
+`testTheSilhouetteIsOneShapeCoveringCardAndTail`
+in `Tests/TooltipRenderTests.swift` pins it.
+
+### Solid stays the frame's
+
+`NotchSurfaceStyle.solid` — the non-default choice — forces `darkAqua` on the
+panel, so every hex the frame specifies still applies exactly as it did before
+glass existed. `Palette` gained light-appearance variants purely so the default
+glass style can follow the Mac into light mode: `textPrimary` `#000000`,
+`textSecondary` `#6B6B6B`, `ample` `#00A356` and `watch` `#B08800`, plus
+`ringTrack` at alpha 0.16 and `barTrack` at alpha 0.15 on black, all chosen for
+at least 3:1 contrast against white rather than sampled from anything.
+`PaletteAppearanceTests` (`Tests/UsageBandTests.swift`) pins both appearances,
+and `testTheSolidStyleForcesTheDarkAppearance` (`PanelSizingIntegrityTests`,
+`Tests/NotchRenderTests.swift`) pins the forced panel appearance.
+
+### What the tests can see
+
+`ImageRenderer` has no desktop behind it to refract, so almost every pixel test
+that renders the notch renders it in the solid style — glass with nothing
+behind it to sample is not what glass looks like on screen. The one glass
+exception is the hardware's band, below, which is painted the same opaque
+black regardless of style and so needs no desktop to read correctly. The other
+thing the glass style still has to prove headlessly is that the folded pill
+stays opaque black whatever the surface style is; `testTheFoldedPillIsOpaqueInTheGlassStyle`
+pins that rest state.
+
+### The hardware's band stays black
+
+A MacBook check showed the physical cutout, in the glass style, as a black
+rectangle set into a sheet of glass — the band at the hardware's height read
+as glass over nothing rather than as the hole in the screen it actually is.
+The fix keeps that band opaque black in both surface styles: it is a topmost
+layer in `NotchRootView.notch(_:)`, sized to `model.contentInset`, so the
+cutout and the drawn shape read as one wide notch again, and the glass begins
+only below it, where the readings begin. `testTheHardwaresBandStaysBlackInTheGlassStyle`
+pins it next to the solid-style band test.
+
+Upstream 1.7.0 draws the whole notch two points past the bezel
+(`NotchRootView.bezelBleed`, applied after `.scaleEffect`), so a band exactly
+`contentInset` deep ended two points short of the cutout's bottom and left a
+strip of glass inside the hole. The band is now `contentInset + bezelBleed /
+sizeScale` deep, which after scaling and the unscaled offset covers exactly
+`contentInset × sizeScale` on screen — the same region the readings are kept
+out of. It only showed in the full run: rendered alone, `ImageRenderer` draws
+glass transparent and the probe skips it; after earlier tests have exercised
+the effect it draws a light material, and
+`testTheHardwaresBandStaysBlackInTheGlassStyle` caught the strip.
+
+### Below macOS 26, and with Reduce transparency on
+
+Codenotch 1.7.0 targets macOS 15, where `glassEffect` does not exist yet. A
+material in the notch panel would have nothing behind it to blur, so below
+macOS 26 the glass style resolves to solid and the Surface setting is not
+offered at all — there is nothing to choose between. Reduce transparency
+resolves to solid too, following the same precedence the Settings window
+already uses for its own translucent chrome: Reduce transparency wins over
+glass. `testReduceTransparencyForcesTheDarkAppearance` and
+`testReduceTransparencyPaintsTheGlassStyleSolid` pin both cases. The window
+learns about a live accessibility change from
+`NSWorkspace.accessibilityDisplayOptionsDidChangeNotification` and re-applies
+the panel's appearance from that subscription, rather than only checking once
+at launch.
 
 ## Decisions needed
 - [ ] Final app name (`Codenotch` is a placeholder)

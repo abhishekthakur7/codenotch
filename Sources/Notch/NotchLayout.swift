@@ -61,6 +61,23 @@ enum NotchLayout {
     static let activityDiameter = Design.px(72)
     static let activityStroke   = Design.px(5.5)
 
+    // The weekly ring. Not in the design frame — the frame draws one ring per
+    // provider — so these are placed against what is already there rather than
+    // quoted from it, and the tests state the clearances rather than the
+    // numbers.
+    //
+    // Thinner than the headline arc on purpose: same kind of fact, lesser
+    // claim on the eye. Two arcs of equal weight in a 44pt circle read as one
+    // confused reading rather than as two limits.
+    static let weeklyRingStroke = Design.px(5)
+    /// Inside: centred in the gap between the glyph and the working
+    /// indicator's own arc, which is the only clear band left in there.
+    static let weeklyInsideRadius = Design.px(28)
+    /// Outside: past the track, into the margin the notch keeps between a ring
+    /// and its bezel. Far enough out not to crowd the track, far enough in that
+    /// the bezel is never touched — `NotchLayoutTests` pins both.
+    static let weeklyOutsideRadius = Design.px(65)
+
     // The settings orb: it lives *below* the notch, not inside it. At rest only
     // an arc of its edge is drawn, tucked into the corner the bottom flare
     // makes; on hover the same circle fills in and takes a gear. One circle,

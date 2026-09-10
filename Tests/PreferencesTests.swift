@@ -68,6 +68,19 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertEqual(preferences.appPresence, .dock)
         XCTAssertEqual(preferences.notchEdge, .right)
         XCTAssertEqual(preferences.notchSize, .medium)
+        XCTAssertEqual(preferences.weeklyRing, .off)
+    }
+
+    /// Off by default, and it has to stay chosen once it is chosen: an extra
+    /// arc in a 44pt circle changes how every reading looks, so it is not
+    /// something to switch on for somebody, nor to forget they switched on.
+    func testTheWeeklyRingIsOffUntilAskedForAndThenSurvivesARelaunch() {
+        let (fresh, name) = makeDefaults()
+        XCTAssertEqual(Preferences(defaults: fresh).weeklyRing, .off)
+
+        Preferences(defaults: fresh).weeklyRing = .outside
+
+        XCTAssertEqual(Preferences(defaults: UserDefaults(suiteName: name)!).weeklyRing, .outside)
     }
 
     /// The size has to outlive the launch that chose it, or it reads as a

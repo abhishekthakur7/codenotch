@@ -156,6 +156,13 @@ final class NotchViewModel: ObservableObject {
     /// Mirrors the persisted Appearance choice so the separate notch window
     /// redraws immediately when Settings changes it.
     @Published var accentColor: AccentColorChoice = .system
+    /// Whether a provider's weekly limit gets a ring of its own, and where.
+    /// Mirrored here for the same reason `accentColor` is: the notch is a
+    /// separate window, and it has to redraw the moment Settings changes this.
+    @Published var weeklyRing: WeeklyRing = .off
+    /// Mirrors the persisted Appearance choice so the separate notch window
+    /// redraws immediately when Settings changes it.
+    @Published var surfaceStyle: NotchSurfaceStyle = .glass
     /// The display's own notch, when this edge has to share the bezel with one.
     ///
     /// Set by the window controller from the screen the panel is on, because
@@ -541,6 +548,21 @@ final class NotchViewModel: ObservableObject {
     /// the hit region has to know that while the notch is still open.
     var restingLength: CGFloat { hardwareNotch?.width ?? NotchLayout.pillHeight }
     var restingDepth: CGFloat { hardwareNotch?.height ?? NotchLayout.pillWidth }
+
+    /// What wakes the folded notch, in panel points: the resting shape and a
+    /// band around it, or the resting shape alone.
+    ///
+    /// The band is for the pill. A 10pt sliver on a screen edge is a fiddly
+    /// target, and the only cost of surrounding it is that it opens a little
+    /// eagerly. Joined to the hardware notch the band is a different matter:
+    /// the notch is already a generous target, and a band around it reached
+    /// 34pt *below* the menu bar — across the title bar of a window tiled
+    /// against the centre of the screen, whose close, minimise and zoom
+    /// buttons then opened the notch on approach and disappeared under it.
+    /// Flush with the hardware, what wakes the notch is the notch.
+    var wakeLength: CGFloat { max(restingLength * sizeScale, wakeBand) }
+    var wakeDepth: CGFloat { restingDepth * sizeScale + wakeBand }
+    private var wakeBand: CGFloat { isFlushWithHardware ? 0 : NotchLayout.pillHotZone }
 
     /// The drawn size of the notch body, in panel axes.
     var notchSize: CGSize {

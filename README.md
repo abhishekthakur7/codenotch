@@ -21,8 +21,13 @@ two never disagree.
 
 ## Download
 
-[**Latest release**](../../releases/latest) — signed, notarized, and updating
-itself from then on. Take this one unless you have a reason not to.
+[![Download for macOS](docs/design/download-macos.svg)](../../releases/latest/download/Codenotch.dmg)
+
+That button is the disk image itself, not the page it sits on — the asset is
+named `Codenotch.dmg` in every release, so `releases/latest/download/` always
+resolves to the newest one and the link never needs updating. Signed,
+notarized, and updating itself from then on. Take this one unless you have a
+reason not to; the [release page](../../releases/latest) has the notes.
 
 To try unreleased `main` without an Xcode install, the [preview
 build](../../releases/tag/preview) is rebuilt from every commit, and the
@@ -49,7 +54,7 @@ A Windows port — Rust/Tauri 2, same design and providers — lives in [`window
 
 | Provider | Source | How |
 |---|---|---|
-| **Claude Code** | official | Claude Code's own `/usage`, asked of the installed `claude`. Falls back to the OAuth token in the login keychain, against the endpoint that command uses, when Claude Code isn't installed. |
+| **Claude Code** | official | Claude Desktop's own cached usage response, where Desktop is running and signed into the same account. Then Claude Code's own `/usage`, asked of the installed `claude`. Then the OAuth token in the login keychain, against the endpoint that command uses. |
 | **Cursor** | official | The editor's signed-in session in its local SQLite state, or the `cursor-agent` login in the keychain — no separate sign-in. |
 | **Codex** | official | ChatGPT's usage endpoint, using the local Codex sign-in. Shows the 5-hour and weekly limits when available. |
 | **Antigravity** | official where licensed, otherwise a request count | Antigravity's local language server first, then Google's quota endpoint; a plain count when neither will answer for the account. |
@@ -204,6 +209,15 @@ At rest it is a small pill on the screen edge that unfolds when the pointer
 reaches it — configurable in Settings to always show, or to hide entirely.
 Settings live in an orb below the notch: an arc at rest, a gear on hover.
 
+Clicking the notch while it is open keeps it open, so it stays put while you
+read it; clicking it again lets it fold away as usual. That click has to land
+on the body itself, since a ring takes its own click to refetch that provider
+and the orb takes one to open Settings. Right-clicking offers the same thing as
+a menu item, **Keep open**, ticked while the notch is being held open, which is
+the surer way to release one that was kept open by accident. The item is
+greyed out when Settings says Always show, because that choice is Settings' to
+change.
+
 In Settings → Appearance → Reset time, choose **Time remaining** for countdowns
 like "Resets in 3 Days 3h". **Reset date** keeps the reset date and time, with
 minutes shown when less than an hour remains.
@@ -277,6 +291,24 @@ an internal endpoint, a local database, a language server's own RPC — and
 those can change without notice. Every adapter's response shape is pinned by
 tests, and every failure degrades to a visible status (`stale`, `needsAuth`,
 `error`) rather than an invented number.
+
+**Claude Desktop's cache:** Claude Desktop is a Chromium app, so the usage
+response its own panel draws is written to an HTTP cache file under
+`~/Library/Application Support/Claude`. Reading it is how the ring stays right
+for people who work in Desktop rather than in the terminal — the two Claude
+Code paths below both go dark when `claude "/usage"` stops printing the windows
+and the keychain token has not been re-minted since Claude Code last ran, which
+is an ordinary state for a Desktop user. It is strictly read-only, and narrow:
+only entries whose cached URL is *this account's* `/api/organizations/<id>/usage`
+are opened at all, matched on the organization Claude Code records for the
+profile, so one account's numbers can never land on another's ring. No token, no
+cookie, no credential and no request to Anthropic are involved. A snapshot older
+than 30 minutes is not shown as live — it drops through to the paths below, and
+the last good reading ages and dims as any other would. Chromium's cache format
+is private and may change; if it does, the source goes quiet and the existing
+ones take over. Bodies are `content-encoding: zstd` and macOS ships no decoder,
+so a decode-only build of Zstandard is vendored under
+[`Sources/Vendor/zstd`](Sources/Vendor/zstd) (BSD-3-Clause).
 
 **Keychain:** Claude's readings do not use it where Claude Code is installed.
 Claude Code files a *new* keychain item on every token rotation, and the new

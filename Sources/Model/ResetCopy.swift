@@ -68,7 +68,14 @@ enum ResetCopy {
             return L10n.t("Resets \(formatter.string(from: resetsAt))", locale: locale)
         }
 
-        formatter.setLocalizedDateFormatFromTemplate("E h:mm a")
+        // `j`, not `h`: a literal hour symbol in a template pins the clock to
+        // twelve hours whatever the region, so everywhere that writes 00:00
+        // rather than 12:00 AM — most of Europe, Asia and Latin America — read
+        // "Resets mer. 12:00 AM" here while every other clock on the Mac said
+        // 00:00. `j` asks the locale, which also carries the "24-Hour Time"
+        // switch in System Settings. Regions that write AM/PM keep it, so
+        // English is still "Thu 12:00 AM".
+        formatter.setLocalizedDateFormatFromTemplate("E j:mm")
         return L10n.t("Resets \(formatter.string(from: resetsAt))", locale: locale)
     }
 

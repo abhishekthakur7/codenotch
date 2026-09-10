@@ -26,10 +26,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// for real. Without this guard every test run put a live request on the
     /// usage endpoint — which is both wrong on its own terms and, on an endpoint
     /// that rate-limits, actively harmful.
-    private var isRunningTests: Bool {
-        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-            || NSClassFromString("XCTestCase") != nil
-    }
+    private var isRunningTests: Bool { Runtime.isUnderTest }
 
     /// Quit any copy of Codenotch that was already running.
     ///

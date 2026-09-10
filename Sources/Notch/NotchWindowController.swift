@@ -263,7 +263,7 @@ final class NotchWindowController {
             container.addSubview(hosting)
             panel.contentView = container
             panel.ignoresMouseEvents = true
-            panel.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel.orderFrontRegardless() }
             self.panel = panel
             self.hostingView = hosting
         }
@@ -754,7 +754,7 @@ final class NotchWindowController {
         peekUntil = nil
         switch visibility {
         case .alwaysShow:
-            panel?.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel?.orderFrontRegardless() }
             model.isAlwaysOn = true
             // Any pin made by hand is subsumed by the setting; leaving it set
             // would outlive a later switch back to hover.
@@ -763,7 +763,7 @@ final class NotchWindowController {
             foldWork = nil
             withAnimation(NotchMotion.unfold) { model.isExpanded = true }
         case .onHover:
-            panel?.orderFrontRegardless()
+            if !Runtime.isUnderTest { panel?.orderFrontRegardless() }
             model.isAlwaysOn = false
             model.isPinned = false
             // Fold now rather than waiting for the pointer to leave: it may
@@ -813,7 +813,7 @@ final class NotchWindowController {
         }
         peekUntil = Date().addingTimeInterval(duration)
 
-        panel.orderFrontRegardless()
+        if !Runtime.isUnderTest { panel.orderFrontRegardless() }
         foldWork?.cancel()
         foldWork = nil
         peekWork?.cancel()

@@ -4,37 +4,65 @@ import Combine
 @MainActor
 final class NotchViewModel: ObservableObject {
     @Published var snapshots: [ProviderSnapshot] = []
-    private var performances: [String: LocalModelPerformance] = [:]
+    /// Per runtime, so Ollama's relay switching off clears its own readings
+    /// and nobody else's.
+    private var performances: [String: [String: LocalModelPerformance]] = [:]
+    private var ledger = LocalTokenLedger()
     private var localMetricsEnabled = false
+
+    /// The Ollama relay's own id; its readings are keyed by model name.
+    static let ollamaSource = "ollama-local"
 
     func setLocalMetricsEnabled(_ enabled: Bool) {
         localMetricsEnabled = enabled
-        if !enabled { performances = [:]; thinkingModels = [:] }
-        snapshots = snapshots.map(withPerformance)
+        if !enabled { performances[Self.ollamaSource] = nil; thinkingModels = [:] }
+        snapshots = snapshots.map(decorated)
     }
 
     func updateSnapshots(_ providerSnapshots: [ProviderSnapshot]) {
         let hoveredID = hoveredSnapshot?.id
-        let next = ProviderOrder.cells(from: providerSnapshots, keeping: snapshots).map(withPerformance)
+        let next = ProviderOrder.cells(from: providerSnapshots, keeping: snapshots).map(decorated)
         let nextHoveredIndex = hoveredID.flatMap { id in next.firstIndex { $0.id == id } }
         if hoveredIndex != nextHoveredIndex { hoveredIndex = nextHoveredIndex }
         snapshots = next
     }
 
-    func updatePerformances(_ measurements: [String: LocalModelPerformance]) {
-        performances = measurements
-        snapshots = snapshots.map(withPerformance)
+    func updatePerformances(_ measurements: [String: LocalModelPerformance],
+                            source: String = NotchViewModel.ollamaSource) {
+        performances[source] = measurements
+        snapshots = snapshots.map(decorated)
     }
 
-    private func withPerformance(_ snapshot: ProviderSnapshot) -> ProviderSnapshot {
+    /// Logged tokens per cell, read against `now` as it is drawn so "today"
+    /// rolls over at midnight without a new line being written.
+    func updateLedger(_ ledger: LocalTokenLedger) {
+        self.ledger = ledger
+        snapshots = snapshots.map(decorated)
+    }
+
+    private func decorated(_ snapshot: ProviderSnapshot) -> ProviderSnapshot {
         guard let model = snapshot.localModel else { return snapshot }
         var snapshot = snapshot
-        snapshot.showsLocalPerformance = localMetricsEnabled
-        snapshot.localPerformance = localMetricsEnabled
-            ? performances[OllamaThinkingStream.modelKey(model.name)] : nil
+        let shows = localMetricsEnabled || snapshot.localRuntimeMeasuresSpeed
+        snapshot.showsLocalPerformance = shows
+        snapshot.localPerformance = shows
+            ? performances[snapshot.providerID]?[Self.performanceKey(for: snapshot, model: model)] : nil
+        snapshot.localLedger = ledger.summary(for: snapshot.id, now: now)
+        snapshot.localContextFraction = snapshot.localLedger?.contextFraction(contextLength: model.contextLength)
         return snapshot
     }
+
+    /// Ollama's relay knows a model by the name a client used, with Ollama's
+    /// implicit `:latest`; everything else reports by notch cell id.
+    static func performanceKey(for snapshot: ProviderSnapshot, model: LocalRuntimeReading.Model) -> String {
+        snapshot.providerID == ollamaSource ? OllamaThinkingStream.modelKey(model.name) : snapshot.id
+    }
+
     @Published var thinkingModels: [String: Date] = [:]
+    /// What each local model instance is doing, keyed by cell id. Ollama's
+    /// thinking relay reports through `thinkingModels`; LM Studio's state
+    /// poll reports here, phase and queue included.
+    @Published var localActivities: [String: LocalModelActivity] = [:]
 
     /// Live agent sessions, keyed by the provider they belong to. They surface
     /// inside that provider's own ring rather than as a cell of their own — one
@@ -392,9 +420,14 @@ final class NotchViewModel: ObservableObject {
     /// somebody else's.
     func activity(for snapshot: ProviderSnapshot) -> ActivitySummary? {
         guard let model = snapshot.localModel else { return activity(for: snapshot.providerID) }
+        if let local = localActivities[snapshot.id] {
+            return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: local.label,
+                detail: snapshot.displayName, state: .busy, waitingFor: nil, since: local.since)],
+                queued: local.queued, note: local.note)
+        }
         guard let since = thinkingModels[OllamaThinkingStream.modelKey(model.name)] else { return nil }
-        return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: "Thinking",
-            detail: "Ollama", state: .busy, waitingFor: nil, since: since)])
+        return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: L10n.t("Thinking"),
+            detail: snapshot.displayName, state: .busy, waitingFor: nil, since: since)])
     }
 
     func activity(for providerID: String) -> ActivitySummary? {
@@ -448,6 +481,7 @@ final class NotchViewModel: ObservableObject {
                 hasTokenUsage: snapshot.tokenUsage != nil,
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
                 compactRowCount: snapshot.compactRowCount)
         }.max() ?? 0
     }

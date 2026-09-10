@@ -21,6 +21,9 @@ struct ProviderRing: View {
     /// A fetch this cell asked for, in flight.
     var isRefreshing: Bool = false
     var localPerformance: LocalModelPerformance?
+    /// A local model's arc: how full its context was on the last request. Nil
+    /// draws the whole ring, which is what a runtime that does not say gets.
+    var localContextFraction: Double?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
@@ -31,6 +34,7 @@ struct ProviderRing: View {
         isBlocked ? .exhausted : UsageBand.band(for: usedFraction ?? 0)
     }
     private var sweep: CGFloat { CGFloat(min(max(usedFraction ?? 0, 0), 1)) }
+    private var localSweep: CGFloat { CGFloat(min(max(localContextFraction ?? 1, 0), 1)) }
 
     var body: some View {
         ZStack {
@@ -41,10 +45,24 @@ struct ProviderRing: View {
                 Circle()
                     .strokeBorder(Palette.ringTrack, lineWidth: NotchLayout.trackStroke)
 
-                if let localPerformance {
+                if localPerformance != nil || localContextFraction != nil {
+                    // Two facts on one ring: the arc is the context filling up,
+                    // the colour is the last response's speed. Inset by half the
+                    // stroke so a full arc lands exactly where the solid
+                    // `strokeBorder` ring used to, and a runtime with no context
+                    // reading looks as it always did. Grey until a speed exists:
+                    // the quota colours would say something a local model has
+                    // no quota to mean.
                     Circle()
-                        .strokeBorder(localPerformance.band.color, lineWidth: NotchLayout.progressStroke)
-                        .animation(NotchMotion.reading, value: localPerformance.band)
+                        .inset(by: NotchLayout.progressStroke / 2)
+                        .trim(from: 0, to: localSweep)
+                        .stroke(
+                            localPerformance?.band.color ?? Palette.textSecondary,
+                            style: StrokeStyle(lineWidth: NotchLayout.progressStroke, lineCap: .round)
+                        )
+                        .rotationEffect(.degrees(-90))
+                        .animation(NotchMotion.reading, value: localSweep)
+                        .animation(NotchMotion.reading, value: localPerformance?.band)
                 } else if usedFraction != nil {
                     Circle()
                         .inset(by: NotchLayout.trackStroke / 2)
@@ -130,13 +148,19 @@ private struct ActivityArc: View {
         .frame(width: NotchLayout.ringDiameter, height: NotchLayout.ringDiameter)
     }
 
+    /// Dots are a line of things: with requests queued behind the running one
+    /// the arc becomes a ring of them, still turning, so a backed-up model is
+    /// told apart from a busy one at a glance.
+    private var queued: Bool { summary.queued > 0 }
+
     private var spinner: some View {
         Circle()
             .inset(by: inset)
-            .trim(from: 0, to: arcFraction)
+            .trim(from: 0, to: queued ? 1 : arcFraction)
             .stroke(
                 summary.color,
-                style: StrokeStyle(lineWidth: NotchLayout.activityStroke, lineCap: .round)
+                style: StrokeStyle(lineWidth: NotchLayout.activityStroke, lineCap: .round,
+                                   dash: queued ? [0.01, NotchLayout.activityStroke * 2.2] : [])
             )
             .rotationEffect(.degrees(spinning ? 360 : 0))
             .onAppear {
@@ -176,13 +200,14 @@ struct ProviderCell: View {
     var body: some View {
         VStack(spacing: NotchLayout.ringLabelGap) {
             ProviderRing(
-                usedFraction: snapshot.hasReading ? snapshot.ringFraction : nil,
+                usedFraction: snapshot.localModel == nil && snapshot.hasReading ? snapshot.ringFraction : nil,
                 glyph: snapshot.glyph,
                 isStale: snapshot.status.isStale || !snapshot.hasReading,
                 isBlocked: snapshot.block != nil,
                 activity: activity,
                 isRefreshing: isRefreshing,
-                localPerformance: snapshot.localPerformance
+                localPerformance: snapshot.localPerformance,
+                localContextFraction: snapshot.localContextFraction
             )
             Text(readingText)
                 .font(Typography.percent)
@@ -200,8 +225,26 @@ struct ProviderCell: View {
         }
         .frame(height: NotchLayout.cellExtent)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(snapshot.localModel.map {
-            "\($0.brand.map { "\($0.displayName), " } ?? "")\($0.name), \(snapshot.displayName) local, \(snapshot.showsLocalPerformance ? (snapshot.localPerformance.map { "Last generation speed \($0.speedText), \($0.band.label)" } ?? "Speed not measured") : "Loaded"), \($0.detail)\(activity?.state == .working ? ", Thinking" : "")"
-        } ?? "\(snapshot.displayName), \(readingText)")
+        .accessibilityLabel(accessibilityText)
+    }
+
+    /// Everything the cell says, as one sentence for VoiceOver and the tests.
+    var accessibilityText: String {
+        snapshot.localModel.map {
+            "\($0.brand.map { "\($0.displayName), " } ?? "")\($0.name), \(snapshot.displayName) local, \(snapshot.showsLocalPerformance ? (snapshot.localPerformance.map { "Last generation speed \($0.speedText), \($0.band.label)" } ?? "Speed not measured") : "Loaded"), \($0.detail)\(localActivityText)\(localLedgerText)"
+        } ?? "\(snapshot.displayName), \(readingText)"
+    }
+
+    /// What the model is doing, the way the tooltip's header says it.
+    private var localActivityText: String {
+        guard let activity, activity.state == .working else { return "" }
+        let phase = activity.sessions.first?.name ?? "Working"
+        return activity.queued > 0 ? ", \(phase), \(activity.queued) queued" : ", \(phase)"
+    }
+
+    private var localLedgerText: String {
+        guard let ledger = snapshot.localLedger else { return "" }
+        let context = snapshot.localContextFraction.map { ", Context \(Percent.text(for: $0))% full" } ?? ""
+        return "\(context), Tokens today \(ledger.tokensTodayText), \(ledger.requestsTodayText) requests"
     }
 }

@@ -194,6 +194,17 @@ struct ProviderSnapshot: Identifiable, Equatable {
     var localModel: LocalRuntimeReading.Model?
     var localPerformance: LocalModelPerformance?
     var showsLocalPerformance = false
+    /// How full the loaded context was on the last request, from the runtime's
+    /// own log. The local ring's arc: a window filling up is the one fraction
+    /// a local model has, where a cloud ring has a quota.
+    var localContextFraction: Double?
+    /// Today's tokens and requests and the shape of the last response, when
+    /// the runtime logs them. Read by the tooltip; absent for runtimes that
+    /// do not.
+    var localLedger: LocalTokenLedger.Summary?
+    /// The runtime measures responses itself, so speed is shown without the
+    /// Ollama relay switch.
+    var localRuntimeMeasuresSpeed = false
     /// A model cell has its own display preference, but polling belongs to the
     /// runtime that supplied it.
     var sourceProviderID: String?
@@ -206,7 +217,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
             ProviderSnapshot(id: "\(id):model:\(model.id)", displayName: displayName,
                              glyph: model.brand?.glyph ?? glyph,
                              fidelity: fidelity, status: status, windows: [],
-                             kind: kind, localModel: model, sourceProviderID: id)
+                             kind: kind, localModel: model,
+                             localRuntimeMeasuresSpeed: localRuntime?.measuresSpeed ?? false,
+                             sourceProviderID: id)
         }
     }
     /// Codex's account-wide token activity, when its profile endpoint returned
@@ -258,8 +271,14 @@ struct ProviderSnapshot: Identifiable, Equatable {
         windows.filter { $0.usedFraction == nil && $0.used != nil }.count
     }
 
-    /// A ring can only be drawn when the provider said what the limit was.
-    var ringFraction: Double? { usedFraction }
+    /// A ring can only be drawn when the provider said what the limit was. A
+    /// local model has no limit; its arc is how full the context was.
+    var ringFraction: Double? { kind == .localRuntime ? localContextFraction : usedFraction }
+
+    /// Rows the tooltip adds for a logged runtime: context used, tokens and
+    /// requests today, reasoning share, draft acceptance. Counted here so the
+    /// card's budget and its contents cannot disagree.
+    var localLedgerRowCount: Int { localLedger == nil ? 0 : 5 }
 
     /// Signing in means something different per provider, so the prompt has to
     /// say which door to knock on.
@@ -286,6 +305,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
         // one wants a key, the local one wants the daemon running.
         case "ollama":       return L10n.t("Enter an Ollama API key in Settings, or export OLLAMA_API_KEY", locale: locale)
         case "ollama-local": return L10n.t("Start Ollama to monitor your local models", locale: locale)
+        case "lmstudio":     return L10n.t("Start LM Studio's server to monitor your local models", locale: locale)
         default:           return L10n.t("Sign in to \(displayName) to read your usage", locale: locale)
         }
     }

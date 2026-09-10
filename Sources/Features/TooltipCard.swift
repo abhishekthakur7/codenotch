@@ -153,6 +153,8 @@ private struct TooltipHeader<Mark: View>: View {
             Text(title)
                 .font(Typography.cardTitle)
                 .foregroundStyle(Palette.textPrimary)
+                // The title names the model; a long note yields before it does.
+                .layoutPriority(1)
             if let note {
                 Spacer(minLength: Design.px(20))
                 Text(note)
@@ -328,7 +330,8 @@ private struct LimitWindowRow: View {
 }
 
 private struct ProviderTooltip: View {
-    var isThinking = false
+    /// What a local model is doing right now, for the header's note.
+    var activityNote: String?
     let snapshot: ProviderSnapshot
     let now: Date
     let resetTimeFormat: ResetTimeFormat
@@ -366,7 +369,7 @@ private struct ProviderTooltip: View {
             TooltipHeader(title: snapshot.kind == .localRuntime
                           ? L10n.t("\(snapshot.localModel?.brand?.displayName ?? snapshot.displayName) · Local")
                           : L10n.t("\(snapshot.displayName) Usage"),
-                          note: isThinking ? L10n.t("Thinking") : (snapshot.localModel?.brand != nil ? snapshot.displayName : readingAge)) {
+                          note: activityNote ?? (snapshot.localModel?.brand != nil ? snapshot.displayName : readingAge)) {
                 ProviderGlyphView(glyph: snapshot.glyph)
                     .foregroundStyle(Palette.textPrimary)
             }
@@ -383,7 +386,9 @@ private struct ProviderTooltip: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, NotchLayout.headerToBlock)
             } else if let localModel = snapshot.localModel {
-                RuntimeModelDetails(model: localModel, performance: snapshot.localPerformance, showsPerformance: snapshot.showsLocalPerformance, now: now)
+                RuntimeModelDetails(model: localModel, performance: snapshot.localPerformance,
+                                    showsPerformance: snapshot.showsLocalPerformance,
+                                    ledger: snapshot.localLedger, now: now)
             } else {
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(Array(groupedWindows.enumerated()), id: \.element.id) { groupIndex, group in
@@ -426,6 +431,9 @@ private struct RuntimeModelDetails: View {
     let model: LocalRuntimeReading.Model
     let performance: LocalModelPerformance?
     let showsPerformance: Bool
+    /// Present for a runtime that logs its requests; five more rows, counted
+    /// in `ProviderSnapshot.localLedgerRowCount`.
+    let ledger: LocalTokenLedger.Summary?
     let now: Date
 
     var body: some View {
@@ -449,6 +457,13 @@ private struct RuntimeModelDetails: View {
                 SplitRow(leading: "Unloads", trailing: model.unloadText(now: now))
                 if showsPerformance {
                     SplitRow(leading: "Measured", trailing: performance.map { ElapsedCopy.ago(since: $0.measuredAt, now: now) } ?? "—")
+                }
+                if let ledger {
+                    SplitRow(leading: "Context used", trailing: ledger.contextText(contextLength: model.contextLength))
+                    SplitRow(leading: "Tokens today", trailing: ledger.tokensTodayText)
+                    SplitRow(leading: "Requests today", trailing: ledger.requestsTodayText)
+                    SplitRow(leading: "Reasoning share", trailing: ledger.reasoningShareText)
+                    SplitRow(leading: "Draft accepted", trailing: ledger.draftAcceptanceText)
                 }
             }
             .padding(.top, NotchLayout.blockSpacing)
@@ -743,6 +758,13 @@ struct TooltipCard: View {
     var tailOffset: CGFloat = 0
     @AppStorage(Preferences.showUsagePaceKey) private var showUsagePace = false
 
+    /// The phase a local model is in, and the queue behind it, for the header.
+    /// Ollama's relay only knows thinking; LM Studio's poll names the phase.
+    private var localActivityNote: String? {
+        guard snapshot.localModel != nil, let activity, activity.state == .working else { return nil }
+        return activity.note ?? activity.sessions.first?.name ?? L10n.t("Thinking")
+    }
+
     /// The same figure the hover region uses, so what is drawn and what is
     /// reachable can never drift apart.
     private var height: CGFloat {
@@ -756,6 +778,7 @@ struct TooltipCard: View {
             hasTokenUsage: snapshot.tokenUsage != nil,
             localModelName: snapshot.localModel?.name,
             showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
             compactRowCount: snapshot.compactRowCount
         )
     }
@@ -768,7 +791,7 @@ struct TooltipCard: View {
             // drifts while the card resizes around them.
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 0) {
-                    ProviderTooltip(isThinking: snapshot.localModel != nil && activity?.state == .working, snapshot: snapshot, now: now, resetTimeFormat: resetTimeFormat,
+                    ProviderTooltip(activityNote: localActivityNote, snapshot: snapshot, now: now, resetTimeFormat: resetTimeFormat,
                                     showUsagePace: showUsagePace)
                     if let tokenUsage = snapshot.tokenUsage {
                         CodexUsageSection(usage: tokenUsage, now: now)

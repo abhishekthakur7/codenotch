@@ -11,6 +11,18 @@ template. `ProviderGlyphView` applies the same foreground color, fixed frame
 and asset lookup used by the other providers, so the mark works on both the
 dark notch and the Settings background.
 
+## LM Studio
+
+`Sources/Assets.xcassets/glyph-lmstudio.imageset/lmstudio.svg` is Lobe Icons'
+monochrome LM Studio mark (`packages/static-svg/icons/lmstudio.svg`) from the
+same pinned commit `a94750e3f5f8fc33757b839d85030e742284e43a`, retrieved
+2026-09-10, adapted the same way as the brand marks below: `fill="#000"`,
+numeric `width="24"` / `height="24"`, web-only style removed. The mark's
+lighter second layer is a `fill-opacity` on the path and survives template
+rendering as partial alpha, which is how the original reads too.
+`LMStudioProviderTests.testTheGlyphAssetRendersAsAMarkNotASquare` checks the
+native render.
+
 ## Local model brands
 
 Qwen, Gemma, Meta (for Llama), DeepSeek and Mistral use monochrome vectors from

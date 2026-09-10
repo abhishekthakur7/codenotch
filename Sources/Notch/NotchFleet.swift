@@ -21,12 +21,16 @@ final class NotchFleet {
     private var visibility: NotchVisibility = .onHover
     private var snapshots: [ProviderSnapshot] = []
     private(set) var thinkingModels: [String: Date] = [:]
-    private var performances: [String: LocalModelPerformance] = [:]
+    /// Per source, the way the view model keeps them: the Ollama relay and
+    /// the LM Studio log each replace their own readings wholesale.
+    private var performances: [String: [String: LocalModelPerformance]] = [:]
+    private var localActivities: [String: LocalModelActivity] = [:]
+    private var ledger = LocalTokenLedger()
     private var localMetricsEnabled = false
 
     func setLocalMetricsEnabled(_ enabled: Bool) {
         localMetricsEnabled = enabled
-        if !enabled { performances = [:]; thinkingModels = [:] }
+        if !enabled { performances[NotchViewModel.ollamaSource] = nil; thinkingModels = [:] }
         for controller in controllers.values { controller.model.setLocalMetricsEnabled(enabled) }
     }
     private var refreshing: Set<String> = []
@@ -181,10 +185,25 @@ final class NotchFleet {
         }
     }
 
-    func setPerformances(_ measurements: [String: LocalModelPerformance]) {
-        performances = measurements
+    func setPerformances(_ measurements: [String: LocalModelPerformance],
+                         source: String = NotchViewModel.ollamaSource) {
+        performances[source] = measurements
         for controller in controllers.values {
-            controller.model.updatePerformances(measurements)
+            controller.model.updatePerformances(measurements, source: source)
+        }
+    }
+
+    func setLocalActivities(_ activities: [String: LocalModelActivity]) {
+        localActivities = activities
+        for controller in controllers.values {
+            controller.model.localActivities = activities
+        }
+    }
+
+    func setLedger(_ ledger: LocalTokenLedger) {
+        self.ledger = ledger
+        for controller in controllers.values {
+            controller.model.updateLedger(ledger)
         }
     }
 
@@ -313,8 +332,12 @@ final class NotchFleet {
         controller.signInItems = signInItems
         controller.model.updateSnapshots(snapshots)
         controller.model.thinkingModels = thinkingModels
+        controller.model.localActivities = localActivities
         controller.model.setLocalMetricsEnabled(localMetricsEnabled)
-        controller.model.updatePerformances(performances)
+        for (source, measurements) in performances {
+            controller.model.updatePerformances(measurements, source: source)
+        }
+        controller.model.updateLedger(ledger)
         controller.model.refreshing = refreshing
         controller.model.sessions = sessions
         controller.model.now = Date()

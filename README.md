@@ -55,6 +55,7 @@ A Windows port — Rust/Tauri 2, same design and providers — lives in [`window
 | **Antigravity** | official where licensed, otherwise a request count | Antigravity's local language server first, then Google's quota endpoint; a plain count when neither will answer for the account. |
 | **GLM** | official | Z.ai's Coding Plan monitor endpoint, with a key borrowed from whichever coding tool already holds one — Claude Code's `settings.json`, ZCode, or OpenCode. |
 | **Ollama (Local)** | local runtime | Automatically detected local models, RAM/VRAM, unload time and context. Optional response capture adds thinking and generation speed. |
+| **LM Studio** | local runtime | Loaded models from LM Studio's own listing, what each one is doing (prompt, generating, queue) from its SDK socket, and speed, context use and tokens per day from its server log. No relay needed. |
 | **Grok** | official | The Grok CLI session in `~/.grok/auth.json`, against the same credits billing endpoint `/usage` uses. |
 | **OpenCode** | official | The Go plan's official usage endpoint, with the `opencode-go` key OpenCode itself stores on sign-in. |
 | **Command Code** | official | The GOAT plan's `/alpha` billing endpoints, with the key the Command Code app writes to `~/.commandcode/auth.json`. |
@@ -80,6 +81,23 @@ Speed updates after completed native Ollama responses; thinking requires streame
 reasoning. Direct requests to Ollama's default port (`11434`) only provide model
 detection. Monitoring never initiates inference or saves prompts, reasoning or replies.
 See [Ollama details](docs/plans/2026-09-07-local-llm-provider-plan.md).
+
+**Local LM Studio is detected automatically** on the port LM Studio's own settings name
+(1234 unless you moved it). Configure the address or stop monitoring in **Settings → LM Studio**.
+Each loaded language model gets a notch cell; embedding models are left out. The cell shows the
+last response's **tok/s** and its ring fills with how much of the loaded **context** the last
+request used. A white arc turns while the model reads a prompt or generates, and becomes a ring
+of dots when requests are queued behind it. Hover for context used, tokens and requests today,
+reasoning share, speculative-decoding acceptance, model size, quantization and context limit.
+
+Nothing has to be pointed at Codenotch: what a model is doing comes from LM Studio's SDK socket
+on the same port (the one `lms ps` uses), and speed and tokens come from `~/.lmstudio/server-logs`,
+which LM Studio writes for every request from any client. Only counts and timings are read from
+those files, never a prompt or a reply. Responses through the OpenAI-compatible endpoint carry no
+clock, so their speed is timed from the generating phase and marked `~`. If LM Studio's server is
+set to require an API token, paste one in Settings → LM Studio (or export `LM_API_TOKEN`); without
+one, requests are sent with no Authorization header at all.
+See [LM Studio details](docs/plans/2026-09-10-lm-studio-provider-plan.md).
 
 Settings lists the connected providers in the order the notch draws them, and
 you can drag one by its handle to move it. The order is remembered across

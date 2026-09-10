@@ -21,6 +21,12 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(ollamaEndpoint, forKey: Keys.ollamaEndpoint) }
     }
 
+    /// Where LM Studio's server answers. Defaults to the port LM Studio's own
+    /// settings name, so a server moved off 1234 is found without typing.
+    @Published var lmstudioEndpoint: String {
+        didSet { defaults.set(lmstudioEndpoint, forKey: Keys.lmstudioEndpoint) }
+    }
+
     /// Providers whose threshold alerts are muted. Stored as the muted set so
     /// a provider added later alerts by default — the same reasoning as
     /// `disconnectedProviders`.
@@ -234,6 +240,7 @@ final class Preferences: ObservableObject {
         /// The old name. Kept so existing choices survive the rename.
         static let disconnected = "hiddenProviders"
         static let ollamaEndpoint = "ollamaEndpoint"
+        static let lmstudioEndpoint = "lmstudioEndpoint"
         static let introducedOllama = "introducedOllama"
         static let migratedOllamaID = "migratedOllamaLocalID"
         static let ollamaMetricsEnabled = "ollamaMetricsEnabled"
@@ -336,6 +343,12 @@ final class Preferences: ObservableObject {
         self.ollamaEndpoint = (try? OllamaEndpoint.parse(
             defaults.string(forKey: Keys.ollamaEndpoint) ?? OllamaEndpoint.defaultAddress
         ).absoluteString) ?? OllamaEndpoint.defaultAddress
+        // A stored choice wins; otherwise LM Studio's own configuration file
+        // says where it listens, and 1234 is what it ships with.
+        self.lmstudioEndpoint = (try? LMStudioEndpoint.parse(
+            defaults.string(forKey: Keys.lmstudioEndpoint)
+                ?? LMStudioEndpoint.configuredAddress() ?? LMStudioEndpoint.defaultAddress
+        ).absoluteString) ?? LMStudioEndpoint.defaultAddress
         self.mutedAlertProviders = Set(defaults.stringArray(forKey: Keys.mutedAlerts) ?? [])
         // Absent means never chosen, which is the hover behaviour the app was
         // designed around — not hidden, which would make a fresh install look

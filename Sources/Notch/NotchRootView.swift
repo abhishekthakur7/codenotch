@@ -272,6 +272,7 @@ struct NotchRootView: View {
                 hasTokenUsage: snapshot.tokenUsage != nil,
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
                 compactRowCount: snapshot.compactRowCount
             )
             : NotchLayout.cardWidth
@@ -299,6 +300,7 @@ struct NotchRootView: View {
                 hasTokenUsage: snapshot.tokenUsage != nil,
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
                 compactRowCount: snapshot.compactRowCount
             )
         // The ring it points at has moved with the notch, so the tail follows

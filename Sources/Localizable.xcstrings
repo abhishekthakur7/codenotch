@@ -4,6 +4,12 @@
     "just now": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "à l'instant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -15,6 +21,12 @@
     "%lld min": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -26,6 +38,12 @@
     "%lld hr": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -37,6 +55,12 @@
     "%lld hr %lld min": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h %lld min"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -48,6 +72,12 @@
     "%@ ago": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -59,6 +89,12 @@
     "Resetting…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialisation…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -70,6 +106,12 @@
     "Resets in %lld min": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinit. dans %lld min"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -81,6 +123,12 @@
     "Resets %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinit. %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -92,6 +140,12 @@
     "%lld%% Used · %lld%% left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% utilisés · %lld%% restants"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -103,6 +157,12 @@
     "1 left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 restant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -114,6 +174,12 @@
     "%lld left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld restants"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -125,6 +191,12 @@
     "1 used": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 utilisé"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -136,6 +208,12 @@
     "%lld used": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld utilisés"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -147,6 +225,12 @@
     "No reading": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun relevé"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -158,6 +242,12 @@
     "%@ until %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ jusqu'à %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -169,6 +259,12 @@
     "Sign in to Claude Code to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Claude Code pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -180,6 +276,12 @@
     "Sign in to Claude Code in ~/.claude-%@ to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Claude Code dans ~/.claude-%@ pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -191,6 +293,12 @@
     "Sign in to Cursor in the editor": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Cursor dans l'éditeur"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -202,6 +310,12 @@
     "Sign in to Codex to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Codex pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -213,6 +327,12 @@
     "Sign in to Antigravity to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Antigravity pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -224,6 +344,12 @@
     "Set up a GLM Coding Plan key for a coding tool to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurez une clé GLM Coding Plan dans un outil de code pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -235,6 +361,12 @@
     "Connect the Go plan in OpenCode to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez le plan Go dans OpenCode pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -246,6 +378,12 @@
     "Sign in to %@ to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à %@ pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -257,6 +395,12 @@
     "Codenotch was refused access to %@'s saved login. Click this ring to ask again, and choose Always Allow.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch s'est vu refuser l'accès aux identifiants enregistrés de %@. Cliquez sur cet anneau pour redemander, puis choisissez Toujours autoriser."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -268,6 +412,12 @@
     "Couldn't read usage — %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lecture de la consommation impossible — %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -279,6 +429,12 @@
     "Waiting for the first reading…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En attente du premier relevé…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -290,6 +446,12 @@
     "Current session": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session en cours"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -301,6 +463,12 @@
     "All models": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tous les modèles"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -312,6 +480,12 @@
     "Opus": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opus"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -323,6 +497,12 @@
     "Sonnet": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonnet"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -334,6 +514,12 @@
     "Included usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation incluse"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -345,6 +531,12 @@
     "API usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation API"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -356,6 +548,12 @@
     "On demand": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À la demande"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -367,6 +565,12 @@
     "5h limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite 5 h"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -378,6 +582,12 @@
     "Weekly limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite hebdomadaire"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -389,6 +599,12 @@
     "Monthly limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite mensuelle"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -400,6 +616,12 @@
     "Daily quota": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quota quotidien"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -411,6 +633,12 @@
     "Longer window": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenêtre plus longue"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -422,6 +650,12 @@
     "%lldm limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite %lld min"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -433,6 +667,12 @@
     "%lldh limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite %lld h"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -444,6 +684,12 @@
     "%lldd limit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite %lld j"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -455,6 +701,12 @@
     "Weekly": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hebdomadaire"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -466,6 +718,12 @@
     "MCP (1 month)": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP (1 mois)"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -477,6 +735,12 @@
     "Usage (%lld h)": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation (%lld h)"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -488,6 +752,12 @@
     "Usage (%lld wk)": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation (%lld sem.)"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -499,6 +769,12 @@
     "Usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -510,6 +786,12 @@
     "Pro searches": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recherches Pro"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -521,6 +803,12 @@
     "Research": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recherche"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -532,6 +820,12 @@
     "Agentic research": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recherche agentique"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -543,6 +837,12 @@
     "Labs": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Labs"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -554,6 +854,12 @@
     "Free queries": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requêtes gratuites"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -565,6 +871,12 @@
     "Requests today · no limit published": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requêtes aujourd'hui · aucune limite publiée"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -576,6 +888,12 @@
     "no requests today": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "aucune requête aujourd'hui"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -587,6 +905,12 @@
     "~%lld request today": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "~%lld requête aujourd'hui"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -598,6 +922,12 @@
     "~%lld requests today": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "~%lld requêtes aujourd'hui"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -609,6 +939,12 @@
     "Grok Build": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok Build"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -620,6 +956,12 @@
     "%@ Usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -631,6 +973,12 @@
     "and %lld more": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "et %lld de plus"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -642,6 +990,12 @@
     "working": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en cours"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -653,6 +1007,12 @@
     "waiting": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en attente"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -664,6 +1024,12 @@
     "idle": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "inactive"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -675,6 +1041,12 @@
     "Working": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En cours"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -686,6 +1058,12 @@
     "Desktop": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bureau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -697,6 +1075,12 @@
     "VS Code": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VS Code"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -708,6 +1092,12 @@
     "Agent": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agent"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -719,6 +1109,12 @@
     "Terminal": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminal"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -730,6 +1126,12 @@
     "Untitled chat": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversation sans titre"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -741,6 +1143,12 @@
     "Always show": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toujours afficher"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -752,6 +1160,12 @@
     "Show on hover": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher au survol"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -763,6 +1177,12 @@
     "Hide": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masquer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -774,6 +1194,12 @@
     "The notch stays open with every reading visible.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'encoche reste ouverte, tous les relevés visibles."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -785,6 +1211,12 @@
     "A small pill at the screen edge that opens when you reach it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une petite pastille au bord de l'écran, qui s'ouvre quand vous l'atteignez."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -796,6 +1228,12 @@
     "Nothing on screen. Open Codenotch again from Applications to bring these settings back.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien à l'écran. Rouvrez Codenotch depuis Applications pour retrouver ces réglages."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -807,6 +1245,12 @@
     "Dock": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -818,6 +1262,12 @@
     "Menu bar": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barre des menus"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -829,6 +1279,12 @@
     "Neither": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -840,6 +1296,12 @@
     "A normal app icon in the Dock while Codenotch is running.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une icône d'app normale dans le Dock tant que Codenotch fonctionne."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -851,6 +1313,12 @@
     "A small icon in the menu bar instead, and nothing in the Dock.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une petite icône dans la barre des menus à la place, et rien dans le Dock."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -862,6 +1330,12 @@
     "No icon anywhere. Open Codenotch again from Applications to bring these settings back.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune icône nulle part. Rouvrez Codenotch depuis Applications pour retrouver ces réglages."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -873,6 +1347,12 @@
     "Right": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Droite"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -884,6 +1364,12 @@
     "Left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gauche"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -895,6 +1381,12 @@
     "Top": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haut"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -906,6 +1398,12 @@
     "Bottom": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bas"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -917,6 +1415,12 @@
     "Down the right-hand edge, clear of a Dock on that side.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le long du bord droit, à l'écart d'un Dock placé de ce côté."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -928,6 +1432,12 @@
     "Down the left-hand edge, clear of a Dock on that side.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le long du bord gauche, à l'écart d'un Dock placé de ce côté."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -939,6 +1449,12 @@
     "A wide bar across the top, readings side by side. On a Mac with a notch of its own it runs up to meet it, so the two read as one shape.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une barre large en haut, relevés côte à côte. Sur un Mac doté de sa propre encoche, elle remonte la rejoindre pour ne former qu'une seule forme."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -950,6 +1466,12 @@
     "A wide bar resting on top of the Dock, readings side by side.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une barre large posée sur le Dock, relevés côte à côte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -961,6 +1483,12 @@
     "Integrations": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intégrations"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -972,6 +1500,12 @@
     "Appearance": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apparence"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -983,6 +1517,12 @@
     "General": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Général"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -994,6 +1534,12 @@
     "Show": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1005,6 +1551,12 @@
     "Edge": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bord"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1016,6 +1568,12 @@
     "App icon": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Icône de l'app"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1027,6 +1585,12 @@
     "Open Codenotch at login": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir Codenotch à l'ouverture de session"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1038,6 +1602,12 @@
     "Install updates automatically": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installer les mises à jour automatiquement"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1049,6 +1619,12 @@
     "Check now": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vérifier maintenant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1060,6 +1636,12 @@
     "App designed and developed by": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App conçue et développée par"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1071,6 +1653,12 @@
     "Connect an assistant to get started": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez un assistant pour commencer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1082,6 +1670,12 @@
     "Codenotch never signs in — each reading is borrowed from the tool that already holds the account. Signing out here stops the credential being read and forgets the numbers, but leaves you signed in to that tool. macOS asks once per tool the first time, and again whenever you sign in to a different account; Always Allow keeps it quiet.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch ne se connecte jamais — chaque relevé est emprunté à l'outil qui détient déjà le compte. Vous déconnecter ici arrête la lecture de l'identifiant et oublie les chiffres, mais vous restez connecté à cet outil. macOS demande une fois par outil la première fois, puis à nouveau chaque fois que vous vous connectez à un autre compte ; Toujours autoriser évite les rappels."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1093,6 +1687,12 @@
     "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor, Codex, Antigravity, GLM, Grok or OpenCode, and its ring appears in the notch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor, Codex, Antigravity, GLM, Grok ou OpenCode et connectez-vous : son anneau apparaît dans l'encoche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1104,6 +1704,12 @@
     "macOS will ask once for permission to read Claude Code's and Antigravity's saved logins. Choose Always Allow — plain Allow makes it ask again every time.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS demandera une fois l'autorisation de lire les identifiants enregistrés de Claude Code et d'Antigravity. Choisissez Toujours autoriser — un simple Autoriser fait redemander à chaque fois."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1115,6 +1721,12 @@
     "Version %@. Updates install in the background and apply next time Codenotch starts.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@. Les mises à jour s'installent en arrière-plan et s'appliquent au prochain démarrage de Codenotch."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1126,6 +1738,12 @@
     "Signed out — nothing is read, and no readings are kept.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déconnecté — rien n'est lu, et aucun relevé n'est conservé."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1137,6 +1755,12 @@
     "Allow access…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoriser l'accès…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1148,6 +1772,12 @@
     "Switch…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changer…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1159,6 +1789,12 @@
     "Asks macOS for %@'s saved login again. Choose Always Allow and it will stop asking.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redemande à macOS les identifiants enregistrés de %@. Choisissez Toujours autoriser et il cessera de demander."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1170,6 +1806,12 @@
     "Switch off to stop reading %@ and forget its readings. %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivez pour arrêter de lire %@ et oublier ses relevés. %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1181,6 +1823,12 @@
     "Switch on to sign in and read %@ again.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activez pour vous reconnecter et lire %@ à nouveau."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1192,6 +1840,12 @@
     "macOS is not letting Codenotch read %@'s saved login. Choose Allow access… above, then Always Allow.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS n'autorise pas Codenotch à lire les identifiants enregistrés de %@. Choisissez Autoriser l'accès… ci-dessus, puis Toujours autoriser."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1203,6 +1857,12 @@
     "Open %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1214,6 +1874,12 @@
     "Opens %@, which is where this account is signed in.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvre %@, où ce compte est connecté."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1225,6 +1891,12 @@
     "Opens %@ in your browser. That site has its own sign-in, separate from the credential read here.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvre %@ dans votre navigateur. Ce site a sa propre connexion, distincte de l'identifiant lu ici."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1236,6 +1908,12 @@
     "Codenotch Settings": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages de Codenotch"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1247,6 +1925,12 @@
     "What's New": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveautés"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1258,6 +1942,12 @@
     "What's new in Codenotch": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les nouveautés de Codenotch"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1269,6 +1959,12 @@
     "Version %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1280,6 +1976,12 @@
     "Continue": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1291,6 +1993,12 @@
     "macOS refused this — try moving Codenotch to /Applications.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS a refusé — essayez de déplacer Codenotch dans /Applications."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1302,6 +2010,12 @@
     "via %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "via %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1313,6 +2027,12 @@
     "Sign in to %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se connecter à %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1324,6 +2044,12 @@
     "Sign in to %@ to read this account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à %@ pour lire ce compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1335,6 +2061,12 @@
     "Sign in with %@ to read this account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec %@ pour lire ce compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1346,6 +2078,12 @@
     "Sign out in the %@ window to use another account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déconnectez-vous dans la fenêtre %@ pour utiliser un autre compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1357,6 +2095,12 @@
     "Switch accounts in %@; the notch follows.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changez de compte dans %@ ; l'encoche suit."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1368,6 +2112,12 @@
     "Switch accounts in the tool that owns it; the notch follows.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changez de compte dans l'outil qui le détient ; l'encoche suit."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1379,6 +2129,12 @@
     "Signs out of %@ — the session belongs to Codenotch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous déconnecte de %@ — la session appartient à Codenotch."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1390,6 +2146,12 @@
     "You stay signed in to %@ — end that session in %@ itself.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous restez connecté à %@ — terminez cette session dans %@ même."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1401,6 +2163,12 @@
     "You stay signed in to the tool that owns the account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous restez connecté à l'outil qui détient le compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1412,6 +2180,12 @@
     "Sign in with the tool that owns this account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec l'outil qui détient ce compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1423,6 +2197,12 @@
     "Sign in to %@…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se connecter à %@…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1434,6 +2214,12 @@
     "Run grok login — it signs in and refreshes the token this reads.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exécutez grok login — il vous connecte et rafraîchit le jeton lu ici."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1445,6 +2231,12 @@
     "Usage rides on the opencode-go key OpenCode stores on sign-in — connect Go inside OpenCode (`opencode auth login`) and the notch reads it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La consommation repose sur la clé opencode-go qu'OpenCode enregistre à la connexion — connectez Go dans OpenCode (`opencode auth login`) et l'encoche la lit."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1456,6 +2248,12 @@
     "Usage rides on a Z.ai GLM Coding Plan key held by a coding tool — Claude Code's settings.json, ZCode or OpenCode. Set one up there and the notch reads it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La consommation repose sur une clé Z.ai GLM Coding Plan détenue par un outil de code — le settings.json de Claude Code, ZCode ou OpenCode. Configurez-en une là-bas et l'encoche la lit."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1467,6 +2265,12 @@
     "Run `%@` once — it signs in and refreshes the token this reads. Use /login there to change account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exécutez `%@` une fois — il vous connecte et rafraîchit le jeton lu ici. Utilisez /login là-bas pour changer de compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1478,6 +2282,12 @@
     "Unlimited on the %@ plan — nothing to meter": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illimité avec le plan %@ — rien à mesurer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1489,6 +2299,12 @@
     "The %@ plan has nothing for Cursor to meter yet": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le plan %@ n'a encore rien à mesurer pour Cursor"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1500,6 +2316,12 @@
     "Codex reported no usage windows": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex n'a signalé aucune fenêtre de consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1511,6 +2333,12 @@
     "No OpenCode Go subscription on this key": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun abonnement OpenCode Go sur cette clé"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1522,6 +2350,12 @@
     "Grok has nothing metered on this account yet": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok n'a encore rien de mesuré sur ce compte"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1533,6 +2367,12 @@
     "Settings…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1544,6 +2384,12 @@
     "Quit Codenotch": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitter Codenotch"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1555,6 +2401,12 @@
     "Keep open": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garder ouverte"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1566,6 +2418,12 @@
     "Refresh now": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualiser maintenant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1577,6 +2435,12 @@
     "Codenotch is set to Always show. Change it in Settings.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch est réglé sur Toujours afficher. Modifiez-le dans les Réglages."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1588,6 +2452,12 @@
     "Checking…": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vérification…"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1599,6 +2469,12 @@
     "Codenotch is up to date.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch est à jour."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1610,6 +2486,12 @@
     "Version %@ is available and will install shortly.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La version %@ est disponible et s'installera sous peu."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1621,6 +2503,12 @@
     "Couldn't reach the update server. Codenotch will try again on its own — nothing is wrong with this copy.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serveur de mise à jour injoignable. Codenotch réessaiera de lui-même — cette copie n'a aucun problème."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1632,6 +2520,12 @@
     "Two more providers, and a live account plan that was silently dropped.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deux fournisseurs de plus, et un plan de compte actif qui passait silencieusement à la trappe."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1643,6 +2537,12 @@
     "Grok is a new ring": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok est un nouvel anneau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1654,6 +2554,12 @@
     "SuperGrok's weekly Grok Build allowance, read from the same billing endpoint the CLI uses, with the session in ~/.grok/auth.json.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'allocation hebdomadaire Grok Build de SuperGrok, lue depuis le même point de facturation que la CLI, avec la session dans ~/.grok/auth.json."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1665,6 +2571,12 @@
     "OpenCode's Go plan is a new ring": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le plan Go d'OpenCode est un nouvel anneau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1676,6 +2588,12 @@
     "Reads the Go plan's official usage endpoint with the key OpenCode itself stores on sign-in — no second sign-in.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lit le point de consommation officiel du plan Go avec la clé qu'OpenCode enregistre lui-même à la connexion — pas de seconde connexion."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1687,6 +2605,12 @@
     "A real Codex account went unmetered": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un vrai compte Codex restait non mesuré"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1698,6 +2622,12 @@
     "Codex's live reading only recognised a 5-hour and a 7-day window. A free-plan account's real limit was a 30-day one, which fell through unnoticed and showed as nothing metered on an account that was genuinely tracked.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le relevé en direct de Codex ne reconnaissait qu'une fenêtre de 5 heures et une de 7 jours. La vraie limite d'un compte en plan gratuit était sur 30 jours : elle passait inaperçue et s'affichait comme « rien à mesurer » sur un compte pourtant bien suivi."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1709,6 +2639,12 @@
     "Switching a provider off now really stops it": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactiver un fournisseur l'arrête vraiment"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1720,6 +2656,12 @@
     "Opening Settings could still read a switched-off provider's account, and a reply already in flight could restore a reading you had just asked it to forget.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir les Réglages pouvait encore lire le compte d'un fournisseur désactivé, et une réponse déjà en vol pouvait restaurer un relevé que vous veniez de demander d'oublier."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1731,6 +2673,12 @@
     "Contributors can build without a certificate": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les contributeurs peuvent compiler sans certificat"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1742,6 +2690,12 @@
     "make build and make test now sign themselves automatically when the maintainer's Developer ID isn't present — no Apple account needed to work on this.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "make build et make test se signent désormais tout seuls quand le Developer ID du mainteneur est absent — aucun compte Apple nécessaire pour contribuer."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1753,6 +2707,12 @@
     "Waking from sleep no longer erases a reading.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sortie de veille n'efface plus un relevé."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1764,6 +2724,12 @@
     "A ring survives waking your Mac": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un anneau survit au réveil de votre Mac"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1775,6 +2741,12 @@
     "A brief window right after sleep, where macOS won't allow a keychain prompt yet, was mistaken for being signed out — which erased the reading and left \"waiting for the first reading\" on screen. It now ages the number instead of throwing it away, and picks back up on its own.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un bref instant juste après la veille, où macOS n'autorise pas encore d'invite du trousseau, était pris pour une déconnexion — ce qui effaçait le relevé et laissait « en attente du premier relevé » à l'écran. Le chiffre vieillit désormais au lieu d'être jeté, et la lecture repart d'elle-même."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1786,6 +2758,12 @@
     "Two more accounts, four community fixes, and honest duplicates.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deux comptes de plus, quatre correctifs de la communauté, et des doublons honnêtes."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1797,6 +2775,12 @@
     "Multiple Claude Code accounts": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plusieurs comptes Claude Code"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1808,6 +2792,12 @@
     "Keep a work login apart with CLAUDE_CONFIG_DIR? It now gets its own ring, its own limits, and its own row in Settings, beside your personal one.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous gardez un compte pro à part avec CLAUDE_CONFIG_DIR ? Il obtient désormais son propre anneau, ses propres limites et sa propre ligne dans les Réglages, à côté de votre compte personnel."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1819,6 +2809,12 @@
     "GLM added": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GLM ajouté"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1830,6 +2826,12 @@
     "Z.ai's Coding Plan reads live now too, with a key borrowed from whichever tool already holds one.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le Coding Plan de Z.ai se lit aussi en direct désormais, avec une clé empruntée à l'outil qui en détient déjà une."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1841,6 +2843,12 @@
     "A stuck Claude ring recovers on its own": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un anneau Claude bloqué se rétablit tout seul"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1852,6 +2860,12 @@
     "One momentary failure — the Mac waking from sleep, most often — used to lock the ring until the app restarted. It now clears itself on the next check.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une défaillance momentanée — le plus souvent la sortie de veille du Mac — bloquait l'anneau jusqu'au redémarrage de l'app. Il se débloque désormais à la vérification suivante."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1863,6 +2877,12 @@
     "Cursor sessions stop reporting work that already ended": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les sessions Cursor cessent de signaler un travail déjà terminé"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1874,6 +2894,12 @@
     "A crashed or abandoned chat could read as \"still working\" for a day or more. It now notices when the writing has actually stopped.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une conversation plantée ou abandonnée pouvait se lire « toujours en cours » pendant un jour ou plus. Elle remarque désormais quand l'écriture s'est réellement arrêtée."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1885,6 +2911,12 @@
     "A months-old duplicate can no longer win": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un doublon vieux de plusieurs mois ne peut plus l'emporter"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1896,6 +2928,12 @@
     "Claude Code files a new keychain entry on every token rotation. An account signed in for a while could pick an old, expired one at random and show \"waiting for the first reading\" forever.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Code dépose une nouvelle entrée dans le trousseau à chaque rotation de jeton. Un compte connecté depuis un moment pouvait en choisir une ancienne, expirée, au hasard, et afficher « en attente du premier relevé » indéfiniment."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1907,6 +2945,12 @@
     "A stray click no longer pins the notch open": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un clic malencontreux ne bloque plus l'encoche ouverte"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1918,6 +2962,12 @@
     "Clicking near the screen edge before the notch had even opened could leave it stuck open with nothing on screen explaining why.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cliquer près du bord de l'écran avant même l'ouverture de l'encoche pouvait la laisser bloquée ouverte, sans rien à l'écran pour l'expliquer."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1929,6 +2979,12 @@
     "Codex reads live, and Always show stays on.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex se lit en direct, et Toujours afficher le reste."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1940,6 +2996,12 @@
     "Codex is read live instead of from a log": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex est lu en direct plutôt que depuis un journal"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1951,6 +3013,12 @@
     "The figure came from a file Codex writes during a turn, so it was as old as the last time you used it — three days stale in one case. Codenotch now asks Codex itself, and matches its own panel.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le chiffre venait d'un fichier que Codex écrit pendant un tour : il datait donc de votre dernière utilisation — trois jours de retard dans un cas. Codenotch interroge désormais Codex lui-même, et correspond à son propre panneau."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1962,6 +3030,12 @@
     "The Codex ring notices the desktop app": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'anneau Codex remarque l'app de bureau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1973,6 +3047,12 @@
     "It only ever watched the files the CLI and the VS Code extension write, so work done in the desktop app never made it spin.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il ne surveillait que les fichiers écrits par la CLI et l'extension VS Code : le travail fait dans l'app de bureau ne le faisait donc jamais tourner."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1984,6 +3064,12 @@
     "Always show no longer turns itself off": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toujours afficher ne se désactive plus tout seul"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -1995,6 +3081,12 @@
     "Clicking the notch toggled the same flag the setting used, so a stray click quietly put it back to showing on hover.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cliquer sur l'encoche basculait le même indicateur que le réglage : un clic malencontreux la remettait discrètement sur affichage au survol."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2006,6 +3098,12 @@
     "Far fewer keychain prompts": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bien moins d'invites du trousseau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2017,6 +3115,12 @@
     "Once a token expired, every check went back to the keychain — a prompt a minute. It now reads the secret only when the owning app has changed it, and never retries a refusal on a timer.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une fois un jeton expiré, chaque vérification retournait au trousseau — une invite par minute. Le secret n'est désormais lu que lorsque l'app propriétaire l'a modifié, et un refus n'est jamais réessayé sur minuterie."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2028,6 +3132,12 @@
     "A paused limit is shown as paused": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une limite en pause est affichée comme telle"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2039,6 +3149,12 @@
     "Some limits are reached while the headline still shows room. The ring reads as spent and says when it lifts.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certaines limites sont atteintes alors que le chiffre principal indique encore de la marge. L'anneau se lit comme épuisé et indique quand elle se lève."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2050,6 +3166,12 @@
     "Long messages are no longer cut off": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les longs messages ne sont plus tronqués"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2061,6 +3183,12 @@
     "A tooltip with something to explain reserved one line for it however much it said.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une info-bulle ayant quelque chose à expliquer ne réservait qu'une seule ligne, quelle que soit la longueur du texte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2072,6 +3200,12 @@
     "Every session, and a tooltip that fits on the screen.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toutes les sessions, et une info-bulle qui tient à l'écran."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2083,6 +3217,12 @@
     "Tooltips are no longer cut off": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les info-bulles ne sont plus tronquées"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2094,6 +3234,12 @@
     "A card is centred on the ring it belongs to, so the first and last providers threw half of it past the end of the panel — and what fell off was the title. The panel now keeps room for it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une carte est centrée sur l'anneau auquel elle appartient : le premier et le dernier fournisseur en projetaient donc la moitié hors du panneau — et ce qui débordait, c'était le titre. Le panneau lui garde désormais de la place."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2105,6 +3251,12 @@
     "As many sessions as your screen can hold": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autant de sessions que votre écran peut en contenir"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2116,6 +3268,12 @@
     "The list was capped at four whatever you were running on. It is now solved for the display: ten on a large one, and \"and N more\" only when there is genuinely no room for the rest.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La liste était plafonnée à quatre quel que soit votre matériel. Elle est désormais calculée pour l'écran : dix sur un grand, et « et N de plus » uniquement quand il n'y a vraiment plus de place."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2127,6 +3285,12 @@
     "The ones that need you come first": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Celles qui vous attendent passent en premier"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2138,6 +3302,12 @@
     "Waiting, then busy, then idle — so if anything is summarised away, it is what matters least.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En attente, puis en cours, puis inactives — ainsi, si quelque chose est résumé, c'est ce qui compte le moins."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2149,6 +3319,12 @@
     "Antigravity's real numbers, and a switch that stays off.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les vrais chiffres d'Antigravity, et un interrupteur qui reste éteint."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2160,6 +3336,12 @@
     "Antigravity shows its actual quota": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antigravity affiche son quota réel"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2171,6 +3353,12 @@
     "Google will not answer Codenotch directly, so it asks Antigravity's own language server instead — the same place Antigravity's usage panel gets its figure.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google ne répond pas directement à Codenotch, qui interroge donc le serveur de langage d'Antigravity — là où le panneau de consommation d'Antigravity prend son chiffre."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2182,6 +3370,12 @@
     "Usage reads both ways": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La consommation se lit dans les deux sens"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2193,6 +3387,12 @@
     "\"12% used · 88% left\", so a reading lines up with whichever end your vendor happens to show.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "« 12 % utilisés · 88 % restants », pour qu'un relevé corresponde au bout que votre fournisseur affiche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2204,6 +3404,12 @@
     "A way back from a declined keychain prompt": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un retour possible après une invite du trousseau refusée"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2215,6 +3421,12 @@
     "Declining no longer looks like being signed out, and Allow access… asks macOS again.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refuser ne ressemble plus à une déconnexion, et Autoriser l'accès… redemande à macOS."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2226,6 +3438,12 @@
     "Switching a provider off now sticks": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactiver un fournisseur tient désormais"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2237,6 +3455,12 @@
     "It stopped being read but its last reading was kept, so the ring came back at the next launch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il cessait d'être lu mais son dernier relevé était conservé : l'anneau revenait au lancement suivant."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2248,6 +3472,12 @@
     "Distant resets show a date": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les réinitialisations lointaines affichent une date"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2259,6 +3489,12 @@
     "A limit renewing in four weeks said \"Mon\", which read as this Monday. It says \"28 Sep\".": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une limite se renouvelant dans quatre semaines indiquait « lun. », qu'on lisait comme ce lundi-ci. Elle indique désormais « 28 sept. »."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2270,6 +3506,12 @@
     "The first release.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La première version."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2281,6 +3523,12 @@
     "Put the notch anywhere": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Placez l'encoche où vous voulez"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2292,6 +3540,12 @@
     "Right, left, top or bottom. It keeps clear of the Dock and the menu bar, and follows when the Dock moves.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Droite, gauche, haut ou bas. Elle reste à l'écart du Dock et de la barre des menus, et suit quand le Dock se déplace."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2303,6 +3557,12 @@
     "It joins your Mac's own notch": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elle rejoint l'encoche de votre Mac"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2314,6 +3574,12 @@
     "On the top edge it takes the hardware's shape, so the two read as one rather than as a bar parked underneath.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sur le bord supérieur, elle épouse la forme du matériel : les deux se lisent comme une seule forme plutôt que comme une barre garée en dessous."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2325,6 +3591,12 @@
     "Claude, Cursor, Codex and Gemini": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude, Cursor, Codex et Gemini"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2336,6 +3608,12 @@
     "Each read from the tool already signed in on this Mac. Codenotch never asks for a password.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chacun lu depuis l'outil déjà connecté sur ce Mac. Codenotch ne demande jamais de mot de passe."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2347,6 +3625,12 @@
     "Choose where Codenotch appears": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez où Codenotch apparaît"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2358,6 +3642,12 @@
     "In the Dock, in the menu bar, or nowhere at all.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dans le Dock, dans la barre des menus, ou nulle part."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2369,6 +3659,12 @@
     "Codenotch": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2380,6 +3676,12 @@
     "%@%% Used · %@%% left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%% utilisés · %@%% restants"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2391,6 +3693,12 @@
     "%@ left": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ restants"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2402,6 +3710,12 @@
     "%@ used": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ utilisés"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2413,6 +3727,12 @@
     "Sign in with GitHub CLI to read your Copilot usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec la CLI GitHub pour lire votre consommation Copilot"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2424,6 +3744,12 @@
     "Sign in with GitHub CLI using `gh auth login`, then enable GitHub Copilot.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec la CLI GitHub via `gh auth login`, puis activez GitHub Copilot."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2435,6 +3761,12 @@
     "GitHub Copilot reported no metered quotas": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub Copilot n'a signalé aucun quota mesuré"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2446,6 +3778,12 @@
     "There is nothing to sign in to: the count is added up from what Gemini CLI, OpenCode and Hermes recorded about their own calls. Your API key is never read.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il n'y a rien à quoi se connecter : le total est additionné à partir de ce que Gemini CLI, OpenCode et Hermes ont enregistré sur leurs propres appels. Votre clé API n'est jamais lue."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2457,6 +3795,12 @@
     "No Gemini CLI, OpenCode or Hermes sessions found": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune session Gemini CLI, OpenCode ou Hermes trouvée"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2468,6 +3812,12 @@
     "Run `%@` once — it signs in and is what these readings come from. Use /login there to change account.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exécutez `%@` une fois — il vous connecte et c'est de là que viennent ces relevés. Utilisez /login là-bas pour changer de compte."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2479,6 +3829,12 @@
     "Scoped": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restreint"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2490,6 +3846,12 @@
     "Auto usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation auto"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2501,6 +3863,12 @@
     "Team on demand": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Équipe à la demande"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2512,6 +3880,12 @@
     "Refresh all": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout actualiser"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2523,6 +3897,12 @@
     "Reset date": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date de réinitialisation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2534,6 +3914,12 @@
     "Time remaining": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temps restant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2545,6 +3931,12 @@
     "Minutes under an hour; otherwise the reset date and time.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Des minutes en dessous d'une heure ; sinon la date et l'heure de réinitialisation."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2556,6 +3948,12 @@
     "Time until usage resets, such as 3 Days 3h or 3h 20m.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temps avant la réinitialisation de la consommation, par exemple 3 j 3h ou 3h 20m."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2567,6 +3965,12 @@
     "Resets in %lld Day %lldh": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinit. dans %lld j %lldh"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2578,6 +3982,12 @@
     "Resets in %lld Days %lldh": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinit. dans %lld j %lldh"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2589,6 +3999,12 @@
     "Resets in %lldh %lldm": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinit. dans %lldh %lldm"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2600,6 +4016,12 @@
     "Nothing on screen. The readings stay in the menu bar menu when App icon is Menu bar. Otherwise, open Codenotch again from Applications to bring these settings back.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien à l'écran. Les relevés restent dans le menu de la barre des menus quand Icône de l'app est réglée sur Barre des menus. Sinon, rouvrez Codenotch depuis Applications pour retrouver ces réglages."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2611,6 +4033,12 @@
     "Main display": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écran principal"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2622,6 +4050,12 @@
     "All displays": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tous les écrans"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2633,6 +4067,12 @@
     "The notch appears only on the display with the menu bar.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'encoche n'apparaît que sur l'écran qui porte la barre des menus."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2644,6 +4084,12 @@
     "Each display gets its own notch, and hovering one opens only that one.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chaque écran a sa propre encoche, et en survoler une n'ouvre que celle-là."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2655,6 +4101,12 @@
     "3 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 secondes"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2666,6 +4118,12 @@
     "5 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 secondes"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2677,6 +4135,12 @@
     "10 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 secondes"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2688,6 +4152,12 @@
     "Long enough to notice, short enough to ignore.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assez long pour être remarqué, assez court pour être ignoré."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2699,6 +4169,12 @@
     "Long enough to read the session's name and reach for it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assez long pour lire le nom de la session et l'atteindre."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2710,6 +4186,12 @@
     "Stays until you have had a chance to look up.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reste jusqu'à ce que vous ayez eu l'occasion de lever les yeux."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2721,6 +4203,12 @@
     "Device accent color": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couleur d'accentuation de l'appareil"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2732,6 +4220,12 @@
     "Connected": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectés"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2743,6 +4237,12 @@
     "Not connected": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non connectés"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2754,6 +4254,12 @@
     "Accounts": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comptes"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2765,6 +4271,12 @@
     "Notifications": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2776,6 +4288,12 @@
     "Nothing is connected, so the notch has no rings to draw.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien n'est connecté : l'encoche n'a donc aucun anneau à dessiner."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2787,6 +4305,12 @@
     "The notch draws these in this order. Drag one by its handle to move it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'encoche les dessine dans cet ordre. Faites glisser une ligne par sa poignée pour la déplacer."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2798,6 +4322,12 @@
     "These have no ring to place. Switch one on and it joins the end of the list above.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ceux-ci n'ont pas d'anneau à placer. Activez-en un et il rejoint la fin de la liste ci-dessus."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2809,6 +4339,12 @@
     "Notch": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encoche"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2820,6 +4356,12 @@
     "Reset time": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialisation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2831,6 +4373,12 @@
     "Displays": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écrans"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2842,6 +4390,12 @@
     "Display": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écran"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2853,6 +4407,12 @@
     "Follow active window": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivre la fenêtre active"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2864,6 +4424,12 @@
     "Unavailable display": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écran indisponible"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2875,6 +4441,12 @@
     "App": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2886,6 +4458,12 @@
     "Accent color": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couleur d'accentuation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2897,6 +4475,12 @@
     "When a session ends": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quand une session se termine"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2908,6 +4492,12 @@
     "Open the notch for a moment": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir l'encoche un instant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2919,6 +4509,12 @@
     "For": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pendant"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2930,6 +4526,12 @@
     "Play a sound": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Émettre un son"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2941,6 +4543,12 @@
     "Finished": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminée"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2952,6 +4560,12 @@
     "Waiting on you": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En attente de vous"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2963,6 +4577,12 @@
     "Threshold alerts": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alertes de seuil"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2974,6 +4594,12 @@
     "Hide Sidebar": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masquer la barre latérale"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2985,6 +4611,12 @@
     "Show Sidebar": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher la barre latérale"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -2996,6 +4628,12 @@
     "Selected": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélectionné"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3007,6 +4645,12 @@
     "Not selected": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non sélectionné"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3018,6 +4662,12 @@
     "%@ (missing)": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (introuvable)"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3029,6 +4679,12 @@
     "Play %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Écouter %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3040,6 +4696,12 @@
     "Monthly budget": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budget mensuel"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3051,6 +4713,12 @@
     "None": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3062,6 +4730,12 @@
     "tokens": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "jetons"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3073,6 +4747,12 @@
     "%@ limit reached": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limite %@ atteinte"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3084,6 +4764,12 @@
     "%@ is at %lld%%": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ est à %lld%%"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3095,6 +4781,12 @@
     "Its %@ limit is spent.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa limite %@ est épuisée."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3106,6 +4798,12 @@
     "Its %@ limit is spent — resets %@": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sa limite %@ est épuisée — réinit. %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3117,6 +4815,12 @@
     "%lld%% of its %@ limit used.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% de sa limite %@ utilisés."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3128,6 +4832,12 @@
     "Moves to the display containing the window receiving keyboard input.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se déplace vers l'écran contenant la fenêtre qui reçoit la saisie clavier."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3139,6 +4849,12 @@
     "Pinned to %@.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fixée sur %@."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3150,6 +4866,12 @@
     "That display is disconnected. Codenotch follows the active window until it returns.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cet écran est déconnecté. Codenotch suit la fenêtre active jusqu'à son retour."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3161,6 +4883,12 @@
     "Drag to reorder. The notch draws the rings in this order.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faites glisser pour réordonner. L'encoche dessine les anneaux dans cet ordre."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3172,6 +4900,12 @@
     "Switch this on to give it a ring in the notch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activez ceci pour lui donner un anneau dans l'encoche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3183,6 +4917,12 @@
     "Alerts for %@ are muted. Click to unmute.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les alertes pour %@ sont coupées. Cliquez pour les réactiver."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3194,6 +4934,12 @@
     "Alert when %@ crosses 80% and 100% of a limit.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerter quand %@ franchit 80 % et 100 % d'une limite."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3205,6 +4951,12 @@
     "Fills the ring against a ceiling you choose; Google publishes none for an API key.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remplit l'anneau par rapport à un plafond que vous choisissez ; Google n'en publie aucun pour une clé API."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3216,6 +4968,12 @@
     "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, GitHub Copilot or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor (l'éditeur ou cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, GitHub Copilot ou une clé API Gemini (via Gemini CLI, OpenCode ou Hermes) et connectez-vous : son anneau apparaît dans l'encoche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3227,6 +4985,12 @@
     "macOS will ask once for permission to read Claude Code's, Antigravity's and cursor-agent's saved logins. Choose Always Allow — plain Allow makes it ask again every time.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS demandera une fois l'autorisation de lire les identifiants enregistrés de Claude Code, d'Antigravity et de cursor-agent. Choisissez Toujours autoriser — un simple Autoriser fait redemander à chaque fois."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3238,6 +5002,12 @@
     "Reorder the rings, pick a display, and get told when a limit is close.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réordonnez les anneaux, choisissez un écran, et soyez prévenu quand une limite approche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3249,6 +5019,12 @@
     "Drag to reorder the rings": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faites glisser pour réordonner les anneaux"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3260,6 +5036,12 @@
     "Settings splits into Connected and Not connected; drag a connected row by its handle to change the order the notch draws them in.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les Réglages se divisent en Connectés et Non connectés ; faites glisser une ligne connectée par sa poignée pour changer l'ordre dans lequel l'encoche les dessine."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3271,6 +5053,12 @@
     "Pin the notch to one display, or show it on every one": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fixez l'encoche sur un écran, ou affichez-la sur tous"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3282,6 +5070,12 @@
     "A Displays picker in Appearance offers the main display or all of them; a second picker pins a single notch to a named screen.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un sélecteur Écrans dans Apparence propose l'écran principal ou tous les écrans ; un second sélecteur fixe une encoche unique sur un écran nommé."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3293,6 +5087,12 @@
     "A ring says when it crosses 80% and 100%": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un anneau prévient quand il franchit 80 % et 100 %"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3304,6 +5104,12 @@
     "A system notification once per crossing, muted per provider from its own settings row.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une notification système une fois par franchissement, que l'on peut couper fournisseur par fournisseur depuis sa propre ligne de réglages."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3315,6 +5121,12 @@
     "GitHub Copilot is a new ring": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub Copilot est un nouvel anneau"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3326,6 +5138,12 @@
     "Reads GitHub's Copilot quota endpoint using the GitHub CLI session already on the Mac.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lit le point de quota Copilot de GitHub en utilisant la session de la CLI GitHub déjà présente sur le Mac."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3337,6 +5155,12 @@
     "Say when a session ends": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signaler la fin d'une session"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3348,6 +5172,12 @@
     "The notch opens itself for a few seconds and sounds a chime when an agent stops working or starts waiting on you; a click jumps to it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'encoche s'ouvre quelques secondes et émet un son quand un agent cesse de travailler ou se met à vous attendre ; un clic vous y amène."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3359,6 +5189,12 @@
     "⌥-drag the pill along its edge": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌥-glissez la pastille le long de son bord"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3370,6 +5206,12 @@
     "Nudge it clear of another menu-bar app anchored to the same spot; remembered per edge.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Décalez-la pour dégager une autre app de la barre des menus ancrée au même endroit ; mémorisé pour chaque bord."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3381,6 +5223,12 @@
     "Choose an accent colour": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez une couleur d'accentuation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3392,6 +5240,12 @@
     "The device accent by default, or a fixed colour for the ring's positive state — the amber and red warning colours stay fixed regardless.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'accentuation de l'appareil par défaut, ou une couleur fixe pour l'état positif de l'anneau — les couleurs d'alerte ambre et rouge restent fixes quoi qu'il arrive."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3403,6 +5257,12 @@
     "A countdown instead of a reset date": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un décompte plutôt qu'une date de réinitialisation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3414,6 +5274,12 @@
     "Appearance's Reset time picker can show \"Resets in 3h 20m\" instead of a date and time.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le sélecteur Réinitialisation dans Apparence peut afficher « Réinit. dans 3h 20m » au lieu d'une date et d'une heure."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3425,6 +5291,12 @@
     "Read Cursor from cursor-agent, and enterprise plans correctly": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lecture de Cursor depuis cursor-agent, et plans entreprise corrects"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3436,6 +5308,12 @@
     "A CLI-only Cursor login now gets a ring, and enterprise/team plans read their real usage instead of reporting nothing to meter.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une connexion Cursor en CLI seule obtient désormais un anneau, et les plans entreprise/équipe lisent leur consommation réelle au lieu de signaler qu'il n'y a rien à mesurer."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3447,6 +5325,12 @@
     "Fewer keychain prompts for Claude and Antigravity": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moins d'invites du trousseau pour Claude et Antigravity"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3458,6 +5342,12 @@
     "Claude reads its own CLI's /usage first, touching the keychain only as a fallback; Antigravity's language server is asked before it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude lit d'abord le /usage de sa propre CLI et ne touche au trousseau qu'en repli ; le serveur de langage d'Antigravity est interrogé avant lui."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3469,6 +5359,12 @@
     "Sub-1% usage no longer reads as 0%": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une consommation sous 1 % ne se lit plus 0 %"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3480,6 +5376,12 @@
     "A reading under one percent shows a tenth (\"<0.1%\") instead of rounding to nothing.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un relevé sous un pour cent affiche un dixième (« <0,1 % ») au lieu d'être arrondi à rien."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3491,6 +5393,12 @@
     "Contributors can build without Xcode signing": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les contributeurs peuvent compiler sans signature Xcode"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3502,6 +5410,12 @@
     "make build and make test sign themselves automatically when the maintainer's certificate isn't present, and CI now runs the suite on every push and pull request.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "make build et make test se signent tout seuls quand le certificat du mainteneur est absent, et la CI exécute désormais la suite à chaque push et chaque pull request."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3513,6 +5427,12 @@
     "Follow System": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivre le système"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3524,6 +5444,12 @@
     "Matches the Mac's preferred language.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correspond à la langue préférée du Mac."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3535,6 +5461,12 @@
     "Codenotch uses this language even if the Mac does not.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch utilise cette langue même si le Mac ne le fait pas."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3546,6 +5478,12 @@
     "Language": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3557,6 +5495,12 @@
     "Show usage pace": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher le rythme de consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3568,6 +5512,12 @@
     "Compares each timed allowance with the time left until reset, showing quota in deficit or held in reserve.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare chaque allocation temporisée au temps restant avant réinitialisation, en montrant le quota en déficit ou gardé en réserve."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3579,6 +5529,12 @@
     "Size": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taille"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3590,6 +5546,12 @@
     "Small": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petite"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3601,6 +5563,12 @@
     "Medium": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moyenne"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3612,6 +5580,12 @@
     "Large": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grande"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3623,6 +5597,12 @@
     "Takes the least room on the edge. Readable, but not from across the desk.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prend le moins de place sur le bord. Lisible, mais pas de l'autre bout du bureau."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3634,6 +5614,12 @@
     "The size the notch was drawn at.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La taille à laquelle l'encoche était dessinée."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3645,6 +5631,12 @@
     "Easier to read at a glance, and harder to ignore.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plus facile à lire d'un coup d'œil, et plus difficile à ignorer."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3656,6 +5648,12 @@
     "Hold ⌥ and drag the notch to slide it along its edge. Each edge remembers where you left it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maintenez ⌥ et faites glisser l'encoche pour la déplacer le long de son bord. Chaque bord retient où vous l'avez laissée."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3667,6 +5665,12 @@
     "Recentre": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recentrer"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3678,6 +5682,12 @@
     "%@% deficit": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ % de déficit"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3689,6 +5699,12 @@
     "%@% reserved": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ % en réserve"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3700,6 +5716,12 @@
     "Idle": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inactive"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3711,6 +5733,12 @@
     "Sign in to Codex in ~/.codex-%@ to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à Codex dans ~/.codex-%@ pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3722,6 +5750,12 @@
     "Sign in with the Command Code app to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec l'app Command Code pour lire votre consommation"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3733,6 +5767,12 @@
     "Enter an Ollama API key in Settings, or export OLLAMA_API_KEY": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saisissez une clé API Ollama dans les Réglages, ou exportez OLLAMA_API_KEY"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3744,6 +5784,12 @@
     "Start Ollama to monitor your local models": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrez Ollama pour surveiller vos modèles locaux"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3755,6 +5801,12 @@
     "Enter an Ollama API key below, or export OLLAMA_API_KEY in your shell.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saisissez une clé API Ollama ci-dessous, ou exportez OLLAMA_API_KEY dans votre shell."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3766,6 +5818,12 @@
     "Sign in with the Command Code app — it writes ~/.commandcode/auth.json and the notch reads it.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous avec l'app Command Code — elle écrit ~/.commandcode/auth.json et l'encoche le lit."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3777,6 +5835,12 @@
     "Command Code has nothing metered on this account yet": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Command Code n'a encore rien de mesuré sur ce compte"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3788,6 +5852,12 @@
     "Monthly usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation mensuelle"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3799,6 +5869,12 @@
     "Session usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation de la session"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3810,6 +5886,12 @@
     "Weekly usage": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consommation hebdomadaire"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3821,6 +5903,12 @@
     "Local Models": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modèles locaux"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3832,6 +5920,12 @@
     "Localhost": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Localhost"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -3843,6 +5937,12 @@
     "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch.": {
       "extractionState": "manual",
       "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor (l'éditeur ou cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot ou une clé API Gemini (via Gemini CLI, OpenCode ou Hermes) et connectez-vous : son anneau apparaît dans l'encoche."
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",

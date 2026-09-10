@@ -2,10 +2,11 @@ import XCTest
 @testable import Codenotch
 
 /// Catalog lookups with an explicit locale. English is the source; Chinese
-/// assertions here only prove a translation that exists is served, not that
-/// every key has one.
+/// and French assertions here only prove a translation that exists is served,
+/// not that every key has one.
 final class LocalizationTests: XCTestCase {
     private let zhHans = Locale(identifier: "zh-Hans")
+    private let french = Locale(identifier: "fr")
     private let english = Locale(identifier: "en")
     private let now = Date(timeIntervalSince1970: 1_787_900_000)
     private let resetNow = Date(timeIntervalSince1970: 1_700_000_000)
@@ -155,6 +156,87 @@ final class LocalizationTests: XCTestCase {
             L10n.t("Sign in to \("Perplexity")", locale: english),
             "Sign in to Perplexity"
         )
+    }
+
+    // MARK: - French
+
+    func testElapsedCopyInFrench() {
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-5), now: now, locale: french),
+            "à l'instant"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-6 * 60), now: now, locale: french),
+            "6 min"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-60 * 60), now: now, locale: french),
+            "1 h"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-65 * 60), now: now, locale: french),
+            "1 h 5 min"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.ago(since: now.addingTimeInterval(-6 * 60), now: now, locale: french),
+            "il y a 6 min"
+        )
+    }
+
+    func testResetCopyUnderAnHourInFrench() {
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(51 * 60), now: resetNow, locale: french),
+            "Réinit. dans 51 min"
+        )
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(-5), now: resetNow, locale: french),
+            "Réinitialisation…"
+        )
+    }
+
+    func testWindowSummaryInFrench() {
+        XCTAssertEqual(
+            percentWindow(0.12).summary(locale: french),
+            "12% utilisés · 88% restants"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", used: 8).summary(locale: french),
+            "8 utilisés"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", remaining: 3).summary(locale: french),
+            "3 restants"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests").summary(locale: french),
+            "Aucun relevé"
+        )
+    }
+
+    func testMenuCopyInFrench() {
+        XCTAssertEqual(L10n.t("Always show", locale: french), "Toujours afficher")
+        XCTAssertEqual(L10n.t("Settings…", locale: french), "Réglages…")
+    }
+
+    func testSignInCopyInFrench() {
+        XCTAssertEqual(
+            L10n.t("Sign in to \("Perplexity")", locale: french),
+            "Se connecter à Perplexity"
+        )
+    }
+
+    /// Every language the picker offers must resolve to a locale the catalog
+    /// is filed under — a region-qualified or unshipped identifier silently
+    /// serves another language instead.
+    func testEveryOfferedLanguageResolves() {
+        XCTAssertEqual(
+            AppLanguage.allCases.map(\.rawValue),
+            ["system", "en", "fr", "zh-Hans"]
+        )
+        XCTAssertNil(AppLanguage.system.locale)
+        for language in AppLanguage.allCases where language != .system {
+            XCTAssertEqual(language.locale?.identifier, language.rawValue)
+        }
     }
 
     private func percentWindow(_ fraction: Double) -> LimitWindow {

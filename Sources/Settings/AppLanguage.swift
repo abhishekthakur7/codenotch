@@ -9,6 +9,7 @@ import Foundation
 enum AppLanguage: String, CaseIterable, Identifiable {
     case system = "system"
     case english = "en"
+    case french = "fr"
     case simplifiedChinese = "zh-Hans"
 
     var id: String { rawValue }
@@ -23,16 +24,18 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .system:            return nil
         case .english:           return Locale(identifier: "en")
+        case .french:            return Locale(identifier: "fr")
         case .simplifiedChinese: return Locale(identifier: "zh-Hans")
         }
     }
 
-    /// English and 简体中文 stay in their own language so the row is
-    /// recognizable when the rest of Settings is in the other one.
+    /// English, Français and 简体中文 stay in their own language so the row
+    /// is recognizable when the rest of Settings is in another one.
     var title: String {
         switch self {
         case .system:            return L10n.t("Follow System")
         case .english:           return "English"
+        case .french:            return "Français"
         case .simplifiedChinese: return "简体中文"
         }
     }
@@ -41,7 +44,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .system:
             return L10n.t("Matches the Mac's preferred language.")
-        case .english, .simplifiedChinese:
+        case .english, .french, .simplifiedChinese:
             return L10n.t("Codenotch uses this language even if the Mac does not.")
         }
     }

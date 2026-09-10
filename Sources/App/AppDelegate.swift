@@ -243,6 +243,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem = statusItem
             statusItem.onRefreshProvider = { [weak store] id in store?.refresh(providerID: id) }
             statusItem.onRefreshAll = { [weak store] in store?.refreshNow() }
+            // Read when the menu opens, so a model's line is as current as its cell.
+            statusItem.cells = { [weak fleet] in fleet?.menuModel.snapshots ?? [] }
+            statusItem.activity = { [weak fleet] in fleet?.menuModel.activity(for: $0) }
 
             preferences.$appPresence
                 .receive(on: RunLoop.main)

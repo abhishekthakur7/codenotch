@@ -110,6 +110,12 @@ as `model`, the tag in the server log, and the handle the socket reports on.
   runtime a model is loaded in (`ProviderSummary.runtimeName`).
 - `UsageStore.isBusy` includes a generating or prompt-reading LM Studio model,
   so cloud polling speeds up for local work too.
+- The menu bar's menu, which had only ever known quota providers, lists a
+  local runtime as "LM Studio — 2 models loaded" with one line per model —
+  headline, phase and queue, context fill, tokens today — read from a
+  panel-less `NotchViewModel` the fleet feeds alongside the displays'
+  (`NotchFleet.menuModel`), so the menu and the cells cannot disagree. This
+  fixed the same gap for Ollama.
 
 Not done, deliberately: TTL / unload time (the REST listing has none; the
 socket's `ttlMs` could feed it later), per-client attribution (the log names

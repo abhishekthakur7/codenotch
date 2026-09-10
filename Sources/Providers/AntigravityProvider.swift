@@ -65,16 +65,27 @@ actor AntigravityProvider: UsageProvider {
     nonisolated func forgetCachedCredential() { AntigravityCredentials.forgetCached() }
 
     nonisolated func account() -> ProviderAccount? {
-        guard AntigravityCredentials.isSignedIn() else { return nil }
-        let held = AntigravityCredentials.held
-        let email = held?.email
-        let plan = held.map { $0.authMethod == "consumer" ? "Personal" : $0.authMethod } ?? "Personal"
-        return ProviderAccount(
-            label: email,
-            plan: plan,
-            source: "Antigravity",
-            manageURL: URL(string: "https://antigravity.google")
-        )
+        if AntigravityCredentials.isSignedIn(), let held = AntigravityCredentials.held {
+            let email = held.email
+            let plan = held.authMethod == "consumer" ? "Personal" : held.authMethod
+            return ProviderAccount(
+                label: email,
+                plan: plan,
+                source: "Antigravity",
+                manageURL: URL(string: "https://antigravity.google")
+            )
+        }
+        
+        if UserDefaults.standard.bool(forKey: "AntigravityEverBridged") {
+            return ProviderAccount(
+                label: L10n.t("Local Session"),
+                plan: L10n.t("Active"),
+                source: "Antigravity IDE",
+                manageURL: nil
+            )
+        }
+        
+        return nil
     }
 
     func fetchSnapshot() async throws -> ProviderSnapshot {
@@ -92,10 +103,9 @@ actor AntigravityProvider: UsageProvider {
             everBridged = true
             UserDefaults.standard.set(true, forKey: "AntigravityEverBridged")
             
-            let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: resolveHeadlineID(for: windows))
         }
 
         if localQuotaOverride != nil && everBridged {
@@ -107,19 +117,17 @@ actor AntigravityProvider: UsageProvider {
         if let credentials,
            let windows = try? await quota(token: credentials.accessToken, project: credentials.projectId),
            !windows.isEmpty {
-            let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: resolveHeadlineID(for: windows))
         }
 
         // 2. Fallback to OMP SQLite store if offline or direct call fails
         let ompWindows = Self.ompUsageWindows(forEmail: credentials?.email)
         if !ompWindows.isEmpty {
-            let mostConstrained = ompWindows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: ompWindows,
-                                    headlineID: mostConstrained?.id ?? "gemini-5h")
+                                    headlineID: resolveHeadlineID(for: ompWindows))
         }
 
         if everBridged { throw UsageProviderError.credentialExpired }
@@ -143,8 +151,23 @@ actor AntigravityProvider: UsageProvider {
                 LimitWindow(id: "requests",
                             label: activity.label(),
                             used: activity.requestsToday)
-            ]
+            ],
+            headlineID: "requests"
         )
+    }
+
+    private func resolveHeadlineID(for windows: [LimitWindow]) -> String {
+        let preferredLimit = Preferences.storedAntigravityHeadlineLimit()
+        
+        if preferredLimit != .automatic {
+            let candidates = windows.filter { $0.id.hasSuffix(preferredLimit.rawValue) }
+            if let mostConstrained = candidates.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) }) {
+                return mostConstrained.id
+            }
+        }
+        
+        let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
+        return mostConstrained?.id ?? "gemini-5h"
     }
 
     /// Ask Antigravity's language server, if it is running.

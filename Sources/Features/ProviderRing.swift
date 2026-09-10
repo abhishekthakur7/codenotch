@@ -123,7 +123,7 @@ private struct ActivityArc: View {
         Group {
             switch summary.state {
             case .working: spinner
-            case .waiting: pulse
+            case .waiting, .success: pulse
             case .idle:    EmptyView()
             }
         }

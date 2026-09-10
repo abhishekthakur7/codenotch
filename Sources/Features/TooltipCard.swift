@@ -233,9 +233,10 @@ private struct StatusRing: View {
                             .rotationEffect(.degrees(angle(at: context.date)))
                     }
                 }
-            case .waiting:
-                // Half a ring, held still: blocked, not progressing.
-                ring(trim: 0.5)
+            case .waiting, .success:
+                // Half a ring, held still: blocked, not progressing. (Or a full ring for success).
+                // Wait, if we want success to be a full ring, we can use 1.0 trim for success.
+                ring(trim: state == .success ? 1.0 : 0.5)
             case .idle:
                 ring(trim: 1)
             }
@@ -644,8 +645,9 @@ private struct SessionRow: View {
 
     private var stateColor: Color {
         switch session.state {
-        case .busy:    return accentColor
+        case .busy:    return Palette.textPrimary
         case .waiting: return Palette.watch
+        case .success: return Palette.ample
         case .idle:    return Palette.textSecondary
         }
     }
@@ -654,6 +656,7 @@ private struct SessionRow: View {
         switch session.state {
         case .busy:    return L10n.t("working")
         case .waiting: return L10n.t("waiting")
+        case .success: return L10n.t("complete")
         case .idle:    return L10n.t("idle")
         }
     }
@@ -694,7 +697,7 @@ private struct SessionList: View {
     private var ordered: [AgentSession] {
         summary.sessions.sorted { a, b in
             let rank: (AgentSession) -> Int = {
-                switch $0.state { case .waiting: 0; case .busy: 1; case .idle: 2 }
+                switch $0.state { case .waiting: 0; case .busy: 1; case .success: 2; case .idle: 3 }
             }
             return rank(a) == rank(b) ? a.since > b.since : rank(a) < rank(b)
         }

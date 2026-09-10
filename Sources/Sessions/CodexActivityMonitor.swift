@@ -95,12 +95,26 @@ final class CodexActivityMonitor: ObservableObject, AgentActivityMonitor {
     static func session(
         id: String, name: String, modified: Date, staleAfter: TimeInterval, now: Date
     ) -> AgentSession? {
-        guard now.timeIntervalSince(modified) <= staleAfter else { return nil }
+        let age = now.timeIntervalSince(modified)
+        let state: AgentSession.State
+        if age <= staleAfter { state = .busy }
+        else if age <= staleAfter + 9 { state = .success }
+        else if age <= staleAfter + 15 { state = .idle }
+        else { return nil }
+
+        let detail: String
+        switch state {
+        case .busy: detail = L10n.t("Working")
+        case .success: detail = L10n.t("Complete")
+        case .idle: detail = L10n.t("Idle")
+        case .waiting: detail = L10n.t("Waiting") // Should not happen in Codex right now
+        }
+
         return AgentSession(
             id: id,
             name: name,
-            detail: L10n.t("Working"),
-            state: .busy,
+            detail: detail,
+            state: state,
             waitingFor: nil,
             since: modified
         )

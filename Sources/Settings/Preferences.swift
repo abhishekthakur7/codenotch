@@ -112,6 +112,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(notchScope.rawValue, forKey: Keys.scope) }
     }
 
+    /// The preferred limit window to show for Antigravity provider (automatic, 5h, or weekly).
+    @Published var antigravityHeadlineLimit: AntigravityHeadlineLimit {
+        didSet { defaults.set(antigravityHeadlineLimit.rawValue, forKey: Keys.antigravityHeadlineLimit) }
+    }
+
     /// Where along that edge the notch sits, nudged from the centred default
     /// by ⌥-dragging the pill. One value per edge — moving it on the right
     /// should not silently relocate it on the top too — so this is read and
@@ -259,6 +264,7 @@ final class Preferences: ObservableObject {
         static let sessionBlockedSoundName = "sessionBlockedSoundName"
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
+        static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -273,6 +279,15 @@ final class Preferences: ObservableObject {
               budget > 0
         else { return nil }
         return budget
+    }
+    
+    nonisolated static func storedAntigravityHeadlineLimit(
+        defaults: UserDefaults = .standard
+    ) -> AntigravityHeadlineLimit {
+        guard let value = defaults.string(forKey: Keys.antigravityHeadlineLimit),
+              let limit = AntigravityHeadlineLimit(rawValue: value)
+        else { return .automatic }
+        return limit
     }
 
     /// True the very first time this copy runs, and never again.
@@ -372,6 +387,8 @@ final class Preferences: ObservableObject {
         // would put notches where none were expected.
         self.notchScope = defaults.string(forKey: Keys.scope)
             .flatMap(NotchScreenScope.init(rawValue:)) ?? .mainDisplay
+        self.antigravityHeadlineLimit = defaults.string(forKey: Keys.antigravityHeadlineLimit)
+            .flatMap(AntigravityHeadlineLimit.init(rawValue:)) ?? .automatic
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
         self.accentColor = defaults.string(forKey: Keys.accentColor)
             .flatMap(AccentColorChoice.init(rawValue:)) ?? .system

@@ -869,6 +869,13 @@ final class NotchWindowController {
 
     /// Clicking the open notch pins it, so it stays put while you read it.
     func togglePinned() {
+        model.isPinned.toggle()
+        if model.isPinned {
+            foldWork?.cancel()
+            foldWork = nil
+            withAnimation(NotchMotion.unfold) { model.isExpanded = true }
+        }
+        updateInteractiveRects()
         onToggleKeepOpen?()
     }
 

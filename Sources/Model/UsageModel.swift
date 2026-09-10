@@ -215,6 +215,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// endpoint; it never changes the profile token buckets. Other providers
     /// leave this nil because they do not expose the same account-level data.
     var tokenUsage: CodexTokenUsage? = nil
+    /// The account's named tier, when the provider publishes one. Shown under
+    /// the tooltip title. Nil when there is nothing to name.
+    var plan: String? = nil
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.

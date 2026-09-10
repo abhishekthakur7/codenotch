@@ -154,6 +154,31 @@ struct ClaudeUsageCLI: Sendable {
         return try Self.parse(text, now: now)
     }
 
+    /// The named tier `/usage` prints above the windows, when it names one.
+    static func plan(in text: String) -> String? {
+        let head = text.split(whereSeparator: \.isNewline).prefix(4).joined(separator: "\n").lowercased()
+        if head.contains("extra usage") { return SubscriptionPlan.display("extra_usage") }
+        if head.contains("max 20x") || head.contains("max20x") { return SubscriptionPlan.display("max_20x") }
+        if head.contains("max 5x") || head.contains("max5x") { return SubscriptionPlan.display("max_5x") }
+        if head.contains("max subscription") || head.contains("using max") {
+            return SubscriptionPlan.display("max")
+        }
+        if head.contains("pro subscription") || head.contains("using pro") {
+            return SubscriptionPlan.display("pro")
+        }
+        if head.contains("team subscription") { return SubscriptionPlan.display("team") }
+        return nil
+    }
+
+    func readWithPlan(profile: ClaudeProfile, now: Date = Date()) async throws -> (windows: [LimitWindow], plan: String?) {
+        let text = try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .utility).async {
+                continuation.resume(with: Result { try self.output(profile) })
+            }
+        }
+        return (try Self.parse(text, now: now), Self.plan(in: text))
+    }
+
     private static func run(binary: URL, profile: ClaudeProfile) throws -> String {
         // A directory of its own, so nothing Claude Code writes on the way
         // past lands in whatever directory the app happened to be launched

@@ -224,23 +224,35 @@ private struct TooltipShell<Content: View>: View {
 
 private struct TooltipHeader<Mark: View>: View {
     let title: String
+    /// The account's named tier, when the provider publishes one.
+    var subtitle: String?
     /// Sits on the header's own line, so saying when a reading was taken costs
     /// the card no extra height.
     var note: String?
     @ViewBuilder let mark: Mark
 
     var body: some View {
-        HStack(spacing: NotchLayout.headerGap) {
+        HStack(alignment: .center, spacing: NotchLayout.headerGap) {
             mark
-            Text(title)
-                .font(Typography.cardTitle)
-                .foregroundStyle(Palette.textPrimary)
-            if let note {
-                Spacer(minLength: Design.px(20))
-                Text(note)
-                    .font(Typography.cardBody)
-                    .foregroundStyle(Palette.textSecondary)
-                    .lineLimit(1)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
+                    Text(title)
+                        .font(Typography.cardTitle)
+                        .foregroundStyle(Palette.textPrimary)
+                    if let note {
+                        Spacer(minLength: Design.px(20))
+                        Text(note)
+                            .font(Typography.cardBody)
+                            .foregroundStyle(Palette.textSecondary)
+                            .lineLimit(1)
+                    }
+                }
+                if let subtitle {
+                    Text(subtitle)
+                        .font(Typography.cardBody)
+                        .foregroundStyle(Palette.textSecondary)
+                        .lineLimit(1)
+                }
             }
         }
     }
@@ -449,6 +461,7 @@ private struct ProviderTooltip: View {
             TooltipHeader(title: snapshot.kind == .localRuntime
                           ? L10n.t("\(snapshot.localModel?.brand?.displayName ?? snapshot.displayName) · Local")
                           : L10n.t("\(snapshot.displayName) Usage"),
+                          subtitle: snapshot.plan,
                           note: isThinking ? L10n.t("Thinking") : (snapshot.localModel?.brand != nil ? snapshot.displayName : readingAge)) {
                 ProviderGlyphView(glyph: snapshot.glyph)
                     .foregroundStyle(Palette.textPrimary)
@@ -839,6 +852,7 @@ struct TooltipCard: View {
             statusMessage: snapshot.statusMessage,
             blockMessage: snapshot.block?.summary(now: now),
             hasTokenUsage: snapshot.tokenUsage != nil,
+            hasPlan: snapshot.plan != nil,
             localModelName: snapshot.localModel?.name,
             showsLocalPerformance: snapshot.showsLocalPerformance,
             compactRowCount: snapshot.compactRowCount

@@ -90,6 +90,7 @@ struct CodexTokenUsage: Codable, Equatable, Sendable {
 enum CodexUsage {
     private struct Response: Decodable {
         let rate_limit: RateLimit?
+        let plan_type: String?
     }
 
     private struct ProfileUsageResponse: Decodable {
@@ -152,6 +153,11 @@ enum CodexUsage {
             throw UsageProviderError.nothingMetered(L10n.t("Codex reported no usage windows"))
         }
         return windows
+    }
+
+    /// The account tier the usage payload names, when it names one.
+    static func plan(from data: Data) -> String? {
+        SubscriptionPlan.display((try? JSONDecoder().decode(Response.self, from: data))?.plan_type)
     }
 
     /// Decode the profile endpoint's token statistics.

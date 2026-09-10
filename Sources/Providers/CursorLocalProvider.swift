@@ -73,7 +73,9 @@ actor CursorLocalProvider: UsageProvider {
             fidelity: .official,
             status: .ok,
             windows: windows,
-            headlineID: CursorUsage.headlineID(in: windows)
+            headlineID: CursorUsage.headlineID(in: windows),
+            plan: CursorUsage.plan(fromJSON: body)
+                ?? SubscriptionPlan.display(account()?.plan)
         )
     }
 }

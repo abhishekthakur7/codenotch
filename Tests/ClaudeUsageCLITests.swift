@@ -30,6 +30,21 @@ final class ClaudeUsageCLITests: XCTestCase {
 
     // MARK: - What the output means
 
+    func testANamedTierAboveTheWindowsIsRead() {
+        let extra = """
+        You are currently using your extra usage to power your Claude Code usage
+
+        Current session: 10% used · resets Sep 7 at 2:59pm (Asia/Jakarta)
+        """
+        XCTAssertEqual(ClaudeUsageCLI.plan(in: extra), "Extra")
+        XCTAssertNil(ClaudeUsageCLI.plan(in: live))
+        XCTAssertEqual(ClaudeUsageCLI.plan(in: """
+        You are currently using Max 5x
+
+        Current session: 1% used · resets Sep 7 at 2:59pm
+        """), "Max 5x")
+    }
+
     func testItReadsBothWindowsOffARealAnswer() throws {
         let windows = try ClaudeUsageCLI.parse(live, now: date("2026-09-07T06:00:00Z"))
 

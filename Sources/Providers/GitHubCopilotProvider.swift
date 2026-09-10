@@ -55,7 +55,8 @@ actor GitHubCopilotProvider: UsageProvider {
             status: .ok,
             windows: windows,
             headlineID: windows.contains { $0.id == "premium_interactions" }
-                ? "premium_interactions" : windows.first?.id
+                ? "premium_interactions" : windows.first?.id,
+            plan: GitHubCopilotUsage.plan(from: data)
         )
     }
 }
@@ -166,6 +167,15 @@ struct GitHubCopilotCredentials: Sendable {
 
 enum GitHubCopilotUsage {
     private static let order = ["premium_interactions", "chat", "completions"]
+
+    static func plan(from data: Data) -> String? {
+        guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+        return SubscriptionPlan.display(
+            (root["copilot_plan"] as? String) ?? (root["plan"] as? String)
+        )
+    }
 
     static func windows(from data: Data) throws -> [LimitWindow] {
         guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],

@@ -186,6 +186,15 @@ At rest it is a small pill on the screen edge that unfolds when the pointer
 reaches it — configurable in Settings to always show, or to hide entirely.
 Settings live in an orb below the notch: an arc at rest, a gear on hover.
 
+Clicking the notch while it is open keeps it open, so it stays put while you
+read it; clicking it again lets it fold away as usual. That click has to land
+on the body itself, since a ring takes its own click to refetch that provider
+and the orb takes one to open Settings. Right-clicking offers the same thing as
+a menu item, **Keep open**, ticked while the notch is being held open, which is
+the surer way to release one that was kept open by accident. The item is
+greyed out when Settings says Always show, because that choice is Settings' to
+change.
+
 In Settings → Appearance → Reset time, choose **Time remaining** for countdowns
 like "Resets in 3 Days 3h". **Reset date** keeps the reset date and time, with
 minutes shown when less than an hour remains.

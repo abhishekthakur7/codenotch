@@ -382,7 +382,7 @@ private struct LimitWindowRow: View {
 
     var body: some View {
         if isCountRow {
-            SplitRow(leading: window.label, trailing: "\(window.used ?? 0)",
+            SplitRow(leading: window.label, trailing: window.usedText ?? "\(window.used ?? 0)",
                      trailingColor: Palette.textSecondary)
         } else {
             VStack(alignment: .leading, spacing: 0) {

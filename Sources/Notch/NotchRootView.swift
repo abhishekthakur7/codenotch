@@ -113,7 +113,6 @@ struct NotchRootView: View {
         // applies to its own translucent chrome.
         let glassy = model.surfaceStyle.effective == .glass
             && !reduceTransparency
-            && model.isExpanded
 
         return ZStack {
             if glassy {

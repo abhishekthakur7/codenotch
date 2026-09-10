@@ -908,14 +908,10 @@ final class NotchWindowController {
         let keepOpen = NSMenuItem(
             title: L10n.t("Keep open"),
             action: #selector(MenuActions.togglePinned(_:)),
-            keyEquivalent: ""
+            keyEquivalent: model.isAlwaysOn ? "✓" : ""
         )
+        keepOpen.keyEquivalentModifierMask = []
         keepOpen.target = menuActions
-        // Checked whichever way it is being held open, but only changeable
-        // when it is the click that is holding it — the setting is Settings'
-        // to change, and a menu item that silently loses is worse than one
-        // that says it is not yours to press.
-        keepOpen.state = model.isAlwaysOn ? .on : .off
         keepOpen.isEnabled = true
         menu.addItem(keepOpen)
         menu.addItem(.separator())

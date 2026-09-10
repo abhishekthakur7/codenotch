@@ -548,6 +548,21 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
+                // Offered only where there is a glass to choose. Below macOS 26
+                // the choice has one possible answer, and a picker that cannot
+                // be moved is worse than no picker at all.
+                if #available(macOS 26.0, *) {
+                    Picker(L10n.t("Surface"), selection: $preferences.notchSurfaceStyle) {
+                        ForEach(NotchSurfaceStyle.allCases) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+
+                    Text(preferences.notchSurfaceStyle.explanation)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
                 // Two ways to answer the same question, because they suit
                 // different people: three named sizes for anyone who wants a
                 // decision made for them, and a slider for anyone who has a

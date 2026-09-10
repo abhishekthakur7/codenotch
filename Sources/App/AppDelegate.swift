@@ -296,6 +296,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.$weeklyRing
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(weeklyRing: $0) }
+            preferences.$notchSurfaceStyle
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
                 .store(in: &cancellables)
 
             preferences.$disconnectedProviders
@@ -469,6 +472,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(resetTimeFormat: preferences.resetTimeFormat)
         fleet.apply(accentColor: preferences.accentColor)
         fleet.apply(weeklyRing: preferences.weeklyRing)
+        fleet.apply(surfaceStyle: preferences.notchSurfaceStyle)
         fleet.show()
     }
 

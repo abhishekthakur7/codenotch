@@ -428,6 +428,16 @@ final class SettingsOrbTests: XCTestCase {
     func testTheHitRegionIsLargerThanTheOrb() {
         XCTAssertGreaterThan(NotchLayout.orbHotZone, NotchLayout.orbDiameter)
     }
+
+    /// The glass arc is masked by this path inside the view's bounds, so a band
+    /// running along the frame's edge would lose the outer half of its stroke.
+    func testTheArcBandStaysInsideItsFrame() {
+        let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let path = ArcBand(trim: 0...0.25, lineWidth: NotchLayout.orbStroke).path(in: frame)
+        XCTAssertFalse(path.isEmpty)
+        XCTAssertTrue(frame.insetBy(dx: -0.5, dy: -0.5).contains(path.boundingRect),
+                      "\(path.boundingRect) escapes the band's frame")
+    }
 }
 
 /// Hiding a provider is stored as the hidden set, so one added in a later
@@ -520,6 +530,28 @@ final class PreferencesTests: XCTestCase {
         defaults.set("ultraviolet", forKey: "accentColor")
 
         XCTAssertEqual(Preferences(defaults: defaults).accentColor, .system)
+    }
+
+    func testSurfaceStyleDefaultsToLiquidGlass() {
+        XCTAssertEqual(preferences().notchSurfaceStyle, .glass)
+    }
+
+    func testSurfaceStyleSurvivesARestart() {
+        let name = "PreferencesSurfaceStyleTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+
+        Preferences(defaults: defaults).notchSurfaceStyle = .solid
+        XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .solid)
+    }
+
+    func testAnUnknownSurfaceStyleFallsBackToLiquidGlass() {
+        let name = "PreferencesSurfaceStyleFallbackTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+        defaults.set("frosted", forKey: "notchSurfaceStyle")
+
+        XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .glass)
     }
 
     /// The key is deliberately unchanged across the rename, so choices made

@@ -132,6 +132,9 @@ final class NotchViewModel: ObservableObject {
     /// Mirrored here for the same reason `accentColor` is: the notch is a
     /// separate window, and it has to redraw the moment Settings changes this.
     @Published var weeklyRing: WeeklyRing = .off
+    /// Mirrors the persisted Appearance choice so the separate notch window
+    /// redraws immediately when Settings changes it.
+    @Published var surfaceStyle: NotchSurfaceStyle = .glass
     /// The display's own notch, when this edge has to share the bezel with one.
     ///
     /// Set by the window controller from the screen the panel is on, because

@@ -118,7 +118,9 @@ struct NotchRootView: View {
             if glassy {
                 if #available(macOS 26.0, *) {
                     Color.clear
-                        .glassEffect(.regular, in: shape)
+                        .frame(width: place.panelSize.width, height: place.panelSize.height)
+                        .glassEffect(.regular, in: Rectangle())
+                        .id(model.isExpanded)
                 }
             }
             

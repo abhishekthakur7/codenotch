@@ -422,6 +422,51 @@ final class ResetWindowTests: XCTestCase {
         XCTAssertEqual(snapshot.windows.count, 1, "the weekly is still listed in the tooltip")
     }
 
+    /// The second ring resolves the same way the headline does: by the id the
+    /// provider declared, not by position.
+    func testTheWeeklyRingResolvesTheDeclaredWindow() {
+        let snapshot = ProviderSnapshot(
+            id: "claude", displayName: "Claude", glyph: .claude,
+            fidelity: .official, status: .ok,
+            windows: [
+                LimitWindow(id: "session", label: "Session", usedFraction: 0.12),
+                LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0.91)
+            ],
+            headlineID: "session", weeklyID: "weekly_all"
+        )
+        XCTAssertEqual(snapshot.weeklyWindow?.id, "weekly_all")
+        XCTAssertEqual(snapshot.weeklyFraction, 0.91)
+        XCTAssertEqual(snapshot.usedFraction, 0.12, "the headline is untouched")
+    }
+
+    /// A provider that picks its headline by whichever limit is tightest —
+    /// Antigravity does — will sometimes land on the weekly one. Two rings
+    /// reporting the same number is worse than one: it reads as a second fact
+    /// that happens to agree rather than as the same fact drawn twice.
+    func testNoSecondRingWhenTheHeadlineIsAlreadyTheWeekly() {
+        let snapshot = ProviderSnapshot(
+            id: "gemini", displayName: "Antigravity", glyph: .antigravity,
+            fidelity: .official, status: .ok,
+            windows: [LimitWindow(id: "gemini-weekly", label: "Weekly", usedFraction: 0.8)],
+            headlineID: "gemini-weekly", weeklyID: "gemini-weekly"
+        )
+        XCTAssertNil(snapshot.weeklyWindow)
+        XCTAssertNil(snapshot.weeklyFraction)
+        XCTAssertEqual(snapshot.headline?.id, "gemini-weekly", "the headline still draws it")
+    }
+
+    /// Declared but absent is not an error — the provider simply did not return
+    /// that window this time, and one ring is the honest answer.
+    func testAMissingWeeklyWindowDrawsNoSecondRing() {
+        let snapshot = ProviderSnapshot(
+            id: "claude", displayName: "Claude", glyph: .claude,
+            fidelity: .official, status: .ok,
+            windows: [LimitWindow(id: "session", label: "Session", usedFraction: 0.2)],
+            headlineID: "session", weeklyID: "weekly_all"
+        )
+        XCTAssertNil(snapshot.weeklyFraction)
+    }
+
     /// A provider that declares no headline keeps the old positional rule.
     func testUndeclaredHeadlineFallsBackToTheFirstWindow() {
         let snapshot = ProviderSnapshot(

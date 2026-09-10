@@ -105,7 +105,8 @@ actor AntigravityProvider: UsageProvider {
             
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: resolveHeadlineID(for: windows))
+                                    headlineID: resolveHeadlineID(for: windows),
+                                    weeklyID: "gemini-weekly")
         }
 
         if localQuotaOverride != nil && everBridged {
@@ -119,7 +120,8 @@ actor AntigravityProvider: UsageProvider {
            !windows.isEmpty {
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
-                                    headlineID: resolveHeadlineID(for: windows))
+                                    headlineID: resolveHeadlineID(for: windows),
+                                    weeklyID: "gemini-weekly")
         }
 
         // 2. Fallback to OMP SQLite store if offline or direct call fails
@@ -127,7 +129,8 @@ actor AntigravityProvider: UsageProvider {
         if !ompWindows.isEmpty {
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: ompWindows,
-                                    headlineID: resolveHeadlineID(for: ompWindows))
+                                    headlineID: resolveHeadlineID(for: ompWindows),
+                                    weeklyID: "gemini-weekly")
         }
 
         if everBridged { throw UsageProviderError.credentialExpired }

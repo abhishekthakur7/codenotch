@@ -102,7 +102,8 @@ actor CommandCodeProvider: UsageProvider {
                 fidelity: .official,
                 status: .ok,
                 windows: windows,
-                headlineID: "monthly"
+                headlineID: "monthly",
+                weeklyID: "weekly"
             )
         } catch UsageProviderError.rateLimited(let retryAfter) {
             consecutiveRateLimits += 1

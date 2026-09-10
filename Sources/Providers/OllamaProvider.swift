@@ -62,7 +62,8 @@ actor OllamaProvider: UsageProvider {
             fidelity: .official,
             status: .ok,
             windows: result.windows,
-            headlineID: result.headlineID
+            headlineID: result.headlineID,
+            weeklyID: "weekly"
         )
     }
 

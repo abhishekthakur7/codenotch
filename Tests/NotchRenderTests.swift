@@ -11,6 +11,14 @@ final class NotchRenderTests: XCTestCase {
         let model = NotchViewModel()
         model.edge = edge
         model.isExpanded = true
+        // A saturated accent, not the default `.system`.
+        //
+        // `colouredFraction` finds an arc by its saturation, and `.system`
+        // resolves to `NSColor.controlAccentColor` — the *Mac's* accent
+        // colour. On a machine set to Graphite the arcs render grey and the
+        // measurement reads zero whether the ring was drawn or not, so a
+        // developer's System Settings decided whether the suite passed.
+        model.accentColor = .blue
         model.snapshots = (0..<cells).map { index in
             ProviderSnapshot(
                 id: "p\(index)", displayName: "P\(index)", glyph: .claude,
@@ -57,6 +65,104 @@ final class NotchRenderTests: XCTestCase {
                 "\(edge): the panel came out blank — the notch drew nothing"
             )
         }
+    }
+
+    /// The weekly ring has to actually appear, and only when asked for.
+    ///
+    /// Counted by colour rather than by ink: the arcs are drawn on top of the
+    /// notch's own black, which is already opaque, so `inkedFraction` cannot
+    /// see them at all — it answers the same number to three decimal places
+    /// whether the ring is there or not. Saturation is what separates an arc
+    /// from the body behind it and the grey track beside it.
+    func testTheWeeklyRingPaintsOnlyWhenSwitchedOn() {
+        func colour(_ ring: WeeklyRing) -> Double {
+            let model = model(edge: .right)
+            model.weeklyRing = ring
+            model.snapshots = model.snapshots.map { snapshot in
+                ProviderSnapshot(
+                    id: snapshot.id, displayName: snapshot.displayName,
+                    glyph: snapshot.glyph, fidelity: snapshot.fidelity,
+                    status: snapshot.status,
+                    windows: snapshot.windows + [
+                        LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0.9)
+                    ],
+                    headlineID: snapshot.headlineID,
+                    weeklyID: "weekly_all"
+                )
+            }
+            guard let rep = render(model) else { return -1 }
+            return colouredFraction(rep)
+        }
+
+        let off = colour(.off)
+        XCTAssertGreaterThan(off, 0, "the headline arc is missing too — this measures nothing")
+        XCTAssertGreaterThan(colour(.inside), off, "inside painted no arc")
+        XCTAssertGreaterThan(colour(.outside), off, "outside painted no arc")
+    }
+
+    /// A week nobody has spent yet still has to be visible.
+    ///
+    /// At 0% the arc has no length, so without a track behind it the ring is
+    /// indistinguishable from the feature being missing — which is exactly how
+    /// Codex read when its week opened empty.
+    func testAnEmptyWeeklyRingStillDrawsItsTrack() {
+        func ink(_ ring: WeeklyRing) -> Double {
+            let model = model(edge: .right)
+            model.weeklyRing = ring
+            model.snapshots = model.snapshots.map { snapshot in
+                ProviderSnapshot(
+                    id: snapshot.id, displayName: snapshot.displayName,
+                    glyph: snapshot.glyph, fidelity: snapshot.fidelity,
+                    status: snapshot.status,
+                    // Nothing used yet: the arc is zero length, the track is all
+                    // there is to see.
+                    windows: snapshot.windows + [
+                        LimitWindow(id: "weekly_all", label: "All models", usedFraction: 0)
+                    ],
+                    headlineID: snapshot.headlineID,
+                    weeklyID: "weekly_all"
+                )
+            }
+            guard let rep = render(model) else { return -1 }
+            return greyFraction(rep)
+        }
+
+        XCTAssertGreaterThan(ink(.outside), ink(.off),
+                             "an empty week drew nothing at all")
+    }
+
+    /// Fraction of sampled pixels that are the ring track's own grey — the way
+    /// to see a track, which carries no hue and so is invisible to
+    /// `colouredFraction`.
+    private func greyFraction(_ rep: NSBitmapImageRep) -> Double {
+        var grey = 0, total = 0
+        for x in stride(from: 0, to: rep.pixelsWide, by: 2) {
+            for y in stride(from: 0, to: rep.pixelsHigh, by: 2) {
+                total += 1
+                guard let colour = rep.colorAt(x: x, y: y), colour.alphaComponent > 0.5,
+                      let rgb = colour.usingColorSpace(.sRGB) else { continue }
+                let channels = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent]
+                let neutral = (channels.max()! - channels.min()!) < 0.06
+                if neutral, channels.max()! > 0.10, channels.max()! < 0.45 { grey += 1 }
+            }
+        }
+        return total == 0 ? 0 : Double(grey) / Double(total)
+    }
+
+    /// Fraction of sampled pixels carrying a hue — an arc rather than the black
+    /// body, the grey track or white type.
+    private func colouredFraction(_ rep: NSBitmapImageRep) -> Double {
+        var coloured = 0, total = 0
+        for x in stride(from: 0, to: rep.pixelsWide, by: 2) {
+            for y in stride(from: 0, to: rep.pixelsHigh, by: 2) {
+                total += 1
+                guard let colour = rep.colorAt(x: x, y: y), colour.alphaComponent > 0.5,
+                      let rgb = colour.usingColorSpace(.sRGB) else { continue }
+                let channels = [rgb.redComponent, rgb.greenComponent, rgb.blueComponent]
+                if (channels.max()! - channels.min()!) > 0.15 { coloured += 1 }
+            }
+        }
+        return total == 0 ? 0 : Double(coloured) / Double(total)
     }
 
     /// And it paints it against the bezel, not somewhere in the middle of the

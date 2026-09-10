@@ -41,6 +41,9 @@ final class NotchFleet {
     private var displayPreference: DisplayPreference = .followActiveWindow
     private var resetTimeFormat: ResetTimeFormat = .automatic
     private var accentColor: AccentColorChoice = .system
+    /// One choice for the whole fleet, like the edge and the size: a weekly
+    /// ring on one display and not another would read as a bug.
+    private var weeklyRing: WeeklyRing = .off
     /// The ⌥-drag nudge along the current edge. One value for the whole
     /// fleet, the same as `edge` itself — displays do not each get their own
     /// edge, so they do not each get their own nudge either.
@@ -136,6 +139,13 @@ final class NotchFleet {
         self.resetTimeFormat = resetTimeFormat
         for controller in controllers.values {
             controller.model.resetTimeFormat = resetTimeFormat
+        }
+    }
+
+    func apply(weeklyRing: WeeklyRing) {
+        self.weeklyRing = weeklyRing
+        for controller in controllers.values {
+            controller.model.weeklyRing = weeklyRing
         }
     }
 
@@ -305,6 +315,7 @@ final class NotchFleet {
         controller.model.sizeScale = scale
         controller.model.resetTimeFormat = resetTimeFormat
         controller.model.accentColor = accentColor
+        controller.model.weeklyRing = weeklyRing
         controller.onRefresh = onRefresh
         controller.onRefreshProvider = onRefreshProvider
         controller.onOpenSettings = onOpenSettings

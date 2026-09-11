@@ -31,6 +31,19 @@ struct AntigravityCredentials {
 
     static func forgetCached() { cache.forget() }
 
+    /// Granted by "Allow access…" alone — see `PromptPermission`.
+    private static let prompt = PromptPermission()
+
+    /// A person asked macOS for this login again: the next read may show the
+    /// dialogue. `forgetCached` grants nothing, because it is not only a click.
+    static func askAgain() {
+        prompt.grant()
+        cache.forget()
+    }
+
+    /// Stands in for the keychain in tests, which have none to read.
+    nonisolated(unsafe) static var readKeychainForTesting: ((_ interactive: Bool) -> (OSStatus, Data?))?
+
     /// Whatever a previous fetch already read, without asking macOS again.
     static var held: AntigravityCredentials? { cache.held }
 
@@ -70,17 +83,27 @@ struct AntigravityCredentials {
         var keychainCreds: AntigravityCredentials?
         var keychainStatus: OSStatus = 0
 
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching([
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrService: service,
-            kSecAttrAccount: account,
-            kSecReturnData: true,
-            kSecMatchLimit: kSecMatchLimitOne
-        ] as CFDictionary, &item)
+        // Never prompts on a poll. The item is written by Go's keyring through
+        // `/usr/bin/security`, so it is refused the way Claude Code's is, and
+        // this read used to raise the dialogue every time the cache's
+        // five-minute retry came round — for a token Antigravity itself had
+        // long stopped refreshing. A refusal is retried through the security
+        // tool under the item's own account, which is not this user's.
+        let interactive = prompt.take()
+        let (status, data) = readKeychainForTesting?(interactive) ?? KeychainSecret.read(
+            query: [
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrService: service,
+                kSecAttrAccount: account,
+                kSecReturnData: true,
+                kSecMatchLimit: kSecMatchLimitOne
+            ],
+            interactive: interactive,
+            rescue: (service: service, account: account)
+        )
         keychainStatus = status
 
-        if status == errSecSuccess, let data = item as? Data, let decoded = decode(data) {
+        if status == errSecSuccess, let data, let decoded = decode(data) {
             keychainCreds = decoded
             if !decoded.isExpired {
                 return decoded

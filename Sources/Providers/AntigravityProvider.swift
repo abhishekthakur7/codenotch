@@ -62,7 +62,8 @@ actor AntigravityProvider: UsageProvider {
         .openApp(bundleID: "com.google.antigravity", name: "Antigravity")
     }
 
-    nonisolated func forgetCachedCredential() { AntigravityCredentials.forgetCached() }
+    /// Reached only from "Allow access…", so it may let the next read prompt.
+    nonisolated func forgetCachedCredential() { AntigravityCredentials.askAgain() }
 
     nonisolated func account() -> ProviderAccount? {
         if AntigravityCredentials.isSignedIn(), let held = AntigravityCredentials.held {

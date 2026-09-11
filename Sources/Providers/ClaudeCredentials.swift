@@ -51,57 +51,21 @@ struct ClaudeCredentials {
             throw UsageProviderError.needsAuth
         }
 
-        // Serialised, because the switch below is process-wide. Two Claude
-        // profiles reading at once would otherwise interleave the save and the
-        // restore, and whichever finished second could leave keychain
-        // interaction off for the life of the app — which is exactly what would
-        // stop "Allow access…" from ever showing its dialogue again.
-        interactionLock.lock()
-        defer { interactionLock.unlock() }
+        // Never prompts unless a person asked — see `KeychainSecret.read`. A
+        // refusal is retried through `/usr/bin/security` under the account
+        // Claude Code files these items with, which is this user's.
+        let (status, item) = KeychainSecret.read(
+            query: [
+                kSecClass: kSecClassGenericPassword,
+                kSecValuePersistentRef: winner.persistentRef,
+                kSecReturnData: true,
+                kSecMatchLimit: kSecMatchLimitOne
+            ],
+            interactive: interactive,
+            rescue: (service: winner.service, account: NSUserName())
+        )
 
-        // Never raise the dialogue from a poll. Claude Code recreates this item
-        // on every token rotation, and a new item's *partition list* admits
-        // only Apple's own tools — so "Always Allow", which writes the access
-        // list, buys exactly one read, and the dialogue came back on a timer.
-        //
-        // `kSecUseAuthenticationUIFail` governs the data-protection keychain
-        // and is ignored by anything carrying a partition list, which is every
-        // item involved; the legacy call is what those honour. Both are set.
-        //
-        // Cursor's and Antigravity's reads do not take this lock, so one of
-        // theirs landing inside this window is refused once without a prompt.
-        // Both retry after their cache's backoff, so that costs a delayed
-        // prompt, never a lost one.
-        var wasAllowed: DarwinBoolean = true
-        if !interactive {
-            SecKeychainGetUserInteractionAllowed(&wasAllowed)
-            SecKeychainSetUserInteractionAllowed(false)
-        }
-        defer { if !interactive { SecKeychainSetUserInteractionAllowed(wasAllowed.boolValue) } }
-
-        var query: [CFString: Any] = [
-            kSecClass: kSecClassGenericPassword,
-            kSecValuePersistentRef: winner.persistentRef,
-            kSecReturnData: true,
-            kSecMatchLimit: kSecMatchLimitOne
-        ]
-        if !interactive { query[kSecUseAuthenticationUI] = kSecUseAuthenticationUIFail }
-
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-
-        // Refused without a prompt, but the item is right there. The partition
-        // refusal is the ordinary case, not an edge one, so try the reader
-        // macOS does admit before reporting it — see `readViaSecurityTool`.
-        // Not on an interactive read: someone who just answered the dialogue
-        // gets exactly the answer they gave.
-        if !interactive, wasRefused(status),
-           let rescued = readViaSecurityTool(service: winner.service) {
-            Log.usage.notice("\(winner.service, privacy: .public) read via the security tool after a refusal")
-            return try decode(rescued, services: services)
-        }
-
-        guard status == errSecSuccess, let data = item as? Data else {
+        guard status == errSecSuccess, let data = item else {
             // The status matters: "not found" means the item was deleted
             // between enumeration and this read — Claude Code rotating at the
             // exact wrong instant — whereas -25308 (interaction not allowed) or
@@ -128,9 +92,6 @@ struct ClaudeCredentials {
 
         return try decode(data, services: services)
     }
-
-    /// The process-wide keychain interaction switch is shared state; see `read`.
-    private static let interactionLock = NSLock()
 
     /// Turn the stored JSON into a credential. Shared by both readers, so a
     /// rescued read is judged exactly as a direct one is.
@@ -169,39 +130,6 @@ struct ClaudeCredentials {
         )
     }
 
-    /// Read the item by name through `/usr/bin/security`.
-    ///
-    /// Claude Code writes these items with that tool, so it is on every item's
-    /// access list, and it is Apple-signed, so it is inside the `apple-tool:`
-    /// partition a freshly recreated item admits. It is never the client that
-    /// gets refused. The secret goes straight back into this process and
-    /// nowhere else; nothing is written, and it is not logged.
-    ///
-    /// Only after a refusal: it costs a process per read, and the direct call
-    /// is both cheaper and the honest way to ask.
-    private static func readViaSecurityTool(service: String) -> Data? {
-        let tool = Process()
-        tool.executableURL = URL(fileURLWithPath: "/usr/bin/security")
-        // `-w` prints only the secret. The account is this user, which is how
-        // Claude Code files it.
-        tool.arguments = ["find-generic-password", "-a", NSUserName(), "-s", service, "-w"]
-        let out = Pipe()
-        tool.standardOutput = out
-        tool.standardError = FileHandle.nullDevice
-        do {
-            try tool.run()
-        } catch {
-            Log.usage.error("could not run the security tool: \(error.localizedDescription, privacy: .public)")
-            return nil
-        }
-        // Drain before waiting: a full pipe nobody reads is a deadlock.
-        let data = out.fileHandleForReading.readDataToEndOfFile()
-        tool.waitUntilExit()
-        guard tool.terminationStatus == 0 else { return nil }
-        var trimmed = data
-        while trimmed.last == 0x0A || trimmed.last == 0x0D { trimmed.removeLast() }
-        return trimmed.isEmpty ? nil : trimmed
-    }
 
     /// Which keychain refusal this was. "Not found" means Claude Code has never
     /// signed in; -25308 or -128 mean the item exists but this app is not on its
@@ -274,25 +202,17 @@ final class ClaudeKeychain: @unchecked Sendable {
     )
 
     private let reader: (_ services: [String], _ interactive: Bool) throws -> ClaudeCredentials
-    private let now: () -> Date
+    private let prompt: PromptPermission
 
-    /// When a person last asked for the dialogue, if they are still owed it.
-    private var promptOwedUntil: Date?
-    private let promptLock = NSLock()
-
-    /// How long an unanswered "Allow access…" stays good for. The click is
-    /// followed by a refresh at once, so this only matters when that refresh
-    /// never reached the keychain — the CLI answered instead. Without a limit
-    /// the permission would sit there until some later poll spent it, and the
-    /// dialogue would appear on a timer after all.
-    static let promptWindow: TimeInterval = 60
+    /// How long an unanswered "Allow access…" stays good for.
+    static let promptWindow = PromptPermission.window
 
     init(services: [String],
          now: @escaping () -> Date = Date.init,
          reader: @escaping (_ services: [String], _ interactive: Bool) throws -> ClaudeCredentials
             = { try ClaudeCredentials.read(services: $0, interactive: $1) }) {
         self.services = services
-        self.now = now
+        self.prompt = PromptPermission(now: now)
         self.reader = reader
     }
 
@@ -312,7 +232,7 @@ final class ClaudeKeychain: @unchecked Sendable {
     func load() throws -> ClaudeCredentials {
         try cache.value(
             itemModifiedAt: { KeychainItem.modifiedAt(services: services) },
-            reload: { [self] in try reader(services, takePrompt()) }
+            reload: { [self] in try reader(services, prompt.take()) }
         )
     }
 
@@ -326,19 +246,7 @@ final class ClaudeKeychain: @unchecked Sendable {
     /// server rejecting a token and the token refresher call, and neither of
     /// those is someone clicking a button.
     func askAgain() {
-        promptLock.lock()
-        promptOwedUntil = now().addingTimeInterval(Self.promptWindow)
-        promptLock.unlock()
+        prompt.grant()
         cache.forget()
-    }
-
-    /// Spent by the read it is taken for, whatever that read's outcome. A Deny
-    /// that left it standing would hand the next poll a dialogue to show.
-    private func takePrompt() -> Bool {
-        promptLock.lock()
-        defer { promptLock.unlock() }
-        guard let until = promptOwedUntil else { return false }
-        promptOwedUntil = nil
-        return now() < until
     }
 }

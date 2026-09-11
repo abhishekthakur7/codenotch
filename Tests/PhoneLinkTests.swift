@@ -39,8 +39,10 @@ final class PhoneLinkTests: XCTestCase {
 
     @MainActor
     func testIntegration() async throws {
-        let registry = PhoneLinkRegistry()
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let registry = PhoneLinkRegistry(directory: tempDir)
         let pairing = PhoneLinkPairing()
+        defer { try? FileManager.default.removeItem(at: tempDir) }
         
         let server = PhoneLinkServer(
             pairing: pairing, registry: registry,
@@ -131,8 +133,10 @@ final class PhoneLinkTests: XCTestCase {
     
     @MainActor
     func testConcurrentPairing() async throws {
-        let registry = PhoneLinkRegistry()
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let registry = PhoneLinkRegistry(directory: tempDir)
         let pairing = PhoneLinkPairing()
+        defer { try? FileManager.default.removeItem(at: tempDir) }
         let server = PhoneLinkServer(pairing: pairing, registry: registry, getSnapshot: { nil }, refreshAndGetSnapshot: { nil })
         let port = try await server.start(port: 0)
         
@@ -206,5 +210,81 @@ final class PhoneLinkTests: XCTestCase {
         let reg2 = PhoneLinkRegistry(directory: dir)
         XCTAssertNotNil(reg2.getDevice(id: "A"))
         XCTAssertNil(reg2.getDevice(id: "B"))
+    }
+    
+    @MainActor
+    func testPairingResponseFormat() async throws {
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let registry = PhoneLinkRegistry(directory: tempDir)
+        let pairing = PhoneLinkPairing()
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+        
+        let server = PhoneLinkServer(pairing: pairing, registry: registry, getSnapshot: { nil }, refreshAndGetSnapshot: { nil })
+        let port = try await server.start(port: 0)
+        
+        let deviceId = "test-device-id-format"
+        let pairBody = "{\"deviceId\":\"\(deviceId)\",\"name\":\"Test\",\"platform\":\"ios\"}"
+        
+        let url = URL(string: "http://127.0.0.1:\(port)/api/v2/pair")!
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.httpBody = pairBody.data(using: .utf8)!
+        
+        let code = await pairing.currentCode
+        let ts = String(Int(Date().timeIntervalSince1970))
+        let payload = "\(ts).nonce-format.POST./api/v2/pair.\(SHA256.hash(data: req.httpBody!).compactMap { String(format: "%02x", $0) }.joined())"
+        let symKey = SymmetricKey(data: Data(code.utf8))
+        let sig = HMAC<SHA256>.authenticationCode(for: Data(payload.utf8), using: symKey).compactMap { String(format: "%02x", $0) }.joined()
+        
+        req.setValue(ts, forHTTPHeaderField: "x-cn-timestamp")
+        req.setValue("nonce-format", forHTTPHeaderField: "x-cn-nonce")
+        req.setValue(sig, forHTTPHeaderField: "x-cn-signature")
+        
+        let (data, response) = try await URLSession.shared.data(for: req)
+        let status = (response as! HTTPURLResponse).statusCode
+        XCTAssertEqual(status, 200)
+        
+        let rawStr = String(data: data, encoding: .utf8)!
+        XCTAssertFalse(rawStr.contains("secret"), "Response must not contain 'secret'")
+        XCTAssertFalse(rawStr.contains(code), "Response must not contain 'code'")
+        
+        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        XCTAssertEqual(json["paired"] as? Bool, true)
+        XCTAssertNotNil(json["server"] as? String)
+        XCTAssertNotNil(json["version"] as? String)
+        XCTAssertEqual(json["api"] as? Int, 2)
+        XCTAssertEqual(json["deviceId"] as? String, deviceId)
+        
+        await server.stop()
+    }
+    
+    @MainActor
+    func testSnapshotNilEncoding() throws {
+        let snap = PhoneLinkSnapshot(
+            server: PhoneLinkSnapshot.ServerInfo(name: "Test", version: "1.0", generatedAt: "now", demo: false),
+            providers: [
+                PhoneLinkSnapshot.Provider(
+                    id: "p1", displayName: "P1", fidelity: "high", status: PhoneLinkSnapshot.Status(kind: "ok", since: nil, why: nil),
+                    windows: [
+                        PhoneLinkSnapshot.Window(id: "w1", label: "W1", usedFraction: nil, remaining: nil, used: nil, resetsAt: nil)
+                    ],
+                    headlineId: nil, block: nil, account: nil)
+            ],
+            sessions: [
+                PhoneLinkSnapshot.Session(id: "s1", name: "S1", detail: "D1", state: "S", waitingFor: nil, since: nil)
+            ]
+        )
+        let data = try JSONEncoder().encode(snap)
+        let jsonStr = String(data: data, encoding: .utf8)!
+        
+        XCTAssertTrue(jsonStr.contains("\"headlineId\":null"))
+        XCTAssertTrue(jsonStr.contains("\"block\":null"))
+        XCTAssertTrue(jsonStr.contains("\"account\":null"))
+        XCTAssertTrue(jsonStr.contains("\"usedFraction\":null"))
+        XCTAssertTrue(jsonStr.contains("\"remaining\":null"))
+        XCTAssertTrue(jsonStr.contains("\"used\":null"))
+        XCTAssertTrue(jsonStr.contains("\"resetsAt\":null"))
+        XCTAssertTrue(jsonStr.contains("\"waitingFor\":null"))
+        XCTAssertTrue(jsonStr.contains("\"since\":null"))
     }
 }

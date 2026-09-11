@@ -292,11 +292,14 @@ final class PhoneLinkRequestHandler: ChannelInboundHandler {
                 self.pairing.lastPaired = device
             }
             
+            let info = Bundle.main.infoDictionary
+            let version = (info?["CFBundleShortVersionString"] as? String) ?? "1.0.0"
             let respObj: [String: Any] = [
-                "ok": true,
-                "serverName": Host.current().localizedName ?? "Mac",
-                "secret": devSecret,
-                "api": 2
+                "paired": true,
+                "server": Host.current().localizedName ?? "Mac",
+                "version": version,
+                "api": 2,
+                "deviceId": req.deviceId
             ]
             let respData = try! JSONSerialization.data(withJSONObject: respObj)
             self.respond(channel, jsonBody: respData)

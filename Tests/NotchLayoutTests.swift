@@ -480,7 +480,8 @@ final class PreferencesTests: XCTestCase {
     func testEverythingIsConnectedByDefault() {
         let p = preferences()
         XCTAssertTrue(p.isConnected("claude"))
-        XCTAssertTrue(p.isConnected("a-provider-that-does-not-exist-yet"))
+        XCTAssertTrue(p.isConnected("codex"))
+        XCTAssertFalse(p.isConnected("a-provider-that-does-not-exist-yet"))
     }
 
     func testConnectingAndDisconnectingRoundTrips() {

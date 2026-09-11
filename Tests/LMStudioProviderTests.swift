@@ -135,7 +135,7 @@ final class LMStudioProviderTests: XCTestCase {
     func testTheEndpointPreferenceIsLoopbackOnlyAndPersists() {
         let defaults = isolatedDefaults()
         let fresh = Preferences(defaults: defaults)
-        XCTAssertTrue(fresh.isConnected("lmstudio"), "on by default, like every provider; nothing shows until LM Studio answers")
+        XCTAssertFalse(fresh.isConnected("lmstudio"), "off until switched on; nothing shows until LM Studio answers")
         XCTAssertNoThrow(try LMStudioEndpoint.parse(fresh.lmstudioEndpoint))
         XCTAssertTrue(fresh.lmstudioEndpoint.hasPrefix("http://127.0.0.1:"))
         fresh.lmstudioEndpoint = "http://127.0.0.1:41343"

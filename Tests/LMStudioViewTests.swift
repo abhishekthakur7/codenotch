@@ -181,7 +181,7 @@ final class LMStudioViewTests: XCTestCase {
                                       logsDirectory: FileManager.default.temporaryDirectory.appendingPathComponent(domain))
         for enabled in [false, true] {
             preferences.setConnected(enabled, for: "lmstudio")
-            store.disconnected = preferences.disconnectedProviders
+            store.disconnected = preferences.disconnectedIDs(among: store.knownIDs)
             let content = LMStudioSettingsRow(preferences: preferences, store: store, metrics: metrics)
                 .padding(20).frame(width: 460).background(Color(nsColor: .windowBackgroundColor))
             let hosting = NSHostingView(rootView: content)

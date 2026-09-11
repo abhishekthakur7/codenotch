@@ -31,7 +31,8 @@ final class PreferencesMigrationTests: XCTestCase {
         Preferences.migrateFromPreviousName(into: fresh, from: oldName)
 
         let preferences = Preferences(defaults: fresh)
-        XCTAssertEqual(preferences.disconnectedProviders, ["glm"])
+        XCTAssertFalse(preferences.isConnected("glm"))
+        XCTAssertTrue(preferences.isConnected("claude"))
         XCTAssertEqual(preferences.notchVisibility, .alwaysShow)
     }
 
@@ -69,6 +70,49 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertEqual(preferences.notchEdge, .right)
         XCTAssertEqual(preferences.notchSize, .medium)
         XCTAssertEqual(preferences.weeklyRing, .off)
+        XCTAssertTrue(preferences.isConnected("claude"))
+        XCTAssertTrue(preferences.isConnected("codex"))
+        XCTAssertTrue(preferences.isConnected("claude-work"))
+        XCTAssertFalse(preferences.isConnected("cursor"))
+        XCTAssertFalse(preferences.isConnected("glm"))
+    }
+
+    func testAFirstLaunchSeedsClaudeAndCodexOnceDiscovered() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "claude-work"])
+        XCTAssertEqual(preferences.connectedProviders, ["claude", "codex", "claude-work"])
+        XCTAssertFalse(preferences.isConnected("cursor"))
+
+        let again = Preferences(defaults: UserDefaults(suiteName: name)!)
+        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "claude-work", "deepseek"])
+        XCTAssertFalse(again.isConnected("cursor"))
+        XCTAssertFalse(again.isConnected("deepseek"))
+        XCTAssertTrue(again.isConnected("claude"))
+    }
+
+    func testHiddenProvidersInvertAgainstWhatThisMacHas() {
+        let (fresh, _) = makeDefaults()
+        fresh.set(["glm", "cursor"], forKey: "hiddenProviders")
+        let preferences = Preferences(defaults: fresh)
+        XCTAssertFalse(preferences.isConnected("glm"))
+        XCTAssertTrue(preferences.isConnected("claude"))
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm"])
+        XCTAssertEqual(preferences.connectedProviders, ["claude", "codex"])
+        XCTAssertFalse(preferences.isConnected("cursor"))
+        XCTAssertTrue(preferences.isConnected("claude"))
+    }
+
+    func testANewClaudeProfileTurnsOnWithoutReopeningCursor() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor"])
+        XCTAssertFalse(preferences.isConnected("cursor"))
+
+        let later = Preferences(defaults: UserDefaults(suiteName: name)!)
+        later.reconcile(discoveredIDs: ["claude", "codex", "cursor", "claude-work"])
+        XCTAssertTrue(later.isConnected("claude-work"))
+        XCTAssertFalse(later.isConnected("cursor"))
     }
 
     /// Off by default, and it has to stay chosen once it is chosen: an extra

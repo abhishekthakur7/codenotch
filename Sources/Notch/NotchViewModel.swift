@@ -98,6 +98,21 @@ final class NotchViewModel: ObservableObject {
     }
     /// The settings handle is under the cursor.
     @Published var isHoveringSettings = false
+    /// The move handle is under the cursor.
+    @Published var isHoveringMove = false
+    /// Bumped each time the move handle is pressed, on the same counter
+    /// pattern `settingsSpins` uses and for the same reason.
+    @Published var moveSpins = 0
+    /// The notch is in hand: the move handle has been held past its threshold
+    /// and the drop zones are up, waiting for a release.
+    @Published var isMoving = false
+    /// Which edge a release would land on. Nil before the pointer has moved
+    /// far enough for a target to be meaningful.
+    @Published var moveTarget: NotchEdge?
+    /// A move finished on `edge`. The controller owns persisting it, for the
+    /// same reason it owns `onReposition`: this type knows the geometry, not
+    /// where preferences live.
+    var onMove: ((NotchEdge) -> Void)?
     /// A direct SwiftUI tap on the settings orb, independent of the panel's
     /// own AppKit-level click routing (`NotchPanel.mouseDown` →
     /// `NotchWindowController.handleClick`). That path relies on the panel's
@@ -279,6 +294,22 @@ final class NotchViewModel: ObservableObject {
         max(0, orbAlong - shapeLength + NotchLayout.orbHotZone / 2).rounded(.up)
     }
 
+    /// Where the move handle sits: the settings orb's position mirrored to the
+    /// near end of the stack. Measured back from zero the same distance the
+    /// orb sits past `shapeLength`, so the pair stay symmetric about the notch
+    /// at every size and on every edge.
+    var moveAlong: CGFloat {
+        guard orbHugsCorner else { return 0 }
+        return cornerCentreAlong - shapeLength
+            + NotchLayout.orbCornerOffset(corner: drawnCornerRadius)
+    }
+
+    /// The mirror of `trailingExtent` at the near end — the room the move
+    /// handle needs before the notch's own start.
+    var leadingExtent: CGFloat {
+        max(0, -moveAlong + NotchLayout.orbHotZone / 2).rounded(.up)
+    }
+
     /// Where the bar's far corner actually turns, along the stack.
     ///
     /// Inset from the bar's end by the *flare* as well as by the corner's own
@@ -312,6 +343,16 @@ final class NotchViewModel: ObservableObject {
                       height: back * (edge.alongDirection.y + inward.y))
     }
 
+    /// `orbArcOffset` mirrored: the move handle hangs off the near corner, so
+    /// its arc tucks back *forward* along the stack rather than backward.
+    var moveArcOffset: CGSize {
+        guard orbHugsCorner else { return .zero }
+        let inward = CGPoint(x: -edge.outward.x, y: -edge.outward.y)
+        let forward = NotchLayout.orbCornerOffset(corner: drawnCornerRadius)
+        return CGSize(width: forward * (edge.alongDirection.x - inward.x),
+                      height: forward * (edge.alongDirection.y - inward.y))
+    }
+
     /// The points the settings handle answers around: the button you are
     /// reaching for, and — where it has parted company with it — the arc you
     /// can actually see.
@@ -341,6 +382,30 @@ final class NotchViewModel: ObservableObject {
     func isOnOrbHandle(along: CGFloat, across: CGFloat) -> Bool {
         let radius = NotchLayout.orbHotZone / 2
         return orbHandlePoints.contains {
+            hypot(along - $0.x, across - $0.y) <= radius
+        }
+    }
+
+    /// The move handle's own points, mirroring `orbHandlePoints` at the near
+    /// end of the stack.
+    var moveHandlePoints: [CGPoint] {
+        let button = CGPoint(x: moveAlong, y: orbInset)
+        guard orbHugsCorner else { return [button] }
+
+        let arcCentre = CGPoint(x: moveAlong + moveArcOffset.width,
+                                y: orbInset + moveArcOffset.height)
+        let reach = hypot(button.x - arcCentre.x, button.y - arcCentre.y)
+        guard reach > 0 else { return [button] }
+        let arcMid = CGPoint(
+            x: arcCentre.x + orbArcRadius * (button.x - arcCentre.x) / reach,
+            y: arcCentre.y + orbArcRadius * (button.y - arcCentre.y) / reach
+        )
+        return [button, arcMid]
+    }
+
+    func isOnMoveHandle(along: CGFloat, across: CGFloat) -> Bool {
+        let radius = NotchLayout.orbHotZone / 2
+        return moveHandlePoints.contains {
             hypot(along - $0.x, across - $0.y) <= radius
         }
     }

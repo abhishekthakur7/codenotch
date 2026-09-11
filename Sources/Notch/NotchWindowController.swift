@@ -28,6 +28,9 @@ final class NotchWindowController {
     /// controller only holds the live value; persisting it per edge is
     /// Preferences' job, the same division `apply(edge:)` already keeps.
     var onReposition: ((CGFloat) -> Void)?
+    /// A move settled on a new edge. The fleet owns writing that to
+    /// preferences, for the same reason it owns `onReposition`.
+    var onMoveToEdge: ((NotchEdge) -> Void)?
 
     private var panel: NotchPanel?
     private var hostingView: NotchHostingView<NotchRootView>?
@@ -336,7 +339,7 @@ final class NotchWindowController {
     /// than a box can answer — see `isOverHandle`.
     private var handleRect: CGRect {
         let side = NotchLayout.orbHotZone
-        let boxes = model.orbHandlePoints.map { point -> CGRect in
+        let boxes = (model.orbHandlePoints + model.moveHandlePoints).map { point -> CGRect in
             let centre = placement.point(along: model.slack + point.x * model.sizeScale,
                                          across: point.y * model.sizeScale)
             return CGRect(x: centre.x - side / 2, y: centre.y - side / 2,
@@ -352,6 +355,15 @@ final class NotchWindowController {
         // is written in — the orb scales with the notch, so its hit test has to
         // be asked in the same space the shape was drawn in.
         model.isOnOrbHandle(
+            along: (placement.along(of: local) - model.slack) / model.sizeScale,
+            across: placement.across(of: local) / model.sizeScale
+        )
+    }
+
+    /// Whether the pointer is on the move handle, asked in the same notch-own
+    /// measurements `isOverHandle` uses.
+    private func isOverMoveHandle(_ local: CGPoint) -> Bool {
+        model.isOnMoveHandle(
             along: (placement.along(of: local) - model.slack) / model.sizeScale,
             across: placement.across(of: local) / model.sizeScale
         )
@@ -468,8 +480,13 @@ final class NotchWindowController {
         if model.isHoveringSettings != overHandle {
             model.isHoveringSettings = overHandle
         }
+        let overMove = model.isExpanded && isOverMoveHandle(local)
+        if model.isHoveringMove != overMove {
+            model.isHoveringMove = overMove
+        }
         setPointing(
-            Self.wantsPointingHand(isExpanded: model.isExpanded, cellIndex: target) || overHandle
+            Self.wantsPointingHand(isExpanded: model.isExpanded, cellIndex: target)
+                || overHandle || overMove
         )
 
         if let target {
@@ -558,6 +575,14 @@ final class NotchWindowController {
         // The handle sits inside the notch, so it has to be tested before the
         // cells — otherwise the cell band nearest the foot of the stack swallows
         // it and clicking the gear refetches a provider instead.
+        // The move handle is tested before the settings orb and the cells for
+        // the same reason the orb is: it sits over the stack, and whichever
+        // band is nearest would otherwise swallow the press.
+        if model.isExpanded, isOverMoveHandle(local) {
+            model.moveSpins += 1
+            beginMove()
+            return
+        }
         if model.isExpanded, isOverHandle(local) {
             // The same turn the SwiftUI tap gives it, so the gear responds
             // however the click reached it — this path and the tap gesture
@@ -681,6 +706,59 @@ final class NotchWindowController {
         pendingRelocate = work
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.relocateInterval,
                                       execute: work)
+    }
+
+    private var dropZones: DropZoneOverlay?
+
+    /// Carries the notch: raises the drop zones, follows the pointer until the
+    /// button lifts, and hands the edge it landed on to `onMoveToEdge`.
+    ///
+    /// Driven from the pointer's own position rather than from drag deltas,
+    /// because what is being chosen is a *place on the screen*, not a distance
+    /// moved — and a press that never moves has to be able to end on the edge
+    /// it started from without having accumulated anything.
+    ///
+    /// Blocks on the panel's event stream until mouse-up, the same AppKit
+    /// pattern `NotchPanel.trackOptionDrag` uses.
+    private func beginMove() {
+        guard let panel, let screen = currentScreen() else { return }
+
+        let overlay = DropZoneOverlay(screen: screen)
+        dropZones = overlay
+        model.isMoving = true
+        // Starts on the edge it is already on, so releasing without moving is
+        // a no-op rather than a jump to whichever edge the maths rounds to.
+        model.moveTarget = model.edge
+        overlay.show(target: model.edge,
+                     restingDepth: model.restingDepth * model.sizeScale,
+                     restingLength: model.shapeLength * model.sizeScale)
+
+        defer {
+            model.isMoving = false
+            model.moveTarget = nil
+            overlay.hide()
+            dropZones = nil
+        }
+
+        while let event = panel.nextEvent(matching: [.leftMouseDragged, .leftMouseUp]) {
+            let local = overlay.localPoint(from: NSEvent.mouseLocation)
+            let target = EdgeDropZones.edge(at: local, in: overlay.screenSize)
+
+            switch event.type {
+            case .leftMouseDragged:
+                if model.moveTarget != target {
+                    model.moveTarget = target
+                }
+                overlay.show(target: target,
+                             restingDepth: model.restingDepth * model.sizeScale,
+                             restingLength: model.shapeLength * model.sizeScale)
+            case .leftMouseUp:
+                if target != model.edge { onMoveToEdge?(target) }
+                return
+            default:
+                return
+            }
+        }
     }
 
     private var lastRelocate = Date.distantPast

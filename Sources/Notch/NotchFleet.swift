@@ -54,6 +54,7 @@ final class NotchFleet {
     /// One choice for the whole fleet, like the edge and the size: a weekly
     /// ring on one display and not another would read as a bug.
     private var weeklyRing: WeeklyRing = .off
+    private var showsMoveHandle = true
     private var surfaceStyle: NotchSurfaceStyle = .glass
     /// The ⌥-drag nudge along the current edge. One value for the whole
     /// fleet, the same as `edge` itself — displays do not each get their own
@@ -154,6 +155,13 @@ final class NotchFleet {
         self.resetTimeFormat = resetTimeFormat
         for controller in controllers.values {
             controller.model.resetTimeFormat = resetTimeFormat
+        }
+    }
+
+    func apply(showsMoveHandle: Bool) {
+        self.showsMoveHandle = showsMoveHandle
+        for controller in controllers.values {
+            controller.apply(showsMoveHandle: showsMoveHandle)
         }
     }
 
@@ -355,6 +363,7 @@ final class NotchFleet {
         controller.model.resetTimeFormat = resetTimeFormat
         controller.model.accentColor = accentColor
         controller.model.weeklyRing = weeklyRing
+        controller.model.showsMoveHandle = showsMoveHandle
         controller.model.surfaceStyle = surfaceStyle
         controller.onRefresh = onRefresh
         controller.onRefreshProvider = onRefreshProvider

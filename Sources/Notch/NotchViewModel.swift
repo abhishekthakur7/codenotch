@@ -175,6 +175,9 @@ final class NotchViewModel: ObservableObject {
     /// Mirrored here for the same reason `accentColor` is: the notch is a
     /// separate window, and it has to redraw the moment Settings changes this.
     @Published var weeklyRing: WeeklyRing = .off
+    /// Whether the move handle is on the notch at all. Mirrored from Settings
+    /// like `weeklyRing`.
+    @Published var showsMoveHandle = true
     /// Mirrors the persisted Appearance choice so the separate notch window
     /// redraws immediately when Settings changes it.
     @Published var surfaceStyle: NotchSurfaceStyle = .glass
@@ -417,6 +420,11 @@ final class NotchViewModel: ObservableObject {
     /// The move handle's own points, mirroring `orbHandlePoints` at the near
     /// end of the stack.
     var moveHandlePoints: [CGPoint] {
+        // No points, not merely no drawing. Every way of reaching the handle —
+        // hover, a press, and the window's own click-through region — is
+        // measured from these, so a hidden handle has to report none or it
+        // leaves an invisible spot that still starts a move.
+        guard showsMoveHandle else { return [] }
         let button = CGPoint(x: moveAlong, y: orbInset)
         guard orbHugsCorner else { return [button] }
 

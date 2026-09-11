@@ -377,6 +377,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(weeklyRing: $0) }
                 .store(in: &cancellables)
+
+            preferences.$showsMoveHandle
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(showsMoveHandle: $0) }
+                .store(in: &cancellables)
                 
             preferences.$notchSurfaceStyle
                 .receive(on: RunLoop.main)
@@ -566,6 +571,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(resetTimeFormat: preferences.resetTimeFormat)
         fleet.apply(accentColor: preferences.accentColor)
         fleet.apply(weeklyRing: preferences.weeklyRing)
+        fleet.apply(showsMoveHandle: preferences.showsMoveHandle)
         fleet.apply(surfaceStyle: preferences.notchSurfaceStyle)
         fleet.show()
     }

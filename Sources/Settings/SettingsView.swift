@@ -638,6 +638,14 @@ struct SettingsView: View {
                         .controlSize(.small)
                 }
 
+                // The arc above the notch. Hiding it loses nothing that cannot
+                // be reached another way: Edge, above, moves the notch too.
+                Toggle(L10n.t("Show move handle"), isOn: $preferences.showsMoveHandle)
+                Text(L10n.t("The arc above the notch. Hold it to carry the notch to another edge — Edge above does the same."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 Picker(L10n.t("Displays"), selection: $preferences.notchScope) {
                     ForEach(NotchScreenScope.allCases) { Text($0.title).tag($0) }
                 }

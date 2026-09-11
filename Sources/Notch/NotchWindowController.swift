@@ -670,6 +670,16 @@ final class NotchWindowController {
     /// because `@Published` fires in `willSet` — a sink here would recompute
     /// the panel from the size that is being replaced. `apply(edge:)` is the
     /// same shape for the same reason.
+    /// Recomputes the click-through region at once. The handle's hit points
+    /// vanish with it, but the window only learns which of its pixels take the
+    /// mouse when those regions are rebuilt; without this the spot where the
+    /// handle was would keep catching clicks until something else moved.
+    func apply(showsMoveHandle: Bool) {
+        guard model.showsMoveHandle != showsMoveHandle else { return }
+        model.showsMoveHandle = showsMoveHandle
+        updateInteractiveRects()
+    }
+
     func apply(alongOffset: CGFloat) {
         guard model.alongOffset != alongOffset else { return }
         model.alongOffset = alongOffset

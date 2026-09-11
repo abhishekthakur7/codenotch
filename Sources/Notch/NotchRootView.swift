@@ -61,19 +61,21 @@ struct NotchRootView: View {
                 // The move handle, mirroring the settings orb at the other end
                 // of the stack. Same construction, same reasons — see the
                 // comments on the orb above; only the placement differs.
-                MoveHandle(isHovered: model.isHoveringMove || model.isMoving,
-                           isArmed: model.isMoving,
-                           edge: model.edge,
-                           convex: model.orbHugsCorner,
-                           arcRadius: model.orbArcRadius,
-                           arcOffset: model.moveArcOffset,
-                           spins: model.moveSpins)
-                        .contentShape(Circle())
-                        .scaleEffect(model.sizeScale)
-                        .position(moveCentre(place))
-                        .scaleEffect(model.isExpanded ? 1 : model.orbMergeScale)
-                        .opacity(model.isExpanded ? 1 : 0)
-                        .animation(motion(orbMotion), value: model.isExpanded)
+                if model.showsMoveHandle {
+                    MoveHandle(isHovered: model.isHoveringMove || model.isMoving,
+                               isArmed: model.isMoving,
+                               edge: model.edge,
+                               convex: model.orbHugsCorner,
+                               arcRadius: model.orbArcRadius,
+                               arcOffset: model.moveArcOffset,
+                               spins: model.moveSpins)
+                            .contentShape(Circle())
+                            .scaleEffect(model.sizeScale)
+                            .position(moveCentre(place))
+                            .scaleEffect(model.isExpanded ? 1 : model.orbMergeScale)
+                            .opacity(model.isExpanded ? 1 : 0)
+                            .animation(motion(orbMotion), value: model.isExpanded)
+                }
 
                 if let snapshot = model.hoveredSnapshot, let index = model.hoveredIndex,
                    model.isExpanded {

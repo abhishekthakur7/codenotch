@@ -243,6 +243,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             // The gear toggles; everything else that opens settings opens it.
             fleet.onOpenSettings = { [weak settings] in settings?.toggle() }
+            // A session row answers where it runs by taking you there.
+            fleet.onFocusSession = { pid in
+                Task { _ = await SessionFocus.focus(pid: pid) }
+            }
             self.settings = settings
 
             // What changed, once per version — including on a fresh install,

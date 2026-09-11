@@ -628,6 +628,13 @@ final class NotchWindowController {
             updateInteractiveRects()
             return
         }
+        // Clicks on the tooltip card belong to whatever is drawn there — the
+        // session rows take their own taps — and must not fall through to the
+        // cell refetch or the pin toggle underneath.
+        if model.isExpanded, let index = model.hoveredIndex,
+           let card = tooltipRect(index: index), card.contains(local) {
+            return
+        }
         guard model.isExpanded else {
             // Opens it, the same as the pointer arriving would — it must not
             // also pin it. The pill's hot zone is deliberately generous, since
@@ -964,7 +971,9 @@ final class NotchWindowController {
             return false
         }
         pendingFocus = nil
-        return SessionFocus.activateApp(owning: pending.pid)
+        // The same exact-tab jump a session row gives, not just the app.
+        Task { _ = await SessionFocus.focus(pid: pending.pid) }
+        return true
     }
 
     /// Tear down a controller whose display is gone: hide first so no panel

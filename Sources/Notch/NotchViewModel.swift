@@ -149,6 +149,9 @@ final class NotchViewModel: ObservableObject {
     /// the one action people actually get stuck without a second, ordinary
     /// route that only needs SwiftUI's own gesture recognition to work.
     var onOpenSettings: (() -> Void)?
+    /// A tap on a session row in the tooltip: jump to the terminal tab the
+    /// session runs in. Takes the session's pid; wired to `SessionFocus`.
+    var onFocusSession: ((pid_t) -> Void)?
     /// Which screen edge the notch is welded to. Everything geometric reads
     /// this through `placement` rather than assuming an axis.
     @Published var edge: NotchEdge = .right

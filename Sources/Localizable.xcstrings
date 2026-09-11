@@ -8842,6 +8842,72 @@
           }
         }
       }
+    },
+    "Unused resets": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未使用重置"
+          }
+        }
+      }
+    },
+    "No unused resets": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无未使用重置"
+          }
+        }
+      }
+    },
+    "1 unused reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 次未使用重置"
+          }
+        }
+      }
+    },
+    "%lld unused resets": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 次未使用重置"
+          }
+        }
+      }
+    },
+    "Expires %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 到期"
+          }
+        }
+      }
+    },
+    "Next expires %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下次 %@ 到期"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

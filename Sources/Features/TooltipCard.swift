@@ -650,6 +650,75 @@ private struct CodexDailyUsageChart: View {
     }
 }
 
+/// Unused rate-limit resets on the Codex account.
+private struct CodexResetCreditsSection: View {
+    let credits: CodexResetCredits
+    let now: Date
+
+    private var countText: String {
+        switch credits.availableCount {
+        case 0: return L10n.t("No unused resets")
+        case 1: return L10n.t("1 unused reset")
+        case let n: return L10n.t("\(n) unused resets")
+        }
+    }
+
+    private var expiryText: String? {
+        guard credits.availableCount > 0, let date = credits.nextExpiry, date > now else {
+            return nil
+        }
+        let stamp = Self.stamp(for: date, now: now)
+        return credits.availableCount > 1
+            ? L10n.t("Next expires \(stamp)")
+            : L10n.t("Expires \(stamp)")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Rectangle()
+                .fill(Palette.ringTrack)
+                .frame(height: NotchLayout.hairline)
+                .padding(.top, NotchLayout.codexUsageTop)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.t("Unused resets"))
+                    .font(Typography.cardBody)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Palette.textPrimary)
+                    .padding(.top, NotchLayout.blockSpacing)
+
+                Text(countText)
+                    .font(Typography.cardBody)
+                    .foregroundStyle(Palette.textPrimary)
+                    .lineLimit(1)
+                    .padding(.top, NotchLayout.codexUsageRowGap)
+
+                if let expiryText {
+                    Text(expiryText)
+                        .font(Typography.cardBody)
+                        .foregroundStyle(Palette.textSecondary)
+                        .lineLimit(1)
+                        .padding(.top, NotchLayout.codexUsageRowGap)
+                }
+            }
+            .frame(height: NotchLayout.codexResetCreditsHeight, alignment: .top)
+        }
+    }
+
+    /// Same date templates `ResetCopy` uses past the hour, so this line and
+    /// the quota rows agree on what "soon" looks like.
+    private static func stamp(for date: Date, now: Date, calendar: Calendar = .current) -> String {
+        let formatter = ResetCopy.formatter(for: calendar)
+        formatter.locale = L10n.locale
+        if ResetCopy.daysApart(from: now, to: date, calendar: calendar) >= 7 {
+            formatter.setLocalizedDateFormatFromTemplate("MMM d")
+        } else {
+            formatter.setLocalizedDateFormatFromTemplate("E j:mm")
+        }
+        return formatter.string(from: date)
+    }
+}
+
 /// Account-wide Codex activity. Unlike the quota rows above, this is sourced
 /// from the Codex profile usage endpoint and is not a local estimate.
 private struct CodexUsageSection: View {
@@ -853,6 +922,7 @@ struct TooltipCard: View {
             blockMessage: snapshot.block?.summary(now: now),
             hasTokenUsage: snapshot.tokenUsage != nil,
             hasPlan: snapshot.plan != nil,
+            hasResetCredits: snapshot.resetCredits != nil,
             localModelName: snapshot.localModel?.name,
             showsLocalPerformance: snapshot.showsLocalPerformance,
             compactRowCount: snapshot.compactRowCount
@@ -869,6 +939,9 @@ struct TooltipCard: View {
                 VStack(alignment: .leading, spacing: 0) {
                     ProviderTooltip(isThinking: snapshot.localModel != nil && activity?.state == .working, snapshot: snapshot, now: now, resetTimeFormat: resetTimeFormat,
                                     showUsagePace: showUsagePace)
+                    if let resetCredits = snapshot.resetCredits {
+                        CodexResetCreditsSection(credits: resetCredits, now: now)
+                    }
                     if let tokenUsage = snapshot.tokenUsage {
                         CodexUsageSection(usage: tokenUsage, now: now)
                     }

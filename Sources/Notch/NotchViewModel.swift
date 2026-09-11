@@ -441,12 +441,17 @@ final class NotchViewModel: ObservableObject {
         snapshots.contains { $0.plan != nil }
     }
 
+    private var hasResetCredits: Bool {
+        snapshots.contains { $0.resetCredits != nil }
+    }
+
     func sessionCap(cellCount: Int) -> Int {
         guard screenSize != .zero else { return NotchLayout.defaultSessionCap }
         return NotchLayout.sessionsFitting(cardBudget: cardBudget(cellCount: cellCount),
                                            windowCount: NotchLayout.maxWindowCount,
                                            hasTokenUsage: hasTokenUsage,
-                                           hasPlan: hasPlan)
+                                           hasPlan: hasPlan,
+                                           hasResetCredits: hasResetCredits)
     }
 
     private func contentCardHeight(sessionCap: Int) -> CGFloat {
@@ -459,6 +464,7 @@ final class NotchViewModel: ObservableObject {
                 blockMessage: snapshot.block?.summary(now: now),
                 hasTokenUsage: snapshot.tokenUsage != nil,
                 hasPlan: snapshot.plan != nil,
+                hasResetCredits: snapshot.resetCredits != nil,
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
                 compactRowCount: snapshot.compactRowCount)
@@ -468,7 +474,8 @@ final class NotchViewModel: ObservableObject {
     func maxCardHeight(cellCount: Int) -> CGFloat {
         let cap = sessionCap(cellCount: cellCount)
         return snapshots.isEmpty
-            ? NotchLayout.maxCardHeight(sessionCap: cap, hasTokenUsage: hasTokenUsage, hasPlan: hasPlan)
+            ? NotchLayout.maxCardHeight(sessionCap: cap, hasTokenUsage: hasTokenUsage, hasPlan: hasPlan,
+                                        hasResetCredits: hasResetCredits)
             : contentCardHeight(sessionCap: cap)
     }
 

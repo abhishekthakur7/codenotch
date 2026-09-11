@@ -232,6 +232,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// the tooltip title. Nil when there is nothing to name.
     var plan: String? = nil
 
+    /// Unused rate-limit resets on this Codex account, listed by the same
+    /// backend as usage.
+    var resetCredits: CodexResetCredits? = nil
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.

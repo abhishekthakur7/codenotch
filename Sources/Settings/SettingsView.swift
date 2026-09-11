@@ -704,7 +704,7 @@ struct SettingsView: View {
                 Picker(L10n.t("Language"), selection: $preferences.language) {
                     ForEach(AppLanguage.allCases) { Text($0.title).tag($0) }
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(.menu)
 
                 Text(preferences.language.explanation)
                     .font(.caption)

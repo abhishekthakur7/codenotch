@@ -82,12 +82,11 @@ struct MoveHandle: View {
         if glassy {
             if #available(macOS 26.0, *) {
                 Color.clear
-                    .glassEffect(
-                        .regular,
-                        in: ArcBand(trim: restingTrim, lineWidth: NotchLayout.orbStroke)
-                    )
+                    .frame(width: 100, height: 100)
+                    .glassEffect(.regular, in: Rectangle())
                     .frame(width: arcRadius * 2 + NotchLayout.orbStroke,
                            height: arcRadius * 2 + NotchLayout.orbStroke)
+                    .clipShape(ArcBand(trim: restingTrim, lineWidth: NotchLayout.orbStroke))
             }
         } else {
             Circle()
@@ -105,8 +104,10 @@ struct MoveHandle: View {
         if glassy {
             if #available(macOS 26.0, *) {
                 Color.clear
-                    .glassEffect(.regular.interactive(), in: Circle())
+                    .frame(width: 100, height: 100)
+                    .glassEffect(.regular.interactive(), in: Rectangle())
                     .frame(width: NotchLayout.orbDiameter, height: NotchLayout.orbDiameter)
+                    .clipShape(Circle())
             }
         } else {
             Circle()

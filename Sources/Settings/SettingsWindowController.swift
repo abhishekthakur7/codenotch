@@ -24,6 +24,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let usageStore: UsageStore?
     private let resetPosition: () -> Void
     private let previewResetAlert: (() -> Void)?
+    private let previewSessionLimitAlert: (() -> Void)?
+    private let previewWeeklyLimitAlert: (() -> Void)?
 
     init(preferences: Preferences,
          providers: @escaping () -> [ProviderSummary],
@@ -34,6 +36,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          retry: @escaping (String) -> Void,
          resetPosition: @escaping () -> Void,
          previewResetAlert: (() -> Void)? = nil,
+         previewSessionLimitAlert: (() -> Void)? = nil,
+         previewWeeklyLimitAlert: (() -> Void)? = nil,
          usageStore: UsageStore? = nil,
          ollamaRelay: OllamaActivityRelay? = nil,
          lmstudioMetrics: LMStudioMetrics? = nil) {
@@ -42,6 +46,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         self.usageStore = usageStore
         self.resetPosition = resetPosition
         self.previewResetAlert = previewResetAlert
+        self.previewSessionLimitAlert = previewSessionLimitAlert
+        self.previewWeeklyLimitAlert = previewWeeklyLimitAlert
         self.switchAccount = switchAccount
         self.retry = retry
         self.updater = updater
@@ -182,7 +188,9 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
                                    updater: updater,
                                    ollamaRelay: ollamaRelay, lmstudioMetrics: lmstudioMetrics,
                                    usageStore: usageStore,
-                                   previewResetAlert: previewResetAlert)
+                                   previewResetAlert: previewResetAlert,
+                                   previewSessionLimitAlert: previewSessionLimitAlert,
+                                   previewWeeklyLimitAlert: previewWeeklyLimitAlert)
         )
         window.center()
         window.isReleasedWhenClosed = false

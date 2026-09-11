@@ -176,6 +176,8 @@ struct SettingsView: View {
     var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
     var previewResetAlert: (() -> Void)? = nil
+    var previewSessionLimitAlert: (() -> Void)? = nil
+    var previewWeeklyLimitAlert: (() -> Void)? = nil
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
     var body: some View {
@@ -763,6 +765,34 @@ struct SettingsView: View {
                 Text(L10n.t("The sound plays on the ordinary output, not the interface sound-effects channel — so it is still heard with \u{201C}Play user interface sound effects\u{201D} switched off in System Settings → Sound."))
                     .font(.caption)
                     .foregroundStyle(.tertiary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(L10n.t("When a limit is reached")) {
+                Toggle(L10n.t("Show notification for session limit"), isOn: $preferences.announceSessionLimitReached)
+
+                Toggle(L10n.t("Show notification for weekly limit"), isOn: $preferences.announceWeeklyLimitReached)
+
+                Toggle(L10n.t("Play a sound"), isOn: $preferences.limitReachedSound)
+
+                SoundRow(label: L10n.t("Alert sound"), name: $preferences.limitReachedSoundName,
+                         pickerEnabled: preferences.limitReachedSound)
+
+                if let previewSessionLimitAlert {
+                    Button(L10n.t("Preview session limit alert")) {
+                        previewSessionLimitAlert()
+                    }
+                }
+
+                if let previewWeeklyLimitAlert {
+                    Button(L10n.t("Preview weekly limit alert")) {
+                        previewWeeklyLimitAlert()
+                    }
+                }
+
+                Text(L10n.t("Displays a notification card from the side of the notch when a provider's session or weekly usage limit is reached."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
 

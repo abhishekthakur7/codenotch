@@ -84,6 +84,9 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     /// How many have been spent, when the provider counts up rather than down
     /// and never states the ceiling. Cursor does this.
     let used: Int?
+    /// Optional display override for `used` — used when the raw count would
+    /// be the wrong unit (e.g. a dollar balance formatted as "$14.28").
+    let usedText: String?
     /// Nil when the provider does not say when the window rolls over.
     let resetsAt: Date?
 
@@ -91,7 +94,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     let duration: TimeInterval?
 
     init(id: String, group: String? = nil, label: String, usedFraction: Double? = nil,
-         remaining: Int? = nil, used: Int? = nil, resetsAt: Date? = nil,
+         remaining: Int? = nil, used: Int? = nil, usedText: String? = nil, resetsAt: Date? = nil,
          duration: TimeInterval? = nil) {
         self.id = id
         self.group = group
@@ -99,6 +102,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
         self.usedFraction = usedFraction
         self.remaining = remaining
         self.used = used
+        self.usedText = usedText
         self.resetsAt = resetsAt
         self.duration = duration
     }
@@ -134,6 +138,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
                 : L10n.t("\(Self.compact(remaining)) left", locale: locale)
         }
         if let used {
+            if let usedText { return usedText }
             return used < 10_000
                 ? L10n.t("\(used) used", locale: locale)
                 : L10n.t("\(Self.compact(used)) used", locale: locale)
@@ -267,6 +272,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
         }
         if let usedFraction { return Percent.text(for: usedFraction) + "%" }
         if let remaining = headline?.remaining { return LimitWindow.compact(remaining) }
+        if let usedText = headline?.usedText { return usedText }
         if let used = headline?.used { return LimitWindow.compact(used) }
         return "—"
     }

@@ -121,7 +121,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     + [CursorLocalProvider()]
                     + codexProfiles.map { CodexLocalProvider(profile: $0) }
                     + [AntigravityProvider(),
-                       GLMProvider(), GrokLocalProvider(), OpenCodeProvider(),
+                       GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
                        CommandCodeProvider(), GitHubCopilotProvider(),
                        OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
                        OllamaProvider(),

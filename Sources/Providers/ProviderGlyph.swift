@@ -3,6 +3,7 @@ import SwiftUI
 /// Which mark a provider cell draws.
 enum ProviderGlyph: String, Codable, Equatable {
     case claude
+    case devin
     case openai
     case third
     case cursor
@@ -60,7 +61,7 @@ enum ProviderGlyph: String, Codable, Equatable {
         case .ollama: return 0.95
         case .third:  return 1.0
         case .ollamaLocal: return 0.98
-        case .qwen, .gemma, .meta, .deepseek, .mistral: return 1.0
+        case .devin, .qwen, .gemma, .meta, .deepseek, .mistral: return 1.0
         }
     }
 
@@ -73,7 +74,7 @@ enum ProviderGlyph: String, Codable, Equatable {
         case .antigravity: return GlyphOutline.antigravity
         case .geminiSpark: return GlyphOutline.gemini
         case .glm:    return GlyphOutline.glm
-        case .qwen, .gemma, .meta, .deepseek, .mistral: return []
+        case .devin, .qwen, .gemma, .meta, .deepseek, .mistral: return []
         case .grok:   return GlyphOutline.grok
         case .opencode: return GlyphOutline.opencode
         case .commandcode: return GlyphOutline.commandcode

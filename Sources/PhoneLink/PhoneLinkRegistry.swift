@@ -29,14 +29,8 @@ final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
         }
     }
     
-    init(directory: URL? = nil) {
-        let dir: URL
-        if let directory = directory {
-            dir = directory
-        } else {
-            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            dir = appSupport.appendingPathComponent("Codenotch/phone-link", isDirectory: true)
-        }
+    init(directory: URL) {
+        let dir = directory
         self.url = dir.appendingPathComponent("devices.json")
         
         do {

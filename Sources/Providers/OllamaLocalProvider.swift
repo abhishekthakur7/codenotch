@@ -42,7 +42,7 @@ final class OllamaLocalProvider: UsageProvider {
                                 kind: kind, localRuntime: reading)
     }
 
-    static func makeSession() -> URLSession {
+    nonisolated static func makeSession() -> URLSession {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.httpCookieStorage = nil
         configuration.httpShouldSetCookies = false

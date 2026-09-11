@@ -204,10 +204,11 @@ final class UsageStore: ObservableObject {
     var localModelSummaries: [ProviderSummary] {
         ProviderOrder.cells(from: snapshots, keeping: notchSnapshots).compactMap { cell in
             guard let model = cell.localModel else { return nil }
+            let runtime = providers.first { $0.id == cell.providerID }?.displayName ?? cell.displayName
             return ProviderSummary(kind: .localRuntime, localModel: model,
-                                   sourceProviderID: cell.providerID,
+                                   sourceProviderID: cell.providerID, runtimeName: runtime,
                                    id: cell.id, name: model.name, glyph: cell.glyph,
-                                   account: nil, signIn: .guidance("Loaded in Ollama."))
+                                   account: nil, signIn: .guidance(L10n.t("Loaded in \(runtime).")))
         }
     }
 
@@ -410,8 +411,20 @@ final class UsageStore: ObservableObject {
     func updateOllamaEndpoint(_ endpoint: URL) {
         guard let provider = providers.first(where: { $0.id == "ollama-local" }) as? OllamaLocalProvider,
               provider.endpoint != endpoint else { return }
+        restart(provider) { provider.endpoint = endpoint }
+    }
+
+    func updateLMStudioEndpoint(_ endpoint: URL) {
+        guard let provider = providers.first(where: { $0.id == LMStudioMetrics.providerID }) as? LMStudioLocalProvider,
+              provider.endpoint != endpoint else { return }
+        restart(provider) { provider.endpoint = endpoint }
+    }
+
+    /// A changed address makes whatever the old one was about to answer
+    /// untrue; the reading is cleared and the new address asked at once.
+    private func restart(_ provider: UsageProvider, applying change: () -> Void) {
         cancelRefresh(providerID: provider.id)
-        provider.endpoint = endpoint
+        change()
         guard !disconnected.contains(provider.id) else { return }
         publish(Self.placeholder(provider))
         _ = beginRefresh(provider)

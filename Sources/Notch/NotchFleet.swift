@@ -15,19 +15,29 @@ import SwiftUI
 final class NotchFleet {
     private var controllers: [NSNumber: NotchWindowController] = [:]
     private var cancellables = Set<AnyCancellable>()
+    /// A model with no panel: what the menu bar's menu reads. Fed everything
+    /// the displays' models are fed, so a model's line there is decorated —
+    /// speed, context, phase, today's tokens — exactly as its cell is.
+    let menuModel = NotchViewModel()
+    /// Every model a reading has to reach.
+    private var models: [NotchViewModel] { [menuModel] + controllers.values.map(\.model) }
 
     private(set) var scope: NotchScreenScope
     private var edge: NotchEdge
     private var visibility: NotchVisibility = .onHover
     private var snapshots: [ProviderSnapshot] = []
     private(set) var thinkingModels: [String: Date] = [:]
-    private var performances: [String: LocalModelPerformance] = [:]
+    /// Per source, the way the view model keeps them: the Ollama relay and
+    /// the LM Studio log each replace their own readings wholesale.
+    private var performances: [String: [String: LocalModelPerformance]] = [:]
+    private var localActivities: [String: LocalModelActivity] = [:]
+    private var ledger = LocalTokenLedger()
     private var localMetricsEnabled = false
 
     func setLocalMetricsEnabled(_ enabled: Bool) {
         localMetricsEnabled = enabled
-        if !enabled { performances = [:]; thinkingModels = [:] }
-        for controller in controllers.values { controller.model.setLocalMetricsEnabled(enabled) }
+        if !enabled { performances[NotchViewModel.ollamaSource] = nil; thinkingModels = [:] }
+        for model in models { model.setLocalMetricsEnabled(enabled) }
     }
     private var refreshing: Set<String> = []
     /// Exposed read-only rather than private: completion-watching needs the
@@ -190,23 +200,38 @@ final class NotchFleet {
     func setSnapshots(_ snapshots: [ProviderSnapshot]) {
         self.snapshots = snapshots
         let now = Date()
-        for controller in controllers.values {
-            controller.model.updateSnapshots(snapshots)
-            controller.model.now = now
+        for model in models {
+            model.updateSnapshots(snapshots)
+            model.now = now
         }
     }
 
-    func setThinkingModels(_ models: [String: Date]) {
-        thinkingModels = models
-        for controller in controllers.values {
-            controller.model.thinkingModels = models
+    func setThinkingModels(_ thinking: [String: Date]) {
+        thinkingModels = thinking
+        for model in models {
+            model.thinkingModels = thinking
         }
     }
 
-    func setPerformances(_ measurements: [String: LocalModelPerformance]) {
-        performances = measurements
-        for controller in controllers.values {
-            controller.model.updatePerformances(measurements)
+    func setPerformances(_ measurements: [String: LocalModelPerformance],
+                         source: String = NotchViewModel.ollamaSource) {
+        performances[source] = measurements
+        for model in models {
+            model.updatePerformances(measurements, source: source)
+        }
+    }
+
+    func setLocalActivities(_ activities: [String: LocalModelActivity]) {
+        localActivities = activities
+        for model in models {
+            model.localActivities = activities
+        }
+    }
+
+    func setLedger(_ ledger: LocalTokenLedger) {
+        self.ledger = ledger
+        for model in models {
+            model.updateLedger(ledger)
         }
     }
 
@@ -229,6 +254,8 @@ final class NotchFleet {
     func setSessions(providerID id: String, sessions live: [AgentSession]) {
         sessions[id] = live
         let now = Date()
+        menuModel.sessions[id] = live
+        menuModel.now = now
         for controller in controllers.values {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
                 controller.model.sessions[id] = live
@@ -339,8 +366,12 @@ final class NotchFleet {
         controller.signInItems = signInItems
         controller.model.updateSnapshots(snapshots)
         controller.model.thinkingModels = thinkingModels
+        controller.model.localActivities = localActivities
         controller.model.setLocalMetricsEnabled(localMetricsEnabled)
-        controller.model.updatePerformances(performances)
+        for (source, measurements) in performances {
+            controller.model.updatePerformances(measurements, source: source)
+        }
+        controller.model.updateLedger(ledger)
         controller.model.refreshing = refreshing
         controller.model.sessions = sessions
         controller.model.now = Date()

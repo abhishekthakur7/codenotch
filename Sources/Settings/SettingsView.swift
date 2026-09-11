@@ -26,7 +26,7 @@ extension View {
 /// crossing-and-notification machinery it switches is Notifications' to
 /// explain.
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
-    case accounts, ollama, appearance, notifications, general
+    case accounts, ollama, lmstudio, appearance, notifications, general
 
     var id: String { rawValue }
 
@@ -34,6 +34,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return L10n.t("Accounts")
         case .ollama:        return "Ollama"   // a product name, the same in every language
+        case .lmstudio:      return "LM Studio"
         case .appearance:    return L10n.t("Appearance")
         case .notifications: return L10n.t("Notifications")
         case .general:       return L10n.t("General")
@@ -44,6 +45,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return "person.crop.circle.fill"
         case .ollama:        return "desktopcomputer"
+        case .lmstudio:      return "cpu"
         case .appearance:    return "paintbrush.fill"
         case .notifications: return "bell.badge.fill"
         case .general:       return "gearshape.fill"
@@ -57,6 +59,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return .blue
         case .ollama:        return .teal
+        case .lmstudio:      return .purple
         case .appearance:    return .indigo
         case .notifications: return .red
         case .general:       return .gray
@@ -170,6 +173,7 @@ struct SettingsView: View {
     let resetPosition: () -> Void
     @ObservedObject var updater: Updater
     var ollamaRelay: OllamaActivityRelay? = nil
+    var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
@@ -418,6 +422,15 @@ struct SettingsView: View {
                 Form {
                     Section(L10n.t("Connection")) {
                         OllamaSettingsRow(preferences: preferences, store: usageStore, relay: ollamaRelay)
+                    }
+                }
+                .formStyle(.grouped)
+            }
+        case .lmstudio:
+            if let usageStore {
+                Form {
+                    Section("Connection") {
+                        LMStudioSettingsRow(preferences: preferences, store: usageStore, metrics: lmstudioMetrics)
                     }
                 }
                 .formStyle(.grouped)
@@ -1280,7 +1293,7 @@ private struct AccountRow: View {
                     .controlSize(.small)
                     .labelsHidden()
                     .help(provider.localModel != nil
-                          ? L10n.t("Show or hide this model in the notch. It stays loaded in Ollama.")
+                          ? L10n.t("Show or hide this model in the notch. It stays loaded in \(provider.runtimeName ?? "Ollama").")
                           : isConnected
                           ? L10n.t("Switch off to stop reading \(provider.name) and forget its readings. \(provider.signIn.signOutCaveat)")
                           : L10n.t("Switch on to sign in and read \(provider.name) again."))
@@ -1470,8 +1483,8 @@ private struct AccountRow: View {
     @ViewBuilder
     private var accountDetail: some View {
         if let model = provider.localModel {
-            Text(isConnected ? L10n.t("\(model.memoryText) \(model.memoryLabel) · via Ollama")
-                 : L10n.t("Hidden from the notch · Loaded in Ollama"))
+            Text(isConnected ? L10n.t("\(model.memoryText) \(model.memoryLabel) · via \(provider.runtimeName ?? "Ollama")")
+                 : L10n.t("Hidden from the notch · Loaded in \(provider.runtimeName ?? "Ollama")"))
                 .foregroundStyle(.secondary)
         } else if !isConnected {
             Text(L10n.t("Signed out — nothing is read, and no readings are kept."))

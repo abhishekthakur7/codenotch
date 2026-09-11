@@ -315,6 +315,7 @@ enum NotchLayout {
                            hasPlan: Bool = false,
                            hasResetCredits: Bool = false,
                            localModelName: String? = nil, showsLocalPerformance: Bool = false,
+                           localLedgerRows: Int = 0,
                            compactRowCount: Int = 0) -> CGFloat {
         let header = max(glyphSize, cardTitleLineHeight)
             + (hasPlan ? cardBodyLineHeight : 0)
@@ -327,8 +328,10 @@ enum NotchLayout {
         }
 
         if let localModelName {
-            // Match RuntimeModelDetails so the panel and hover region fit all rows.
-            let rows: CGFloat = showsLocalPerformance ? 7 : 4
+            // Match RuntimeModelDetails so the panel and hover region fit all
+            // rows: the runtime's own, the speed pair, and a logged runtime's
+            // ledger lines.
+            let rows: CGFloat = (showsLocalPerformance ? 7 : 4) + CGFloat(max(0, localLedgerRows))
             height += headerToBlock + modelNameHeight(localModelName)
                 + blockSpacing + rows * cardBodyLineHeight + (rows - 1) * sessionRowGap
         } else if windowCount > 0 {

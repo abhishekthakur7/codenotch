@@ -308,6 +308,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 preferences?.setOffset(offset, for: preferences?.notchEdge ?? .right)
             }
 
+            // Writing the preference is the whole of it: `notchEdge` is
+            // `@Published` and the fleet already follows it, so the notch
+            // relocates by the same path the Settings picker uses.
+            fleet.onMoveToEdge = { [weak preferences] edge in
+                preferences?.notchEdge = edge
+            }
+
             preferences.$resetTimeFormat
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(resetTimeFormat: $0) }

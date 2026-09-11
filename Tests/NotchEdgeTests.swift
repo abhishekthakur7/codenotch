@@ -535,6 +535,64 @@ final class OrbOrientationTests: XCTestCase {
         XCTAssertEqual(SettingsOrb.restingTrim(for: .right).upperBound, 1.0, accuracy: 0.0001)
     }
 
+    // MARK: - Move handle
+
+    /// The move handle's arc, by the same measurement.
+    private func moveArcDirection(_ edge: NotchEdge) -> CGPoint {
+        let range = MoveHandle.restingTrim(for: edge, convex: false)
+        let mid = (range.lowerBound + range.upperBound) / 2
+        let angle = Double(mid) * 2 * .pi
+        return CGPoint(x: cos(angle), y: sin(angle))
+    }
+
+    /// The move handle hangs off the *other* end of the stack, but off the same
+    /// screen edge — so its arc faces the bezel exactly as the orb's does.
+    ///
+    /// This is the assertion that fails if the quadrant is reached by rotating
+    /// half a circle instead of reflecting along the stack: a half turn
+    /// reverses this direction too, and the arc curls away into open screen.
+    func testTheMoveArcFacesTheBezelOnEveryEdge() {
+        for edge in NotchEdge.allCases {
+            XCTAssertGreaterThan(
+                dot(moveArcDirection(edge), edge.outward), 0.5,
+                "\(edge): the move handle's arc faces away from the bezel"
+            )
+        }
+    }
+
+    /// And back toward the notch — which for this handle is *forward* along the
+    /// stack, since it hangs off the near end.
+    func testTheMoveArcFacesBackTowardTheNotchOnEveryEdge() {
+        for edge in NotchEdge.allCases {
+            XCTAssertGreaterThan(
+                dot(moveArcDirection(edge), edge.alongDirection), 0.5,
+                "\(edge): the move handle's arc points away from the notch"
+            )
+        }
+    }
+
+    /// The two handles mirror each other along the stack: same bezel component,
+    /// opposite component along it.
+    func testTheTwoHandlesMirrorEachOther() {
+        for edge in NotchEdge.allCases {
+            let orb = arcDirection(edge)
+            let move = moveArcDirection(edge)
+            XCTAssertEqual(dot(orb, edge.outward), dot(move, edge.outward),
+                           accuracy: 0.0001,
+                           "\(edge): the handles lean differently against the bezel")
+            XCTAssertEqual(dot(orb, edge.alongDirection), -dot(move, edge.alongDirection),
+                           accuracy: 0.0001,
+                           "\(edge): the handles are not mirrored along the stack")
+        }
+    }
+
+    func testTheMoveArcIsAQuadrantOnEveryEdge() {
+        for edge in NotchEdge.allCases {
+            let range = MoveHandle.restingTrim(for: edge, convex: false)
+            XCTAssertEqual(range.upperBound - range.lowerBound, 0.25, accuracy: 0.0001, "\(edge)")
+        }
+    }
+
     /// `alongDirection` and `outward` are perpendicular by construction — the
     /// stack runs along the bezel and `across` leaves it at a right angle.
     func testTheStackRunsAlongTheBezelNotIntoIt() {

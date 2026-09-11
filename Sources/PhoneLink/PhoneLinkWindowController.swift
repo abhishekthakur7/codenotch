@@ -12,6 +12,8 @@ final class PhoneLinkWindowController: NSWindowController {
             defer: false
         )
         window.title = "Connect your phone"
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
         window.center()
         window.isReleasedWhenClosed = false
         super.init(window: window)
@@ -23,6 +25,7 @@ final class PhoneLinkWindowController: NSWindowController {
     
     @MainActor
     func show(pairing: PhoneLinkPairing, registry: PhoneLinkRegistry, port: Int, serverStatus: PhoneLinkServerStatus) {
+        pairing.rotateCode()
         let view = PhoneLinkPairingView(pairing: pairing, registry: registry, port: port, serverStatus: serverStatus)
         window?.contentView = NSHostingView(rootView: view)
         window?.center()

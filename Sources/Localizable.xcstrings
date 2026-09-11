@@ -4,6 +4,12 @@
     "just now": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "только что"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -33,6 +39,12 @@
     "%lld min": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld мин"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -62,6 +74,12 @@
     "%lld hr": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ч"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -91,6 +109,12 @@
     "%lld hr %lld min": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ч %lld мин"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -120,6 +144,12 @@
     "%@ ago": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ назад"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -149,6 +179,12 @@
     "Resetting…": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс…"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -178,6 +214,12 @@
     "Resets in %lld min": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс через %lld мин"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -236,6 +278,12 @@
     "%lld%% Used · %lld%% left": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использовано %lld%% · осталось %lld%%"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -265,6 +313,12 @@
     "1 left": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остался 1"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -294,6 +348,12 @@
     "%lld left": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осталось %lld"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -323,6 +383,12 @@
     "1 used": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использован 1"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -352,6 +418,12 @@
     "%lld used": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использовано %lld"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -381,6 +453,12 @@
     "No reading": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет данных"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -410,6 +488,12 @@
     "%@ until %@": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ до %@"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -439,6 +523,12 @@
     "Sign in to Claude Code to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в Claude Code, чтобы увидеть использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -468,6 +558,12 @@
     "Sign in to Claude Code in ~/.claude-%@ to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в Claude Code в ~/.claude-%@, чтобы увидеть использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -497,6 +593,12 @@
     "Sign in to Cursor in the editor": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в Cursor в редакторе"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -526,6 +628,12 @@
     "Sign in to Codex to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в Codex, чтобы увидеть использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -555,6 +663,12 @@
     "Sign in to Antigravity to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в Antigravity, чтобы увидеть использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -642,6 +756,12 @@
     "Sign in to %@ to read your usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в %@, чтобы увидеть использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -729,6 +849,12 @@
     "Waiting for the first reading…": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ожидание первых данных…"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -758,6 +884,12 @@
     "Current session": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Текущая сессия"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -787,6 +919,12 @@
     "All models": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Все модели"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -874,6 +1012,12 @@
     "Included usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Включённый объём"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -903,6 +1047,12 @@
     "API usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использование API"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -932,6 +1082,12 @@
     "On demand": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По запросу"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -961,6 +1117,12 @@
     "5h limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лимит на 5 ч"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -990,6 +1152,12 @@
     "Weekly limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Недельный лимит"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1019,6 +1187,12 @@
     "Monthly limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Месячный лимит"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1048,6 +1222,12 @@
     "Daily quota": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Суточная квота"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1077,6 +1257,12 @@
     "Longer window": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Более длинное окно"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1106,6 +1292,12 @@
     "%lldm limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лимит на %lld мин"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1135,6 +1327,12 @@
     "%lldh limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лимит на %lld ч"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1164,6 +1362,12 @@
     "%lldd limit": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лимит на %lld дн"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1193,6 +1397,12 @@
     "Weekly": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Недельный"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1222,6 +1432,12 @@
     "MCP (1 month)": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP (1 месяц)"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1251,6 +1467,12 @@
     "Usage (%lld h)": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использование (%lld ч)"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1280,6 +1502,12 @@
     "Usage (%lld wk)": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использование (%lld нед.)"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1309,6 +1537,12 @@
     "Usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использование"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1338,6 +1572,12 @@
     "Pro searches": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поиски Pro"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1367,6 +1607,12 @@
     "Research": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Исследования"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1396,6 +1642,12 @@
     "Agentic research": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Агентные исследования"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1454,6 +1706,12 @@
     "Free queries": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бесплатные запросы"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1483,6 +1741,12 @@
     "Requests today · no limit published": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запросы сегодня · лимит не указан"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1512,6 +1776,12 @@
     "no requests today": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "сегодня запросов нет"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1541,6 +1811,12 @@
     "~%lld request today": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "сегодня ~%lld запрос"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1570,6 +1846,12 @@
     "~%lld requests today": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "сегодня ~%lld запросов"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1599,6 +1881,12 @@
     "Grok Build": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok Build"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1628,6 +1916,12 @@
     "%@ Usage": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использование %@"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1657,6 +1951,12 @@
     "and %lld more": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "и ещё %lld"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1686,6 +1986,12 @@
     "working": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "работает"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1715,6 +2021,12 @@
     "waiting": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ожидает"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1744,6 +2056,12 @@
     "idle": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "бездействует"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1773,6 +2091,12 @@
     "Working": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Работа"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1802,6 +2126,12 @@
     "Desktop": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рабочий стол"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1860,6 +2190,12 @@
     "Agent": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Агент"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1889,6 +2225,12 @@
     "Terminal": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Терминал"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1918,6 +2260,12 @@
     "Untitled chat": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чат без названия"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1947,6 +2295,12 @@
     "Always show": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всегда показывать"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -1976,6 +2330,12 @@
     "Show on hover": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показывать при наведении"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2005,6 +2365,12 @@
     "Hide": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скрыть"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2034,6 +2400,12 @@
     "The notch stays open with every reading visible.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выемка остаётся открытой, и все данные видны."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2063,6 +2435,12 @@
     "A small pill at the screen edge that opens when you reach it.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Небольшая панель у края экрана, которая открывается при наведении."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2092,6 +2470,12 @@
     "Nothing on screen. Open Codenotch again from Applications to bring these settings back.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ничего не показывать. Откройте Codenotch снова из Программ, чтобы вернуть эти настройки."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2121,6 +2505,12 @@
     "Dock": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2150,6 +2540,12 @@
     "Menu bar": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Строка меню"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2179,6 +2575,12 @@
     "Neither": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ни то ни другое"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2208,6 +2610,12 @@
     "A normal app icon in the Dock while Codenotch is running.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обычный значок приложения в Dock во время работы Codenotch."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2237,6 +2645,12 @@
     "A small icon in the menu bar instead, and nothing in the Dock.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Небольшой значок в строке меню вместо значка в Dock."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2266,6 +2680,12 @@
     "No icon anywhere. Open Codenotch again from Applications to bring these settings back.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ни одного значка. Откройте Codenotch снова из Программ, чтобы вернуть эти настройки."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2295,6 +2715,12 @@
     "Right": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Справа"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2324,6 +2750,12 @@
     "Left": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Слева"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2353,6 +2785,12 @@
     "Top": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сверху"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2382,6 +2820,12 @@
     "Bottom": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Снизу"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2527,6 +2971,12 @@
     "Integrations": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Интеграции"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2556,6 +3006,12 @@
     "Appearance": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Внешний вид"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2585,6 +3041,12 @@
     "General": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Общие"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2614,6 +3076,12 @@
     "Show": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показывать"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2643,6 +3111,12 @@
     "Edge": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Край"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2672,6 +3146,12 @@
     "App icon": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Значок приложения"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2701,6 +3181,12 @@
     "Open Codenotch at login": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открывать Codenotch при входе"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2730,6 +3216,12 @@
     "Install updates automatically": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Устанавливать обновления автоматически"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2759,6 +3251,12 @@
     "Check now": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить сейчас"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2788,6 +3286,12 @@
     "App designed and developed by": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приложение разработал"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -2817,6 +3321,12 @@
     "Connect an assistant to get started": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подключите ассистента, чтобы начать"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3455,6 +3965,12 @@
     "Sign in to %@": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войти в %@"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3484,6 +4000,12 @@
     "Sign in to %@ to read this account.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите в %@, чтобы использовать этот аккаунт."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3513,6 +4035,12 @@
     "Sign in with %@ to read this account.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите через %@, чтобы использовать этот аккаунт."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3542,6 +4070,12 @@
     "Sign out in the %@ window to use another account.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выйдите из аккаунта в окне %@, чтобы использовать другой."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3571,6 +4105,12 @@
     "Switch accounts in %@; the notch follows.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смените аккаунт в %@ — выемка обновится."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3600,6 +4140,12 @@
     "Switch accounts in the tool that owns it; the notch follows.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Смените аккаунт в приложении, которому он принадлежит — выемка обновится."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3629,6 +4175,12 @@
     "Signs out of %@ — the session belongs to Codenotch.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выход из %@ — сессия принадлежит Codenotch."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3658,6 +4210,12 @@
     "You stay signed in to %@ — end that session in %@ itself.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вы останетесь вошли в %@ — завершите сессию непосредственно в %@."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3716,6 +4274,12 @@
     "Sign in with the tool that owns this account.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войдите через приложение, которому принадлежит этот аккаунт."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3745,6 +4309,12 @@
     "Sign in to %@…": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войти в %@…"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -3890,6 +4460,12 @@
     "Unlimited on the %@ plan — nothing to meter": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тариф %@ без ограничений — нечего измерять"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4035,6 +4611,12 @@
     "Settings…": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки…"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4064,6 +4646,12 @@
     "Quit Codenotch": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выйти из Codenotch"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4093,6 +4681,12 @@
     "Keep open": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оставить открытым"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4122,6 +4716,12 @@
     "Refresh now": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить сейчас"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4180,6 +4780,12 @@
     "Checking…": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверка…"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4209,6 +4815,12 @@
     "Codenotch is up to date.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch обновлён."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -4238,6 +4850,12 @@
     "Version %@ is available and will install shortly.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступна версия %@; она скоро установится."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6616,6 +7234,12 @@
     "Refresh all": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить всё"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6645,6 +7269,12 @@
     "Reset date": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дата сброса"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6674,6 +7304,12 @@
     "Time remaining": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оставшееся время"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6877,6 +7513,12 @@
     "Main display": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Основной дисплей"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6906,6 +7548,12 @@
     "All displays": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Все дисплеи"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -6993,6 +7641,12 @@
     "3 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 секунды"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -7022,6 +7676,12 @@
     "5 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 секунд"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -7051,6 +7711,12 @@
     "10 seconds": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 секунд"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -8211,6 +8877,12 @@
     "%lld%% of its %@ limit used.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Использовано %lld%% от лимита «%@»."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9255,6 +9927,12 @@
     "Follow System": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как в системе"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9284,6 +9962,12 @@
     "Matches the Mac's preferred language.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Соответствует предпочитаемому языку Mac."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9313,6 +9997,12 @@
     "Codenotch uses this language even if the Mac does not.": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch использует этот язык независимо от языка Mac."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9342,6 +10032,12 @@
     "Language": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9661,6 +10357,12 @@
     "Recentre": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По центру"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -9748,6 +10450,12 @@
     "Idle": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бездействие"
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
@@ -10171,6 +10879,12 @@
     "Complete": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завершено"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10188,6 +10902,12 @@
     "Waiting": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ожидание"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10222,6 +10942,12 @@
     "Active": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Активно"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10256,6 +10982,12 @@
     "Automatic": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Автоматически"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10783,6 +11515,12 @@
     "Off": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выкл."
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10800,6 +11538,12 @@
     "Inside": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Внутри"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10817,6 +11561,12 @@
     "Outside": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Снаружи"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11225,6 +11975,12 @@
     "Save": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранить"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11242,6 +11998,12 @@
     "Saved": {
       "extractionState": "manual",
       "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранено"
+          }
+        },
         "ja": {
           "stringUnit": {
             "state": "translated",

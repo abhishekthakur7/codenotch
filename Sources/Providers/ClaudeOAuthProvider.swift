@@ -95,6 +95,8 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// minute, so the last answer is reused in between.
     private let cliRefreshInterval: TimeInterval
     private var lastCLIWindows: (windows: [LimitWindow], at: Date)?
+    /// The named tier the last `/usage` print named, if it named one.
+    private var lastCLIPlan: String?
     /// Stamped on every spawn, successful or not. Without it a Claude Code that
     /// is installed but signed out costs a process on every tick, forever.
     private var lastCLIAttempt: Date?
@@ -138,7 +140,7 @@ actor ClaudeOAuthProvider: UsageProvider {
         // there is no reason for a 429 on one to darken a ring the other can
         // still fill.
         if let windows = await cliWindows() {
-            return snapshot(windows: windows)
+            return snapshot(windows: windows, plan: lastCLIPlan)
         }
         if let retryNoEarlierThan, retryNoEarlierThan > Date() {
             let remaining = retryNoEarlierThan.timeIntervalSinceNow
@@ -178,7 +180,7 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// The snapshot shape every source produces. One place, so a window order or
     /// a headline changed for the endpoint cannot quietly differ from the CLI's or
     /// Desktop's — the three are the same reading taken from three places.
-    private func snapshot(windows: [LimitWindow]) -> ProviderSnapshot {
+    private func snapshot(windows: [LimitWindow], plan: String? = nil) -> ProviderSnapshot {
         ProviderSnapshot(
             id: id,
             displayName: displayName,
@@ -189,7 +191,8 @@ actor ClaudeOAuthProvider: UsageProvider {
             headlineID: "session",
             // #102's second ring. The helper is the only place a Claude
             // snapshot is built now, so this is the only place it can go.
-            weeklyID: "weekly_all"
+            weeklyID: "weekly_all",
+            plan: plan?.nonEmptyPlan
         )
     }
 
@@ -268,10 +271,11 @@ actor ClaudeOAuthProvider: UsageProvider {
         lastCLIAttempt = now
 
         do {
-            let windows = try await cli.read(profile: profile, now: now)
-            lastCLIWindows = (windows, now)
-            Log.usage.debug("\(self.id, privacy: .public): read \(windows.count) windows from claude /usage")
-            return windows
+            let reading = try await cli.readWithPlan(profile: profile, now: now)
+            lastCLIWindows = (reading.windows, now)
+            lastCLIPlan = reading.plan
+            Log.usage.debug("\(self.id, privacy: .public): read \(reading.windows.count) windows from claude /usage")
+            return reading.windows
         } catch {
             Log.usage.debug("\(self.id, privacy: .public): claude /usage did not answer, falling back to the token")
             return nil
@@ -316,7 +320,7 @@ actor ClaudeOAuthProvider: UsageProvider {
         }
 
         let payload = try UsageResponse.decoder.decode(UsageResponse.self, from: data)
-        return snapshot(windows: payload.limitWindows())
+        return snapshot(windows: payload.limitWindows(), plan: credentials?.subscriptionType)
     }
 
     private func currentToken() throws -> String {

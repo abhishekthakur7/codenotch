@@ -12,8 +12,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "just now"
+            "state": "translated",
+            "value": "たった今"
           }
         },
         "pt-BR": {
@@ -41,8 +41,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld min"
+            "state": "translated",
+            "value": "%lld 分"
           }
         },
         "pt-BR": {
@@ -70,8 +70,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld hr"
+            "state": "translated",
+            "value": "%lld 時間"
           }
         },
         "pt-BR": {
@@ -99,8 +99,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld hr %lld min"
+            "state": "translated",
+            "value": "%lld 時間 %lld 分"
           }
         },
         "pt-BR": {
@@ -128,8 +128,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ ago"
+            "state": "translated",
+            "value": "%@前"
           }
         },
         "pt-BR": {
@@ -157,8 +157,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resetting…"
+            "state": "translated",
+            "value": "リセット中…"
           }
         },
         "pt-BR": {
@@ -186,8 +186,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resets in %lld min"
+            "state": "translated",
+            "value": "%lld 分後にリセット"
           }
         },
         "pt-BR": {
@@ -215,8 +215,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resets %@"
+            "state": "translated",
+            "value": "%@ にリセット"
           }
         },
         "pt-BR": {
@@ -244,8 +244,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld%% Used · %lld%% left"
+            "state": "translated",
+            "value": "%lld%% 使用 · 残り %lld%%"
           }
         },
         "pt-BR": {
@@ -273,8 +273,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "1 left"
+            "state": "translated",
+            "value": "残り 1"
           }
         },
         "pt-BR": {
@@ -302,8 +302,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld left"
+            "state": "translated",
+            "value": "残り %lld"
           }
         },
         "pt-BR": {
@@ -331,8 +331,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "1 used"
+            "state": "translated",
+            "value": "1 使用"
           }
         },
         "pt-BR": {
@@ -360,8 +360,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld used"
+            "state": "translated",
+            "value": "%lld 使用"
           }
         },
         "pt-BR": {
@@ -389,8 +389,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No reading"
+            "state": "translated",
+            "value": "読み取りなし"
           }
         },
         "pt-BR": {
@@ -418,8 +418,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ until %@"
+            "state": "translated",
+            "value": "%@（%@ まで）"
           }
         },
         "pt-BR": {
@@ -447,8 +447,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Claude Code to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには Claude Code にサインイン"
           }
         },
         "pt-BR": {
@@ -476,8 +476,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Claude Code in ~/.claude-%@ to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには ~/.claude-%@ で Claude Code にサインイン"
           }
         },
         "pt-BR": {
@@ -505,8 +505,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Cursor in the editor"
+            "state": "translated",
+            "value": "エディタで Cursor にサインイン"
           }
         },
         "pt-BR": {
@@ -534,8 +534,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Codex to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには Codex にサインイン"
           }
         },
         "pt-BR": {
@@ -563,8 +563,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Antigravity to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには Antigravity にサインイン"
           }
         },
         "pt-BR": {
@@ -592,8 +592,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Set up a GLM Coding Plan key for a coding tool to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには、コーディングツールに GLM Coding Plan のキーを設定"
           }
         },
         "pt-BR": {
@@ -621,8 +621,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Connect the Go plan in OpenCode to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには OpenCode で Go プランを接続"
           }
         },
         "pt-BR": {
@@ -650,8 +650,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to %@ to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには %@ にサインイン"
           }
         },
         "pt-BR": {
@@ -679,8 +679,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch was refused access to %@'s saved login. Click this ring to ask again, and choose Always Allow."
+            "state": "translated",
+            "value": "Codenotch は %@ の保存済みログインへのアクセスを拒否されました。このリングをクリックして再度要求し、「常に許可」を選んでください。"
           }
         },
         "pt-BR": {
@@ -708,8 +708,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Couldn't read usage — %@"
+            "state": "translated",
+            "value": "使用量を読み取れませんでした — %@"
           }
         },
         "pt-BR": {
@@ -737,8 +737,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Waiting for the first reading…"
+            "state": "translated",
+            "value": "最初の読み取りを待っています…"
           }
         },
         "pt-BR": {
@@ -766,8 +766,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Current session"
+            "state": "translated",
+            "value": "現在のセッション"
           }
         },
         "pt-BR": {
@@ -795,8 +795,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "All models"
+            "state": "translated",
+            "value": "全モデル"
           }
         },
         "pt-BR": {
@@ -824,7 +824,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Opus"
           }
         },
@@ -853,7 +853,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Sonnet"
           }
         },
@@ -882,8 +882,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Included usage"
+            "state": "translated",
+            "value": "プラン内の使用量"
           }
         },
         "pt-BR": {
@@ -911,8 +911,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "API usage"
+            "state": "translated",
+            "value": "API 使用量"
           }
         },
         "pt-BR": {
@@ -940,8 +940,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "On demand"
+            "state": "translated",
+            "value": "従量課金"
           }
         },
         "pt-BR": {
@@ -969,8 +969,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "5h limit"
+            "state": "translated",
+            "value": "5 時間の上限"
           }
         },
         "pt-BR": {
@@ -998,8 +998,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Weekly limit"
+            "state": "translated",
+            "value": "週間の上限"
           }
         },
         "pt-BR": {
@@ -1027,8 +1027,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Monthly limit"
+            "state": "translated",
+            "value": "月間の上限"
           }
         },
         "pt-BR": {
@@ -1056,8 +1056,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Daily quota"
+            "state": "translated",
+            "value": "1 日の割り当て"
           }
         },
         "pt-BR": {
@@ -1085,8 +1085,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Longer window"
+            "state": "translated",
+            "value": "長期の枠"
           }
         },
         "pt-BR": {
@@ -1114,8 +1114,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lldm limit"
+            "state": "translated",
+            "value": "%lld 分の上限"
           }
         },
         "pt-BR": {
@@ -1143,8 +1143,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lldh limit"
+            "state": "translated",
+            "value": "%lld 時間の上限"
           }
         },
         "pt-BR": {
@@ -1172,8 +1172,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lldd limit"
+            "state": "translated",
+            "value": "%lld 日の上限"
           }
         },
         "pt-BR": {
@@ -1201,8 +1201,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Weekly"
+            "state": "translated",
+            "value": "週間"
           }
         },
         "pt-BR": {
@@ -1230,8 +1230,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "MCP (1 month)"
+            "state": "translated",
+            "value": "MCP（1 か月）"
           }
         },
         "pt-BR": {
@@ -1259,8 +1259,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage (%lld h)"
+            "state": "translated",
+            "value": "使用量（%lld 時間）"
           }
         },
         "pt-BR": {
@@ -1288,8 +1288,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage (%lld wk)"
+            "state": "translated",
+            "value": "使用量（%lld 週）"
           }
         },
         "pt-BR": {
@@ -1317,8 +1317,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage"
+            "state": "translated",
+            "value": "使用量"
           }
         },
         "pt-BR": {
@@ -1346,8 +1346,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Pro searches"
+            "state": "translated",
+            "value": "Pro 検索"
           }
         },
         "pt-BR": {
@@ -1375,8 +1375,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Research"
+            "state": "translated",
+            "value": "リサーチ"
           }
         },
         "pt-BR": {
@@ -1404,8 +1404,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Agentic research"
+            "state": "translated",
+            "value": "エージェントリサーチ"
           }
         },
         "pt-BR": {
@@ -1433,7 +1433,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Labs"
           }
         },
@@ -1462,8 +1462,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Free queries"
+            "state": "translated",
+            "value": "無料クエリ"
           }
         },
         "pt-BR": {
@@ -1491,8 +1491,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Requests today · no limit published"
+            "state": "translated",
+            "value": "本日のリクエスト · 上限の公表なし"
           }
         },
         "pt-BR": {
@@ -1520,8 +1520,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "no requests today"
+            "state": "translated",
+            "value": "本日のリクエストなし"
           }
         },
         "pt-BR": {
@@ -1549,8 +1549,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "~%lld request today"
+            "state": "translated",
+            "value": "本日 約 %lld リクエスト"
           }
         },
         "pt-BR": {
@@ -1578,8 +1578,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "~%lld requests today"
+            "state": "translated",
+            "value": "本日 約 %lld リクエスト"
           }
         },
         "pt-BR": {
@@ -1607,7 +1607,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Grok Build"
           }
         },
@@ -1636,8 +1636,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ Usage"
+            "state": "translated",
+            "value": "%@ の使用量"
           }
         },
         "pt-BR": {
@@ -1665,8 +1665,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "and %lld more"
+            "state": "translated",
+            "value": "ほか %lld 件"
           }
         },
         "pt-BR": {
@@ -1694,8 +1694,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "working"
+            "state": "translated",
+            "value": "作業中"
           }
         },
         "pt-BR": {
@@ -1723,8 +1723,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "waiting"
+            "state": "translated",
+            "value": "待機中"
           }
         },
         "pt-BR": {
@@ -1752,8 +1752,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "idle"
+            "state": "translated",
+            "value": "アイドル"
           }
         },
         "pt-BR": {
@@ -1781,8 +1781,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Working"
+            "state": "translated",
+            "value": "作業中"
           }
         },
         "pt-BR": {
@@ -1810,8 +1810,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Desktop"
+            "state": "translated",
+            "value": "デスクトップ"
           }
         },
         "pt-BR": {
@@ -1839,7 +1839,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "VS Code"
           }
         },
@@ -1868,8 +1868,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Agent"
+            "state": "translated",
+            "value": "エージェント"
           }
         },
         "pt-BR": {
@@ -1897,8 +1897,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Terminal"
+            "state": "translated",
+            "value": "ターミナル"
           }
         },
         "pt-BR": {
@@ -1926,8 +1926,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Untitled chat"
+            "state": "translated",
+            "value": "無題のチャット"
           }
         },
         "pt-BR": {
@@ -1955,8 +1955,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Always show"
+            "state": "translated",
+            "value": "常に表示"
           }
         },
         "pt-BR": {
@@ -1984,8 +1984,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Show on hover"
+            "state": "translated",
+            "value": "ホバー時に表示"
           }
         },
         "pt-BR": {
@@ -2013,8 +2013,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Hide"
+            "state": "translated",
+            "value": "非表示"
           }
         },
         "pt-BR": {
@@ -2042,8 +2042,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The notch stays open with every reading visible."
+            "state": "translated",
+            "value": "ノッチは開いたままで、すべての読み取りが見えます。"
           }
         },
         "pt-BR": {
@@ -2071,8 +2071,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A small pill at the screen edge that opens when you reach it."
+            "state": "translated",
+            "value": "画面の端に小さなピル。ポインタを近づけると開きます。"
           }
         },
         "pt-BR": {
@@ -2100,8 +2100,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Nothing on screen. Open Codenotch again from Applications to bring these settings back."
+            "state": "translated",
+            "value": "画面には何も出ません。この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
           }
         },
         "pt-BR": {
@@ -2129,7 +2129,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Dock"
           }
         },
@@ -2158,8 +2158,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Menu bar"
+            "state": "translated",
+            "value": "メニューバー"
           }
         },
         "pt-BR": {
@@ -2187,8 +2187,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Neither"
+            "state": "translated",
+            "value": "どちらにも出さない"
           }
         },
         "pt-BR": {
@@ -2216,8 +2216,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A normal app icon in the Dock while Codenotch is running."
+            "state": "translated",
+            "value": "Codenotch の実行中、Dock に通常のアプリアイコンが出ます。"
           }
         },
         "pt-BR": {
@@ -2245,8 +2245,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A small icon in the menu bar instead, and nothing in the Dock."
+            "state": "translated",
+            "value": "代わりにメニューバーへ小さなアイコン。Dock には出ません。"
           }
         },
         "pt-BR": {
@@ -2274,8 +2274,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No icon anywhere. Open Codenotch again from Applications to bring these settings back."
+            "state": "translated",
+            "value": "どこにもアイコンが出ません。この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
           }
         },
         "pt-BR": {
@@ -2303,8 +2303,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Right"
+            "state": "translated",
+            "value": "右"
           }
         },
         "pt-BR": {
@@ -2332,8 +2332,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Left"
+            "state": "translated",
+            "value": "左"
           }
         },
         "pt-BR": {
@@ -2361,8 +2361,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Top"
+            "state": "translated",
+            "value": "上"
           }
         },
         "pt-BR": {
@@ -2390,8 +2390,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Bottom"
+            "state": "translated",
+            "value": "下"
           }
         },
         "pt-BR": {
@@ -2419,8 +2419,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Down the right-hand edge, clear of a Dock on that side."
+            "state": "translated",
+            "value": "右端に沿って。その側の Dock は避けます。"
           }
         },
         "pt-BR": {
@@ -2448,8 +2448,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Down the left-hand edge, clear of a Dock on that side."
+            "state": "translated",
+            "value": "左端に沿って。その側の Dock は避けます。"
           }
         },
         "pt-BR": {
@@ -2477,8 +2477,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A wide bar across the top, readings side by side. On a Mac with a notch of its own it runs up to meet it, so the two read as one shape."
+            "state": "translated",
+            "value": "上端を横切る幅広のバー。読み取りが横並びになります。ノッチのある Mac ではそこまで伸びて、ひと続きの形に見えます。"
           }
         },
         "pt-BR": {
@@ -2506,8 +2506,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A wide bar resting on top of the Dock, readings side by side."
+            "state": "translated",
+            "value": "Dock の上に載る幅広のバー。読み取りが横並びになります。"
           }
         },
         "pt-BR": {
@@ -2535,8 +2535,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Integrations"
+            "state": "translated",
+            "value": "連携"
           }
         },
         "pt-BR": {
@@ -2564,8 +2564,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Appearance"
+            "state": "translated",
+            "value": "外観"
           }
         },
         "pt-BR": {
@@ -2593,8 +2593,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "General"
+            "state": "translated",
+            "value": "一般"
           }
         },
         "pt-BR": {
@@ -2622,8 +2622,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Show"
+            "state": "translated",
+            "value": "表示"
           }
         },
         "pt-BR": {
@@ -2651,8 +2651,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Edge"
+            "state": "translated",
+            "value": "配置する辺"
           }
         },
         "pt-BR": {
@@ -2680,8 +2680,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "App icon"
+            "state": "translated",
+            "value": "アプリアイコン"
           }
         },
         "pt-BR": {
@@ -2709,8 +2709,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Open Codenotch at login"
+            "state": "translated",
+            "value": "ログイン時に Codenotch を開く"
           }
         },
         "pt-BR": {
@@ -2738,8 +2738,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Install updates automatically"
+            "state": "translated",
+            "value": "アップデートを自動的にインストール"
           }
         },
         "pt-BR": {
@@ -2767,8 +2767,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Check now"
+            "state": "translated",
+            "value": "今すぐ確認"
           }
         },
         "pt-BR": {
@@ -2796,8 +2796,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "App designed and developed by"
+            "state": "translated",
+            "value": "デザインと開発"
           }
         },
         "pt-BR": {
@@ -2825,8 +2825,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Connect an assistant to get started"
+            "state": "translated",
+            "value": "アシスタントを接続して始めましょう"
           }
         },
         "pt-BR": {
@@ -2854,8 +2854,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch never signs in — each reading is borrowed from the tool that already holds the account. Signing out here stops the credential being read and forgets the numbers, but leaves you signed in to that tool. macOS asks once per tool the first time, and again whenever you sign in to a different account; Always Allow keeps it quiet."
+            "state": "translated",
+            "value": "Codenotch がサインインすることはありません。読み取りはすべて、すでにアカウントを保持しているツールから借りたものです。ここでサインアウトすると資格情報の読み取りが止まり、数値も忘れられますが、そのツールへのサインインはそのまま残ります。macOS はツールごとに初回の一度、そして別のアカウントにサインインするたびに確認します。「常に許可」を選べば以後は尋ねられません。"
           }
         },
         "pt-BR": {
@@ -2883,8 +2883,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor, Codex, Antigravity, GLM, Grok or OpenCode, and its ring appears in the notch."
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor、Codex、Antigravity、GLM、Grok、OpenCode のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
           }
         },
         "pt-BR": {
@@ -2912,8 +2912,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "macOS will ask once for permission to read Claude Code's and Antigravity's saved logins. Choose Always Allow — plain Allow makes it ask again every time."
+            "state": "translated",
+            "value": "macOS は Claude Code と Antigravity の保存済みログインを読み取る許可を一度だけ尋ねます。「常に許可」を選んでください。「許可」だけでは毎回尋ねられます。"
           }
         },
         "pt-BR": {
@@ -2941,8 +2941,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Version %@. Updates install in the background and apply next time Codenotch starts."
+            "state": "translated",
+            "value": "バージョン %@。アップデートはバックグラウンドでインストールされ、次回 Codenotch を起動したときに適用されます。"
           }
         },
         "pt-BR": {
@@ -2970,8 +2970,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Signed out — nothing is read, and no readings are kept."
+            "state": "translated",
+            "value": "サインアウト済み — 読み取りも行わず、読み取りの保存もしません。"
           }
         },
         "pt-BR": {
@@ -2999,8 +2999,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Allow access…"
+            "state": "translated",
+            "value": "アクセスを許可…"
           }
         },
         "pt-BR": {
@@ -3028,8 +3028,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch…"
+            "state": "translated",
+            "value": "切り替え…"
           }
         },
         "pt-BR": {
@@ -3057,8 +3057,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Asks macOS for %@'s saved login again. Choose Always Allow and it will stop asking."
+            "state": "translated",
+            "value": "%@ の保存済みログインを macOS に再度要求します。「常に許可」を選べば以後は尋ねられません。"
           }
         },
         "pt-BR": {
@@ -3086,8 +3086,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch off to stop reading %@ and forget its readings. %@"
+            "state": "translated",
+            "value": "オフにすると %@ の読み取りを止め、その読み取りを忘れます。%@"
           }
         },
         "pt-BR": {
@@ -3115,8 +3115,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch on to sign in and read %@ again."
+            "state": "translated",
+            "value": "オンにすると再びサインインして %@ を読み取ります。"
           }
         },
         "pt-BR": {
@@ -3144,8 +3144,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "macOS is not letting Codenotch read %@'s saved login. Choose Allow access… above, then Always Allow."
+            "state": "translated",
+            "value": "macOS が %@ の保存済みログインの読み取りを許可していません。上の「アクセスを許可…」を選び、「常に許可」を選んでください。"
           }
         },
         "pt-BR": {
@@ -3173,8 +3173,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Open %@"
+            "state": "translated",
+            "value": "%@ を開く"
           }
         },
         "pt-BR": {
@@ -3202,8 +3202,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Opens %@, which is where this account is signed in."
+            "state": "translated",
+            "value": "このアカウントがサインインしている %@ を開きます。"
           }
         },
         "pt-BR": {
@@ -3231,8 +3231,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Opens %@ in your browser. That site has its own sign-in, separate from the credential read here."
+            "state": "translated",
+            "value": "ブラウザで %@ を開きます。このサイトには独自のサインインがあり、ここで読み取っている資格情報とは別のものです。"
           }
         },
         "pt-BR": {
@@ -3260,8 +3260,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch Settings"
+            "state": "translated",
+            "value": "Codenotch 設定"
           }
         },
         "pt-BR": {
@@ -3289,8 +3289,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "What's New"
+            "state": "translated",
+            "value": "新機能"
           }
         },
         "pt-BR": {
@@ -3318,8 +3318,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "What's new in Codenotch"
+            "state": "translated",
+            "value": "Codenotch の新機能"
           }
         },
         "pt-BR": {
@@ -3347,8 +3347,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Version %@"
+            "state": "translated",
+            "value": "バージョン %@"
           }
         },
         "pt-BR": {
@@ -3376,8 +3376,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Continue"
+            "state": "translated",
+            "value": "続ける"
           }
         },
         "pt-BR": {
@@ -3405,8 +3405,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "macOS refused this — try moving Codenotch to /Applications."
+            "state": "translated",
+            "value": "macOS に拒否されました — Codenotch を /Applications に移動してみてください。"
           }
         },
         "pt-BR": {
@@ -3434,8 +3434,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "via %@"
+            "state": "translated",
+            "value": "%@ 経由"
           }
         },
         "pt-BR": {
@@ -3463,8 +3463,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to %@"
+            "state": "translated",
+            "value": "%@ にサインイン"
           }
         },
         "pt-BR": {
@@ -3492,8 +3492,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to %@ to read this account."
+            "state": "translated",
+            "value": "このアカウントを読み取るには %@ にサインインしてください。"
           }
         },
         "pt-BR": {
@@ -3521,8 +3521,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with %@ to read this account."
+            "state": "translated",
+            "value": "このアカウントを読み取るには %@ でサインインしてください。"
           }
         },
         "pt-BR": {
@@ -3550,8 +3550,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign out in the %@ window to use another account."
+            "state": "translated",
+            "value": "別のアカウントを使うには、%@ のウインドウでサインアウトしてください。"
           }
         },
         "pt-BR": {
@@ -3579,8 +3579,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch accounts in %@; the notch follows."
+            "state": "translated",
+            "value": "%@ でアカウントを切り替えると、ノッチもそれに従います。"
           }
         },
         "pt-BR": {
@@ -3608,8 +3608,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch accounts in the tool that owns it; the notch follows."
+            "state": "translated",
+            "value": "そのアカウントを持つツールで切り替えると、ノッチもそれに従います。"
           }
         },
         "pt-BR": {
@@ -3637,8 +3637,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Signs out of %@ — the session belongs to Codenotch."
+            "state": "translated",
+            "value": "%@ からサインアウトします — このセッションは Codenotch のものです。"
           }
         },
         "pt-BR": {
@@ -3666,8 +3666,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "You stay signed in to %@ — end that session in %@ itself."
+            "state": "translated",
+            "value": "%@ にはサインインしたままです — そのセッションを終えるには %@ 側で操作してください。"
           }
         },
         "pt-BR": {
@@ -3695,8 +3695,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "You stay signed in to the tool that owns the account."
+            "state": "translated",
+            "value": "そのアカウントを持つツールにはサインインしたままです。"
           }
         },
         "pt-BR": {
@@ -3724,8 +3724,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with the tool that owns this account."
+            "state": "translated",
+            "value": "このアカウントを持つツールでサインインしてください。"
           }
         },
         "pt-BR": {
@@ -3753,8 +3753,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to %@…"
+            "state": "translated",
+            "value": "%@ にサインイン…"
           }
         },
         "pt-BR": {
@@ -3782,8 +3782,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Run grok login — it signs in and refreshes the token this reads."
+            "state": "translated",
+            "value": "grok login を実行してください。サインインし、ここで読み取るトークンを更新します。"
           }
         },
         "pt-BR": {
@@ -3811,8 +3811,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage rides on the opencode-go key OpenCode stores on sign-in — connect Go inside OpenCode (`opencode auth login`) and the notch reads it."
+            "state": "translated",
+            "value": "使用量は、OpenCode がサインイン時に保存する opencode-go キーを使います。OpenCode 内で Go を接続（`opencode auth login`）すれば、ノッチが読み取ります。"
           }
         },
         "pt-BR": {
@@ -3840,8 +3840,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage rides on a Z.ai GLM Coding Plan key held by a coding tool — Claude Code's settings.json, ZCode or OpenCode. Set one up there and the notch reads it."
+            "state": "translated",
+            "value": "使用量は、コーディングツールが持つ Z.ai GLM Coding Plan のキーを使います。Claude Code の settings.json、ZCode、OpenCode のいずれかです。そこで設定すれば、ノッチが読み取ります。"
           }
         },
         "pt-BR": {
@@ -3869,8 +3869,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Run `%@` once — it signs in and refreshes the token this reads. Use /login there to change account."
+            "state": "translated",
+            "value": "`%@` を一度実行してください。サインインし、ここで読み取るトークンを更新します。アカウントを変えるには、そこで /login を使います。"
           }
         },
         "pt-BR": {
@@ -3898,8 +3898,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Unlimited on the %@ plan — nothing to meter"
+            "state": "translated",
+            "value": "%@ プランでは無制限 — 計測する対象がありません"
           }
         },
         "pt-BR": {
@@ -3927,8 +3927,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The %@ plan has nothing for Cursor to meter yet"
+            "state": "translated",
+            "value": "%@ プランには、Cursor が計測できる対象がまだありません"
           }
         },
         "pt-BR": {
@@ -3956,8 +3956,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codex reported no usage windows"
+            "state": "translated",
+            "value": "Codex は使用量の枠を返しませんでした"
           }
         },
         "pt-BR": {
@@ -3985,8 +3985,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No OpenCode Go subscription on this key"
+            "state": "translated",
+            "value": "このキーに OpenCode Go のサブスクリプションがありません"
           }
         },
         "pt-BR": {
@@ -4014,8 +4014,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Grok has nothing metered on this account yet"
+            "state": "translated",
+            "value": "このアカウントには、Grok が計測する対象がまだありません"
           }
         },
         "pt-BR": {
@@ -4043,8 +4043,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Settings…"
+            "state": "translated",
+            "value": "設定…"
           }
         },
         "pt-BR": {
@@ -4072,8 +4072,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Quit Codenotch"
+            "state": "translated",
+            "value": "Codenotch を終了"
           }
         },
         "pt-BR": {
@@ -4101,8 +4101,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Keep open"
+            "state": "translated",
+            "value": "開いたままにする"
           }
         },
         "pt-BR": {
@@ -4130,8 +4130,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Refresh now"
+            "state": "translated",
+            "value": "今すぐ更新"
           }
         },
         "pt-BR": {
@@ -4159,8 +4159,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch is set to Always show. Change it in Settings."
+            "state": "translated",
+            "value": "Codenotch は「常に表示」に設定されています。設定で変更してください。"
           }
         },
         "pt-BR": {
@@ -4188,8 +4188,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Checking…"
+            "state": "translated",
+            "value": "確認中…"
           }
         },
         "pt-BR": {
@@ -4217,8 +4217,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch is up to date."
+            "state": "translated",
+            "value": "Codenotch は最新です。"
           }
         },
         "pt-BR": {
@@ -4246,8 +4246,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Version %@ is available and will install shortly."
+            "state": "translated",
+            "value": "バージョン %@ が利用可能です。まもなくインストールされます。"
           }
         },
         "pt-BR": {
@@ -4275,8 +4275,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Couldn't reach the update server. Codenotch will try again on its own — nothing is wrong with this copy."
+            "state": "translated",
+            "value": "アップデートサーバーに接続できませんでした。Codenotch が自動で再試行します — このコピーに問題はありません。"
           }
         },
         "pt-BR": {
@@ -4304,8 +4304,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Two more providers, and a live account plan that was silently dropped."
+            "state": "translated",
+            "value": "サービスが 2 つ増え、黙って抜け落ちていた実アカウントのプランに対応。"
           }
         },
         "pt-BR": {
@@ -4333,8 +4333,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Grok is a new ring"
+            "state": "translated",
+            "value": "Grok が新しいリングに"
           }
         },
         "pt-BR": {
@@ -4362,8 +4362,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "SuperGrok's weekly Grok Build allowance, read from the same billing endpoint the CLI uses, with the session in ~/.grok/auth.json."
+            "state": "translated",
+            "value": "SuperGrok の週間 Grok Build 枠を、CLI と同じ課金エンドポイントから読み取ります。セッションは ~/.grok/auth.json のものを使います。"
           }
         },
         "pt-BR": {
@@ -4391,8 +4391,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "OpenCode's Go plan is a new ring"
+            "state": "translated",
+            "value": "OpenCode の Go プランが新しいリングに"
           }
         },
         "pt-BR": {
@@ -4420,8 +4420,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reads the Go plan's official usage endpoint with the key OpenCode itself stores on sign-in — no second sign-in."
+            "state": "translated",
+            "value": "OpenCode 自身がサインイン時に保存するキーで、Go プランの公式な使用量エンドポイントを読み取ります。二度目のサインインは不要です。"
           }
         },
         "pt-BR": {
@@ -4449,8 +4449,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A real Codex account went unmetered"
+            "state": "translated",
+            "value": "実在の Codex アカウントが未計測になっていた"
           }
         },
         "pt-BR": {
@@ -4478,8 +4478,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codex's live reading only recognised a 5-hour and a 7-day window. A free-plan account's real limit was a 30-day one, which fell through unnoticed and showed as nothing metered on an account that was genuinely tracked."
+            "state": "translated",
+            "value": "Codex のライブ読み取りは 5 時間と 7 日間の枠しか認識していませんでした。無料プランのアカウントの実際の上限は 30 日間で、これが見落とされ、本当は計測されているアカウントが「計測対象なし」と表示されていました。"
           }
         },
         "pt-BR": {
@@ -4507,8 +4507,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switching a provider off now really stops it"
+            "state": "translated",
+            "value": "サービスをオフにすると本当に止まるように"
           }
         },
         "pt-BR": {
@@ -4536,8 +4536,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Opening Settings could still read a switched-off provider's account, and a reply already in flight could restore a reading you had just asked it to forget."
+            "state": "translated",
+            "value": "設定を開くと、オフにしたサービスのアカウントを読み取ってしまうことがありました。また、すでに送信済みの応答が、忘れるよう指示したばかりの読み取りを復活させることがありました。"
           }
         },
         "pt-BR": {
@@ -4565,8 +4565,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Contributors can build without a certificate"
+            "state": "translated",
+            "value": "証明書なしでコントリビューターがビルドできるように"
           }
         },
         "pt-BR": {
@@ -4594,8 +4594,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "make build and make test now sign themselves automatically when the maintainer's Developer ID isn't present — no Apple account needed to work on this."
+            "state": "translated",
+            "value": "メンテナの Developer ID がない場合、make build と make test が自動的に自己署名するようになりました。作業に Apple アカウントは要りません。"
           }
         },
         "pt-BR": {
@@ -4623,8 +4623,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Waking from sleep no longer erases a reading."
+            "state": "translated",
+            "value": "スリープからの復帰で読み取りが消えなくなりました。"
           }
         },
         "pt-BR": {
@@ -4652,8 +4652,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A ring survives waking your Mac"
+            "state": "translated",
+            "value": "Mac の復帰後もリングが残るように"
           }
         },
         "pt-BR": {
@@ -4681,8 +4681,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A brief window right after sleep, where macOS won't allow a keychain prompt yet, was mistaken for being signed out — which erased the reading and left \"waiting for the first reading\" on screen. It now ages the number instead of throwing it away, and picks back up on its own."
+            "state": "translated",
+            "value": "スリープ直後の、macOS がまだキーチェーンの確認を許可しないわずかな時間が、サインアウトと誤認されていました。その結果、読み取りが消えて「最初の読み取りを待っています」が表示されたままになっていました。今は数値を破棄せず古いものとして扱い、自動で復帰します。"
           }
         },
         "pt-BR": {
@@ -4710,8 +4710,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Two more accounts, four community fixes, and honest duplicates."
+            "state": "translated",
+            "value": "アカウントが 2 つ増え、コミュニティからの修正が 4 件、そして重複の扱いを正直に。"
           }
         },
         "pt-BR": {
@@ -4739,8 +4739,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Multiple Claude Code accounts"
+            "state": "translated",
+            "value": "複数の Claude Code アカウント"
           }
         },
         "pt-BR": {
@@ -4768,8 +4768,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Keep a work login apart with CLAUDE_CONFIG_DIR? It now gets its own ring, its own limits, and its own row in Settings, beside your personal one."
+            "state": "translated",
+            "value": "CLAUDE_CONFIG_DIR で仕事用のログインを分けていますか。個人用のものと並んで、独自のリング、独自の上限、設定の独自の行を持つようになりました。"
           }
         },
         "pt-BR": {
@@ -4797,8 +4797,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "GLM added"
+            "state": "translated",
+            "value": "GLM に対応"
           }
         },
         "pt-BR": {
@@ -4826,8 +4826,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Z.ai's Coding Plan reads live now too, with a key borrowed from whichever tool already holds one."
+            "state": "translated",
+            "value": "Z.ai の Coding Plan もライブで読み取れるようになりました。キーは、すでにそれを持っているツールから借ります。"
           }
         },
         "pt-BR": {
@@ -4855,8 +4855,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A stuck Claude ring recovers on its own"
+            "state": "translated",
+            "value": "固まった Claude のリングが自動で復帰"
           }
         },
         "pt-BR": {
@@ -4884,8 +4884,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "One momentary failure — the Mac waking from sleep, most often — used to lock the ring until the app restarted. It now clears itself on the next check."
+            "state": "translated",
+            "value": "一度の瞬間的な失敗 — 多くは Mac のスリープ復帰時です — でリングがロックされ、アプリを再起動するまで戻りませんでした。今は次回の確認で自動的に解消されます。"
           }
         },
         "pt-BR": {
@@ -4913,8 +4913,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Cursor sessions stop reporting work that already ended"
+            "state": "translated",
+            "value": "Cursor のセッションが、終わった作業を報告し続けないように"
           }
         },
         "pt-BR": {
@@ -4942,8 +4942,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A crashed or abandoned chat could read as \"still working\" for a day or more. It now notices when the writing has actually stopped."
+            "state": "translated",
+            "value": "クラッシュしたり放置されたチャットが、1 日以上「まだ作業中」と表示されることがありました。今は書き込みが実際に止まったことを検知します。"
           }
         },
         "pt-BR": {
@@ -4971,8 +4971,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A months-old duplicate can no longer win"
+            "state": "translated",
+            "value": "数か月前の重複が勝たないように"
           }
         },
         "pt-BR": {
@@ -5000,8 +5000,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude Code files a new keychain entry on every token rotation. An account signed in for a while could pick an old, expired one at random and show \"waiting for the first reading\" forever."
+            "state": "translated",
+            "value": "Claude Code はトークンをローテーションするたびに新しいキーチェーン項目を作ります。しばらくサインインしたままのアカウントでは、古い期限切れの項目がランダムに選ばれ、「最初の読み取りを待っています」がいつまでも表示されることがありました。"
           }
         },
         "pt-BR": {
@@ -5029,8 +5029,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A stray click no longer pins the notch open"
+            "state": "translated",
+            "value": "誤クリックでノッチが開いたままにならないように"
           }
         },
         "pt-BR": {
@@ -5058,8 +5058,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Clicking near the screen edge before the notch had even opened could leave it stuck open with nothing on screen explaining why."
+            "state": "translated",
+            "value": "ノッチが開く前に画面の端の近くをクリックすると、理由が画面に出ないまま開いた状態で固まることがありました。"
           }
         },
         "pt-BR": {
@@ -5087,8 +5087,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codex reads live, and Always show stays on."
+            "state": "translated",
+            "value": "Codex をライブ読み取りに。「常に表示」もオフになりません。"
           }
         },
         "pt-BR": {
@@ -5116,8 +5116,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codex is read live instead of from a log"
+            "state": "translated",
+            "value": "Codex をログではなくライブで読み取るように"
           }
         },
         "pt-BR": {
@@ -5145,8 +5145,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The figure came from a file Codex writes during a turn, so it was as old as the last time you used it — three days stale in one case. Codenotch now asks Codex itself, and matches its own panel."
+            "state": "translated",
+            "value": "数値はターンの途中で Codex が書き出すファイルから取っていたため、最後に使った時点のまま古くなっていました。3 日前の値だったこともあります。今は Codex 自身に問い合わせるので、Codex のパネルと一致します。"
           }
         },
         "pt-BR": {
@@ -5174,8 +5174,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The Codex ring notices the desktop app"
+            "state": "translated",
+            "value": "Codex のリングがデスクトップアプリを認識"
           }
         },
         "pt-BR": {
@@ -5203,8 +5203,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "It only ever watched the files the CLI and the VS Code extension write, so work done in the desktop app never made it spin."
+            "state": "translated",
+            "value": "以前は CLI と VS Code 拡張が書くファイルしか見ていなかったため、デスクトップアプリでの作業ではリングが動きませんでした。"
           }
         },
         "pt-BR": {
@@ -5232,8 +5232,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Always show no longer turns itself off"
+            "state": "translated",
+            "value": "「常に表示」が勝手にオフにならないように"
           }
         },
         "pt-BR": {
@@ -5261,8 +5261,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Clicking the notch toggled the same flag the setting used, so a stray click quietly put it back to showing on hover."
+            "state": "translated",
+            "value": "ノッチをクリックすると設定と同じフラグが切り替わっていたため、誤クリックで静かに「ホバー時に表示」へ戻っていました。"
           }
         },
         "pt-BR": {
@@ -5290,8 +5290,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Far fewer keychain prompts"
+            "state": "translated",
+            "value": "キーチェーンの確認が大幅に減少"
           }
         },
         "pt-BR": {
@@ -5319,8 +5319,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Once a token expired, every check went back to the keychain — a prompt a minute. It now reads the secret only when the owning app has changed it, and never retries a refusal on a timer."
+            "state": "translated",
+            "value": "トークンが期限切れになると、確認のたびにキーチェーンへ戻っていました。1 分に 1 回の確認です。今は、持ち主のアプリが秘密情報を変更したときにだけ読み取り、拒否をタイマーで再試行することもありません。"
           }
         },
         "pt-BR": {
@@ -5348,8 +5348,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A paused limit is shown as paused"
+            "state": "translated",
+            "value": "一時停止中の上限を、そのように表示"
           }
         },
         "pt-BR": {
@@ -5377,8 +5377,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Some limits are reached while the headline still shows room. The ring reads as spent and says when it lifts."
+            "state": "translated",
+            "value": "見出しにはまだ余裕があるのに達している上限があります。リングは使い切りとして表示し、いつ解除されるかを示します。"
           }
         },
         "pt-BR": {
@@ -5406,8 +5406,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Long messages are no longer cut off"
+            "state": "translated",
+            "value": "長いメッセージが切れないように"
           }
         },
         "pt-BR": {
@@ -5435,8 +5435,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A tooltip with something to explain reserved one line for it however much it said."
+            "state": "translated",
+            "value": "説明のあるツールチップは、内容の量にかかわらず 1 行しか確保していませんでした。"
           }
         },
         "pt-BR": {
@@ -5464,8 +5464,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Every session, and a tooltip that fits on the screen."
+            "state": "translated",
+            "value": "すべてのセッションと、画面に収まるツールチップ。"
           }
         },
         "pt-BR": {
@@ -5493,8 +5493,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Tooltips are no longer cut off"
+            "state": "translated",
+            "value": "ツールチップが切れないように"
           }
         },
         "pt-BR": {
@@ -5522,8 +5522,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A card is centred on the ring it belongs to, so the first and last providers threw half of it past the end of the panel — and what fell off was the title. The panel now keeps room for it."
+            "state": "translated",
+            "value": "カードは対応するリングを中心に配置されるため、最初と最後のサービスではその半分がパネルの外へはみ出し、はみ出すのはタイトルでした。今はパネルがその分の余白を確保します。"
           }
         },
         "pt-BR": {
@@ -5551,8 +5551,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "As many sessions as your screen can hold"
+            "state": "translated",
+            "value": "画面に収まるだけのセッションを表示"
           }
         },
         "pt-BR": {
@@ -5580,8 +5580,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The list was capped at four whatever you were running on. It is now solved for the display: ten on a large one, and \"and N more\" only when there is genuinely no room for the rest."
+            "state": "translated",
+            "value": "一覧は実行環境にかかわらず 4 件に固定されていました。今はディスプレイに合わせて決まります。大きな画面なら 10 件、「ほか N 件」は本当に余地がないときだけ出ます。"
           }
         },
         "pt-BR": {
@@ -5609,8 +5609,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The ones that need you come first"
+            "state": "translated",
+            "value": "あなたを待っているものが先頭に"
           }
         },
         "pt-BR": {
@@ -5638,8 +5638,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Waiting, then busy, then idle — so if anything is summarised away, it is what matters least."
+            "state": "translated",
+            "value": "待機中、次に作業中、最後にアイドル。まとめて省略されるとしても、いちばん重要でないものから省かれます。"
           }
         },
         "pt-BR": {
@@ -5667,8 +5667,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Antigravity's real numbers, and a switch that stays off."
+            "state": "translated",
+            "value": "Antigravity の実際の数値と、オフのままになるスイッチ。"
           }
         },
         "pt-BR": {
@@ -5696,8 +5696,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Antigravity shows its actual quota"
+            "state": "translated",
+            "value": "Antigravity が実際の割り当てを表示"
           }
         },
         "pt-BR": {
@@ -5725,8 +5725,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Google will not answer Codenotch directly, so it asks Antigravity's own language server instead — the same place Antigravity's usage panel gets its figure."
+            "state": "translated",
+            "value": "Google は Codenotch に直接応答しないため、代わりに Antigravity 自身の言語サーバーに問い合わせます。Antigravity の使用量パネルが数値を得ているのと同じ場所です。"
           }
         },
         "pt-BR": {
@@ -5754,8 +5754,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Usage reads both ways"
+            "state": "translated",
+            "value": "使用量を両方の見方で表示"
           }
         },
         "pt-BR": {
@@ -5783,8 +5783,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "\"12% used · 88% left\", so a reading lines up with whichever end your vendor happens to show."
+            "state": "translated",
+            "value": "「12% 使用 · 残り 88%」。ベンダーがどちらの数値を示していても、読み取りが噛み合います。"
           }
         },
         "pt-BR": {
@@ -5812,8 +5812,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A way back from a declined keychain prompt"
+            "state": "translated",
+            "value": "キーチェーンの確認を拒否したあとの戻り道"
           }
         },
         "pt-BR": {
@@ -5841,8 +5841,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Declining no longer looks like being signed out, and Allow access… asks macOS again."
+            "state": "translated",
+            "value": "拒否してもサインアウトには見えなくなり、「アクセスを許可…」で macOS に再度要求できます。"
           }
         },
         "pt-BR": {
@@ -5870,8 +5870,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switching a provider off now sticks"
+            "state": "translated",
+            "value": "サービスをオフにした状態が保たれるように"
           }
         },
         "pt-BR": {
@@ -5899,8 +5899,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "It stopped being read but its last reading was kept, so the ring came back at the next launch."
+            "state": "translated",
+            "value": "読み取りは止まるものの最後の読み取りが保持されていたため、次回の起動でリングが戻ってきていました。"
           }
         },
         "pt-BR": {
@@ -5928,8 +5928,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Distant resets show a date"
+            "state": "translated",
+            "value": "先のリセットは日付で表示"
           }
         },
         "pt-BR": {
@@ -5957,8 +5957,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A limit renewing in four weeks said \"Mon\", which read as this Monday. It says \"28 Sep\"."
+            "state": "translated",
+            "value": "4 週間後に更新される上限が「月」と表示され、今週の月曜日のように読めていました。今は「9月28日」と表示します。"
           }
         },
         "pt-BR": {
@@ -5986,8 +5986,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The first release."
+            "state": "translated",
+            "value": "最初のリリース。"
           }
         },
         "pt-BR": {
@@ -6015,8 +6015,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Put the notch anywhere"
+            "state": "translated",
+            "value": "ノッチをどこにでも配置"
           }
         },
         "pt-BR": {
@@ -6044,8 +6044,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Right, left, top or bottom. It keeps clear of the Dock and the menu bar, and follows when the Dock moves."
+            "state": "translated",
+            "value": "右、左、上、下。Dock とメニューバーを避け、Dock が移動すれば追従します。"
           }
         },
         "pt-BR": {
@@ -6073,8 +6073,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "It joins your Mac's own notch"
+            "state": "translated",
+            "value": "Mac 自身のノッチと一体に"
           }
         },
         "pt-BR": {
@@ -6102,8 +6102,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "On the top edge it takes the hardware's shape, so the two read as one rather than as a bar parked underneath."
+            "state": "translated",
+            "value": "上端では実機のノッチの形を取り込むので、下にバーが置かれているようにではなく、ひと続きに見えます。"
           }
         },
         "pt-BR": {
@@ -6131,8 +6131,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude, Cursor, Codex and Gemini"
+            "state": "translated",
+            "value": "Claude、Cursor、Codex、Gemini"
           }
         },
         "pt-BR": {
@@ -6160,8 +6160,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Each read from the tool already signed in on this Mac. Codenotch never asks for a password."
+            "state": "translated",
+            "value": "いずれもこの Mac ですでにサインイン済みのツールから読み取ります。Codenotch がパスワードを尋ねることはありません。"
           }
         },
         "pt-BR": {
@@ -6189,8 +6189,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Choose where Codenotch appears"
+            "state": "translated",
+            "value": "Codenotch の表示場所を選択"
           }
         },
         "pt-BR": {
@@ -6218,8 +6218,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "In the Dock, in the menu bar, or nowhere at all."
+            "state": "translated",
+            "value": "Dock、メニューバー、またはどこにも出さない。"
           }
         },
         "pt-BR": {
@@ -6247,7 +6247,7 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Codenotch"
           }
         },
@@ -6276,8 +6276,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@%% Used · %@%% left"
+            "state": "translated",
+            "value": "%@%% 使用 · 残り %@%%"
           }
         },
         "pt-BR": {
@@ -6305,8 +6305,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ left"
+            "state": "translated",
+            "value": "残り %@"
           }
         },
         "pt-BR": {
@@ -6334,8 +6334,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ used"
+            "state": "translated",
+            "value": "%@ 使用"
           }
         },
         "pt-BR": {
@@ -6363,8 +6363,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with GitHub CLI to read your Copilot usage"
+            "state": "translated",
+            "value": "Copilot の使用量を読み取るには GitHub CLI でサインイン"
           }
         },
         "pt-BR": {
@@ -6392,8 +6392,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with GitHub CLI using `gh auth login`, then enable GitHub Copilot."
+            "state": "translated",
+            "value": "`gh auth login` で GitHub CLI にサインインし、GitHub Copilot を有効にしてください。"
           }
         },
         "pt-BR": {
@@ -6421,8 +6421,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "GitHub Copilot reported no metered quotas"
+            "state": "translated",
+            "value": "GitHub Copilot は計測対象の割り当てを返しませんでした"
           }
         },
         "pt-BR": {
@@ -6450,8 +6450,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "There is nothing to sign in to: the count is added up from what Gemini CLI, OpenCode and Hermes recorded about their own calls. Your API key is never read."
+            "state": "translated",
+            "value": "サインインする先はありません。この件数は、Gemini CLI、OpenCode、Hermes が自分の呼び出しについて記録した内容を合算したものです。API キーが読み取られることはありません。"
           }
         },
         "pt-BR": {
@@ -6479,8 +6479,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No Gemini CLI, OpenCode or Hermes sessions found"
+            "state": "translated",
+            "value": "Gemini CLI、OpenCode、Hermes のセッションが見つかりません"
           }
         },
         "pt-BR": {
@@ -6508,8 +6508,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Run `%@` once — it signs in and is what these readings come from. Use /login there to change account."
+            "state": "translated",
+            "value": "`%@` を一度実行してください。サインインし、ここでの読み取りはそこから得られます。アカウントを変えるには、そこで /login を使います。"
           }
         },
         "pt-BR": {
@@ -6537,8 +6537,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Scoped"
+            "state": "translated",
+            "value": "スコープ付き"
           }
         },
         "pt-BR": {
@@ -6566,8 +6566,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Auto usage"
+            "state": "translated",
+            "value": "自動使用量"
           }
         },
         "pt-BR": {
@@ -6595,8 +6595,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Team on demand"
+            "state": "translated",
+            "value": "チームの従量課金"
           }
         },
         "pt-BR": {
@@ -6624,8 +6624,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Refresh all"
+            "state": "translated",
+            "value": "すべて更新"
           }
         },
         "pt-BR": {
@@ -6653,8 +6653,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reset date"
+            "state": "translated",
+            "value": "リセット日"
           }
         },
         "pt-BR": {
@@ -6682,8 +6682,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Time remaining"
+            "state": "translated",
+            "value": "残り時間"
           }
         },
         "pt-BR": {
@@ -6711,8 +6711,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Minutes under an hour; otherwise the reset date and time."
+            "state": "translated",
+            "value": "1 時間未満なら分、それ以外はリセットの日時。"
           }
         },
         "pt-BR": {
@@ -6740,8 +6740,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Time until usage resets, such as 3 Days 3h or 3h 20m."
+            "state": "translated",
+            "value": "使用量がリセットされるまでの時間。「3 日 3 時間」「3 時間 20 分」など。"
           }
         },
         "pt-BR": {
@@ -6769,8 +6769,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resets in %lld Day %lldh"
+            "state": "translated",
+            "value": "%lld 日 %lld 時間後にリセット"
           }
         },
         "pt-BR": {
@@ -6798,8 +6798,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resets in %lld Days %lldh"
+            "state": "translated",
+            "value": "%lld 日 %lld 時間後にリセット"
           }
         },
         "pt-BR": {
@@ -6827,8 +6827,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Resets in %lldh %lldm"
+            "state": "translated",
+            "value": "%lld 時間 %lld 分後にリセット"
           }
         },
         "pt-BR": {
@@ -6856,8 +6856,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Nothing on screen. The readings stay in the menu bar menu when App icon is Menu bar. Otherwise, open Codenotch again from Applications to bring these settings back."
+            "state": "translated",
+            "value": "画面には何も出ません。「アプリアイコン」が「メニューバー」なら、読み取りはメニューバーのメニューに残ります。それ以外の場合、この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
           }
         },
         "pt-BR": {
@@ -6885,8 +6885,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Main display"
+            "state": "translated",
+            "value": "メインディスプレイ"
           }
         },
         "pt-BR": {
@@ -6914,8 +6914,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "All displays"
+            "state": "translated",
+            "value": "すべてのディスプレイ"
           }
         },
         "pt-BR": {
@@ -6943,8 +6943,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The notch appears only on the display with the menu bar."
+            "state": "translated",
+            "value": "ノッチはメニューバーのあるディスプレイにだけ出ます。"
           }
         },
         "pt-BR": {
@@ -6972,8 +6972,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Each display gets its own notch, and hovering one opens only that one."
+            "state": "translated",
+            "value": "ディスプレイごとに独自のノッチが出ます。ホバーしたものだけが開きます。"
           }
         },
         "pt-BR": {
@@ -7001,8 +7001,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "3 seconds"
+            "state": "translated",
+            "value": "3 秒"
           }
         },
         "pt-BR": {
@@ -7030,8 +7030,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "5 seconds"
+            "state": "translated",
+            "value": "5 秒"
           }
         },
         "pt-BR": {
@@ -7059,8 +7059,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "10 seconds"
+            "state": "translated",
+            "value": "10 秒"
           }
         },
         "pt-BR": {
@@ -7088,8 +7088,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Long enough to notice, short enough to ignore."
+            "state": "translated",
+            "value": "気づく程度に長く、無視できる程度に短く。"
           }
         },
         "pt-BR": {
@@ -7117,8 +7117,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Long enough to read the session's name and reach for it."
+            "state": "translated",
+            "value": "セッション名を読んで手を伸ばせる程度の長さ。"
           }
         },
         "pt-BR": {
@@ -7146,8 +7146,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Stays until you have had a chance to look up."
+            "state": "translated",
+            "value": "顔を上げる余裕ができるまで残ります。"
           }
         },
         "pt-BR": {
@@ -7175,8 +7175,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Device accent color"
+            "state": "translated",
+            "value": "デバイスのアクセントカラー"
           }
         },
         "pt-BR": {
@@ -7204,8 +7204,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Connected"
+            "state": "translated",
+            "value": "接続済み"
           }
         },
         "pt-BR": {
@@ -7233,8 +7233,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Not connected"
+            "state": "translated",
+            "value": "未接続"
           }
         },
         "pt-BR": {
@@ -7262,8 +7262,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Accounts"
+            "state": "translated",
+            "value": "アカウント"
           }
         },
         "pt-BR": {
@@ -7291,8 +7291,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Notifications"
+            "state": "translated",
+            "value": "通知"
           }
         },
         "pt-BR": {
@@ -7320,8 +7320,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Nothing is connected, so the notch has no rings to draw."
+            "state": "translated",
+            "value": "何も接続されていないため、ノッチに描くリングがありません。"
           }
         },
         "pt-BR": {
@@ -7349,8 +7349,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The notch draws these in this order. Drag one by its handle to move it."
+            "state": "translated",
+            "value": "ノッチはこの順にリングを描きます。ハンドルをドラッグして並べ替えられます。"
           }
         },
         "pt-BR": {
@@ -7378,8 +7378,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "These have no ring to place. Switch one on and it joins the end of the list above."
+            "state": "translated",
+            "value": "これらには配置するリングがありません。オンにすると、上の一覧の末尾に加わります。"
           }
         },
         "pt-BR": {
@@ -7407,8 +7407,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Notch"
+            "state": "translated",
+            "value": "ノッチ"
           }
         },
         "pt-BR": {
@@ -7436,8 +7436,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reset time"
+            "state": "translated",
+            "value": "リセット時刻"
           }
         },
         "pt-BR": {
@@ -7465,8 +7465,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Displays"
+            "state": "translated",
+            "value": "ディスプレイ"
           }
         },
         "pt-BR": {
@@ -7494,8 +7494,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Display"
+            "state": "translated",
+            "value": "ディスプレイ"
           }
         },
         "pt-BR": {
@@ -7523,8 +7523,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Follow active window"
+            "state": "translated",
+            "value": "アクティブなウインドウに追従"
           }
         },
         "pt-BR": {
@@ -7552,8 +7552,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Unavailable display"
+            "state": "translated",
+            "value": "利用できないディスプレイ"
           }
         },
         "pt-BR": {
@@ -7581,8 +7581,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "App"
+            "state": "translated",
+            "value": "アプリ"
           }
         },
         "pt-BR": {
@@ -7610,8 +7610,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Accent color"
+            "state": "translated",
+            "value": "アクセントカラー"
           }
         },
         "pt-BR": {
@@ -7639,8 +7639,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "When a session ends"
+            "state": "translated",
+            "value": "セッションが終わったとき"
           }
         },
         "pt-BR": {
@@ -7668,8 +7668,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Open the notch for a moment"
+            "state": "translated",
+            "value": "ノッチを一瞬開く"
           }
         },
         "pt-BR": {
@@ -7697,8 +7697,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "For"
+            "state": "translated",
+            "value": "表示時間"
           }
         },
         "pt-BR": {
@@ -7726,8 +7726,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Play a sound"
+            "state": "translated",
+            "value": "サウンドを再生"
           }
         },
         "pt-BR": {
@@ -7755,8 +7755,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Finished"
+            "state": "translated",
+            "value": "完了"
           }
         },
         "pt-BR": {
@@ -7784,8 +7784,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Waiting on you"
+            "state": "translated",
+            "value": "あなたを待機中"
           }
         },
         "pt-BR": {
@@ -7813,8 +7813,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Threshold alerts"
+            "state": "translated",
+            "value": "しきい値の通知"
           }
         },
         "pt-BR": {
@@ -7842,8 +7842,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Hide Sidebar"
+            "state": "translated",
+            "value": "サイドバーを隠す"
           }
         },
         "pt-BR": {
@@ -7871,8 +7871,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Show Sidebar"
+            "state": "translated",
+            "value": "サイドバーを表示"
           }
         },
         "pt-BR": {
@@ -7900,8 +7900,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Selected"
+            "state": "translated",
+            "value": "選択中"
           }
         },
         "pt-BR": {
@@ -7929,8 +7929,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Not selected"
+            "state": "translated",
+            "value": "未選択"
           }
         },
         "pt-BR": {
@@ -7958,8 +7958,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ (missing)"
+            "state": "translated",
+            "value": "%@（見つかりません）"
           }
         },
         "pt-BR": {
@@ -7987,8 +7987,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Play %@"
+            "state": "translated",
+            "value": "%@ を再生"
           }
         },
         "pt-BR": {
@@ -8016,8 +8016,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Monthly budget"
+            "state": "translated",
+            "value": "月間の予算"
           }
         },
         "pt-BR": {
@@ -8045,8 +8045,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "None"
+            "state": "translated",
+            "value": "なし"
           }
         },
         "pt-BR": {
@@ -8074,8 +8074,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "tokens"
+            "state": "translated",
+            "value": "トークン"
           }
         },
         "pt-BR": {
@@ -8103,8 +8103,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ limit reached"
+            "state": "translated",
+            "value": "%@ の上限に到達"
           }
         },
         "pt-BR": {
@@ -8132,8 +8132,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ is at %lld%%"
+            "state": "translated",
+            "value": "%@ が %lld%%"
           }
         },
         "pt-BR": {
@@ -8161,8 +8161,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Its %@ limit is spent."
+            "state": "translated",
+            "value": "%@ の上限を使い切りました。"
           }
         },
         "pt-BR": {
@@ -8190,8 +8190,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Its %@ limit is spent — resets %@"
+            "state": "translated",
+            "value": "%@ の上限を使い切りました — %@ にリセット"
           }
         },
         "pt-BR": {
@@ -8219,8 +8219,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld%% of its %@ limit used."
+            "state": "translated",
+            "value": "%lld%% を使用（%@ の上限）。"
           }
         },
         "pt-BR": {
@@ -8248,8 +8248,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Moves to the display containing the window receiving keyboard input."
+            "state": "translated",
+            "value": "キーボード入力を受け取っているウインドウのあるディスプレイに移動します。"
           }
         },
         "pt-BR": {
@@ -8277,8 +8277,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Pinned to %@."
+            "state": "translated",
+            "value": "%@ に固定。"
           }
         },
         "pt-BR": {
@@ -8306,8 +8306,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "That display is disconnected. Codenotch follows the active window until it returns."
+            "state": "translated",
+            "value": "そのディスプレイは接続されていません。復帰するまで、Codenotch はアクティブなウインドウに追従します。"
           }
         },
         "pt-BR": {
@@ -8335,8 +8335,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Drag to reorder. The notch draws the rings in this order."
+            "state": "translated",
+            "value": "ドラッグして並べ替えます。ノッチはこの順にリングを描きます。"
           }
         },
         "pt-BR": {
@@ -8364,8 +8364,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Switch this on to give it a ring in the notch."
+            "state": "translated",
+            "value": "オンにすると、ノッチにリングが追加されます。"
           }
         },
         "pt-BR": {
@@ -8393,8 +8393,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Alerts for %@ are muted. Click to unmute."
+            "state": "translated",
+            "value": "%@ の通知はミュート中です。クリックで解除します。"
           }
         },
         "pt-BR": {
@@ -8422,8 +8422,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Alert when %@ crosses 80% and 100% of a limit."
+            "state": "translated",
+            "value": "%@ が上限の 80% と 100% を超えたときに通知します。"
           }
         },
         "pt-BR": {
@@ -8451,8 +8451,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Fills the ring against a ceiling you choose; Google publishes none for an API key."
+            "state": "translated",
+            "value": "自分で決めた上限に対してリングを満たします。API キーについて Google は上限を公表していません。"
           }
         },
         "pt-BR": {
@@ -8480,8 +8480,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, GitHub Copilot or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch."
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor（エディタまたは cursor-agent）、Codex、Antigravity、GLM、Grok、OpenCode、GitHub Copilot、または Gemini API キー（Gemini CLI、OpenCode、Hermes 経由）のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
           }
         },
         "pt-BR": {
@@ -8509,8 +8509,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "macOS will ask once for permission to read Claude Code's, Antigravity's and cursor-agent's saved logins. Choose Always Allow — plain Allow makes it ask again every time."
+            "state": "translated",
+            "value": "macOS は Claude Code、Antigravity、cursor-agent の保存済みログインを読み取る許可を一度だけ尋ねます。「常に許可」を選んでください。「許可」だけでは毎回尋ねられます。"
           }
         },
         "pt-BR": {
@@ -8538,8 +8538,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reorder the rings, pick a display, and get told when a limit is close."
+            "state": "translated",
+            "value": "リングの並べ替え、ディスプレイの選択、そして上限が近づいたときの通知。"
           }
         },
         "pt-BR": {
@@ -8567,8 +8567,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Drag to reorder the rings"
+            "state": "translated",
+            "value": "ドラッグでリングを並べ替え"
           }
         },
         "pt-BR": {
@@ -8596,8 +8596,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Settings splits into Connected and Not connected; drag a connected row by its handle to change the order the notch draws them in."
+            "state": "translated",
+            "value": "設定が「接続済み」と「未接続」に分かれます。接続済みの行をハンドルでドラッグすると、ノッチが描く順序を変えられます。"
           }
         },
         "pt-BR": {
@@ -8625,8 +8625,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Pin the notch to one display, or show it on every one"
+            "state": "translated",
+            "value": "ノッチを 1 つのディスプレイに固定、またはすべてに表示"
           }
         },
         "pt-BR": {
@@ -8654,8 +8654,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A Displays picker in Appearance offers the main display or all of them; a second picker pins a single notch to a named screen."
+            "state": "translated",
+            "value": "「外観」の「ディスプレイ」ピッカーで、メインディスプレイかすべてかを選べます。2 つ目のピッカーでは、1 つのノッチを指定した画面に固定できます。"
           }
         },
         "pt-BR": {
@@ -8683,8 +8683,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A ring says when it crosses 80% and 100%"
+            "state": "translated",
+            "value": "リングが 80% と 100% の到達を知らせます"
           }
         },
         "pt-BR": {
@@ -8712,8 +8712,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A system notification once per crossing, muted per provider from its own settings row."
+            "state": "translated",
+            "value": "超えるたびにシステム通知を 1 回。サービスごとに、その設定行からミュートできます。"
           }
         },
         "pt-BR": {
@@ -8741,8 +8741,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "GitHub Copilot is a new ring"
+            "state": "translated",
+            "value": "GitHub Copilot が新しいリングに"
           }
         },
         "pt-BR": {
@@ -8770,8 +8770,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reads GitHub's Copilot quota endpoint using the GitHub CLI session already on the Mac."
+            "state": "translated",
+            "value": "Mac にすでにある GitHub CLI のセッションを使って、GitHub の Copilot 割り当てエンドポイントを読み取ります。"
           }
         },
         "pt-BR": {
@@ -8799,8 +8799,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Say when a session ends"
+            "state": "translated",
+            "value": "セッションの終了を知らせる"
           }
         },
         "pt-BR": {
@@ -8828,8 +8828,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The notch opens itself for a few seconds and sounds a chime when an agent stops working or starts waiting on you; a click jumps to it."
+            "state": "translated",
+            "value": "エージェントが作業を止めるか、あなたを待ち始めると、ノッチが数秒だけ開いてチャイムを鳴らします。クリックするとそこへ移動します。"
           }
         },
         "pt-BR": {
@@ -8857,8 +8857,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "⌥-drag the pill along its edge"
+            "state": "translated",
+            "value": "⌥ ドラッグでピルを辺に沿って移動"
           }
         },
         "pt-BR": {
@@ -8886,8 +8886,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Nudge it clear of another menu-bar app anchored to the same spot; remembered per edge."
+            "state": "translated",
+            "value": "同じ位置に固定された別のメニューバーアプリを避けてずらせます。位置は辺ごとに記憶されます。"
           }
         },
         "pt-BR": {
@@ -8915,8 +8915,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Choose an accent colour"
+            "state": "translated",
+            "value": "アクセントカラーを選択"
           }
         },
         "pt-BR": {
@@ -8944,8 +8944,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The device accent by default, or a fixed colour for the ring's positive state — the amber and red warning colours stay fixed regardless."
+            "state": "translated",
+            "value": "既定ではデバイスのアクセントカラー。リングの正常時の色を固定することもできます。警告のアンバーと赤は、いずれの場合も固定のままです。"
           }
         },
         "pt-BR": {
@@ -8973,8 +8973,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A countdown instead of a reset date"
+            "state": "translated",
+            "value": "リセット日ではなくカウントダウン"
           }
         },
         "pt-BR": {
@@ -9002,8 +9002,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Appearance's Reset time picker can show \"Resets in 3h 20m\" instead of a date and time."
+            "state": "translated",
+            "value": "「外観」の「リセット時刻」ピッカーで、日時の代わりに「3 時間 20 分後にリセット」と表示できます。"
           }
         },
         "pt-BR": {
@@ -9031,8 +9031,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Read Cursor from cursor-agent, and enterprise plans correctly"
+            "state": "translated",
+            "value": "Cursor を cursor-agent から読み取り、エンタープライズプランも正しく"
           }
         },
         "pt-BR": {
@@ -9060,8 +9060,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A CLI-only Cursor login now gets a ring, and enterprise/team plans read their real usage instead of reporting nothing to meter."
+            "state": "translated",
+            "value": "CLI だけの Cursor ログインにもリングが出るようになり、エンタープライズ/チームプランは「計測対象なし」ではなく実際の使用量を読み取ります。"
           }
         },
         "pt-BR": {
@@ -9089,8 +9089,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Fewer keychain prompts for Claude and Antigravity"
+            "state": "translated",
+            "value": "Claude と Antigravity のキーチェーン確認を削減"
           }
         },
         "pt-BR": {
@@ -9118,8 +9118,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude reads its own CLI's /usage first, touching the keychain only as a fallback; Antigravity's language server is asked before it."
+            "state": "translated",
+            "value": "Claude はまず自身の CLI の /usage を読み、キーチェーンは代替手段としてのみ使います。Antigravity は、その前に言語サーバーへ問い合わせます。"
           }
         },
         "pt-BR": {
@@ -9147,8 +9147,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sub-1% usage no longer reads as 0%"
+            "state": "translated",
+            "value": "1% 未満の使用量が 0% と表示されないように"
           }
         },
         "pt-BR": {
@@ -9176,8 +9176,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A reading under one percent shows a tenth (\"<0.1%\") instead of rounding to nothing."
+            "state": "translated",
+            "value": "1 パーセント未満の読み取りは、丸めて 0 にせず小数第 1 位（「<0.1%」）で表示します。"
           }
         },
         "pt-BR": {
@@ -9205,8 +9205,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Contributors can build without Xcode signing"
+            "state": "translated",
+            "value": "Xcode の署名なしでコントリビューターがビルドできるように"
           }
         },
         "pt-BR": {
@@ -9234,8 +9234,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "make build and make test sign themselves automatically when the maintainer's certificate isn't present, and CI now runs the suite on every push and pull request."
+            "state": "translated",
+            "value": "メンテナの証明書がない場合、make build と make test が自動的に自己署名するようになりました。CI もすべてのプッシュとプルリクエストでテストを実行します。"
           }
         },
         "pt-BR": {
@@ -9263,8 +9263,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Follow System"
+            "state": "translated",
+            "value": "システムに従う"
           }
         },
         "pt-BR": {
@@ -9292,8 +9292,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Matches the Mac's preferred language."
+            "state": "translated",
+            "value": "Mac の優先言語に合わせます。"
           }
         },
         "pt-BR": {
@@ -9321,8 +9321,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch uses this language even if the Mac does not."
+            "state": "translated",
+            "value": "Mac がこの言語でなくても、Codenotch はこの言語を使います。"
           }
         },
         "pt-BR": {
@@ -9350,8 +9350,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Language"
+            "state": "translated",
+            "value": "言語"
           }
         },
         "pt-BR": {
@@ -9379,8 +9379,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Show usage pace"
+            "state": "translated",
+            "value": "使用ペースを表示"
           }
         },
         "pt-BR": {
@@ -9408,8 +9408,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Compares each timed allowance with the time left until reset, showing quota in deficit or held in reserve."
+            "state": "translated",
+            "value": "時間で区切られた枠ごとに、リセットまでの残り時間と比べて、超過分か余裕分かを示します。"
           }
         },
         "pt-BR": {
@@ -9437,8 +9437,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Size"
+            "state": "translated",
+            "value": "サイズ"
           }
         },
         "pt-BR": {
@@ -9466,8 +9466,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Small"
+            "state": "translated",
+            "value": "小"
           }
         },
         "pt-BR": {
@@ -9495,8 +9495,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Medium"
+            "state": "translated",
+            "value": "中"
           }
         },
         "pt-BR": {
@@ -9524,8 +9524,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Large"
+            "state": "translated",
+            "value": "大"
           }
         },
         "pt-BR": {
@@ -9553,8 +9553,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Takes the least room on the edge. Readable, but not from across the desk."
+            "state": "translated",
+            "value": "辺で占める場所が最小。読めますが、机の向こうからは無理です。"
           }
         },
         "pt-BR": {
@@ -9582,8 +9582,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The size the notch was drawn at."
+            "state": "translated",
+            "value": "ノッチが本来描かれるサイズ。"
           }
         },
         "pt-BR": {
@@ -9611,8 +9611,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Easier to read at a glance, and harder to ignore."
+            "state": "translated",
+            "value": "ひと目で読みやすく、無視しにくいサイズ。"
           }
         },
         "pt-BR": {
@@ -9640,8 +9640,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Hold ⌥ and drag the notch to slide it along its edge. Each edge remembers where you left it."
+            "state": "translated",
+            "value": "⌥ を押しながらノッチをドラッグすると、辺に沿って動かせます。位置は辺ごとに記憶されます。"
           }
         },
         "pt-BR": {
@@ -9669,8 +9669,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Recentre"
+            "state": "translated",
+            "value": "中央に戻す"
           }
         },
         "pt-BR": {
@@ -9698,8 +9698,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@% deficit"
+            "state": "translated",
+            "value": "%@% 超過"
           }
         },
         "pt-BR": {
@@ -9727,8 +9727,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@% reserved"
+            "state": "translated",
+            "value": "%@% 余裕"
           }
         },
         "pt-BR": {
@@ -9756,8 +9756,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Idle"
+            "state": "translated",
+            "value": "アイドル"
           }
         },
         "pt-BR": {
@@ -9785,8 +9785,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in to Codex in ~/.codex-%@ to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには ~/.codex-%@ で Codex にサインイン"
           }
         },
         "pt-BR": {
@@ -9814,8 +9814,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with the Command Code app to read your usage"
+            "state": "translated",
+            "value": "使用量を読み取るには Command Code アプリでサインイン"
           }
         },
         "pt-BR": {
@@ -9843,8 +9843,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Enter an Ollama API key in Settings, or export OLLAMA_API_KEY"
+            "state": "translated",
+            "value": "設定で Ollama の API キーを入力するか、OLLAMA_API_KEY を export してください"
           }
         },
         "pt-BR": {
@@ -9872,8 +9872,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Start Ollama to monitor your local models"
+            "state": "translated",
+            "value": "ローカルモデルを監視するには Ollama を起動してください"
           }
         },
         "pt-BR": {
@@ -9901,8 +9901,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Enter an Ollama API key below, or export OLLAMA_API_KEY in your shell."
+            "state": "translated",
+            "value": "下に Ollama の API キーを入力するか、シェルで OLLAMA_API_KEY を export してください。"
           }
         },
         "pt-BR": {
@@ -9930,8 +9930,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Sign in with the Command Code app — it writes ~/.commandcode/auth.json and the notch reads it."
+            "state": "translated",
+            "value": "Command Code アプリでサインインしてください。~/.commandcode/auth.json が書き出され、ノッチがそれを読み取ります。"
           }
         },
         "pt-BR": {
@@ -9959,8 +9959,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Command Code has nothing metered on this account yet"
+            "state": "translated",
+            "value": "このアカウントには、Command Code が計測する対象がまだありません"
           }
         },
         "pt-BR": {
@@ -9988,8 +9988,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Monthly usage"
+            "state": "translated",
+            "value": "月間の使用量"
           }
         },
         "pt-BR": {
@@ -10017,8 +10017,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Session usage"
+            "state": "translated",
+            "value": "セッションの使用量"
           }
         },
         "pt-BR": {
@@ -10046,8 +10046,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Weekly usage"
+            "state": "translated",
+            "value": "週間の使用量"
           }
         },
         "pt-BR": {
@@ -10075,8 +10075,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Local Models"
+            "state": "translated",
+            "value": "ローカルモデル"
           }
         },
         "pt-BR": {
@@ -10104,8 +10104,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Localhost"
+            "state": "translated",
+            "value": "localhost"
           }
         },
         "pt-BR": {
@@ -10133,8 +10133,8 @@
         },
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch."
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor（エディタまたは cursor-agent）、Codex、Antigravity、GLM、Grok、OpenCode、Command Code、GitHub Copilot、または Gemini API キー（Gemini CLI、OpenCode、Hermes 経由）のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
           }
         },
         "pt-BR": {
@@ -10156,8 +10156,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "complete"
+            "state": "translated",
+            "value": "完了"
           }
         },
         "zh-Hans": {
@@ -10173,8 +10173,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Complete"
+            "state": "translated",
+            "value": "完了"
           }
         },
         "zh-Hans": {
@@ -10190,8 +10190,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Waiting"
+            "state": "translated",
+            "value": "待機中"
           }
         },
         "zh-Hans": {
@@ -10207,8 +10207,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Local Session"
+            "state": "translated",
+            "value": "ローカルセッション"
           }
         },
         "zh-Hans": {
@@ -10224,8 +10224,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Active"
+            "state": "translated",
+            "value": "実行中"
           }
         },
         "zh-Hans": {
@@ -10241,8 +10241,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Ensure Antigravity IDE is running to read this account."
+            "state": "translated",
+            "value": "このアカウントを読み取るには、Antigravity IDE を起動しておいてください。"
           }
         },
         "zh-Hans": {
@@ -10258,8 +10258,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Automatic"
+            "state": "translated",
+            "value": "自動"
           }
         },
         "zh-Hans": {
@@ -10275,8 +10275,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "5-Hour Limit"
+            "state": "translated",
+            "value": "5 時間の上限"
           }
         },
         "zh-Hans": {
@@ -10292,8 +10292,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Weekly Limit"
+            "state": "translated",
+            "value": "週間の上限"
           }
         },
         "zh-Hans": {
@@ -10309,7 +10309,7 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Liquid Glass"
           }
         },
@@ -10326,8 +10326,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Solid black"
+            "state": "translated",
+            "value": "不透明な黒"
           }
         },
         "zh-Hans": {
@@ -10343,8 +10343,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "System Liquid Glass. Follows this Mac's Appearance settings, including Clear or Tinted glass and light or dark mode."
+            "state": "translated",
+            "value": "システムの Liquid Glass。クリアか色付きか、ライトかダークかを含め、この Mac の「外観」設定に従います。"
           }
         },
         "zh-Hans": {
@@ -10360,8 +10360,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The original opaque black notch. Always dark, whatever the Mac's appearance."
+            "state": "translated",
+            "value": "従来の不透明な黒いノッチ。Mac の外観にかかわらず常にダークです。"
           }
         },
         "zh-Hans": {
@@ -10377,8 +10377,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A second ring for the week, Liquid Glass, French, and Claude Desktop read straight from its own cache."
+            "state": "translated",
+            "value": "週間用の 2 本目のリング、Liquid Glass、フランス語、そして Claude Desktop を自身のキャッシュから直接読み取り。"
           }
         },
         "zh-Hans": {
@@ -10394,8 +10394,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The week gets a ring of its own"
+            "state": "translated",
+            "value": "週間に専用のリング"
           }
         },
         "zh-Hans": {
@@ -10411,8 +10411,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A second arc, inside the headline ring or outside it, for providers that publish a weekly limit as well as a session one. Off by default; Appearance has the switch."
+            "state": "translated",
+            "value": "セッションの上限に加えて週間の上限を公表しているサービス向けに、主リングの内側または外側へ 2 本目の弧を描きます。既定はオフで、「外観」に切り替えがあります。"
           }
         },
         "zh-Hans": {
@@ -10428,8 +10428,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The open notch, its tooltip and the settings orb take the system's own glass surface, so they refract what is behind them instead of sitting on it. Reduce Transparency turns it solid."
+            "state": "translated",
+            "value": "開いたノッチ、そのツールチップ、設定のオーブが、システム自身のガラス面を使います。背景の上に載るのではなく、背景を屈折させます。「透明度を下げる」をオンにすると不透明になります。"
           }
         },
         "zh-Hans": {
@@ -10445,7 +10445,7 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Français"
           }
         },
@@ -10462,8 +10462,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A third language in Appearance, alongside English and 简体中文."
+            "state": "translated",
+            "value": "「外観」に English と 简体中文 に続く 3 つ目の言語。"
           }
         },
         "zh-Hans": {
@@ -10479,8 +10479,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude Desktop usage, read from its own cache"
+            "state": "translated",
+            "value": "Claude Desktop の使用量を、自身のキャッシュから読み取り"
           }
         },
         "zh-Hans": {
@@ -10496,8 +10496,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A third way to read a Claude account, used when the CLI and the token cannot answer. Nothing is sent anywhere: the cache is on this Mac and is only decompressed."
+            "state": "translated",
+            "value": "Claude アカウントを読む 3 つ目の方法。CLI もトークンも答えられないときに使います。どこにも送信しません。キャッシュはこの Mac 上にあり、解凍するだけです。"
           }
         },
         "zh-Hans": {
@@ -10513,8 +10513,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude Code found where npm puts it"
+            "state": "translated",
+            "value": "npm が置いた場所の Claude Code も見つかるように"
           }
         },
         "zh-Hans": {
@@ -10530,8 +10530,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "An install under nvm, Volta or pnpm is discovered like any other, which also restores the background sign-in renewal for those setups."
+            "state": "translated",
+            "value": "nvm、Volta、pnpm 配下のインストールも他と同じように検出されます。これらの構成でバックグラウンドのサインイン更新も復活します。"
           }
         },
         "zh-Hans": {
@@ -10547,8 +10547,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No more transcript folders left behind"
+            "state": "translated",
+            "value": "トランスクリプトのフォルダが残らないように"
           }
         },
         "zh-Hans": {
@@ -10564,8 +10564,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reading Claude usage ran in a fresh directory every poll, and Claude Code filed a transcript folder for each one. It now runs from a single place, in print mode, writing no session at all."
+            "state": "translated",
+            "value": "Claude の使用量の読み取りは、ポーリングのたびに新しいディレクトリで実行され、Claude Code がその都度トランスクリプトのフォルダを作っていました。今は 1 か所から print モードで実行し、セッションを一切書き出しません。"
           }
         },
         "zh-Hans": {
@@ -10581,8 +10581,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Reset times follow the Mac's clock"
+            "state": "translated",
+            "value": "リセット時刻が Mac の時刻表示に従う"
           }
         },
         "zh-Hans": {
@@ -10598,8 +10598,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A 24-hour Mac gets 24-hour reset times instead of AM and PM."
+            "state": "translated",
+            "value": "24 時間表示の Mac では、午前/午後ではなく 24 時間表示のリセット時刻になります。"
           }
         },
         "zh-Hans": {
@@ -10615,8 +10615,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A finished session says so"
+            "state": "translated",
+            "value": "終わったセッションがそう表示される"
           }
         },
         "zh-Hans": {
@@ -10632,8 +10632,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Agent sessions carry a success state, so a run that has completed reads differently from one still going."
+            "state": "translated",
+            "value": "エージェントのセッションが成功状態を持つようになり、完了した実行と進行中の実行が区別して表示されます。"
           }
         },
         "zh-Hans": {
@@ -10649,8 +10649,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Antigravity: choose which limit leads"
+            "state": "translated",
+            "value": "Antigravity: どの上限を主にするか選択"
           }
         },
         "zh-Hans": {
@@ -10666,8 +10666,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "The headline ring can follow a named limit rather than whichever happens to be tightest, and a CLI-only install counts as a real account."
+            "state": "translated",
+            "value": "主リングを、たまたま最も逼迫している上限ではなく、指定した上限に従わせられます。また CLI だけのインストールも実アカウントとして扱われます。"
           }
         },
         "zh-Hans": {
@@ -10683,8 +10683,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Only the hardware notch wakes a notch joined to it"
+            "state": "translated",
+            "value": "一体化したノッチは実機のノッチでのみ反応"
           }
         },
         "zh-Hans": {
@@ -10700,8 +10700,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A notch merged with the camera housing no longer wakes from a pointer anywhere along the whole top edge."
+            "state": "translated",
+            "value": "カメラ部と一体化したノッチが、上端のどこにポインタを置いても反応してしまうことがなくなりました。"
           }
         },
         "zh-Hans": {
@@ -10717,8 +10717,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Weekly ring"
+            "state": "translated",
+            "value": "週間のリング"
           }
         },
         "zh-Hans": {
@@ -10734,8 +10734,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Surface"
+            "state": "translated",
+            "value": "表面"
           }
         },
         "zh-Hans": {
@@ -10751,8 +10751,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Notch reads"
+            "state": "translated",
+            "value": "ノッチに表示する上限"
           }
         },
         "zh-Hans": {
@@ -10768,8 +10768,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Choose which limit appears in the main notch for Antigravity."
+            "state": "translated",
+            "value": "Antigravity で主ノッチに表示する上限を選びます。"
           }
         },
         "zh-Hans": {
@@ -10785,8 +10785,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Off"
+            "state": "translated",
+            "value": "オフ"
           }
         },
         "zh-Hans": {
@@ -10802,8 +10802,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Inside"
+            "state": "translated",
+            "value": "内側"
           }
         },
         "zh-Hans": {
@@ -10819,8 +10819,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Outside"
+            "state": "translated",
+            "value": "外側"
           }
         },
         "zh-Hans": {
@@ -10836,8 +10836,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "One ring per provider, showing the headline limit. The weekly allowance stays in the hover card."
+            "state": "translated",
+            "value": "サービスごとに 1 本のリングで主な上限を表示します。週間の枠はホバーカードに残ります。"
           }
         },
         "zh-Hans": {
@@ -10853,8 +10853,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator."
+            "state": "translated",
+            "value": "週間の上限を細いリングで主リングの内側に描きます。作業中インジケータと同じ隙間を共有します。"
           }
         },
         "zh-Hans": {
@@ -10870,8 +10870,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge."
+            "state": "translated",
+            "value": "週間の上限を細いリングで主リングの外側、リングとノッチの端の間の余白に描きます。"
           }
         },
         "zh-Hans": {
@@ -10887,8 +10887,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Run %@ in Terminal to sign in to %@."
+            "state": "translated",
+            "value": "%@ をターミナルで実行して %@ にサインインしてください。"
           }
         },
         "zh-Hans": {
@@ -10904,8 +10904,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Requests today · last used %@"
+            "state": "translated",
+            "value": "本日のリクエスト · 最終利用 %@"
           }
         },
         "zh-Hans": {
@@ -10921,8 +10921,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "yesterday"
+            "state": "translated",
+            "value": "昨日"
           }
         },
         "zh-Hans": {
@@ -10938,8 +10938,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld days ago"
+            "state": "translated",
+            "value": "%lld 日前"
           }
         },
         "zh-Hans": {
@@ -10955,8 +10955,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Personal"
+            "state": "translated",
+            "value": "個人"
           }
         },
         "zh-Hans": {
@@ -10972,8 +10972,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Gemini Models"
+            "state": "translated",
+            "value": "Gemini モデル"
           }
         },
         "zh-Hans": {
@@ -10989,8 +10989,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "5-hour Limit"
+            "state": "translated",
+            "value": "5 時間の上限"
           }
         },
         "zh-Hans": {
@@ -11006,8 +11006,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Claude and GPT models"
+            "state": "translated",
+            "value": "Claude と GPT のモデル"
           }
         },
         "zh-Hans": {
@@ -11023,8 +11023,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Question"
+            "state": "translated",
+            "value": "質問"
           }
         },
         "zh-Hans": {
@@ -11040,8 +11040,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Approval"
+            "state": "translated",
+            "value": "承認"
           }
         },
         "zh-Hans": {
@@ -11057,8 +11057,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Permission"
+            "state": "translated",
+            "value": "許可"
           }
         },
         "zh-Hans": {
@@ -11074,8 +11074,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "needs your input"
+            "state": "translated",
+            "value": "入力待ち"
           }
         },
         "zh-Hans": {
@@ -11091,8 +11091,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Working in %@"
+            "state": "translated",
+            "value": "%@ で作業中"
           }
         },
         "zh-Hans": {
@@ -11108,8 +11108,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Connection"
+            "state": "translated",
+            "value": "接続"
           }
         },
         "zh-Hans": {
@@ -11125,8 +11125,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Preset"
+            "state": "translated",
+            "value": "プリセット"
           }
         },
         "zh-Hans": {
@@ -11142,8 +11142,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Custom"
+            "state": "translated",
+            "value": "カスタム"
           }
         },
         "zh-Hans": {
@@ -11159,8 +11159,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Preset size"
+            "state": "translated",
+            "value": "プリセットのサイズ"
           }
         },
         "zh-Hans": {
@@ -11176,8 +11176,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Scales the whole surface — rings, text and tooltip together — so the proportions stay as drawn. 100% is the size the notch was designed at."
+            "state": "translated",
+            "value": "リング、文字、ツールチップをまとめて拡大縮小するので、比率は設計どおりのままです。100% がノッチの設計サイズです。"
           }
         },
         "zh-Hans": {
@@ -11193,8 +11193,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Ollama API key"
+            "state": "translated",
+            "value": "Ollama の API キー"
           }
         },
         "zh-Hans": {
@@ -11210,8 +11210,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Paste your key"
+            "state": "translated",
+            "value": "キーを貼り付け"
           }
         },
         "zh-Hans": {
@@ -11227,8 +11227,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Save"
+            "state": "translated",
+            "value": "保存"
           }
         },
         "zh-Hans": {
@@ -11244,8 +11244,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Saved"
+            "state": "translated",
+            "value": "保存しました"
           }
         },
         "zh-Hans": {
@@ -11261,8 +11261,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ usage needs its sign-in renewed — run `claude` once in a terminal."
+            "state": "translated",
+            "value": "%@ の使用量はサインインの更新が必要です — ターミナルで `claude` を一度実行してください。"
           }
         },
         "zh-Hans": {
@@ -11278,8 +11278,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ %@ · via Ollama"
+            "state": "translated",
+            "value": "%@ %@ · Ollama 経由"
           }
         },
         "zh-Hans": {
@@ -11295,8 +11295,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Hidden from the notch · Loaded in Ollama"
+            "state": "translated",
+            "value": "ノッチでは非表示 · Ollama には読み込み済み"
           }
         },
         "zh-Hans": {
@@ -11312,8 +11312,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Show or hide this model in the notch. It stays loaded in Ollama."
+            "state": "translated",
+            "value": "このモデルをノッチに表示するかどうか。Ollama には読み込まれたままです。"
           }
         },
         "zh-Hans": {
@@ -11329,8 +11329,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Thinking"
+            "state": "translated",
+            "value": "思考中"
           }
         },
         "zh-Hans": {
@@ -11346,8 +11346,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%@ · Local"
+            "state": "translated",
+            "value": "%@ · ローカル"
           }
         },
         "zh-Hans": {
@@ -11363,8 +11363,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No Ollama usage recorded yet for this period."
+            "state": "translated",
+            "value": "この期間の Ollama の使用量はまだ記録されていません。"
           }
         },
         "zh-Hans": {
@@ -11380,8 +11380,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Unused resets"
+            "state": "translated",
+            "value": "未使用のリセット"
           }
         },
         "zh-Hans": {
@@ -11397,8 +11397,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "No unused resets"
+            "state": "translated",
+            "value": "未使用のリセットなし"
           }
         },
         "zh-Hans": {
@@ -11414,8 +11414,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "1 unused reset"
+            "state": "translated",
+            "value": "未使用のリセット 1 件"
           }
         },
         "zh-Hans": {
@@ -11431,8 +11431,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "%lld unused resets"
+            "state": "translated",
+            "value": "未使用のリセット %lld 件"
           }
         },
         "zh-Hans": {
@@ -11448,8 +11448,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Expires %@"
+            "state": "translated",
+            "value": "%@ に期限切れ"
           }
         },
         "zh-Hans": {
@@ -11465,8 +11465,8 @@
       "localizations": {
         "ja": {
           "stringUnit": {
-            "state": "new",
-            "value": "Next expires %@"
+            "state": "translated",
+            "value": "次は %@ に期限切れ"
           }
         },
         "zh-Hans": {

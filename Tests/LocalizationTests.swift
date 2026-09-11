@@ -7,6 +7,7 @@ import XCTest
 final class LocalizationTests: XCTestCase {
     private let zhHans = Locale(identifier: "zh-Hans")
     private let french = Locale(identifier: "fr")
+    private let japanese = Locale(identifier: "ja")
     private let brazilianPortuguese = Locale(identifier: "pt-BR")
     private let english = Locale(identifier: "en")
     private let now = Date(timeIntervalSince1970: 1_787_900_000)
@@ -301,6 +302,85 @@ final class LocalizationTests: XCTestCase {
     func testPortugueseIsServedUnderTheRegionQualifiedIdentifier() {
         XCTAssertEqual(L10n.t("Usage", locale: brazilianPortuguese), "Uso")
         XCTAssertEqual(AppLanguage.brazilianPortuguese.locale?.identifier, "pt-BR")
+    }
+
+    // MARK: - Japanese
+
+    func testElapsedCopyInJapanese() {
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-5), now: now, locale: japanese),
+            "たった今"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-6 * 60), now: now, locale: japanese),
+            "6 分"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-60 * 60), now: now, locale: japanese),
+            "1 時間"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-65 * 60), now: now, locale: japanese),
+            "1 時間 5 分"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.ago(since: now.addingTimeInterval(-6 * 60), now: now, locale: japanese),
+            "6 分前"
+        )
+    }
+
+    func testResetCopyUnderAnHourInJapanese() {
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(51 * 60), now: resetNow, locale: japanese),
+            "51 分後にリセット"
+        )
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(-5), now: resetNow, locale: japanese),
+            "リセット中…"
+        )
+    }
+
+    func testWindowSummaryInJapanese() {
+        XCTAssertEqual(
+            percentWindow(0.12).summary(locale: japanese),
+            "12% 使用 · 残り 88%"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", used: 8).summary(locale: japanese),
+            "8 使用"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", remaining: 3).summary(locale: japanese),
+            "残り 3"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests").summary(locale: japanese),
+            "読み取りなし"
+        )
+    }
+
+    func testMenuCopyInJapanese() {
+        XCTAssertEqual(L10n.t("Always show", locale: japanese), "常に表示")
+        XCTAssertEqual(L10n.t("Settings…", locale: japanese), "設定…")
+    }
+
+    func testSignInCopyInJapanese() {
+        XCTAssertEqual(
+            L10n.t("Sign in to \("Perplexity")", locale: japanese),
+            "Perplexity にサインイン"
+        )
+    }
+
+    /// The Japanese keeps every format specifier in the order the English put
+    /// them, so an `Int` still lands on `%lld` and a `String` on `%@`. This is
+    /// the threshold alert, whose two arguments are of different types and
+    /// would be read through the wrong conversion if a translation swapped
+    /// them without positional specifiers.
+    func testThresholdAlertKeepsArgumentOrderInJapanese() {
+        XCTAssertEqual(
+            L10n.t("\(80)% of its \("weekly") limit used.", locale: japanese),
+            "80% を使用（weekly の上限）。"
+        )
     }
 
     /// Every language the picker offers must resolve to a locale the catalog

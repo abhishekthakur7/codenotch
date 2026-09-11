@@ -481,6 +481,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             "gemini": AntigravityActivityMonitor(),
             "grok": GrokActivityMonitor(),
             "gemini-api": GeminiAPIActivityMonitor(),
+            "kimi": KimiActivityMonitor(),
         ]
         var claudeMonitors: [ClaudeSessionMonitor] = []
         for profile in claudeProfiles {

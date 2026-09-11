@@ -416,7 +416,7 @@ struct SettingsView: View {
         case .ollama:
             if let usageStore {
                 Form {
-                    Section("Connection") {
+                    Section(L10n.t("Connection")) {
                         OllamaSettingsRow(preferences: preferences, store: usageStore, relay: ollamaRelay)
                     }
                 }
@@ -591,14 +591,12 @@ struct SettingsView: View {
                             .frame(width: 46, alignment: .trailing)
                     }
 
-                    Text("Scales the whole surface — rings, text and tooltip "
-                         + "together — so the proportions stay as drawn. "
-                         + "100% is the size the notch was designed at.")
+                    Text(L10n.t("Scales the whole surface — rings, text and tooltip together — so the proportions stay as drawn. 100% is the size the notch was designed at."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    Picker("Preset size", selection: $preferences.notchSize) {
+                    Picker(L10n.t("Preset size"), selection: $preferences.notchSize) {
                         ForEach(NotchSize.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.segmented)
@@ -1297,8 +1295,7 @@ private struct AccountRow: View {
             // inside, this warning would be swallowed by the very row that
             // makes everything look fine.
             if isConnected, provider.needsSignInRenewal {
-                Text("\(provider.name) usage needs its sign-in renewed — run "
-                     + "`claude` once in a terminal.")
+                Text(L10n.t("\(provider.name) usage needs its sign-in renewed — run `claude` once in a terminal."))
                     .font(.caption)
                     .foregroundStyle(.orange)
                     .padding(.leading, 48)
@@ -1365,7 +1362,7 @@ private struct AccountRow: View {
                         .foregroundStyle(.secondary)
                     Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
                         ForEach(AntigravityHeadlineLimit.allCases) { limit in
-                            Text(limit.explanation).tag(limit)
+                            Text(limit.title).tag(limit)
                         }
                     }
                     .labelsHidden()
@@ -1421,15 +1418,15 @@ private struct AccountRow: View {
         // own line instead, and `.small` comes off the controls — it bought
         // nothing but a cramped row.
         VStack(alignment: .leading, spacing: 4) {
-            Text("Ollama API key")
+            Text(L10n.t("Ollama API key"))
                 .foregroundStyle(.secondary)
             HStack(spacing: 8) {
-                SecureField("Paste your key", text: $ollamaKey)
+                SecureField(L10n.t("Paste your key"), text: $ollamaKey)
                     .textContentType(.password)
                     .textFieldStyle(.roundedBorder)
                     .labelsHidden()
                     .frame(maxWidth: 260)
-                Button("Save") {
+                Button(L10n.t("Save")) {
                     guard !ollamaKey.isEmpty else { return }
                     OllamaCredentials.store(ollamaKey)
                     ollamaKey = ""
@@ -1438,7 +1435,7 @@ private struct AccountRow: View {
                 }
                 .disabled(ollamaKey.isEmpty)
                 if ollamaKeySaved {
-                    Text("Saved")
+                    Text(L10n.t("Saved"))
                         .foregroundStyle(.green)
                 }
             }

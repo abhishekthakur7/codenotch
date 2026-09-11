@@ -37,7 +37,7 @@ enum GeminiCLIActivity {
         return [AgentSession(
             id: "gemini-api.\(newest.session.deletingPathExtension().lastPathComponent)",
             name: "Gemini CLI",
-            detail: "Working in \(projectName(of: newest.project))",
+            detail: L10n.t("Working in \(projectName(of: newest.project))"),
             state: .busy,
             waitingFor: nil,
             since: newest.modified

@@ -23,6 +23,9 @@ enum ProviderStatus: Equatable {
     case ok
     case stale(since: Date)
     case needsAuth
+    /// The owning app emptied its own credential. Distinct from `needsAuth`
+    /// because the last reading is kept — see `UsageProviderError`.
+    case signedOutByOwner
     /// macOS was asked for a credential that exists, and refused.
     case accessDenied
     case unsupported(String)
@@ -371,6 +374,10 @@ struct ProviderSnapshot: Identifiable, Equatable {
         let locale = L10n.locale
         switch status {
         case .needsAuth:      return authPrompt
+        case .signedOutByOwner:
+            // Names the cause, because "sign in again" on its own invites the
+            // reasonable conclusion that this app lost the login.
+            return L10n.t("Claude Code emptied this profile's saved login — it does that to every profile at once after it updates itself. Sign in again to \(displayName) to read your usage.", locale: locale)
         case .accessDenied:
             // Says what happened and what fixes it. "Sign in to Claude Code"
             // would send someone who *is* signed in to fix the wrong thing.

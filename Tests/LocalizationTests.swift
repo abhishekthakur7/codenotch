@@ -1,12 +1,13 @@
 import XCTest
 @testable import Codenotch
 
-/// Catalog lookups with an explicit locale. English is the source; Chinese
-/// and French assertions here only prove a translation that exists is served,
-/// not that every key has one.
+/// Catalog lookups with an explicit locale. English is the source; Chinese,
+/// French and Brazilian Portuguese assertions here only prove a translation
+/// that exists is served, not that every key has one.
 final class LocalizationTests: XCTestCase {
     private let zhHans = Locale(identifier: "zh-Hans")
     private let french = Locale(identifier: "fr")
+    private let brazilianPortuguese = Locale(identifier: "pt-BR")
     private let english = Locale(identifier: "en")
     private let now = Date(timeIntervalSince1970: 1_787_900_000)
     private let resetNow = Date(timeIntervalSince1970: 1_700_000_000)
@@ -225,13 +226,90 @@ final class LocalizationTests: XCTestCase {
         )
     }
 
+    // MARK: - Brazilian Portuguese
+
+    func testElapsedCopyInBrazilianPortuguese() {
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-5), now: now, locale: brazilianPortuguese),
+            "agora mesmo"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-6 * 60), now: now, locale: brazilianPortuguese),
+            "6 min"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-60 * 60), now: now, locale: brazilianPortuguese),
+            "1 h"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-65 * 60), now: now, locale: brazilianPortuguese),
+            "1 h 5 min"
+        )
+        XCTAssertEqual(
+            ElapsedCopy.ago(since: now.addingTimeInterval(-6 * 60), now: now, locale: brazilianPortuguese),
+            "há 6 min"
+        )
+    }
+
+    func testResetCopyUnderAnHourInBrazilianPortuguese() {
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(51 * 60), now: resetNow, locale: brazilianPortuguese),
+            "Renova em 51 min"
+        )
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(-5), now: resetNow, locale: brazilianPortuguese),
+            "Renovando…"
+        )
+    }
+
+    func testWindowSummaryInBrazilianPortuguese() {
+        XCTAssertEqual(
+            percentWindow(0.12).summary(locale: brazilianPortuguese),
+            "12% usado · 88% restante"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", used: 8).summary(locale: brazilianPortuguese),
+            "8 usados"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests", remaining: 3).summary(locale: brazilianPortuguese),
+            "3 restantes"
+        )
+        XCTAssertEqual(
+            LimitWindow(id: "w", label: "Requests").summary(locale: brazilianPortuguese),
+            "Sem leitura"
+        )
+    }
+
+    func testMenuCopyInBrazilianPortuguese() {
+        XCTAssertEqual(L10n.t("Always show", locale: brazilianPortuguese), "Sempre exibir")
+        XCTAssertEqual(L10n.t("Settings…", locale: brazilianPortuguese), "Ajustes…")
+    }
+
+    func testSignInCopyInBrazilianPortuguese() {
+        XCTAssertEqual(
+            L10n.t("Sign in to \("Perplexity")", locale: brazilianPortuguese),
+            "Entrar no Perplexity"
+        )
+    }
+
+    /// `pt-BR` is the only offered identifier that carries a region, so it
+    /// is the one that could hit the trap `AppLanguage.locale` documents for
+    /// `en_US`: an identifier the catalog is not filed under falls through to
+    /// another localization. The catalog is filed under `pt-BR`, so the
+    /// picker's identifier has to stay region-qualified to match it.
+    func testPortugueseIsServedUnderTheRegionQualifiedIdentifier() {
+        XCTAssertEqual(L10n.t("Usage", locale: brazilianPortuguese), "Uso")
+        XCTAssertEqual(AppLanguage.brazilianPortuguese.locale?.identifier, "pt-BR")
+    }
+
     /// Every language the picker offers must resolve to a locale the catalog
     /// is filed under — a region-qualified or unshipped identifier silently
     /// serves another language instead.
     func testEveryOfferedLanguageResolves() {
         XCTAssertEqual(
             AppLanguage.allCases.map(\.rawValue),
-            ["system", "en", "fr", "zh-Hans"]
+            ["system", "en", "fr", "pt-BR", "zh-Hans"]
         )
         XCTAssertNil(AppLanguage.system.locale)
         for language in AppLanguage.allCases where language != .system {

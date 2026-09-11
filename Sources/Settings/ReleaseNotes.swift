@@ -32,6 +32,52 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.9.0",
+                headline: L10n.t("LM Studio, DeepSeek and Devin, Japanese and Portuguese, and no more keychain password on a timer."),
+                changes: [
+                    ReleaseNote.Change(
+                        title: L10n.t("LM Studio"),
+                        detail: L10n.t("Loaded models, whether each is thinking or queued, generation speed, how full its context is, and a daily ledger of the tokens it used. Read from LM Studio on this Mac.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("DeepSeek and Devin"),
+                        detail: L10n.t("DeepSeek's platform balance and spend, with a card of daily usage, and Devin's usage.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("日本語 and Português (Brasil)"),
+                        detail: L10n.t("Two more languages, and the language picker is now a menu so all of them fit.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("The keychain password stops coming back"),
+                        detail: L10n.t("Claude Code and Antigravity recreate their saved logins in a way macOS will not let an Always Allow outlast, so the password dialogue kept returning. Background refreshes no longer show it at all; Allow access in Settings is the one place it can still appear.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Carry the notch to another edge"),
+                        detail: L10n.t("Hold the arc above the notch and drop it on any edge. Appearance can hide the arc if you would rather not see it.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("More on the hover card"),
+                        detail: L10n.t("The account's plan under the title, and Codex rate-limit resets you have not used yet.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("A Claude login that Claude Code empties keeps its reading"),
+                        detail: L10n.t("After Claude Code updates itself it can clear every profile's saved login at once. The last numbers now stay, dimmed, instead of vanishing.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Antigravity reads the same numbers from every source"),
+                        detail: L10n.t("Its local server and Google's own endpoint are read by one parser, so the ring does not change depending on which answered. In automatic mode an exhausted limit only leads when every limit is exhausted.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Gemini API counts OpenCode and Hermes"),
+                        detail: L10n.t("Turns made through OpenCode and Hermes now count toward the Gemini API ring.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Smaller fixes"),
+                        detail: L10n.t("Recentre moves the notch at once; full-screen auto-fold accounts for the camera housing; and a rate-limit wait no longer costs a whole extra refresh.")
+                    ),
+                ]
+            ),
+            ReleaseNote(
                 version: "1.8.0",
                 headline: L10n.t("A second ring for the week, Liquid Glass, French, and Claude Desktop read straight from its own cache."),
                 changes: [

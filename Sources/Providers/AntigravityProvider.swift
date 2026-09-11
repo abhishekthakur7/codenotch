@@ -106,7 +106,7 @@ actor AntigravityProvider: UsageProvider {
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
                                     headlineID: resolveHeadlineID(for: windows),
-                                    weeklyID: "gemini-weekly")
+                                    weeklyID: resolveWeeklyID(for: windows))
         }
 
         if localQuotaOverride != nil && everBridged {
@@ -121,7 +121,7 @@ actor AntigravityProvider: UsageProvider {
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: windows,
                                     headlineID: resolveHeadlineID(for: windows),
-                                    weeklyID: "gemini-weekly")
+                                    weeklyID: resolveWeeklyID(for: windows))
         }
 
         // 2. Fallback to OMP SQLite store if offline or direct call fails
@@ -130,7 +130,7 @@ actor AntigravityProvider: UsageProvider {
             return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                     fidelity: .official, status: .ok, windows: ompWindows,
                                     headlineID: resolveHeadlineID(for: ompWindows),
-                                    weeklyID: "gemini-weekly")
+                                    weeklyID: resolveWeeklyID(for: ompWindows))
         }
 
         if everBridged { throw UsageProviderError.credentialExpired }
@@ -159,18 +159,57 @@ actor AntigravityProvider: UsageProvider {
         )
     }
 
-    private func resolveHeadlineID(for windows: [LimitWindow]) -> String {
+    nonisolated func resolveHeadlineID(for windows: [LimitWindow]) -> String {
         let preferredLimit = Preferences.storedAntigravityHeadlineLimit()
+        let preferredModel = Preferences.storedAntigravityHeadlineModel()
+        
+        var candidates = windows
+        
+        // Filter by preferred model
+        candidates = candidates.filter { $0.id.hasPrefix(preferredModel.rawValue) }
+        
+        // If the preferred model has no windows, fallback to all windows
+        if candidates.isEmpty {
+            candidates = windows
+        }
         
         if preferredLimit != .automatic {
-            let candidates = windows.filter { $0.id.hasSuffix(preferredLimit.rawValue) }
-            if let mostConstrained = candidates.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) }) {
+            let isWeekly = preferredLimit == .weekly
+            let limitCandidates = candidates.filter { window in
+                if isWeekly {
+                    return window.id.hasSuffix("-weekly") || window.duration == 7 * 86400 || window.label.contains("Weekly")
+                } else {
+                    return window.id.hasSuffix("-hourly") || window.label.contains("5-hour") || window.label.contains("Five Hour")
+                }
+            }
+            if let mostConstrained = limitCandidates.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) }) {
                 return mostConstrained.id
             }
         }
         
-        let mostConstrained = windows.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
-        return mostConstrained?.id ?? "gemini-5h"
+        let mostConstrained = candidates.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) })
+        return mostConstrained?.id ?? "\(preferredModel.rawValue)-hourly"
+    }
+
+    nonisolated func resolveWeeklyID(for windows: [LimitWindow]) -> String? {
+        let preferredModel = Preferences.storedAntigravityHeadlineModel()
+        
+        var candidates = windows
+        
+        candidates = candidates.filter { $0.id.hasPrefix(preferredModel.rawValue) }
+        if candidates.isEmpty {
+            candidates = windows
+        }
+        
+        let weeklyCandidates = candidates.filter { window in
+            window.id.hasSuffix("-weekly") || window.duration == 7 * 86400 || window.label.contains("Weekly")
+        }
+        
+        if let mostConstrained = weeklyCandidates.max(by: { ($0.usedFraction ?? 0) < ($1.usedFraction ?? 0) }) {
+            return mostConstrained.id
+        }
+        
+        return nil
     }
 
     /// Ask Antigravity's language server, if it is running.

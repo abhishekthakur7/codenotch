@@ -130,45 +130,49 @@ struct NotchRootView: View {
         // applies to its own translucent chrome.
         let glassy = model.surfaceStyle.effective == .glass
             && !reduceTransparency
-            && model.isExpanded
 
         return ZStack {
-            // Nothing of ours underneath: a wash of our own would override the
-            // Clear/Tinted choice in Appearance settings, which is the whole
-            // point of handing this surface to the system.
-            //
-            // No `else`: the solid fill below is mounted in every style anyway,
-            // and below macOS 26 `glassy` is always false, so it is simply left
-            // at full opacity.
-            if #available(macOS 26.0, *) {
-                Color.clear
-                    .glassEffect(.regular, in: shape)
-                    .opacity(glassy ? 1 : 0)
+            if glassy {
+                if #available(macOS 26.0, *) {
+                    Color.clear
+                        .frame(width: place.panelSize.width, height: place.panelSize.height)
+                        .glassEffect(.regular, in: Rectangle())
+                        .id(model.isExpanded)
+                }
             }
+            
+            ZStack {
+                // Nothing of ours underneath: a wash of our own would override the
+                // Clear/Tinted choice in Appearance settings, which is the whole
+                // point of handing this surface to the system.
+                //
+                // No `else`: the solid fill below is mounted in every style anyway,
+                // and below macOS 26 `glassy` is always false, so it is simply left
+                // at full opacity.
+                shape.fill(Palette.notch).opacity(glassy ? 0 : 1)
 
-            shape.fill(Palette.notch).opacity(glassy ? 0 : 1)
-
-            // The band at the hardware's height is the strip beside a hole in
-            // the screen. Glass there makes the cutout read as a black
-            // rectangle set into a sheet of glass; black there makes the hole
-            // and the shape we draw one wide notch again, and the glass begins
-            // below it, where the readings begin. A hardware notch only ever
-            // joins the top edge, so `.top` is the right alignment; the band is
-            // clipped by the `.clipShape(shape)` below, which keeps the bezel
-            // fillets at its corners.
-            //
-            // Deeper than the hardware by the bleed below, and undoing the
-            // scale on that one number: the whole shape is pushed `bezelBleed`
-            // points past the screen edge after it is scaled, so a band drawn
-            // exactly `contentInset` deep ends that far short of the hole and
-            // leaves a strip of glass along the bottom of the cutout.
-            if model.joinedNotch != nil {
-                Rectangle()
-                    .fill(Palette.notch)
-                    .frame(height: model.contentInset + Self.bezelBleed / model.sizeScale)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                // The band at the hardware's height is the strip beside a hole in
+                // the screen. Glass there makes the cutout read as a black
+                // rectangle set into a sheet of glass; black there makes the hole
+                // and the shape we draw one wide notch again, and the glass begins
+                // below it, where the readings begin. A hardware notch only ever
+                // joins the top edge, so `.top` is the right alignment; the band is
+                // clipped by the `.clipShape(shape)` below, which keeps the bezel
+                // fillets at its corners.
+                //
+                // Deeper than the hardware by the bleed below, and undoing the
+                // scale on that one number: the whole shape is pushed `bezelBleed`
+                // points past the screen edge after it is scaled, so a band drawn
+                // exactly `contentInset` deep ends that far short of the hole and
+                // leaves a strip of glass along the bottom of the cutout.
+                if model.joinedNotch != nil {
+                    Rectangle()
+                        .fill(Palette.notch)
+                        .frame(height: model.contentInset + Self.bezelBleed / model.sizeScale)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                }
             }
-        }
+        }   
             // The glass and the fill both stay mounted so folding keeps
             // animating one shape rather than swapping one view for another
             // mid-flight; the crossfade rides on the unfold animation already

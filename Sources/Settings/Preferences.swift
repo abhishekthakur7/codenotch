@@ -117,6 +117,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(antigravityHeadlineLimit.rawValue, forKey: Keys.antigravityHeadlineLimit) }
     }
 
+    /// The preferred model group to show for Antigravity provider (Gemini or Claude and GPT models).
+    @Published var antigravityHeadlineModel: AntigravityHeadlineModel {
+        didSet { defaults.set(antigravityHeadlineModel.rawValue, forKey: Keys.antigravityHeadlineModel) }
+    }
+
     /// Where along that edge the notch sits, nudged from the centred default
     /// by ⌥-dragging the pill. One value per edge — moving it on the right
     /// should not silently relocate it on the top too — so this is read and
@@ -278,6 +283,7 @@ final class Preferences: ObservableObject {
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
         static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
+        static let antigravityHeadlineModel = "antigravityHeadlineModel"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -301,6 +307,15 @@ final class Preferences: ObservableObject {
               let limit = AntigravityHeadlineLimit(rawValue: value)
         else { return .automatic }
         return limit
+    }
+
+    nonisolated static func storedAntigravityHeadlineModel(
+        defaults: UserDefaults = .standard
+    ) -> AntigravityHeadlineModel {
+        guard let value = defaults.string(forKey: Keys.antigravityHeadlineModel),
+              let model = AntigravityHeadlineModel(rawValue: value)
+        else { return .gemini }
+        return model
     }
 
     /// True the very first time this copy runs, and never again.
@@ -402,6 +417,8 @@ final class Preferences: ObservableObject {
             .flatMap(NotchScreenScope.init(rawValue:)) ?? .mainDisplay
         self.antigravityHeadlineLimit = defaults.string(forKey: Keys.antigravityHeadlineLimit)
             .flatMap(AntigravityHeadlineLimit.init(rawValue:)) ?? .automatic
+        self.antigravityHeadlineModel = defaults.string(forKey: Keys.antigravityHeadlineModel)
+            .flatMap(AntigravityHeadlineModel.init(rawValue:)) ?? .gemini
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
         // Off by default: an extra arc in a 44pt circle is a change to how
         // every reading looks, and nobody asked for it on their behalf.

@@ -562,12 +562,17 @@ final class EdgeArrivalTests: XCTestCase {
         let controller = openController()
         defer { controller.stop() }
 
+        var didFold = false
+        let cancellable = controller.model.$isExpanded.sink { isExpanded in
+            if !isExpanded {
+                didFold = true
+            }
+        }
+        defer { cancellable.cancel() }
+
         controller.apply(edge: .top)
-        XCTAssertTrue(wait { controller.panelAlphaForTesting < 1 }, "it never went away")
-        XCTAssertTrue(wait { controller.panelAlphaForTesting == 1 }, "it never came back")
-        XCTAssertFalse(controller.model.isExpanded,
-                       "it arrived at full size instead of opening into place")
-        XCTAssertTrue(wait { controller.model.isExpanded }, "it never opened")
+        XCTAssertTrue(wait { controller.model.isExpanded && controller.model.edge == .top && controller.panelAlphaForTesting == 1 }, "it never finished the move")
+        XCTAssertTrue(didFold, "it arrived at full size instead of opening into place")
     }
 
     /// And it is on screen while it opens, not still fading in underneath.

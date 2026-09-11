@@ -10,6 +10,12 @@
             "value": "à l'instant"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "たった今"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -31,6 +37,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld min"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 分"
           }
         },
         "pt-BR": {
@@ -56,6 +68,12 @@
             "value": "%lld h"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 時間"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -77,6 +95,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld h %lld min"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 時間 %lld 分"
           }
         },
         "pt-BR": {
@@ -102,6 +126,12 @@
             "value": "il y a %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@前"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -123,6 +153,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Réinitialisation…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット中…"
           }
         },
         "pt-BR": {
@@ -148,6 +184,12 @@
             "value": "Réinit. dans %lld min"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 分後にリセット"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -169,6 +211,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Réinit. %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ にリセット"
           }
         },
         "pt-BR": {
@@ -194,6 +242,12 @@
             "value": "%lld%% utilisés · %lld%% restants"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% 使用 · 残り %lld%%"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -215,6 +269,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "1 restant"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り 1"
           }
         },
         "pt-BR": {
@@ -240,6 +300,12 @@
             "value": "%lld restants"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り %lld"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -261,6 +327,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "1 utilisé"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 使用"
           }
         },
         "pt-BR": {
@@ -286,6 +358,12 @@
             "value": "%lld utilisés"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 使用"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -307,6 +385,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aucun relevé"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み取りなし"
           }
         },
         "pt-BR": {
@@ -332,6 +416,12 @@
             "value": "%@ jusqu'à %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@（%@ まで）"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -353,6 +443,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous à Claude Code pour lire votre consommation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには Claude Code にサインイン"
           }
         },
         "pt-BR": {
@@ -378,6 +474,12 @@
             "value": "Connectez-vous à Claude Code dans ~/.claude-%@ pour lire votre consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには ~/.claude-%@ で Claude Code にサインイン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -399,6 +501,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous à Cursor dans l'éditeur"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エディタで Cursor にサインイン"
           }
         },
         "pt-BR": {
@@ -424,6 +532,12 @@
             "value": "Connectez-vous à Codex pour lire votre consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには Codex にサインイン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -445,6 +559,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous à Antigravity pour lire votre consommation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには Antigravity にサインイン"
           }
         },
         "pt-BR": {
@@ -470,6 +590,12 @@
             "value": "Configurez une clé GLM Coding Plan dans un outil de code pour lire votre consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには、コーディングツールに GLM Coding Plan のキーを設定"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -491,6 +617,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez le plan Go dans OpenCode pour lire votre consommation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには OpenCode で Go プランを接続"
           }
         },
         "pt-BR": {
@@ -516,6 +648,12 @@
             "value": "Connectez-vous à %@ pour lire votre consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには %@ にサインイン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -537,6 +675,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch s'est vu refuser l'accès aux identifiants enregistrés de %@. Cliquez sur cet anneau pour redemander, puis choisissez Toujours autoriser."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は %@ の保存済みログインへのアクセスを拒否されました。このリングをクリックして再度要求し、「常に許可」を選んでください。"
           }
         },
         "pt-BR": {
@@ -562,6 +706,12 @@
             "value": "Lecture de la consommation impossible — %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取れませんでした — %@"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -583,6 +733,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En attente du premier relevé…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最初の読み取りを待っています…"
           }
         },
         "pt-BR": {
@@ -608,6 +764,12 @@
             "value": "Session en cours"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在のセッション"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -631,6 +793,12 @@
             "value": "Tous les modèles"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全モデル"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -649,6 +817,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opus"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "Opus"
@@ -677,6 +851,12 @@
             "value": "Sonnet"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonnet"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -698,6 +878,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Consommation incluse"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プラン内の使用量"
           }
         },
         "pt-BR": {
@@ -723,6 +909,12 @@
             "value": "Consommation API"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -744,6 +936,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "À la demande"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "従量課金"
           }
         },
         "pt-BR": {
@@ -769,6 +967,12 @@
             "value": "Limite 5 h"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 時間の上限"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -790,6 +994,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Limite hebdomadaire"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限"
           }
         },
         "pt-BR": {
@@ -815,6 +1025,12 @@
             "value": "Limite mensuelle"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月間の上限"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -836,6 +1052,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quota quotidien"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 日の割り当て"
           }
         },
         "pt-BR": {
@@ -861,6 +1083,12 @@
             "value": "Fenêtre plus longue"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "長期の枠"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -882,6 +1110,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Limite %lld min"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 分の上限"
           }
         },
         "pt-BR": {
@@ -907,6 +1141,12 @@
             "value": "Limite %lld h"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 時間の上限"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -928,6 +1168,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Limite %lld j"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 日の上限"
           }
         },
         "pt-BR": {
@@ -953,6 +1199,12 @@
             "value": "Hebdomadaire"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -974,6 +1226,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "MCP (1 mois)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP（1 か月）"
           }
         },
         "pt-BR": {
@@ -999,6 +1257,12 @@
             "value": "Consommation (%lld h)"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量（%lld 時間）"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1020,6 +1284,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Consommation (%lld sem.)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量（%lld 週）"
           }
         },
         "pt-BR": {
@@ -1045,6 +1315,12 @@
             "value": "Consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1066,6 +1342,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recherches Pro"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro 検索"
           }
         },
         "pt-BR": {
@@ -1091,6 +1373,12 @@
             "value": "Recherche"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リサーチ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1114,6 +1402,12 @@
             "value": "Recherche agentique"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エージェントリサーチ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1132,6 +1426,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Labs"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "Labs"
@@ -1160,6 +1460,12 @@
             "value": "Requêtes gratuites"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無料クエリ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1181,6 +1487,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Requêtes aujourd'hui · aucune limite publiée"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本日のリクエスト · 上限の公表なし"
           }
         },
         "pt-BR": {
@@ -1206,6 +1518,12 @@
             "value": "aucune requête aujourd'hui"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本日のリクエストなし"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1227,6 +1545,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "~%lld requête aujourd'hui"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本日 約 %lld リクエスト"
           }
         },
         "pt-BR": {
@@ -1252,6 +1576,12 @@
             "value": "~%lld requêtes aujourd'hui"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本日 約 %lld リクエスト"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1270,6 +1600,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok Build"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "Grok Build"
@@ -1298,6 +1634,12 @@
             "value": "Consommation %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1319,6 +1661,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "et %lld de plus"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ほか %lld 件"
           }
         },
         "pt-BR": {
@@ -1344,6 +1692,12 @@
             "value": "en cours"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作業中"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1365,6 +1719,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "en attente"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待機中"
           }
         },
         "pt-BR": {
@@ -1390,6 +1750,12 @@
             "value": "inactive"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アイドル"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1411,6 +1777,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "En cours"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作業中"
           }
         },
         "pt-BR": {
@@ -1436,6 +1808,12 @@
             "value": "Bureau"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デスクトップ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1454,6 +1832,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VS Code"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "VS Code"
@@ -1482,6 +1866,12 @@
             "value": "Agent"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エージェント"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1503,6 +1893,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Terminal"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ターミナル"
           }
         },
         "pt-BR": {
@@ -1528,6 +1924,12 @@
             "value": "Conversation sans titre"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無題のチャット"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1549,6 +1951,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toujours afficher"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常に表示"
           }
         },
         "pt-BR": {
@@ -1574,6 +1982,12 @@
             "value": "Afficher au survol"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ホバー時に表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1595,6 +2009,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Masquer"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "非表示"
           }
         },
         "pt-BR": {
@@ -1620,6 +2040,12 @@
             "value": "L'encoche reste ouverte, tous les relevés visibles."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチは開いたままで、すべての読み取りが見えます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1641,6 +2067,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une petite pastille au bord de l'écran, qui s'ouvre quand vous l'atteignez."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面の端に小さなピル。ポインタを近づけると開きます。"
           }
         },
         "pt-BR": {
@@ -1666,6 +2098,12 @@
             "value": "Rien à l'écran. Rouvrez Codenotch depuis Applications pour retrouver ces réglages."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面には何も出ません。この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1684,6 +2122,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "Dock"
@@ -1712,6 +2156,12 @@
             "value": "Barre des menus"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メニューバー"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1733,6 +2183,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aucun"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どちらにも出さない"
           }
         },
         "pt-BR": {
@@ -1758,6 +2214,12 @@
             "value": "Une icône d'app normale dans le Dock tant que Codenotch fonctionne."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch の実行中、Dock に通常のアプリアイコンが出ます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1779,6 +2241,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une petite icône dans la barre des menus à la place, et rien dans le Dock."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "代わりにメニューバーへ小さなアイコン。Dock には出ません。"
           }
         },
         "pt-BR": {
@@ -1804,6 +2272,12 @@
             "value": "Aucune icône nulle part. Rouvrez Codenotch depuis Applications pour retrouver ces réglages."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どこにもアイコンが出ません。この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1825,6 +2299,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Droite"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右"
           }
         },
         "pt-BR": {
@@ -1850,6 +2330,12 @@
             "value": "Gauche"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "左"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1871,6 +2357,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haut"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上"
           }
         },
         "pt-BR": {
@@ -1896,6 +2388,12 @@
             "value": "Bas"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1917,6 +2415,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Le long du bord droit, à l'écart d'un Dock placé de ce côté."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右端に沿って。その側の Dock は避けます。"
           }
         },
         "pt-BR": {
@@ -1942,6 +2446,12 @@
             "value": "Le long du bord gauche, à l'écart d'un Dock placé de ce côté."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "左端に沿って。その側の Dock は避けます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -1963,6 +2473,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une barre large en haut, relevés côte à côte. Sur un Mac doté de sa propre encoche, elle remonte la rejoindre pour ne former qu'une seule forme."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上端を横切る幅広のバー。読み取りが横並びになります。ノッチのある Mac ではそこまで伸びて、ひと続きの形に見えます。"
           }
         },
         "pt-BR": {
@@ -1988,6 +2504,12 @@
             "value": "Une barre large posée sur le Dock, relevés côte à côte."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock の上に載る幅広のバー。読み取りが横並びになります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2009,6 +2531,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Intégrations"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "連携"
           }
         },
         "pt-BR": {
@@ -2034,6 +2562,12 @@
             "value": "Apparence"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外観"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2055,6 +2589,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Général"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一般"
           }
         },
         "pt-BR": {
@@ -2080,6 +2620,12 @@
             "value": "Affichage"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2101,6 +2647,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bord"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配置する辺"
           }
         },
         "pt-BR": {
@@ -2126,6 +2678,12 @@
             "value": "Icône de l'app"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アプリアイコン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2147,6 +2705,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouvrir Codenotch à l'ouverture de session"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ログイン時に Codenotch を開く"
           }
         },
         "pt-BR": {
@@ -2172,6 +2736,12 @@
             "value": "Installer les mises à jour automatiquement"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデートを自動的にインストール"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2193,6 +2763,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vérifier maintenant"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今すぐ確認"
           }
         },
         "pt-BR": {
@@ -2218,6 +2794,12 @@
             "value": "App conçue et développée par"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デザインと開発"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2239,6 +2821,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez un assistant pour commencer"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アシスタントを接続して始めましょう"
           }
         },
         "pt-BR": {
@@ -2264,6 +2852,12 @@
             "value": "Codenotch ne se connecte jamais — chaque relevé est emprunté à l'outil qui détient déjà le compte. Vous déconnecter ici arrête la lecture de l'identifiant et oublie les chiffres, mais vous restez connecté à cet outil. macOS demande une fois par outil la première fois, puis à nouveau chaque fois que vous vous connectez à un autre compte ; Toujours autoriser évite les rappels."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch がサインインすることはありません。読み取りはすべて、すでにアカウントを保持しているツールから借りたものです。ここでサインアウトすると資格情報の読み取りが止まり、数値も忘れられますが、そのツールへのサインインはそのまま残ります。macOS はツールごとに初回の一度、そして別のアカウントにサインインするたびに確認します。「常に許可」を選べば以後は尋ねられません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2285,6 +2879,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor, Codex, Antigravity, GLM, Grok ou OpenCode et connectez-vous : son anneau apparaît dans l'encoche."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor、Codex、Antigravity、GLM、Grok、OpenCode のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
           }
         },
         "pt-BR": {
@@ -2310,6 +2910,12 @@
             "value": "macOS demandera une fois l'autorisation de lire les identifiants enregistrés de Claude Code et d'Antigravity. Choisissez Toujours autoriser — un simple Autoriser fait redemander à chaque fois."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS は Claude Code と Antigravity の保存済みログインを読み取る許可を一度だけ尋ねます。「常に許可」を選んでください。「許可」だけでは毎回尋ねられます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2331,6 +2937,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Version %@. Les mises à jour s'installent en arrière-plan et s'appliquent au prochain démarrage de Codenotch."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バージョン %@。アップデートはバックグラウンドでインストールされ、次回 Codenotch を起動したときに適用されます。"
           }
         },
         "pt-BR": {
@@ -2356,6 +2968,12 @@
             "value": "Déconnecté — rien n'est lu, et aucun relevé n'est conservé."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サインアウト済み — 読み取りも行わず、読み取りの保存もしません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2377,6 +2995,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Autoriser l'accès…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクセスを許可…"
           }
         },
         "pt-BR": {
@@ -2402,6 +3026,12 @@
             "value": "Changer…"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "切り替え…"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2423,6 +3053,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Redemande à macOS les identifiants enregistrés de %@. Choisissez Toujours autoriser et il cessera de demander."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の保存済みログインを macOS に再度要求します。「常に許可」を選べば以後は尋ねられません。"
           }
         },
         "pt-BR": {
@@ -2448,6 +3084,12 @@
             "value": "Désactivez pour arrêter de lire %@ et oublier ses relevés. %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オフにすると %@ の読み取りを止め、その読み取りを忘れます。%@"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2469,6 +3111,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Activez pour vous reconnecter et lire %@ à nouveau."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オンにすると再びサインインして %@ を読み取ります。"
           }
         },
         "pt-BR": {
@@ -2494,6 +3142,12 @@
             "value": "macOS n'autorise pas Codenotch à lire les identifiants enregistrés de %@. Choisissez Autoriser l'accès… ci-dessus, puis Toujours autoriser."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS が %@ の保存済みログインの読み取りを許可していません。上の「アクセスを許可…」を選び、「常に許可」を選んでください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2515,6 +3169,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouvrir %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ を開く"
           }
         },
         "pt-BR": {
@@ -2540,6 +3200,12 @@
             "value": "Ouvre %@, où ce compte est connecté."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントがサインインしている %@ を開きます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2561,6 +3227,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ouvre %@ dans votre navigateur. Ce site a sa propre connexion, distincte de l'identifiant lu ici."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ブラウザで %@ を開きます。このサイトには独自のサインインがあり、ここで読み取っている資格情報とは別のものです。"
           }
         },
         "pt-BR": {
@@ -2586,6 +3258,12 @@
             "value": "Réglages de Codenotch"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch 設定"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2607,6 +3285,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nouveautés"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新機能"
           }
         },
         "pt-BR": {
@@ -2632,6 +3316,12 @@
             "value": "Les nouveautés de Codenotch"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch の新機能"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2653,6 +3343,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Version %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バージョン %@"
           }
         },
         "pt-BR": {
@@ -2678,6 +3374,12 @@
             "value": "Continuer"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "続ける"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2699,6 +3401,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "macOS a refusé — essayez de déplacer Codenotch dans /Applications."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS に拒否されました — Codenotch を /Applications に移動してみてください。"
           }
         },
         "pt-BR": {
@@ -2724,6 +3432,12 @@
             "value": "via %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 経由"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2745,6 +3459,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Se connecter à %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ にサインイン"
           }
         },
         "pt-BR": {
@@ -2770,6 +3490,12 @@
             "value": "Connectez-vous à %@ pour lire ce compte."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントを読み取るには %@ にサインインしてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2791,6 +3517,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous avec %@ pour lire ce compte."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントを読み取るには %@ でサインインしてください。"
           }
         },
         "pt-BR": {
@@ -2816,6 +3548,12 @@
             "value": "Déconnectez-vous dans la fenêtre %@ pour utiliser un autre compte."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "別のアカウントを使うには、%@ のウインドウでサインアウトしてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2837,6 +3575,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Changez de compte dans %@ ; l'encoche suit."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ でアカウントを切り替えると、ノッチもそれに従います。"
           }
         },
         "pt-BR": {
@@ -2862,6 +3606,12 @@
             "value": "Changez de compte dans l'outil qui le détient ; l'encoche suit."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "そのアカウントを持つツールで切り替えると、ノッチもそれに従います。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2883,6 +3633,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vous déconnecte de %@ — la session appartient à Codenotch."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ からサインアウトします — このセッションは Codenotch のものです。"
           }
         },
         "pt-BR": {
@@ -2908,6 +3664,12 @@
             "value": "Vous restez connecté à %@ — terminez cette session dans %@ même."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ にはサインインしたままです — そのセッションを終えるには %@ 側で操作してください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2929,6 +3691,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vous restez connecté à l'outil qui détient le compte."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "そのアカウントを持つツールにはサインインしたままです。"
           }
         },
         "pt-BR": {
@@ -2954,6 +3722,12 @@
             "value": "Connectez-vous avec l'outil qui détient ce compte."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントを持つツールでサインインしてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -2975,6 +3749,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Se connecter à %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ にサインイン…"
           }
         },
         "pt-BR": {
@@ -3000,6 +3780,12 @@
             "value": "Exécutez grok login — il vous connecte et rafraîchit le jeton lu ici."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "grok login を実行してください。サインインし、ここで読み取るトークンを更新します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3021,6 +3807,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "La consommation repose sur la clé opencode-go qu'OpenCode enregistre à la connexion — connectez Go dans OpenCode (`opencode auth login`) et l'encoche la lit."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量は、OpenCode がサインイン時に保存する opencode-go キーを使います。OpenCode 内で Go を接続（`opencode auth login`）すれば、ノッチが読み取ります。"
           }
         },
         "pt-BR": {
@@ -3046,6 +3838,12 @@
             "value": "La consommation repose sur une clé Z.ai GLM Coding Plan détenue par un outil de code — le settings.json de Claude Code, ZCode ou OpenCode. Configurez-en une là-bas et l'encoche la lit."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量は、コーディングツールが持つ Z.ai GLM Coding Plan のキーを使います。Claude Code の settings.json、ZCode、OpenCode のいずれかです。そこで設定すれば、ノッチが読み取ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3067,6 +3865,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Exécutez `%@` une fois — il vous connecte et rafraîchit le jeton lu ici. Utilisez /login là-bas pour changer de compte."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "`%@` を一度実行してください。サインインし、ここで読み取るトークンを更新します。アカウントを変えるには、そこで /login を使います。"
           }
         },
         "pt-BR": {
@@ -3092,6 +3896,12 @@
             "value": "Illimité avec le plan %@ — rien à mesurer"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ プランでは無制限 — 計測する対象がありません"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3113,6 +3923,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Le plan %@ n'a encore rien à mesurer pour Cursor"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ プランには、Cursor が計測できる対象がまだありません"
           }
         },
         "pt-BR": {
@@ -3138,6 +3954,12 @@
             "value": "Codex n'a signalé aucune fenêtre de consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex は使用量の枠を返しませんでした"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3159,6 +3981,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aucun abonnement OpenCode Go sur cette clé"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このキーに OpenCode Go のサブスクリプションがありません"
           }
         },
         "pt-BR": {
@@ -3184,6 +4012,12 @@
             "value": "Grok n'a encore rien de mesuré sur ce compte"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントには、Grok が計測する対象がまだありません"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3205,6 +4039,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Réglages…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定…"
           }
         },
         "pt-BR": {
@@ -3230,6 +4070,12 @@
             "value": "Quitter Codenotch"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch を終了"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3251,6 +4097,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Garder ouverte"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "開いたままにする"
           }
         },
         "pt-BR": {
@@ -3276,6 +4128,12 @@
             "value": "Actualiser maintenant"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今すぐ更新"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3297,6 +4155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch est réglé sur Toujours afficher. Modifiez-le dans les Réglages."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は「常に表示」に設定されています。設定で変更してください。"
           }
         },
         "pt-BR": {
@@ -3322,6 +4186,12 @@
             "value": "Vérification…"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "確認中…"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3343,6 +4213,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch est à jour."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は最新です。"
           }
         },
         "pt-BR": {
@@ -3368,6 +4244,12 @@
             "value": "La version %@ est disponible et s'installera sous peu."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バージョン %@ が利用可能です。まもなくインストールされます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3389,6 +4271,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Serveur de mise à jour injoignable. Codenotch réessaiera de lui-même — cette copie n'a aucun problème."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデートサーバーに接続できませんでした。Codenotch が自動で再試行します — このコピーに問題はありません。"
           }
         },
         "pt-BR": {
@@ -3414,6 +4302,12 @@
             "value": "Deux fournisseurs de plus, et un plan de compte actif qui passait silencieusement à la trappe."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスが 2 つ増え、黙って抜け落ちていた実アカウントのプランに対応。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3435,6 +4329,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Grok est un nouvel anneau"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grok が新しいリングに"
           }
         },
         "pt-BR": {
@@ -3460,6 +4360,12 @@
             "value": "L'allocation hebdomadaire Grok Build de SuperGrok, lue depuis le même point de facturation que la CLI, avec la session dans ~/.grok/auth.json."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SuperGrok の週間 Grok Build 枠を、CLI と同じ課金エンドポイントから読み取ります。セッションは ~/.grok/auth.json のものを使います。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3481,6 +4387,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Le plan Go d'OpenCode est un nouvel anneau"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenCode の Go プランが新しいリングに"
           }
         },
         "pt-BR": {
@@ -3506,6 +4418,12 @@
             "value": "Lit le point de consommation officiel du plan Go avec la clé qu'OpenCode enregistre lui-même à la connexion — pas de seconde connexion."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenCode 自身がサインイン時に保存するキーで、Go プランの公式な使用量エンドポイントを読み取ります。二度目のサインインは不要です。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3527,6 +4445,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un vrai compte Codex restait non mesuré"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "実在の Codex アカウントが未計測になっていた"
           }
         },
         "pt-BR": {
@@ -3552,6 +4476,12 @@
             "value": "Le relevé en direct de Codex ne reconnaissait qu'une fenêtre de 5 heures et une de 7 jours. La vraie limite d'un compte en plan gratuit était sur 30 jours : elle passait inaperçue et s'affichait comme « rien à mesurer » sur un compte pourtant bien suivi."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex のライブ読み取りは 5 時間と 7 日間の枠しか認識していませんでした。無料プランのアカウントの実際の上限は 30 日間で、これが見落とされ、本当は計測されているアカウントが「計測対象なし」と表示されていました。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3573,6 +4503,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Désactiver un fournisseur l'arrête vraiment"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスをオフにすると本当に止まるように"
           }
         },
         "pt-BR": {
@@ -3598,6 +4534,12 @@
             "value": "Ouvrir les Réglages pouvait encore lire le compte d'un fournisseur désactivé, et une réponse déjà en vol pouvait restaurer un relevé que vous veniez de demander d'oublier."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定を開くと、オフにしたサービスのアカウントを読み取ってしまうことがありました。また、すでに送信済みの応答が、忘れるよう指示したばかりの読み取りを復活させることがありました。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3619,6 +4561,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les contributeurs peuvent compiler sans certificat"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "証明書なしでコントリビューターがビルドできるように"
           }
         },
         "pt-BR": {
@@ -3644,6 +4592,12 @@
             "value": "make build et make test se signent désormais tout seuls quand le Developer ID du mainteneur est absent — aucun compte Apple nécessaire pour contribuer."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メンテナの Developer ID がない場合、make build と make test が自動的に自己署名するようになりました。作業に Apple アカウントは要りません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3665,6 +4619,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "La sortie de veille n'efface plus un relevé."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スリープからの復帰で読み取りが消えなくなりました。"
           }
         },
         "pt-BR": {
@@ -3690,6 +4650,12 @@
             "value": "Un anneau survit au réveil de votre Mac"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac の復帰後もリングが残るように"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3711,6 +4677,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un bref instant juste après la veille, où macOS n'autorise pas encore d'invite du trousseau, était pris pour une déconnexion — ce qui effaçait le relevé et laissait « en attente du premier relevé » à l'écran. Le chiffre vieillit désormais au lieu d'être jeté, et la lecture repart d'elle-même."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スリープ直後の、macOS がまだキーチェーンの確認を許可しないわずかな時間が、サインアウトと誤認されていました。その結果、読み取りが消えて「最初の読み取りを待っています」が表示されたままになっていました。今は数値を破棄せず古いものとして扱い、自動で復帰します。"
           }
         },
         "pt-BR": {
@@ -3736,6 +4708,12 @@
             "value": "Deux comptes de plus, quatre correctifs de la communauté, et des doublons honnêtes."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウントが 2 つ増え、コミュニティからの修正が 4 件、そして重複の扱いを正直に。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3757,6 +4735,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plusieurs comptes Claude Code"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "複数の Claude Code アカウント"
           }
         },
         "pt-BR": {
@@ -3782,6 +4766,12 @@
             "value": "Vous gardez un compte pro à part avec CLAUDE_CONFIG_DIR ? Il obtient désormais son propre anneau, ses propres limites et sa propre ligne dans les Réglages, à côté de votre compte personnel."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CLAUDE_CONFIG_DIR で仕事用のログインを分けていますか。個人用のものと並んで、独自のリング、独自の上限、設定の独自の行を持つようになりました。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3803,6 +4793,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "GLM ajouté"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GLM に対応"
           }
         },
         "pt-BR": {
@@ -3828,6 +4824,12 @@
             "value": "Le Coding Plan de Z.ai se lit aussi en direct désormais, avec une clé empruntée à l'outil qui en détient déjà une."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z.ai の Coding Plan もライブで読み取れるようになりました。キーは、すでにそれを持っているツールから借ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3849,6 +4851,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un anneau Claude bloqué se rétablit tout seul"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "固まった Claude のリングが自動で復帰"
           }
         },
         "pt-BR": {
@@ -3874,6 +4882,12 @@
             "value": "Une défaillance momentanée — le plus souvent la sortie de veille du Mac — bloquait l'anneau jusqu'au redémarrage de l'app. Il se débloque désormais à la vérification suivante."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一度の瞬間的な失敗 — 多くは Mac のスリープ復帰時です — でリングがロックされ、アプリを再起動するまで戻りませんでした。今は次回の確認で自動的に解消されます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3895,6 +4909,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les sessions Cursor cessent de signaler un travail déjà terminé"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cursor のセッションが、終わった作業を報告し続けないように"
           }
         },
         "pt-BR": {
@@ -3920,6 +4940,12 @@
             "value": "Une conversation plantée ou abandonnée pouvait se lire « toujours en cours » pendant un jour ou plus. Elle remarque désormais quand l'écriture s'est réellement arrêtée."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "クラッシュしたり放置されたチャットが、1 日以上「まだ作業中」と表示されることがありました。今は書き込みが実際に止まったことを検知します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3941,6 +4967,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un doublon vieux de plusieurs mois ne peut plus l'emporter"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数か月前の重複が勝たないように"
           }
         },
         "pt-BR": {
@@ -3966,6 +4998,12 @@
             "value": "Claude Code dépose une nouvelle entrée dans le trousseau à chaque rotation de jeton. Un compte connecté depuis un moment pouvait en choisir une ancienne, expirée, au hasard, et afficher « en attente du premier relevé » indéfiniment."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Code はトークンをローテーションするたびに新しいキーチェーン項目を作ります。しばらくサインインしたままのアカウントでは、古い期限切れの項目がランダムに選ばれ、「最初の読み取りを待っています」がいつまでも表示されることがありました。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -3987,6 +5025,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un clic malencontreux ne bloque plus l'encoche ouverte"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "誤クリックでノッチが開いたままにならないように"
           }
         },
         "pt-BR": {
@@ -4012,6 +5056,12 @@
             "value": "Cliquer près du bord de l'écran avant même l'ouverture de l'encoche pouvait la laisser bloquée ouverte, sans rien à l'écran pour l'expliquer."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチが開く前に画面の端の近くをクリックすると、理由が画面に出ないまま開いた状態で固まることがありました。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4033,6 +5083,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codex se lit en direct, et Toujours afficher le reste."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex をライブ読み取りに。「常に表示」もオフになりません。"
           }
         },
         "pt-BR": {
@@ -4058,6 +5114,12 @@
             "value": "Codex est lu en direct plutôt que depuis un journal"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex をログではなくライブで読み取るように"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4079,6 +5141,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Le chiffre venait d'un fichier que Codex écrit pendant un tour : il datait donc de votre dernière utilisation — trois jours de retard dans un cas. Codenotch interroge désormais Codex lui-même, et correspond à son propre panneau."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数値はターンの途中で Codex が書き出すファイルから取っていたため、最後に使った時点のまま古くなっていました。3 日前の値だったこともあります。今は Codex 自身に問い合わせるので、Codex のパネルと一致します。"
           }
         },
         "pt-BR": {
@@ -4104,6 +5172,12 @@
             "value": "L'anneau Codex remarque l'app de bureau"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codex のリングがデスクトップアプリを認識"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4125,6 +5199,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Il ne surveillait que les fichiers écrits par la CLI et l'extension VS Code : le travail fait dans l'app de bureau ne le faisait donc jamais tourner."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "以前は CLI と VS Code 拡張が書くファイルしか見ていなかったため、デスクトップアプリでの作業ではリングが動きませんでした。"
           }
         },
         "pt-BR": {
@@ -4150,6 +5230,12 @@
             "value": "Toujours afficher ne se désactive plus tout seul"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「常に表示」が勝手にオフにならないように"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4171,6 +5257,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cliquer sur l'encoche basculait le même indicateur que le réglage : un clic malencontreux la remettait discrètement sur affichage au survol."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチをクリックすると設定と同じフラグが切り替わっていたため、誤クリックで静かに「ホバー時に表示」へ戻っていました。"
           }
         },
         "pt-BR": {
@@ -4196,6 +5288,12 @@
             "value": "Bien moins d'invites du trousseau"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キーチェーンの確認が大幅に減少"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4217,6 +5315,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une fois un jeton expiré, chaque vérification retournait au trousseau — une invite par minute. Le secret n'est désormais lu que lorsque l'app propriétaire l'a modifié, et un refus n'est jamais réessayé sur minuterie."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トークンが期限切れになると、確認のたびにキーチェーンへ戻っていました。1 分に 1 回の確認です。今は、持ち主のアプリが秘密情報を変更したときにだけ読み取り、拒否をタイマーで再試行することもありません。"
           }
         },
         "pt-BR": {
@@ -4242,6 +5346,12 @@
             "value": "Une limite en pause est affichée comme telle"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一時停止中の上限を、そのように表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4263,6 +5373,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Certaines limites sont atteintes alors que le chiffre principal indique encore de la marge. L'anneau se lit comme épuisé et indique quand elle se lève."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "見出しにはまだ余裕があるのに達している上限があります。リングは使い切りとして表示し、いつ解除されるかを示します。"
           }
         },
         "pt-BR": {
@@ -4288,6 +5404,12 @@
             "value": "Les longs messages ne sont plus tronqués"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "長いメッセージが切れないように"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4309,6 +5431,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une info-bulle ayant quelque chose à expliquer ne réservait qu'une seule ligne, quelle que soit la longueur du texte."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "説明のあるツールチップは、内容の量にかかわらず 1 行しか確保していませんでした。"
           }
         },
         "pt-BR": {
@@ -4334,6 +5462,12 @@
             "value": "Toutes les sessions, et une info-bulle qui tient à l'écran."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべてのセッションと、画面に収まるツールチップ。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4355,6 +5489,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les info-bulles ne sont plus tronquées"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ツールチップが切れないように"
           }
         },
         "pt-BR": {
@@ -4380,6 +5520,12 @@
             "value": "Une carte est centrée sur l'anneau auquel elle appartient : le premier et le dernier fournisseur en projetaient donc la moitié hors du panneau — et ce qui débordait, c'était le titre. Le panneau lui garde désormais de la place."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カードは対応するリングを中心に配置されるため、最初と最後のサービスではその半分がパネルの外へはみ出し、はみ出すのはタイトルでした。今はパネルがその分の余白を確保します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4401,6 +5547,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Autant de sessions que votre écran peut en contenir"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面に収まるだけのセッションを表示"
           }
         },
         "pt-BR": {
@@ -4426,6 +5578,12 @@
             "value": "La liste était plafonnée à quatre quel que soit votre matériel. Elle est désormais calculée pour l'écran : dix sur un grand, et « et N de plus » uniquement quand il n'y a vraiment plus de place."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一覧は実行環境にかかわらず 4 件に固定されていました。今はディスプレイに合わせて決まります。大きな画面なら 10 件、「ほか N 件」は本当に余地がないときだけ出ます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4447,6 +5605,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Celles qui vous attendent passent en premier"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あなたを待っているものが先頭に"
           }
         },
         "pt-BR": {
@@ -4472,6 +5636,12 @@
             "value": "En attente, puis en cours, puis inactives — ainsi, si quelque chose est résumé, c'est ce qui compte le moins."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待機中、次に作業中、最後にアイドル。まとめて省略されるとしても、いちばん重要でないものから省かれます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4493,6 +5663,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les vrais chiffres d'Antigravity, et un interrupteur qui reste éteint."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antigravity の実際の数値と、オフのままになるスイッチ。"
           }
         },
         "pt-BR": {
@@ -4518,6 +5694,12 @@
             "value": "Antigravity affiche son quota réel"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antigravity が実際の割り当てを表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4539,6 +5721,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Google ne répond pas directement à Codenotch, qui interroge donc le serveur de langage d'Antigravity — là où le panneau de consommation d'Antigravity prend son chiffre."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google は Codenotch に直接応答しないため、代わりに Antigravity 自身の言語サーバーに問い合わせます。Antigravity の使用量パネルが数値を得ているのと同じ場所です。"
           }
         },
         "pt-BR": {
@@ -4564,6 +5752,12 @@
             "value": "La consommation se lit dans les deux sens"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を両方の見方で表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4585,6 +5779,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "« 12 % utilisés · 88 % restants », pour qu'un relevé corresponde au bout que votre fournisseur affiche."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「12% 使用 · 残り 88%」。ベンダーがどちらの数値を示していても、読み取りが噛み合います。"
           }
         },
         "pt-BR": {
@@ -4610,6 +5810,12 @@
             "value": "Un retour possible après une invite du trousseau refusée"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キーチェーンの確認を拒否したあとの戻り道"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4631,6 +5837,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Refuser ne ressemble plus à une déconnexion, et Autoriser l'accès… redemande à macOS."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拒否してもサインアウトには見えなくなり、「アクセスを許可…」で macOS に再度要求できます。"
           }
         },
         "pt-BR": {
@@ -4656,6 +5868,12 @@
             "value": "Désactiver un fournisseur tient désormais"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスをオフにした状態が保たれるように"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4677,6 +5895,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Il cessait d'être lu mais son dernier relevé était conservé : l'anneau revenait au lancement suivant."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み取りは止まるものの最後の読み取りが保持されていたため、次回の起動でリングが戻ってきていました。"
           }
         },
         "pt-BR": {
@@ -4702,6 +5926,12 @@
             "value": "Les réinitialisations lointaines affichent une date"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "先のリセットは日付で表示"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4723,6 +5953,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une limite se renouvelant dans quatre semaines indiquait « lun. », qu'on lisait comme ce lundi-ci. Elle indique désormais « 28 sept. »."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4 週間後に更新される上限が「月」と表示され、今週の月曜日のように読めていました。今は「9月28日」と表示します。"
           }
         },
         "pt-BR": {
@@ -4748,6 +5984,12 @@
             "value": "La première version."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最初のリリース。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4769,6 +6011,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Placez l'encoche où vous voulez"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチをどこにでも配置"
           }
         },
         "pt-BR": {
@@ -4794,6 +6042,12 @@
             "value": "Droite, gauche, haut ou bas. Elle reste à l'écart du Dock et de la barre des menus, et suit quand le Dock se déplace."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右、左、上、下。Dock とメニューバーを避け、Dock が移動すれば追従します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4815,6 +6069,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Elle rejoint l'encoche de votre Mac"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac 自身のノッチと一体に"
           }
         },
         "pt-BR": {
@@ -4840,6 +6100,12 @@
             "value": "Sur le bord supérieur, elle épouse la forme du matériel : les deux se lisent comme une seule forme plutôt que comme une barre garée en dessous."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上端では実機のノッチの形を取り込むので、下にバーが置かれているようにではなく、ひと続きに見えます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4861,6 +6127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Claude, Cursor, Codex et Gemini"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude、Cursor、Codex、Gemini"
           }
         },
         "pt-BR": {
@@ -4886,6 +6158,12 @@
             "value": "Chacun lu depuis l'outil déjà connecté sur ce Mac. Codenotch ne demande jamais de mot de passe."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "いずれもこの Mac ですでにサインイン済みのツールから読み取ります。Codenotch がパスワードを尋ねることはありません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4907,6 +6185,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Choisissez où Codenotch apparaît"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch の表示場所を選択"
           }
         },
         "pt-BR": {
@@ -4932,6 +6216,12 @@
             "value": "Dans le Dock, dans la barre des menus, ou nulle part."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock、メニューバー、またはどこにも出さない。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4950,6 +6240,12 @@
       "extractionState": "manual",
       "localizations": {
         "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch"
@@ -4978,6 +6274,12 @@
             "value": "%@%% utilisés · %@%% restants"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%% 使用 · 残り %@%%"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -4999,6 +6301,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ restants"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り %@"
           }
         },
         "pt-BR": {
@@ -5024,6 +6332,12 @@
             "value": "%@ utilisés"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 使用"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5045,6 +6359,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous avec la CLI GitHub pour lire votre consommation Copilot"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copilot の使用量を読み取るには GitHub CLI でサインイン"
           }
         },
         "pt-BR": {
@@ -5070,6 +6390,12 @@
             "value": "Connectez-vous avec la CLI GitHub via `gh auth login`, puis activez GitHub Copilot."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "`gh auth login` で GitHub CLI にサインインし、GitHub Copilot を有効にしてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5091,6 +6417,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "GitHub Copilot n'a signalé aucun quota mesuré"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub Copilot は計測対象の割り当てを返しませんでした"
           }
         },
         "pt-BR": {
@@ -5116,6 +6448,12 @@
             "value": "Il n'y a rien à quoi se connecter : le total est additionné à partir de ce que Gemini CLI, OpenCode et Hermes ont enregistré sur leurs propres appels. Votre clé API n'est jamais lue."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サインインする先はありません。この件数は、Gemini CLI、OpenCode、Hermes が自分の呼び出しについて記録した内容を合算したものです。API キーが読み取られることはありません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5137,6 +6475,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aucune session Gemini CLI, OpenCode ou Hermes trouvée"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini CLI、OpenCode、Hermes のセッションが見つかりません"
           }
         },
         "pt-BR": {
@@ -5162,6 +6506,12 @@
             "value": "Exécutez `%@` une fois — il vous connecte et c'est de là que viennent ces relevés. Utilisez /login là-bas pour changer de compte."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "`%@` を一度実行してください。サインインし、ここでの読み取りはそこから得られます。アカウントを変えるには、そこで /login を使います。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5183,6 +6533,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Restreint"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スコープ付き"
           }
         },
         "pt-BR": {
@@ -5208,6 +6564,12 @@
             "value": "Consommation auto"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自動使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5229,6 +6591,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Équipe à la demande"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "チームの従量課金"
           }
         },
         "pt-BR": {
@@ -5254,6 +6622,12 @@
             "value": "Tout actualiser"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべて更新"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5275,6 +6649,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Date de réinitialisation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット日"
           }
         },
         "pt-BR": {
@@ -5300,6 +6680,12 @@
             "value": "Temps restant"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り時間"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5321,6 +6707,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Des minutes en dessous d'une heure ; sinon la date et l'heure de réinitialisation."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 時間未満なら分、それ以外はリセットの日時。"
           }
         },
         "pt-BR": {
@@ -5346,6 +6738,12 @@
             "value": "Temps avant la réinitialisation de la consommation, par exemple 3 j 3h ou 3h 20m."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量がリセットされるまでの時間。「3 日 3 時間」「3 時間 20 分」など。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5367,6 +6765,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Réinit. dans %lld j %lldh"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 日 %lld 時間後にリセット"
           }
         },
         "pt-BR": {
@@ -5392,6 +6796,12 @@
             "value": "Réinit. dans %lld j %lldh"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 日 %lld 時間後にリセット"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5413,6 +6823,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Réinit. dans %lldh %lldm"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 時間 %lld 分後にリセット"
           }
         },
         "pt-BR": {
@@ -5438,6 +6854,12 @@
             "value": "Rien à l'écran. Les relevés restent dans le menu de la barre des menus quand Icône de l'app est réglée sur Barre des menus. Sinon, rouvrez Codenotch depuis Applications pour retrouver ces réglages."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面には何も出ません。「アプリアイコン」が「メニューバー」なら、読み取りはメニューバーのメニューに残ります。それ以外の場合、この設定に戻るには、アプリケーションから Codenotch をもう一度開いてください。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5459,6 +6881,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Écran principal"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メインディスプレイ"
           }
         },
         "pt-BR": {
@@ -5484,6 +6912,12 @@
             "value": "Tous les écrans"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべてのディスプレイ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5505,6 +6939,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "L'encoche n'apparaît que sur l'écran qui porte la barre des menus."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチはメニューバーのあるディスプレイにだけ出ます。"
           }
         },
         "pt-BR": {
@@ -5530,6 +6970,12 @@
             "value": "Chaque écran a sa propre encoche, et en survoler une n'ouvre que celle-là."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ディスプレイごとに独自のノッチが出ます。ホバーしたものだけが開きます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5551,6 +6997,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "3 secondes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 秒"
           }
         },
         "pt-BR": {
@@ -5576,6 +7028,12 @@
             "value": "5 secondes"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 秒"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5597,6 +7055,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "10 secondes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 秒"
           }
         },
         "pt-BR": {
@@ -5622,6 +7086,12 @@
             "value": "Assez long pour être remarqué, assez court pour être ignoré."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "気づく程度に長く、無視できる程度に短く。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5643,6 +7113,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Assez long pour lire le nom de la session et l'atteindre."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッション名を読んで手を伸ばせる程度の長さ。"
           }
         },
         "pt-BR": {
@@ -5668,6 +7144,12 @@
             "value": "Reste jusqu'à ce que vous ayez eu l'occasion de lever les yeux."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "顔を上げる余裕ができるまで残ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5689,6 +7171,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Couleur d'accentuation de l'appareil"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デバイスのアクセントカラー"
           }
         },
         "pt-BR": {
@@ -5714,6 +7202,12 @@
             "value": "Connectés"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続済み"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5735,6 +7229,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Non connectés"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未接続"
           }
         },
         "pt-BR": {
@@ -5760,6 +7260,12 @@
             "value": "Comptes"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウント"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5781,6 +7287,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notifications"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
           }
         },
         "pt-BR": {
@@ -5806,6 +7318,12 @@
             "value": "Rien n'est connecté : l'encoche n'a donc aucun anneau à dessiner."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "何も接続されていないため、ノッチに描くリングがありません。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5827,6 +7345,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "L'encoche les dessine dans cet ordre. Faites glisser une ligne par sa poignée pour la déplacer."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチはこの順にリングを描きます。ハンドルをドラッグして並べ替えられます。"
           }
         },
         "pt-BR": {
@@ -5852,6 +7376,12 @@
             "value": "Ceux-ci n'ont pas d'anneau à placer. Activez-en un et il rejoint la fin de la liste ci-dessus."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "これらには配置するリングがありません。オンにすると、上の一覧の末尾に加わります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5873,6 +7403,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Encoche"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチ"
           }
         },
         "pt-BR": {
@@ -5898,6 +7434,12 @@
             "value": "Réinitialisation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット時刻"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5919,6 +7461,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Écrans"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ディスプレイ"
           }
         },
         "pt-BR": {
@@ -5944,6 +7492,12 @@
             "value": "Écran"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ディスプレイ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -5965,6 +7519,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Suivre la fenêtre active"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクティブなウインドウに追従"
           }
         },
         "pt-BR": {
@@ -5990,6 +7550,12 @@
             "value": "Écran indisponible"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用できないディスプレイ"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6011,6 +7577,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "App"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アプリ"
           }
         },
         "pt-BR": {
@@ -6036,6 +7608,12 @@
             "value": "Couleur d'accentuation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクセントカラー"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6057,6 +7635,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quand une session se termine"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションが終わったとき"
           }
         },
         "pt-BR": {
@@ -6082,6 +7666,12 @@
             "value": "Ouvrir l'encoche un instant"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチを一瞬開く"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6103,6 +7693,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pendant"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表示時間"
           }
         },
         "pt-BR": {
@@ -6128,6 +7724,12 @@
             "value": "Émettre un son"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サウンドを再生"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6149,6 +7751,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Terminée"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
           }
         },
         "pt-BR": {
@@ -6174,6 +7782,12 @@
             "value": "En attente de vous"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "あなたを待機中"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6195,6 +7809,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Alertes de seuil"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "しきい値の通知"
           }
         },
         "pt-BR": {
@@ -6220,6 +7840,12 @@
             "value": "Masquer la barre latérale"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サイドバーを隠す"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6241,6 +7867,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Afficher la barre latérale"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サイドバーを表示"
           }
         },
         "pt-BR": {
@@ -6266,6 +7898,12 @@
             "value": "Sélectionné"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択中"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6287,6 +7925,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Non sélectionné"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未選択"
           }
         },
         "pt-BR": {
@@ -6312,6 +7956,12 @@
             "value": "%@ (introuvable)"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@（見つかりません）"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6333,6 +7983,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Écouter %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ を再生"
           }
         },
         "pt-BR": {
@@ -6358,6 +8014,12 @@
             "value": "Budget mensuel"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月間の予算"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6379,6 +8041,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aucun"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "なし"
           }
         },
         "pt-BR": {
@@ -6404,6 +8072,12 @@
             "value": "jetons"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トークン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6425,6 +8099,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Limite %@ atteinte"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の上限に到達"
           }
         },
         "pt-BR": {
@@ -6450,6 +8130,12 @@
             "value": "%@ est à %lld%%"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ が %lld%%"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6471,6 +8157,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sa limite %@ est épuisée."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の上限を使い切りました。"
           }
         },
         "pt-BR": {
@@ -6496,6 +8188,12 @@
             "value": "Sa limite %@ est épuisée — réinit. %@"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の上限を使い切りました — %@ にリセット"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6517,6 +8215,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld%% de sa limite %@ utilisés."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%% を使用（%@ の上限）。"
           }
         },
         "pt-BR": {
@@ -6542,6 +8246,12 @@
             "value": "Se déplace vers l'écran contenant la fenêtre qui reçoit la saisie clavier."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キーボード入力を受け取っているウインドウのあるディスプレイに移動します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6563,6 +8273,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fixée sur %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ に固定。"
           }
         },
         "pt-BR": {
@@ -6588,6 +8304,12 @@
             "value": "Cet écran est déconnecté. Codenotch suit la fenêtre active jusqu'à son retour."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "そのディスプレイは接続されていません。復帰するまで、Codenotch はアクティブなウインドウに追従します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6609,6 +8331,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Faites glisser pour réordonner. L'encoche dessine les anneaux dans cet ordre."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ドラッグして並べ替えます。ノッチはこの順にリングを描きます。"
           }
         },
         "pt-BR": {
@@ -6634,6 +8362,12 @@
             "value": "Activez ceci pour lui donner un anneau dans l'encoche."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オンにすると、ノッチにリングが追加されます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6655,6 +8389,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les alertes pour %@ sont coupées. Cliquez pour les réactiver."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の通知はミュート中です。クリックで解除します。"
           }
         },
         "pt-BR": {
@@ -6680,6 +8420,12 @@
             "value": "Alerter quand %@ franchit 80 % et 100 % d'une limite."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ が上限の 80% と 100% を超えたときに通知します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6701,6 +8447,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Remplit l'anneau par rapport à un plafond que vous choisissez ; Google n'en publie aucun pour une clé API."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自分で決めた上限に対してリングを満たします。API キーについて Google は上限を公表していません。"
           }
         },
         "pt-BR": {
@@ -6726,6 +8478,12 @@
             "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor (l'éditeur ou cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, GitHub Copilot ou une clé API Gemini (via Gemini CLI, OpenCode ou Hermes) et connectez-vous : son anneau apparaît dans l'encoche."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor（エディタまたは cursor-agent）、Codex、Antigravity、GLM、Grok、OpenCode、GitHub Copilot、または Gemini API キー（Gemini CLI、OpenCode、Hermes 経由）のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6747,6 +8505,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "macOS demandera une fois l'autorisation de lire les identifiants enregistrés de Claude Code, d'Antigravity et de cursor-agent. Choisissez Toujours autoriser — un simple Autoriser fait redemander à chaque fois."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS は Claude Code、Antigravity、cursor-agent の保存済みログインを読み取る許可を一度だけ尋ねます。「常に許可」を選んでください。「許可」だけでは毎回尋ねられます。"
           }
         },
         "pt-BR": {
@@ -6772,6 +8536,12 @@
             "value": "Réordonnez les anneaux, choisissez un écran, et soyez prévenu quand une limite approche."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リングの並べ替え、ディスプレイの選択、そして上限が近づいたときの通知。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6793,6 +8563,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Faites glisser pour réordonner les anneaux"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ドラッグでリングを並べ替え"
           }
         },
         "pt-BR": {
@@ -6818,6 +8594,12 @@
             "value": "Les Réglages se divisent en Connectés et Non connectés ; faites glisser une ligne connectée par sa poignée pour changer l'ordre dans lequel l'encoche les dessine."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定が「接続済み」と「未接続」に分かれます。接続済みの行をハンドルでドラッグすると、ノッチが描く順序を変えられます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6839,6 +8621,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fixez l'encoche sur un écran, ou affichez-la sur tous"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチを 1 つのディスプレイに固定、またはすべてに表示"
           }
         },
         "pt-BR": {
@@ -6864,6 +8652,12 @@
             "value": "Un sélecteur Écrans dans Apparence propose l'écran principal ou tous les écrans ; un second sélecteur fixe une encoche unique sur un écran nommé."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「外観」の「ディスプレイ」ピッカーで、メインディスプレイかすべてかを選べます。2 つ目のピッカーでは、1 つのノッチを指定した画面に固定できます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6885,6 +8679,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un anneau prévient quand il franchit 80 % et 100 %"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リングが 80% と 100% の到達を知らせます"
           }
         },
         "pt-BR": {
@@ -6910,6 +8710,12 @@
             "value": "Une notification système une fois par franchissement, que l'on peut couper fournisseur par fournisseur depuis sa propre ligne de réglages."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "超えるたびにシステム通知を 1 回。サービスごとに、その設定行からミュートできます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6931,6 +8737,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "GitHub Copilot est un nouvel anneau"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub Copilot が新しいリングに"
           }
         },
         "pt-BR": {
@@ -6956,6 +8768,12 @@
             "value": "Lit le point de quota Copilot de GitHub en utilisant la session de la CLI GitHub déjà présente sur le Mac."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac にすでにある GitHub CLI のセッションを使って、GitHub の Copilot 割り当てエンドポイントを読み取ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -6977,6 +8795,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Signaler la fin d'une session"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションの終了を知らせる"
           }
         },
         "pt-BR": {
@@ -7002,6 +8826,12 @@
             "value": "L'encoche s'ouvre quelques secondes et émet un son quand un agent cesse de travailler ou se met à vous attendre ; un clic vous y amène."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エージェントが作業を止めるか、あなたを待ち始めると、ノッチが数秒だけ開いてチャイムを鳴らします。クリックするとそこへ移動します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7023,6 +8853,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "⌥-glissez la pastille le long de son bord"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌥ ドラッグでピルを辺に沿って移動"
           }
         },
         "pt-BR": {
@@ -7048,6 +8884,12 @@
             "value": "Décalez-la pour dégager une autre app de la barre des menus ancrée au même endroit ; mémorisé pour chaque bord."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同じ位置に固定された別のメニューバーアプリを避けてずらせます。位置は辺ごとに記憶されます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7069,6 +8911,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Choisissez une couleur d'accentuation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクセントカラーを選択"
           }
         },
         "pt-BR": {
@@ -7094,6 +8942,12 @@
             "value": "L'accentuation de l'appareil par défaut, ou une couleur fixe pour l'état positif de l'anneau — les couleurs d'alerte ambre et rouge restent fixes quoi qu'il arrive."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "既定ではデバイスのアクセントカラー。リングの正常時の色を固定することもできます。警告のアンバーと赤は、いずれの場合も固定のままです。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7115,6 +8969,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Un décompte plutôt qu'une date de réinitialisation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット日ではなくカウントダウン"
           }
         },
         "pt-BR": {
@@ -7140,6 +9000,12 @@
             "value": "Le sélecteur Réinitialisation dans Apparence peut afficher « Réinit. dans 3h 20m » au lieu d'une date et d'une heure."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「外観」の「リセット時刻」ピッカーで、日時の代わりに「3 時間 20 分後にリセット」と表示できます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7161,6 +9027,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lecture de Cursor depuis cursor-agent, et plans entreprise corrects"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cursor を cursor-agent から読み取り、エンタープライズプランも正しく"
           }
         },
         "pt-BR": {
@@ -7186,6 +9058,12 @@
             "value": "Une connexion Cursor en CLI seule obtient désormais un anneau, et les plans entreprise/équipe lisent leur consommation réelle au lieu de signaler qu'il n'y a rien à mesurer."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CLI だけの Cursor ログインにもリングが出るようになり、エンタープライズ/チームプランは「計測対象なし」ではなく実際の使用量を読み取ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7207,6 +9085,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Moins d'invites du trousseau pour Claude et Antigravity"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude と Antigravity のキーチェーン確認を削減"
           }
         },
         "pt-BR": {
@@ -7232,6 +9116,12 @@
             "value": "Claude lit d'abord le /usage de sa propre CLI et ne touche au trousseau qu'en repli ; le serveur de langage d'Antigravity est interrogé avant lui."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude はまず自身の CLI の /usage を読み、キーチェーンは代替手段としてのみ使います。Antigravity は、その前に言語サーバーへ問い合わせます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7253,6 +9143,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Une consommation sous 1 % ne se lit plus 0 %"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1% 未満の使用量が 0% と表示されないように"
           }
         },
         "pt-BR": {
@@ -7278,6 +9174,12 @@
             "value": "Un relevé sous un pour cent affiche un dixième (« <0,1 % ») au lieu d'être arrondi à rien."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 パーセント未満の読み取りは、丸めて 0 にせず小数第 1 位（「<0.1%」）で表示します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7299,6 +9201,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Les contributeurs peuvent compiler sans signature Xcode"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xcode の署名なしでコントリビューターがビルドできるように"
           }
         },
         "pt-BR": {
@@ -7324,6 +9232,12 @@
             "value": "make build et make test se signent tout seuls quand le certificat du mainteneur est absent, et la CI exécute désormais la suite à chaque push et chaque pull request."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メンテナの証明書がない場合、make build と make test が自動的に自己署名するようになりました。CI もすべてのプッシュとプルリクエストでテストを実行します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7345,6 +9259,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Suivre le système"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システムに従う"
           }
         },
         "pt-BR": {
@@ -7370,6 +9290,12 @@
             "value": "Correspond à la langue préférée du Mac."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac の優先言語に合わせます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7391,6 +9317,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch utilise cette langue même si le Mac ne le fait pas."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac がこの言語でなくても、Codenotch はこの言語を使います。"
           }
         },
         "pt-BR": {
@@ -7416,6 +9348,12 @@
             "value": "Langue"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7437,6 +9375,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Afficher le rythme de consommation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用ペースを表示"
           }
         },
         "pt-BR": {
@@ -7462,6 +9406,12 @@
             "value": "Compare chaque allocation temporisée au temps restant avant réinitialisation, en montrant le quota en déficit ou gardé en réserve."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間で区切られた枠ごとに、リセットまでの残り時間と比べて、超過分か余裕分かを示します。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7483,6 +9433,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Taille"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サイズ"
           }
         },
         "pt-BR": {
@@ -7508,6 +9464,12 @@
             "value": "Petite"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "小"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7529,6 +9491,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Moyenne"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中"
           }
         },
         "pt-BR": {
@@ -7554,6 +9522,12 @@
             "value": "Grande"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "大"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7575,6 +9549,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prend le moins de place sur le bord. Lisible, mais pas de l'autre bout du bureau."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "辺で占める場所が最小。読めますが、机の向こうからは無理です。"
           }
         },
         "pt-BR": {
@@ -7600,6 +9580,12 @@
             "value": "La taille à laquelle l'encoche était dessinée."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチが本来描かれるサイズ。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7621,6 +9607,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plus facile à lire d'un coup d'œil, et plus difficile à ignorer."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ひと目で読みやすく、無視しにくいサイズ。"
           }
         },
         "pt-BR": {
@@ -7646,6 +9638,12 @@
             "value": "Maintenez ⌥ et faites glisser l'encoche pour la déplacer le long de son bord. Chaque bord retient où vous l'avez laissée."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌥ を押しながらノッチをドラッグすると、辺に沿って動かせます。位置は辺ごとに記憶されます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7667,6 +9665,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recentrer"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中央に戻す"
           }
         },
         "pt-BR": {
@@ -7692,6 +9696,12 @@
             "value": "%@ % de déficit"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@% 超過"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7713,6 +9723,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ % en réserve"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@% 余裕"
           }
         },
         "pt-BR": {
@@ -7738,6 +9754,12 @@
             "value": "Inactive"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アイドル"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7759,6 +9781,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Connectez-vous à Codex dans ~/.codex-%@ pour lire votre consommation"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには ~/.codex-%@ で Codex にサインイン"
           }
         },
         "pt-BR": {
@@ -7784,6 +9812,12 @@
             "value": "Connectez-vous avec l'app Command Code pour lire votre consommation"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには Command Code アプリでサインイン"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7805,6 +9839,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Saisissez une clé API Ollama dans les Réglages, ou exportez OLLAMA_API_KEY"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定で Ollama の API キーを入力するか、OLLAMA_API_KEY を export してください"
           }
         },
         "pt-BR": {
@@ -7830,6 +9870,12 @@
             "value": "Démarrez Ollama pour surveiller vos modèles locaux"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデルを監視するには Ollama を起動してください"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7851,6 +9897,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Saisissez une clé API Ollama ci-dessous, ou exportez OLLAMA_API_KEY dans votre shell."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下に Ollama の API キーを入力するか、シェルで OLLAMA_API_KEY を export してください。"
           }
         },
         "pt-BR": {
@@ -7876,6 +9928,12 @@
             "value": "Connectez-vous avec l'app Command Code — elle écrit ~/.commandcode/auth.json et l'encoche le lit."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Command Code アプリでサインインしてください。~/.commandcode/auth.json が書き出され、ノッチがそれを読み取ります。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7897,6 +9955,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Command Code n'a encore rien de mesuré sur ce compte"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントには、Command Code が計測する対象がまだありません"
           }
         },
         "pt-BR": {
@@ -7922,6 +9986,12 @@
             "value": "Consommation mensuelle"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月間の使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7943,6 +10013,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Consommation de la session"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションの使用量"
           }
         },
         "pt-BR": {
@@ -7968,6 +10044,12 @@
             "value": "Consommation hebdomadaire"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の使用量"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -7989,6 +10071,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Modèles locaux"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデル"
           }
         },
         "pt-BR": {
@@ -8014,6 +10102,12 @@
             "value": "Localhost"
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "localhost"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -8037,6 +10131,12 @@
             "value": "Codenotch lit la consommation des outils déjà connectés sur ce Mac — il ne demande jamais votre mot de passe. Installez l'un de Claude Code (l'outil en terminal, pas l'app Claude), Cursor (l'éditeur ou cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot ou une clé API Gemini (via Gemini CLI, OpenCode ou Hermes) et connectez-vous : son anneau apparaît dans l'encoche."
           }
         },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor（エディタまたは cursor-agent）、Codex、Antigravity、GLM、Grok、OpenCode、Command Code、GitHub Copilot、または Gemini API キー（Gemini CLI、OpenCode、Hermes 経由）のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
+          }
+        },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
@@ -8054,6 +10154,12 @@
     "complete": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8065,6 +10171,12 @@
     "Complete": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8076,6 +10188,12 @@
     "Waiting": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待機中"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8087,6 +10205,12 @@
     "Local Session": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルセッション"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8098,6 +10222,12 @@
     "Active": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "実行中"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8109,6 +10239,12 @@
     "Ensure Antigravity IDE is running to read this account.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントを読み取るには、Antigravity IDE を起動しておいてください。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8120,6 +10256,12 @@
     "Automatic": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自動"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8131,6 +10273,12 @@
     "5-Hour Limit": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 時間の上限"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8142,6 +10290,12 @@
     "Weekly Limit": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8153,6 +10307,12 @@
     "Liquid Glass": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liquid Glass"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8164,6 +10324,12 @@
     "Solid black": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不透明な黒"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8175,6 +10341,12 @@
     "System Liquid Glass. Follows this Mac's Appearance settings, including Clear or Tinted glass and light or dark mode.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システムの Liquid Glass。クリアか色付きか、ライトかダークかを含め、この Mac の「外観」設定に従います。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8186,6 +10358,12 @@
     "The original opaque black notch. Always dark, whatever the Mac's appearance.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "従来の不透明な黒いノッチ。Mac の外観にかかわらず常にダークです。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8197,6 +10375,12 @@
     "A second ring for the week, Liquid Glass, French, and Claude Desktop read straight from its own cache.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間用の 2 本目のリング、Liquid Glass、フランス語、そして Claude Desktop を自身のキャッシュから直接読み取り。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8208,6 +10392,12 @@
     "The week gets a ring of its own": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間に専用のリング"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8219,6 +10409,12 @@
     "A second arc, inside the headline ring or outside it, for providers that publish a weekly limit as well as a session one. Off by default; Appearance has the switch.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションの上限に加えて週間の上限を公表しているサービス向けに、主リングの内側または外側へ 2 本目の弧を描きます。既定はオフで、「外観」に切り替えがあります。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8230,6 +10426,12 @@
     "The open notch, its tooltip and the settings orb take the system's own glass surface, so they refract what is behind them instead of sitting on it. Reduce Transparency turns it solid.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "開いたノッチ、そのツールチップ、設定のオーブが、システム自身のガラス面を使います。背景の上に載るのではなく、背景を屈折させます。「透明度を下げる」をオンにすると不透明になります。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8241,6 +10443,12 @@
     "Français": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8252,6 +10460,12 @@
     "A third language in Appearance, alongside English and 简体中文.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「外観」に English と 简体中文 に続く 3 つ目の言語。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8263,6 +10477,12 @@
     "Claude Desktop usage, read from its own cache": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Desktop の使用量を、自身のキャッシュから読み取り"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8274,6 +10494,12 @@
     "A third way to read a Claude account, used when the CLI and the token cannot answer. Nothing is sent anywhere: the cache is on this Mac and is only decompressed.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude アカウントを読む 3 つ目の方法。CLI もトークンも答えられないときに使います。どこにも送信しません。キャッシュはこの Mac 上にあり、解凍するだけです。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8285,6 +10511,12 @@
     "Claude Code found where npm puts it": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "npm が置いた場所の Claude Code も見つかるように"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8296,6 +10528,12 @@
     "An install under nvm, Volta or pnpm is discovered like any other, which also restores the background sign-in renewal for those setups.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nvm、Volta、pnpm 配下のインストールも他と同じように検出されます。これらの構成でバックグラウンドのサインイン更新も復活します。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8307,6 +10545,12 @@
     "No more transcript folders left behind": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トランスクリプトのフォルダが残らないように"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8318,6 +10562,12 @@
     "Reading Claude usage ran in a fresh directory every poll, and Claude Code filed a transcript folder for each one. It now runs from a single place, in print mode, writing no session at all.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude の使用量の読み取りは、ポーリングのたびに新しいディレクトリで実行され、Claude Code がその都度トランスクリプトのフォルダを作っていました。今は 1 か所から print モードで実行し、セッションを一切書き出しません。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8329,6 +10579,12 @@
     "Reset times follow the Mac's clock": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット時刻が Mac の時刻表示に従う"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8340,6 +10596,12 @@
     "A 24-hour Mac gets 24-hour reset times instead of AM and PM.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 時間表示の Mac では、午前/午後ではなく 24 時間表示のリセット時刻になります。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8351,6 +10613,12 @@
     "A finished session says so": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "終わったセッションがそう表示される"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8362,6 +10630,12 @@
     "Agent sessions carry a success state, so a run that has completed reads differently from one still going.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エージェントのセッションが成功状態を持つようになり、完了した実行と進行中の実行が区別して表示されます。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8373,6 +10647,12 @@
     "Antigravity: choose which limit leads": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antigravity: どの上限を主にするか選択"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8384,6 +10664,12 @@
     "The headline ring can follow a named limit rather than whichever happens to be tightest, and a CLI-only install counts as a real account.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主リングを、たまたま最も逼迫している上限ではなく、指定した上限に従わせられます。また CLI だけのインストールも実アカウントとして扱われます。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8395,6 +10681,12 @@
     "Only the hardware notch wakes a notch joined to it": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一体化したノッチは実機のノッチでのみ反応"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8406,6 +10698,12 @@
     "A notch merged with the camera housing no longer wakes from a pointer anywhere along the whole top edge.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カメラ部と一体化したノッチが、上端のどこにポインタを置いても反応してしまうことがなくなりました。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8417,6 +10715,12 @@
     "Weekly ring": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間のリング"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8428,6 +10732,12 @@
     "Surface": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "表面"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8439,6 +10749,12 @@
     "Notch reads": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチに表示する上限"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8450,6 +10766,12 @@
     "Choose which limit appears in the main notch for Antigravity.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antigravity で主ノッチに表示する上限を選びます。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8461,6 +10783,12 @@
     "Off": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オフ"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8472,6 +10800,12 @@
     "Inside": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内側"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8483,6 +10817,12 @@
     "Outside": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外側"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8494,6 +10834,12 @@
     "One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスごとに 1 本のリングで主な上限を表示します。週間の枠はホバーカードに残ります。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8505,6 +10851,12 @@
     "A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限を細いリングで主リングの内側に描きます。作業中インジケータと同じ隙間を共有します。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8516,6 +10868,12 @@
     "A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限を細いリングで主リングの外側、リングとノッチの端の間の余白に描きます。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8527,6 +10885,12 @@
     "Run %@ in Terminal to sign in to %@.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ をターミナルで実行して %@ にサインインしてください。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8538,6 +10902,12 @@
     "Requests today · last used %@": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本日のリクエスト · 最終利用 %@"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8549,6 +10919,12 @@
     "yesterday": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "昨日"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8560,6 +10936,12 @@
     "%lld days ago": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 日前"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8571,6 +10953,12 @@
     "Personal": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "個人"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8582,6 +10970,12 @@
     "Gemini Models": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini モデル"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8593,6 +10987,12 @@
     "5-hour Limit": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 時間の上限"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8604,6 +11004,12 @@
     "Claude and GPT models": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude と GPT のモデル"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8615,6 +11021,12 @@
     "Question": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "質問"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8626,6 +11038,12 @@
     "Approval": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "承認"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8637,6 +11055,12 @@
     "Permission": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "許可"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8648,6 +11072,12 @@
     "needs your input": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "入力待ち"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8659,6 +11089,12 @@
     "Working in %@": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ で作業中"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8670,6 +11106,12 @@
     "Connection": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8681,6 +11123,12 @@
     "Preset": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プリセット"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8692,6 +11140,12 @@
     "Custom": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カスタム"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8703,6 +11157,12 @@
     "Preset size": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プリセットのサイズ"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8714,6 +11174,12 @@
     "Scales the whole surface — rings, text and tooltip together — so the proportions stay as drawn. 100% is the size the notch was designed at.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リング、文字、ツールチップをまとめて拡大縮小するので、比率は設計どおりのままです。100% がノッチの設計サイズです。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8725,6 +11191,12 @@
     "Ollama API key": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama の API キー"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8736,6 +11208,12 @@
     "Paste your key": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キーを貼り付け"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8747,6 +11225,12 @@
     "Save": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8758,6 +11242,12 @@
     "Saved": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存しました"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8769,6 +11259,12 @@
     "%@ usage needs its sign-in renewed — run `claude` once in a terminal.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の使用量はサインインの更新が必要です — ターミナルで `claude` を一度実行してください。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8780,6 +11276,12 @@
     "%@ %@ · via Ollama": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@ · Ollama 経由"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8791,6 +11293,12 @@
     "Hidden from the notch · Loaded in Ollama": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチでは非表示 · Ollama には読み込み済み"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8802,6 +11310,12 @@
     "Show or hide this model in the notch. It stays loaded in Ollama.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このモデルをノッチに表示するかどうか。Ollama には読み込まれたままです。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8813,6 +11327,12 @@
     "Thinking": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "思考中"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8824,6 +11344,12 @@
     "%@ · Local": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · ローカル"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8835,6 +11361,12 @@
     "No Ollama usage recorded yet for this period.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この期間の Ollama の使用量はまだ記録されていません。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8846,6 +11378,12 @@
     "Unused resets": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未使用のリセット"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8857,6 +11395,12 @@
     "No unused resets": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未使用のリセットなし"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8868,6 +11412,12 @@
     "1 unused reset": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未使用のリセット 1 件"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8879,6 +11429,12 @@
     "%lld unused resets": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未使用のリセット %lld 件"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8890,6 +11446,12 @@
     "Expires %@": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ に期限切れ"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -8901,6 +11463,12 @@
     "Next expires %@": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次は %@ に期限切れ"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",

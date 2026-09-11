@@ -59,4 +59,22 @@ final class AppLanguageTests: XCTestCase {
         L10n.testLocale = nil
         XCTAssertEqual(L10n.t("Always show"), "始终显示")
     }
+
+    /// Japanese is offered in the picker under the identifier the catalog
+    /// files its translations under. Deliberately no assertion on the copy
+    /// `ja` serves: the catalog carries no Japanese yet, so today it falls
+    /// back to English, and pinning that would turn into a failing test the
+    /// moment a translation lands — which is the point of the branch.
+    func testJapaneseIsOfferedAndMapsToJa() {
+        XCTAssertTrue(AppLanguage.allCases.contains(.japanese))
+        XCTAssertEqual(AppLanguage.japanese.title, "日本語")
+    }
+
+    /// The override round-trips through the store like any other language,
+    /// even while the catalog has nothing to serve for it.
+    func testApplyJapaneseStoresTheOverride() {
+        L10n.apply(.japanese)
+        L10n.testLocale = nil
+        XCTAssertEqual(L10n.locale.identifier, "ja")
+    }
 }

@@ -95,8 +95,15 @@ enum Sites {
             const response = await fetch('/api/v0/users/get_user_summary', {
                 credentials: 'include', headers: { 'Accept': 'application/json', 'Authorization': token.startsWith('Bearer ') ? token : 'Bearer ' + token }
             });
-            return response.status >= 200 && response.status < 300;
-        } catch (_) { return false; }
+            if (response.status < 200 || response.status >= 300) {
+                return JSON.stringify({ authenticated: false });
+            }
+            const bytes = new TextEncoder().encode(token);
+            const digest = await crypto.subtle.digest('SHA-256', bytes);
+            const fingerprint = Array.from(new Uint8Array(digest))
+                .map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return JSON.stringify({ authenticated: true, fingerprint });
+        } catch (_) { return JSON.stringify({ authenticated: false }); }
         """#,
         detailParse: DeepSeekUsage.detail(fromJSON:),
         parse: { json in

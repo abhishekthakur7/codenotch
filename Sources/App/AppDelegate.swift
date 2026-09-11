@@ -228,7 +228,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 signOut: { [weak store] in store?.signOut(providerID: $0) },
                 signIn: { [weak store] in store?.signIn(providerID: $0) ?? false },
                 switchAccount: { [weak store] in
-                    store?.openAccountSource(providerID: $0) ?? false
+                    store?.openAccountSource(providerID: $0, switching: true) ?? false
                 },
                 retry: { [weak store] in store?.reauthorize(providerID: $0) },
                 // Both halves, because the stored nudge and the live one are

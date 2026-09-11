@@ -4,6 +4,43 @@ import SwiftUI
 
 @MainActor
 final class DeepSeekUsageTests: XCTestCase {
+    func testSwitchGateIgnoresTheExistingSession() {
+        var gate = WebSessionAuthenticationGate(baselineFingerprint: "old")
+
+        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
+        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+    }
+
+    func testSwitchGateCommitsOnlyAfterLogoutAndANewSession() {
+        var gate = WebSessionAuthenticationGate(baselineFingerprint: "old")
+
+        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
+        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
+        XCTAssertTrue(gate.observe(authenticated: true, fingerprint: "new"))
+    }
+
+    func testSignedInSessionAppearsAsAnAccountInSettings() {
+        let key = "deepseek.signedIn"
+        let previous = UserDefaults.standard.object(forKey: key)
+        defer {
+            if let previous {
+                UserDefaults.standard.set(previous, forKey: key)
+            } else {
+                UserDefaults.standard.removeObject(forKey: key)
+            }
+        }
+
+        UserDefaults.standard.set(true, forKey: key)
+        let provider = WebSessionProvider(site: Sites.deepSeek)
+        let account = provider.account()
+
+        XCTAssertNotNil(account)
+        XCTAssertEqual(account?.source, "DeepSeek")
+        XCTAssertEqual(account?.manageURL?.absoluteString, "https://platform.deepseek.com/usage")
+    }
+
     func testPlatformSummaryBuildsMoneyWindow() throws {
         let json = #"{"data":{"biz_data":{"normal_wallets":[{"currency":"CNY","balance":"10.87"}],"total_costs":[{"currency":"CNY","amount":"9.20"}],"total_available_token_estimation":"3300000"}}}"#
         let reading = try DeepSeekUsage.reading(fromJSON: json)

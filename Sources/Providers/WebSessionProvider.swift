@@ -2,6 +2,43 @@ import AppKit
 import WebKit
 import os
 
+/// Holds the only state a switch flow needs from the old session. The raw
+/// browser token never leaves JavaScript and its digest is kept in memory only.
+struct WebSessionAuthenticationGate: Equatable {
+    private(set) var baselineFingerprint: String?
+    private(set) var sawLogout = false
+    private var unauthenticatedSamples = 0
+
+    init(baselineFingerprint: String?) {
+        self.baselineFingerprint = baselineFingerprint
+    }
+
+    /// A switch commits only after a real logout/login transition. This keeps
+    /// an already-authenticated old page from being mistaken for the new
+    /// account and avoids false positives from one transient probe failure.
+    mutating func observe(authenticated: Bool, fingerprint: String?) -> Bool {
+        guard authenticated else {
+            unauthenticatedSamples += 1
+            if unauthenticatedSamples >= 2 { sawLogout = true }
+            return false
+        }
+
+        unauthenticatedSamples = 0
+        guard sawLogout else {
+            if baselineFingerprint == nil { baselineFingerprint = fingerprint }
+            return false
+        }
+
+        // Providers with no fingerprint can still use the explicit
+        // logout/login transition. DeepSeek supplies one, so the same-account
+        // re-login does not look like an account switch unless its session
+        // identity changed.
+        guard baselineFingerprint == nil || fingerprint == nil || fingerprint != baselineFingerprint
+        else { return false }
+        return true
+    }
+}
+
 /// Reads a provider's usage from the endpoint its own web app uses, by running
 /// the request *inside a browser the user signs into themselves*.
 ///
@@ -57,11 +94,27 @@ final class WebSessionProvider: NSObject, UsageProvider {
     /// the session lives in its own WebView, so it can open one and clear one.
     nonisolated var signInRoute: SignInRoute { .modal(name: displayName) }
 
+    /// A successful browser probe is the account identity this provider can
+    /// honestly expose. DeepSeek does not include an email or plan in the
+    /// usage payload we read, but the persisted session is enough to keep the
+    /// settings row in its signed-in state after the sheet is reopened.
+    nonisolated func account() -> ProviderAccount? {
+        guard UserDefaults.standard.bool(forKey: "\(id).signedIn") else { return nil }
+        return ProviderAccount(
+            label: nil,
+            plan: nil,
+            source: displayName,
+            manageURL: site.origin.appendingPathComponent("usage")
+        )
+    }
+
     private let site: Site
     private var webView: WKWebView?
     private var signInWindow: NSWindow?
     private var signInProbeTask: Task<Void, Never>?
     private var isLoaded = false
+    private var lastAuthFingerprint: String?
+    private var switchGate: WebSessionAuthenticationGate?
 
     var onAuthenticated: (() -> Void)?
 
@@ -168,6 +221,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
 
         if status == 401 || status == 403 {
             // Not signed in, or a challenge wants a human. Same remedy either way.
+            hasSignedIn = false
             throw UsageProviderError.needsAuth
         }
         guard (200..<300).contains(status) else {
@@ -232,6 +286,8 @@ final class WebSessionProvider: NSObject, UsageProvider {
     func signOut() async {
         signInProbeTask?.cancel()
         signInProbeTask = nil
+        switchGate = nil
+        lastAuthFingerprint = nil
         hasSignedIn = false
         isLoaded = false
 
@@ -250,6 +306,17 @@ final class WebSessionProvider: NSObject, UsageProvider {
     }
 
     func presentSignIn() {
+        presentSignIn(switching: false)
+    }
+
+    func presentAccountSwitch() {
+        presentSignIn(switching: true)
+    }
+
+    private func presentSignIn(switching: Bool) {
+        switchGate = switching
+            ? WebSessionAuthenticationGate(baselineFingerprint: lastAuthFingerprint)
+            : nil
         let webView = makeWebViewIfNeeded()
         if let signInWindow {
             signInWindow.makeKeyAndOrderFront(nil)
@@ -286,16 +353,44 @@ final class WebSessionProvider: NSObject, UsageProvider {
                 let result = try? await webView.callAsyncJavaScript(
                     probe, arguments: [:], in: nil, contentWorld: .page
                 )
-                if result as? Bool == true {
+                guard let state = Self.authenticationState(from: result) else { continue }
+                if var gate = self.switchGate {
+                    if gate.observe(authenticated: state.authenticated, fingerprint: state.fingerprint) {
+                        self.switchGate = nil
+                        self.lastAuthFingerprint = state.fingerprint
+                        self.authenticationDidComplete()
+                    } else {
+                        self.switchGate = gate
+                    }
+                } else if state.authenticated {
+                    self.lastAuthFingerprint = state.fingerprint
                     self.authenticationDidComplete()
-                    return
                 }
             }
         }
     }
 
+    private struct AuthenticationState {
+        let authenticated: Bool
+        let fingerprint: String?
+    }
+
+    private static func authenticationState(from result: Any?) -> AuthenticationState? {
+        if let authenticated = result as? Bool {
+            return AuthenticationState(authenticated: authenticated, fingerprint: nil)
+        }
+        guard let text = result as? String,
+              let data = text.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let authenticated = object["authenticated"] as? Bool
+        else { return nil }
+        return AuthenticationState(authenticated: authenticated,
+                                   fingerprint: object["fingerprint"] as? String)
+    }
+
     private func authenticationDidComplete() {
         hasSignedIn = true
+        switchGate = nil
         signInProbeTask?.cancel()
         signInProbeTask = nil
         signInWindow?.close()
@@ -317,5 +412,8 @@ extension WebSessionProvider: NSWindowDelegate {
         signInWindow = nil
         signInProbeTask?.cancel()
         signInProbeTask = nil
+        // Closing a switch window is a cancellation, not a successful account
+        // change. Leave the committed session and usage untouched.
+        switchGate = nil
     }
 }

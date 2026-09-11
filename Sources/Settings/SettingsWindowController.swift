@@ -23,6 +23,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let lmstudioMetrics: LMStudioMetrics?
     private let usageStore: UsageStore?
     private let resetPosition: () -> Void
+    private let previewResetAlert: (() -> Void)?
 
     init(preferences: Preferences,
          providers: @escaping () -> [ProviderSummary],
@@ -32,6 +33,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          switchAccount: @escaping (String) -> Bool,
          retry: @escaping (String) -> Void,
          resetPosition: @escaping () -> Void,
+         previewResetAlert: (() -> Void)? = nil,
          usageStore: UsageStore? = nil,
          ollamaRelay: OllamaActivityRelay? = nil,
          lmstudioMetrics: LMStudioMetrics? = nil) {
@@ -39,6 +41,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         self.lmstudioMetrics = lmstudioMetrics
         self.usageStore = usageStore
         self.resetPosition = resetPosition
+        self.previewResetAlert = previewResetAlert
         self.switchAccount = switchAccount
         self.retry = retry
         self.updater = updater
@@ -178,7 +181,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
                                    resetPosition: resetPosition,
                                    updater: updater,
                                    ollamaRelay: ollamaRelay, lmstudioMetrics: lmstudioMetrics,
-                                   usageStore: usageStore)
+                                   usageStore: usageStore,
+                                   previewResetAlert: previewResetAlert)
         )
         window.center()
         window.isReleasedWhenClosed = false

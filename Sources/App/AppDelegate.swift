@@ -240,6 +240,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     preferences?.setOffset(0, for: preferences?.notchEdge ?? .right)
                     fleet?.apply(alongOffset: 0)
                 },
+                previewResetAlert: { [weak self] in
+                    self?.previewUsageResetAlert()
+                },
                 usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio
             )
             // The gear toggles; everything else that opens settings opens it.
@@ -626,6 +629,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         guard preferences.announceUsageReset else { return }
         fleet.showResetAlert(event, duration: 5.0)
+    }
+
+    @MainActor
+    private func previewUsageResetAlert() {
+        let demo = UsageResetEvent(
+            providerID: "claude",
+            providerName: "Claude",
+            windowLabel: "5-hour limit",
+            glyph: .claude,
+            previousFraction: 0.95,
+            currentFraction: 0.00,
+            resetsAt: Date().addingTimeInterval(5 * 3600)
+        )
+        announceUsageReset(event: demo)
     }
 
     /// Closing the settings window must not take the app with it.

@@ -175,6 +175,7 @@ struct SettingsView: View {
     var ollamaRelay: OllamaActivityRelay? = nil
     var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
+    var previewResetAlert: (() -> Void)? = nil
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
     var body: some View {
@@ -772,6 +773,12 @@ struct SettingsView: View {
 
                 SoundRow(label: L10n.t("Reset sound"), name: $preferences.usageResetSoundName,
                          pickerEnabled: preferences.usageResetSound)
+
+                if let previewResetAlert {
+                    Button(L10n.t("Preview notification")) {
+                        previewResetAlert()
+                    }
+                }
 
                 Text(L10n.t("Displays a notification card from the side of the notch when a provider's usage limit resets."))
                     .font(.caption)

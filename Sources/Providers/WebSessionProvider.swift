@@ -339,6 +339,23 @@ final class WebSessionProvider: NSObject, UsageProvider {
         NSApp.activate(ignoringOtherApps: true)
         signInWindow = window
         webView.load(URLRequest(url: site.origin))
+        signInSheetDidOpen()
+    }
+
+    /// What opening the sheet means for the session.
+    ///
+    /// A site that can confirm a sign-in — DeepSeek's probe — is not signed in
+    /// until it does, so the page is watched until it reports a session. A site
+    /// with no probe has nothing to wait for, and waiting anyway left it at
+    /// "needs sign-in" for good: the only path that sets `hasSignedIn` runs from
+    /// that probe. Those keep the optimistic sign-in they always had, and the
+    /// next refresh drops back to `needsAuth` if it did not take.
+    func signInSheetDidOpen() {
+        guard site.authProbeScript != nil else {
+            isLoaded = true
+            hasSignedIn = true
+            return
+        }
         isLoaded = false
         watchForAuthentication()
     }

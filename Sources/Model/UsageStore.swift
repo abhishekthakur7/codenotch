@@ -540,12 +540,16 @@ final class UsageStore: ObservableObject {
     /// Claude Code, Cursor or Codex, and the most this can honestly do is open
     /// the thing that owns it.
     @discardableResult
-    func openAccountSource(providerID: String) -> Bool {
+    func openAccountSource(providerID: String, switching: Bool = false) -> Bool {
         guard let provider = providers.first(where: { $0.id == providerID }) else { return false }
 
         switch provider.signInRoute {
         case .modal:
-            provider.presentSignIn()
+            if switching {
+                provider.presentAccountSwitch()
+            } else {
+                provider.presentSignIn()
+            }
             return true
         case .openApp(let bundleID, _):
             guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)

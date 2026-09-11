@@ -39,6 +39,10 @@ protocol UsageProvider {
     /// route matters as much as this call. A requirement, not an extension
     /// member, for the reason spelled out above `account()`.
     func presentSignIn()
+    /// Open the provider's account-switch flow. Providers that do not own a
+    /// session have no special switching UI, so their normal sign-in action is
+    /// the honest fallback.
+    func presentAccountSwitch()
     /// Drop any credential held in memory, so the next read goes to the
     /// keychain for real.
     ///
@@ -55,6 +59,8 @@ protocol UsageProvider {
 }
 
 extension UsageProvider {
+    func presentAccountSwitch() { presentSignIn() }
+
     var isVisibleWhenAbsent: Bool { true }
 }
 

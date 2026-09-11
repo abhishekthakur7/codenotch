@@ -96,10 +96,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if ProcessInfo.processInfo.environment["CODENOTCH_DEMO"] == "1" {
             fleet.setSnapshots(Fixtures.snapshots())
         } else {
-            // Nothing needs a browser session at the moment. `WebSessionProvider`
-            // and `Sites.perplexity` are kept: they are the working pattern for a
-            // site behind bot management, and re-registering is one line.
-            let webProviders: [WebSessionProvider] = []
+            // DeepSeek's Platform usage page is a browser-session provider:
+            // login is explicit, stays in Codenotch's own WKWebView store, and
+            // the page-local requests are refreshed only after that login.
+            let deepSeek = WebSessionProvider(site: Sites.deepSeek)
+            let webProviders: [WebSessionProvider] = [deepSeek]
             fleet.signInItems = webProviders.map { provider in
                 (title: L10n.t("Sign in to \(provider.displayName)…"),
                  action: { [weak provider] in provider?.presentSignIn() })
@@ -141,6 +142,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 // order for a frame and then visibly shuffles.
                 order: preferences.providerOrder
             )
+            deepSeek.onAuthenticated = { [weak store] in
+                store?.refresh(providerID: "deepseek")
+            }
 
             let updater = Updater()
             self.updater = updater
@@ -224,7 +228,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 signOut: { [weak store] in store?.signOut(providerID: $0) },
                 signIn: { [weak store] in store?.signIn(providerID: $0) ?? false },
                 switchAccount: { [weak store] in
-                    store?.openAccountSource(providerID: $0) ?? false
+                    store?.openAccountSource(providerID: $0, switching: true) ?? false
                 },
                 retry: { [weak store] in store?.reauthorize(providerID: $0) },
                 // Both halves, because the stored nudge and the live one are

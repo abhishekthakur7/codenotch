@@ -262,7 +262,7 @@ private struct TooltipHeader<Mark: View>: View {
 
 /// A label on the left and a quieter value on the right — the row shape the
 /// design frame uses throughout.
-private struct SplitRow<Accessory: View>: View {
+struct SplitRow<Accessory: View>: View {
     let leading: String
     let trailing: String
     var leadingColor: Color = Palette.textPrimary
@@ -391,12 +391,14 @@ private struct LimitWindowRow: View {
     /// A count-only row (no fraction, no reset) — like Ollama's per-model request
     /// counts — renders as a single table line: name left, count right.
     private var isCountRow: Bool {
-        window.usedFraction == nil && window.used != nil
+        window.usedFraction == nil && (window.used != nil || window.detail != nil)
     }
 
     var body: some View {
-        if isCountRow {
-            SplitRow(leading: window.label, trailing: window.usedText ?? "\(window.used ?? 0)",
+        if let money = window.money {
+            MoneyBreakdownView(title: window.label, money: money, fidelity: fidelity)
+        } else if isCountRow {
+            SplitRow(leading: window.label, trailing: window.detail ?? window.usedText ?? "\(window.used ?? 0)",
                      trailingColor: Palette.textSecondary)
         } else {
             VStack(alignment: .leading, spacing: 0) {
@@ -413,7 +415,7 @@ private struct LimitWindowRow: View {
                     .padding(.top, NotchLayout.labelToBar)
                 }
 
-                Text("\(window.usedFraction == nil ? "" : fidelity.qualifier)\(window.summary)\(paceText)")
+                Text("\(window.usedFraction == nil ? "" : fidelity.qualifier)\(window.detail ?? window.summary)\(paceText)")
                     .font(Typography.cardBody)
                     .foregroundStyle(Palette.textPrimary)
                     .lineLimit(1)
@@ -421,6 +423,67 @@ private struct LimitWindowRow: View {
                     .padding(.top, NotchLayout.barToUsed)
             }
         }
+    }
+}
+
+private struct MoneyBreakdownView: View {
+    let title: String
+    let money: UsageMoneyBreakdown
+    let fidelity: Fidelity
+    @Environment(\.codenotchAccentColor) private var accentColor
+
+    private var symbol: String {
+        switch money.currency.uppercased() {
+        case "CNY", "RMB", "JPY": return "¥"
+        case "USD": return "$"
+        case "EUR": return "€"
+        default: return "\(money.currency) "
+        }
+    }
+
+    private func amount(_ value: Double) -> String {
+        "\(symbol)\(String(format: "%.2f", locale: Locale(identifier: "en_US_POSIX"), value))"
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SplitRow(leading: title,
+                     trailing: "\(fidelity.qualifier)\(Percent.text(for: money.spentFraction))% used")
+            GeometryReader { proxy in
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .fill(UsageBand.band(for: money.spentFraction).color(accent: accentColor))
+                        .frame(width: proxy.size.width * CGFloat(money.spentFraction))
+                    Rectangle().fill(Palette.barTrack)
+                }
+            }
+            .frame(width: NotchLayout.cardTextWidth, height: NotchLayout.moneyBarHeight)
+            .clipShape(Capsule())
+            .padding(.top, NotchLayout.labelToBar)
+
+            HStack(spacing: NotchLayout.blockSpacing) {
+                MoneyStat(label: "Spent", value: amount(money.spent), color: accentColor)
+                MoneyStat(label: "Remaining", value: amount(money.remaining), color: Palette.textSecondary)
+                MoneyStat(label: "Funded", value: amount(money.funded), color: Palette.textPrimary)
+            }
+            .frame(width: NotchLayout.cardTextWidth)
+            .padding(.top, NotchLayout.moneyBarToStats)
+        }
+    }
+}
+
+private struct MoneyStat: View {
+    let label: String
+    let value: String
+    let color: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: NotchLayout.moneyStatGap) {
+            Text(label).foregroundStyle(Palette.textSecondary).lineLimit(1)
+            Text(value).foregroundStyle(color).monospacedDigit().lineLimit(1)
+        }
+        .font(Typography.cardBody)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -569,7 +632,7 @@ private struct RuntimeModelDetails: View {
     }
 }
 
-private enum UsageFormat {
+enum UsageFormat {
     static func tokens(_ value: Int?) -> String {
         guard let value else { return "—" }
         switch value {
@@ -938,6 +1001,8 @@ struct TooltipCard: View {
         NotchLayout.cardHeight(
             windowCount: snapshot.windows.count,
             groupCount: snapshot.windowGroupCount,
+            moneyWindowCount: snapshot.windows.filter { $0.money != nil }.count,
+            usageDetailGroupCount: snapshot.usageDetail?.visibleGroups.count ?? 0,
             sessionCount: snapshot.localModel == nil ? (activity?.sessions.count ?? 0) : 0,
             sessionCap: sessionCap,
             statusMessage: snapshot.statusMessage,
@@ -967,6 +1032,9 @@ struct TooltipCard: View {
                     }
                     if let tokenUsage = snapshot.tokenUsage {
                         CodexUsageSection(usage: tokenUsage, now: now)
+                    }
+                    if let usageDetail = snapshot.usageDetail, usageDetail.hasUsage {
+                        DeepSeekUsageDetail(detail: usageDetail)
                     }
                     if let activity, snapshot.localModel == nil {
                         SessionList(summary: activity, now: now, cap: sessionCap)

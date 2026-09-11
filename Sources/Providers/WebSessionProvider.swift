@@ -24,11 +24,30 @@ final class WebSessionProvider: NSObject, UsageProvider {
         let displayName: String
         let glyph: ProviderGlyph
         let origin: URL
+        let fidelity: Fidelity
+        let authProbeScript: String?
         /// Runs in the page as an async function body. Must return a JSON string
         /// `{ "status": Int, "body": String }`.
         let script: String
         /// Turns the response body into windows, or throws if it cannot.
         let parse: (String) throws -> [LimitWindow]
+        let detailParse: ((String) throws -> ProviderUsageDetail?)?
+
+        init(id: String, displayName: String, glyph: ProviderGlyph, origin: URL,
+             script: String, fidelity: Fidelity = .official,
+             authProbeScript: String? = nil,
+             detailParse: ((String) throws -> ProviderUsageDetail?)? = nil,
+             parse: @escaping (String) throws -> [LimitWindow]) {
+            self.id = id
+            self.displayName = displayName
+            self.glyph = glyph
+            self.origin = origin
+            self.script = script
+            self.fidelity = fidelity
+            self.authProbeScript = authProbeScript
+            self.detailParse = detailParse
+            self.parse = parse
+        }
     }
 
     nonisolated let id: String
@@ -41,7 +60,10 @@ final class WebSessionProvider: NSObject, UsageProvider {
     private let site: Site
     private var webView: WKWebView?
     private var signInWindow: NSWindow?
+    private var signInProbeTask: Task<Void, Never>?
     private var isLoaded = false
+
+    var onAuthenticated: (() -> Void)?
 
     init(site: Site) {
         self.site = site
@@ -93,6 +115,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
         ))
         let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 1100, height: 800),
                                 configuration: configuration)
+        webView.navigationDelegate = self
         self.webView = webView
         return webView
     }
@@ -152,7 +175,11 @@ final class WebSessionProvider: NSObject, UsageProvider {
         }
 
         // Recorded verbatim so a parser can be written against the real thing.
-        Log.usage.notice("\(self.site.id, privacy: .public) usage -> \(body.prefix(1200), privacy: .public)")
+        if site.id == "deepseek" {
+            Log.usage.notice("\(self.site.id, privacy: .public) usage response received")
+        } else {
+            Log.usage.notice("\(self.site.id, privacy: .public) usage -> \(body.prefix(1200), privacy: .public)")
+        }
         if let probes = envelope["probes"] as? String {
             Log.usage.notice("\(self.site.id, privacy: .public) probes -> \(probes.prefix(2600), privacy: .public)")
         }
@@ -161,9 +188,10 @@ final class WebSessionProvider: NSObject, UsageProvider {
             id: id,
             displayName: displayName,
             glyph: glyph,
-            fidelity: .official,
+            fidelity: site.fidelity,
             status: .ok,
-            windows: try site.parse(body)
+            windows: try site.parse(body),
+            usageDetail: try site.detailParse?(body)
         )
     }
 
@@ -202,6 +230,8 @@ final class WebSessionProvider: NSObject, UsageProvider {
     /// default store is shared, so clearing all of it would sign the user out of
     /// every other web provider at the same time.
     func signOut() async {
+        signInProbeTask?.cancel()
+        signInProbeTask = nil
         hasSignedIn = false
         isLoaded = false
 
@@ -224,6 +254,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
         if let signInWindow {
             signInWindow.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
+            watchForAuthentication()
             return
         }
         let window = NSWindow(
@@ -234,14 +265,57 @@ final class WebSessionProvider: NSObject, UsageProvider {
         )
         window.title = "Sign in to \(displayName)"
         window.contentView = webView
+        window.delegate = self
         window.center()
         window.isReleasedWhenClosed = false
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         signInWindow = window
         webView.load(URLRequest(url: site.origin))
-        isLoaded = true
-        // Optimistic; the next refresh drops back to `needsAuth` if it did not take.
+        isLoaded = false
+        watchForAuthentication()
+    }
+
+    private func watchForAuthentication() {
+        guard signInWindow != nil, let probe = site.authProbeScript, let webView else { return }
+        signInProbeTask?.cancel()
+        signInProbeTask = Task { [weak self, weak webView] in
+            for _ in 0..<240 {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard !Task.isCancelled, let self, let webView else { return }
+                let result = try? await webView.callAsyncJavaScript(
+                    probe, arguments: [:], in: nil, contentWorld: .page
+                )
+                if result as? Bool == true {
+                    self.authenticationDidComplete()
+                    return
+                }
+            }
+        }
+    }
+
+    private func authenticationDidComplete() {
         hasSignedIn = true
+        signInProbeTask?.cancel()
+        signInProbeTask = nil
+        signInWindow?.close()
+        signInWindow = nil
+        isLoaded = false
+        onAuthenticated?()
+    }
+}
+
+extension WebSessionProvider: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        watchForAuthentication()
+    }
+}
+
+extension WebSessionProvider: NSWindowDelegate {
+    func windowWillClose(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow, window === signInWindow else { return }
+        signInWindow = nil
+        signInProbeTask?.cancel()
+        signInProbeTask = nil
     }
 }

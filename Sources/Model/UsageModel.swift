@@ -19,6 +19,21 @@ enum Fidelity: String, Codable, Equatable {
     var qualifier: String { self == .official ? "" : "~" }
 }
 
+/// A provider-reported money balance. The percentage is derived from these
+/// exact account amounts; the amounts themselves come from the provider.
+struct UsageMoneyBreakdown: Codable, Equatable, Sendable {
+    let currency: String
+    let spent: Double
+    let remaining: Double
+
+    var funded: Double { spent + remaining }
+
+    var spentFraction: Double {
+        guard funded > 0 else { return 0 }
+        return min(max(spent / funded, 0), 1)
+    }
+}
+
 enum ProviderStatus: Equatable {
     case ok
     case stale(since: Date)
@@ -95,6 +110,10 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     /// How many have been spent, when the provider counts up rather than down
     /// and never states the ceiling. Cursor does this.
     let used: Int?
+    /// Optional provider-specific value for count-only rows.
+    let detail: String?
+    /// Structured money data for providers whose account is metered in money.
+    let money: UsageMoneyBreakdown?
     /// Optional display override for `used` — used when the raw count would
     /// be the wrong unit (e.g. a dollar balance formatted as "$14.28").
     let usedText: String?
@@ -105,7 +124,8 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     let duration: TimeInterval?
 
     init(id: String, group: String? = nil, label: String, usedFraction: Double? = nil,
-         remaining: Int? = nil, used: Int? = nil, usedText: String? = nil, resetsAt: Date? = nil,
+         remaining: Int? = nil, used: Int? = nil, usedText: String? = nil, detail: String? = nil,
+         money: UsageMoneyBreakdown? = nil, resetsAt: Date? = nil,
          duration: TimeInterval? = nil) {
         self.id = id
         self.group = group
@@ -114,6 +134,8 @@ struct LimitWindow: Identifiable, Codable, Equatable {
         self.remaining = remaining
         self.used = used
         self.usedText = usedText
+        self.detail = detail
+        self.money = money
         self.resetsAt = resetsAt
         self.duration = duration
     }
@@ -251,6 +273,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// Unused rate-limit resets on this Codex account, listed by the same
     /// backend as usage.
     var resetCredits: CodexResetCredits? = nil
+    /// Provider-owned online usage detail, such as DeepSeek's API key/model
+    /// breakdown and daily token/cost series.
+    var usageDetail: ProviderUsageDetail? = nil
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.
@@ -318,7 +343,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// How many windows are count-only (no fraction, no bar) — they render as
     /// single-line rows and take less vertical space than full bar rows.
     var compactRowCount: Int {
-        windows.filter { $0.usedFraction == nil && $0.used != nil }.count
+        windows.filter { $0.usedFraction == nil && ($0.used != nil || $0.detail != nil) }.count
     }
 
     /// A ring can only be drawn when the provider said what the limit was. A
@@ -343,6 +368,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
             return L10n.t("Sign in to Claude Code in ~/.claude-\(slug) to read your usage", locale: locale)
         case "cursor":     return L10n.t("Sign in to Cursor in the editor", locale: locale)
         case "codex":      return L10n.t("Sign in to Codex to read your usage", locale: locale)
+        case "deepseek":   return L10n.t("Sign in to DeepSeek Platform to read your usage", locale: locale)
         case _ where CodexProfile.slug(fromProviderID: id) != nil:
             let slug = CodexProfile.slug(fromProviderID: id)!
             return L10n.t("Sign in to Codex in ~/.codex-\(slug) to read your usage", locale: locale)

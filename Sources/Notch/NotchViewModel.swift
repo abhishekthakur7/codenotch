@@ -556,6 +556,8 @@ final class NotchViewModel: ObservableObject {
         snapshots.map { snapshot in
             NotchLayout.cardHeight(windowCount: snapshot.windows.count,
                 groupCount: Set(snapshot.windows.compactMap(\.group)).count,
+                moneyWindowCount: snapshot.windows.filter { $0.money != nil }.count,
+                usageDetailGroupCount: snapshot.usageDetail?.visibleGroups.count ?? 0,
                 sessionCount: snapshot.localModel == nil ? sessionCap + 1 : 0,
                 sessionCap: sessionCap,
                 statusMessage: snapshot.statusMessage,

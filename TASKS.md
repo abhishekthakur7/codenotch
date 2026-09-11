@@ -65,6 +65,9 @@ Design spec in [`docs/specs/2026-08-28-usage-notch-design.md`](docs/specs/2026-0
       reports neither
 - [x] **`WebSessionProvider`** — the browser plumbing written once; `Sites`
       carries the per-site origin, script and parser
+- [x] **DeepSeek Platform** — explicit WebView login, account funded/spent
+      summary, aggregate tokens/cost/requests/API-key metrics, and 30-day
+      daily token/cost charts from the Platform usage endpoints
 - [x] **Cursor** via the same route, pinned by `CursorUsageTests`
 - [x] Cursor's glyph, flattened from its own SVG rather than traced from the
       design frame — exact at any size. See "Flattening an SVG" below
@@ -164,8 +167,9 @@ means work is happening. `CodexActivityMonitor` errs short: the ring stops eight
 seconds after the last write rather than claiming activity it cannot see. If
 Codex grows a real status field, that should replace this.
 
-Perplexity's adapter is kept but unregistered. `WebSessionProvider` is the
-working pattern for a site behind bot management, and re-registering is one line.
+Perplexity's adapter is kept but unregistered. DeepSeek is the first registered
+Platform-login site using `WebSessionProvider`; its login remains explicit and
+its account data stays in the provider's own WebView session.
 
 ### Cursor
 
@@ -843,8 +847,7 @@ credential, which is the same control under an honest name.
 - [x] `WebSessionProvider.signOut()` clears its own cookies — the one true
       logout in the app, because that session is the only one Codenotch created.
       Scoped to the site's host: the data store is shared, so emptying it would
-      sign the user out of every other web provider too. Nothing ships on this
-      path today, but the button would silently lie without it.
+      sign the user out of every other web provider too.
 - [x] Each row shows the account it reads (address and plan), with **Open** going
       to that vendor's own usage page.
 - [x] Every row states what signing out does *not* reach

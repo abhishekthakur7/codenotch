@@ -124,7 +124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     + codexProfiles.map { CodexLocalProvider(profile: $0) }
                     + [AntigravityProvider(),
                        GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
-                       CommandCodeProvider(), GitHubCopilotProvider(),
+                       CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(),
                        OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
                        LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
                        OllamaProvider(),

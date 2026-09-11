@@ -67,7 +67,7 @@ actor AntigravityProvider: UsageProvider {
     nonisolated func account() -> ProviderAccount? {
         if AntigravityCredentials.isSignedIn(), let held = AntigravityCredentials.held {
             let email = held.email
-            let plan = held.authMethod == "consumer" ? "Personal" : held.authMethod
+            let plan = held.authMethod == "consumer" ? L10n.t("Personal") : held.authMethod
             return ProviderAccount(
                 label: email,
                 plan: plan,
@@ -159,27 +159,29 @@ actor AntigravityProvider: UsageProvider {
         )
     }
 
-    private func resolveHeadlineID(for windows: [LimitWindow]) -> String {
+    nonisolated func resolveHeadlineID(for windows: [LimitWindow]) -> String {
         let preferredLimit = Preferences.storedAntigravityHeadlineLimit()
+        let preferredModel = Preferences.storedAntigravityHeadlineModel()
+        let modelCandidates = windows.filter { $0.id.hasPrefix(preferredModel.rawValue) }
+        let candidates = modelCandidates.isEmpty ? windows : modelCandidates
 
         if preferredLimit != .automatic {
-            let candidates = windows.filter { matches($0, cadence: preferredLimit) }
-            if let mostConstrained = candidates.max(by: constrainedBefore) {
+            let limitCandidates = candidates.filter { matches($0, cadence: preferredLimit) }
+            if let mostConstrained = limitCandidates.max(by: constrainedBefore) {
                 return mostConstrained.id
             }
         }
 
         // Match CodexBar's default: an exhausted lane does not displace a
         // usable lane unless every lane is exhausted.
-        let fractional = windows.filter { $0.usedFraction != nil }
+        let fractional = candidates.filter { $0.usedFraction != nil }
         let usable = fractional.filter { ($0.usedFraction ?? 0) < 1 }
-        let candidates = usable.isEmpty ? fractional : usable
-        return candidates.max(by: constrainedBefore)?.id
-            ?? windows.first?.id
-            ?? "gemini-5h"
+        return (usable.isEmpty ? fractional : usable).max(by: constrainedBefore)?.id
+            ?? candidates.first?.id
+            ?? "\(preferredModel.rawValue)-hourly"
     }
 
-    private func matches(_ window: LimitWindow, cadence: AntigravityHeadlineLimit) -> Bool {
+    private nonisolated func matches(_ window: LimitWindow, cadence: AntigravityHeadlineLimit) -> Bool {
         let value = "\(window.id) \(window.label)".lowercased()
         switch cadence {
         case .fiveHour:
@@ -193,11 +195,23 @@ actor AntigravityProvider: UsageProvider {
         }
     }
 
-    private func constrainedBefore(_ lhs: LimitWindow, _ rhs: LimitWindow) -> Bool {
+    private nonisolated func constrainedBefore(_ lhs: LimitWindow, _ rhs: LimitWindow) -> Bool {
         let left = lhs.usedFraction ?? 0
         let right = rhs.usedFraction ?? 0
         if left != right { return left < right }
         return lhs.id > rhs.id
+    }
+
+    nonisolated func resolveWeeklyID(for windows: [LimitWindow]) -> String? {
+        let preferredModel = Preferences.storedAntigravityHeadlineModel()
+        let modelCandidates = windows.filter { $0.id.hasPrefix(preferredModel.rawValue) }
+        let candidates = modelCandidates.isEmpty ? windows : modelCandidates
+        let weekly = candidates.filter { window in
+            window.duration == 7 * 86400 ||
+                window.id.lowercased().hasSuffix("-weekly") ||
+                window.label.lowercased().contains("weekly")
+        }
+        return weekly.max(by: constrainedBefore)?.id
     }
 
     /// Ask Antigravity's language server, if it is running.
@@ -263,15 +277,6 @@ actor AntigravityProvider: UsageProvider {
         AntigravityQuotaParser.parse(data, now: now)
     }
 
-    private func resolveWeeklyID(for windows: [LimitWindow]) -> String? {
-        let weekly = windows.filter { window in
-            window.duration == 7 * 86400 ||
-                window.id.lowercased().hasSuffix("-weekly") ||
-                window.label.lowercased().contains("weekly")
-        }
-        return weekly.first(where: { $0.group?.lowercased().contains("gemini") == true })?.id
-            ?? weekly.first?.id
-    }
 
     static func ompUsageWindows(forEmail email: String? = nil) -> [LimitWindow] {
         let dbURL = URL(fileURLWithPath: ("~/.omp/agent/agent.db" as NSString).expandingTildeInPath)
@@ -328,9 +333,9 @@ actor AntigravityProvider: UsageProvider {
             let resetsAt = (resetsAtMs > 0) ? Date(timeIntervalSince1970: resetsAtMs / 1000.0) : nil
 
             let isGemini = limitId.contains(":google:") || rawLabel.contains("Google")
-            let groupName = isGemini ? "Gemini Models" : "Claude and GPT models"
+            let groupName = isGemini ? L10n.t("Gemini Models") : L10n.t("Claude and GPT models")
             let isWeekly = windowLabel.contains("weekly")
-            let labelName = isWeekly ? "Weekly Limit" : "5-hour Limit"
+            let labelName = isWeekly ? L10n.t("Weekly Limit") : L10n.t("5-hour Limit")
             let standardID = isGemini ? (isWeekly ? "gemini-weekly" : "gemini-hourly") : (isWeekly ? "3p-weekly" : "3p-hourly")
 
             if latestByID[standardID] == nil {
@@ -339,10 +344,10 @@ actor AntigravityProvider: UsageProvider {
         }
 
         let standardSlots: [(id: String, group: String, label: String, isWeekly: Bool)] = [
-            ("gemini-hourly", "Gemini Models", "5-hour Limit", false),
-            ("gemini-weekly", "Gemini Models", "Weekly Limit", true),
-            ("3p-hourly", "Claude and GPT models", "5-hour Limit", false),
-            ("3p-weekly", "Claude and GPT models", "Weekly Limit", true)
+            ("gemini-hourly", L10n.t("Gemini Models"), L10n.t("5-hour Limit"), false),
+            ("gemini-weekly", L10n.t("Gemini Models"), L10n.t("Weekly Limit"), true),
+            ("3p-hourly", L10n.t("Claude and GPT models"), L10n.t("5-hour Limit"), false),
+            ("3p-weekly", L10n.t("Claude and GPT models"), L10n.t("Weekly Limit"), true)
         ]
 
         var windows: [LimitWindow] = []
@@ -369,6 +374,30 @@ actor AntigravityProvider: UsageProvider {
         }
         return windows
     }
+
+    /// Known quota group names, so an English API value still localizes.
+    private static func quotaGroupName(_ name: String?) -> String? {
+        guard let name, !name.isEmpty else { return nil }
+        switch name {
+        case "Gemini Models": return L10n.t("Gemini Models")
+        case "Claude and GPT models": return L10n.t("Claude and GPT models")
+        default: return name
+        }
+    }
+
+    /// Known window titles, including the wording the language server uses.
+    private static func quotaWindowLabel(_ name: String) -> String {
+        var label = name
+        if label.hasSuffix(" Remaining") {
+            label = String(label.dropLast(" Remaining".count))
+        }
+        switch label {
+        case "Five Hour Limit", "5-hour Limit": return L10n.t("5-hour Limit")
+        case "Weekly Limit": return L10n.t("Weekly Limit")
+        default: return label
+        }
+    }
+
     /// The plan's display name, for the message the cell shows.
     static func tier(in data: Data) -> String {
         struct Response: Decodable {

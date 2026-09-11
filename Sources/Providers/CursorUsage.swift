@@ -42,6 +42,13 @@ enum CursorUsage {
     /// The window the ring should mean. Cursor Models when that field exists,
     /// never the blended total, never API — and on an enterprise/team plan,
     /// which reports neither, the hard `included` ceiling.
+    static func plan(fromJSON json: String) -> String? {
+        guard let data = json.data(using: .utf8),
+              let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { return nil }
+        return (root["membershipType"] as? String)?.nonEmptyPlan
+    }
+
     static func headlineID(in windows: [LimitWindow]) -> String {
         if windows.contains(where: { $0.id == "auto" }) { return "auto" }
         if windows.contains(where: { $0.id == "included" }) { return "included" }

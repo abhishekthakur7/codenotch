@@ -12,12 +12,20 @@ struct ActivitySummary: Equatable {
 
     let state: State
     let sessions: [AgentSession]
+    /// Requests lined up behind the one running — a local runtime's queue.
+    /// Zero for every cloud agent, which has no such line to report.
+    let queued: Int
+    /// What the tooltip's header says while this is going on, where a local
+    /// runtime names the phase. Nil leaves the header to the session's name.
+    let note: String?
 
     /// Nil when nothing is running — the cell disappears rather than sitting
     /// there saying nothing.
-    init?(sessions: [AgentSession]) {
+    init?(sessions: [AgentSession], queued: Int = 0, note: String? = nil) {
         guard !sessions.isEmpty else { return nil }
         self.sessions = sessions
+        self.queued = max(0, queued)
+        self.note = note
         // Anything blocked on you outranks anything merely busy: it is the only
         // state where the notch is asking for something.
         if sessions.contains(where: { $0.state == .waiting }) {

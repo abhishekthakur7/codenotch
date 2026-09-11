@@ -68,6 +68,20 @@ final class OllamaLocalUsageTests: XCTestCase {
         }
     }
 
+    func testTheEnvironmentKeyWinsAndBlankIsAbsent() {
+        XCTAssertEqual(OllamaCredentials.load(environment: ["OLLAMA_API_KEY": " k "], keychain: { "stored" }), "k")
+        XCTAssertEqual(OllamaCredentials.load(environment: ["OLLAMA_API_KEY": "  "], keychain: { "stored" }), "stored",
+                       "a blank export is no key")
+        XCTAssertNil(OllamaCredentials.load(environment: [:], keychain: { nil }))
+    }
+
+    func testTheKeychainClosureIsNotCachedBetweenCalls() {
+        var calls = 0
+        _ = OllamaCredentials.load(environment: [:], keychain: { calls += 1; return "stored" })
+        _ = OllamaCredentials.load(environment: [:], keychain: { calls += 1; return "stored" })
+        XCTAssertEqual(calls, 2, "the injectable path must bypass the cache")
+    }
+
     func testOnlyLocalHTTPOriginsAreAccepted() throws {
         XCTAssertEqual(try OllamaEndpoint.parse(" http://localhost:11434/ ").absoluteString,
                        "http://127.0.0.1:11434")

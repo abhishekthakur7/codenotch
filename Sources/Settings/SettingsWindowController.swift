@@ -20,6 +20,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let retry: (String) -> Void
     private let updater: Updater
     private let ollamaRelay: OllamaActivityRelay?
+    private let lmstudioMetrics: LMStudioMetrics?
     private let usageStore: UsageStore?
     private let resetPosition: () -> Void
 
@@ -32,8 +33,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          retry: @escaping (String) -> Void,
          resetPosition: @escaping () -> Void,
          usageStore: UsageStore? = nil,
-         ollamaRelay: OllamaActivityRelay? = nil) {
+         ollamaRelay: OllamaActivityRelay? = nil,
+         lmstudioMetrics: LMStudioMetrics? = nil) {
         self.ollamaRelay = ollamaRelay
+        self.lmstudioMetrics = lmstudioMetrics
         self.usageStore = usageStore
         self.resetPosition = resetPosition
         self.switchAccount = switchAccount
@@ -174,7 +177,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
                                    retry: retry,
                                    resetPosition: resetPosition,
                                    updater: updater,
-                                   ollamaRelay: ollamaRelay, usageStore: usageStore)
+                                   ollamaRelay: ollamaRelay, lmstudioMetrics: lmstudioMetrics,
+                                   usageStore: usageStore)
         )
         window.center()
         window.isReleasedWhenClosed = false

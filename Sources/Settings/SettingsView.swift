@@ -26,7 +26,7 @@ extension View {
 /// crossing-and-notification machinery it switches is Notifications' to
 /// explain.
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
-    case accounts, ollama, appearance, notifications, general
+    case accounts, ollama, lmstudio, appearance, notifications, general
 
     var id: String { rawValue }
 
@@ -34,6 +34,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return L10n.t("Accounts")
         case .ollama:        return "Ollama"   // a product name, the same in every language
+        case .lmstudio:      return "LM Studio"
         case .appearance:    return L10n.t("Appearance")
         case .notifications: return L10n.t("Notifications")
         case .general:       return L10n.t("General")
@@ -44,6 +45,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return "person.crop.circle.fill"
         case .ollama:        return "desktopcomputer"
+        case .lmstudio:      return "cpu"
         case .appearance:    return "paintbrush.fill"
         case .notifications: return "bell.badge.fill"
         case .general:       return "gearshape.fill"
@@ -57,6 +59,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         switch self {
         case .accounts:      return .blue
         case .ollama:        return .teal
+        case .lmstudio:      return .purple
         case .appearance:    return .indigo
         case .notifications: return .red
         case .general:       return .gray
@@ -170,6 +173,7 @@ struct SettingsView: View {
     let resetPosition: () -> Void
     @ObservedObject var updater: Updater
     var ollamaRelay: OllamaActivityRelay? = nil
+    var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
@@ -416,8 +420,17 @@ struct SettingsView: View {
         case .ollama:
             if let usageStore {
                 Form {
-                    Section("Connection") {
+                    Section(L10n.t("Connection")) {
                         OllamaSettingsRow(preferences: preferences, store: usageStore, relay: ollamaRelay)
+                    }
+                }
+                .formStyle(.grouped)
+            }
+        case .lmstudio:
+            if let usageStore {
+                Form {
+                    Section("Connection") {
+                        LMStudioSettingsRow(preferences: preferences, store: usageStore, metrics: lmstudioMetrics)
                     }
                 }
                 .formStyle(.grouped)
@@ -439,6 +452,7 @@ struct SettingsView: View {
                     AccountRow(provider: account, preferences: preferences,
                                signOut: signOut, signIn: signIn,
                                switchAccount: switchAccount, retry: retry,
+                               refresh: { usageStore?.reevaluate(providerID: $0) },
                                isOrderable: true,
                                drag: drag,
                                cursorRefresh: cursorRefresh,
@@ -473,6 +487,7 @@ struct SettingsView: View {
                         AccountRow(provider: account, preferences: preferences,
                                    signOut: signOut, signIn: signIn,
                                    switchAccount: switchAccount, retry: retry,
+                                   refresh: { usageStore?.reevaluate(providerID: $0) },
                                    isOrderable: false,
                                    drag: drag,
                                    cursorRefresh: cursorRefresh,
@@ -591,14 +606,12 @@ struct SettingsView: View {
                             .frame(width: 46, alignment: .trailing)
                     }
 
-                    Text("Scales the whole surface — rings, text and tooltip "
-                         + "together — so the proportions stay as drawn. "
-                         + "100% is the size the notch was designed at.")
+                    Text(L10n.t("Scales the whole surface — rings, text and tooltip together — so the proportions stay as drawn. 100% is the size the notch was designed at."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
-                    Picker("Preset size", selection: $preferences.notchSize) {
+                    Picker(L10n.t("Preset size"), selection: $preferences.notchSize) {
                         ForEach(NotchSize.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.segmented)
@@ -1131,6 +1144,7 @@ private struct AccountRow: View {
     let signIn: (String) -> Bool
     let switchAccount: (String) -> Bool
     let retry: (String) -> Void
+    let refresh: (String) -> Void
     /// Whether this row has a place in the notch to argue about. A provider
     /// switched off draws no ring, so there is nothing for a drag to arrange.
     let isOrderable: Bool
@@ -1265,7 +1279,10 @@ private struct AccountRow: View {
                 if isConnected, provider.wasRefusedAccess {
                     Button(L10n.t("Allow access…")) { retry(provider.id) }
                         .controlSize(.small)
-                        .help(L10n.t("Asks macOS for \(provider.name)'s saved login again. Choose Always Allow and it will stop asking."))
+                        // Not "it will stop asking": for Claude it will not.
+                        // Claude Code recreates its login when the token
+                        // rotates, and a recreated item forgets the grant.
+                        .help(L10n.t("Asks macOS for \(provider.name)'s saved login again. Always Allow means it is asked less often."))
                 }
 
                 if isConnected, let destination {
@@ -1279,7 +1296,7 @@ private struct AccountRow: View {
                     .controlSize(.small)
                     .labelsHidden()
                     .help(provider.localModel != nil
-                          ? L10n.t("Show or hide this model in the notch. It stays loaded in Ollama.")
+                          ? L10n.t("Show or hide this model in the notch. It stays loaded in \(provider.runtimeName ?? "Ollama").")
                           : isConnected
                           ? L10n.t("Switch off to stop reading \(provider.name) and forget its readings. \(provider.signIn.signOutCaveat)")
                           : L10n.t("Switch on to sign in and read \(provider.name) again."))
@@ -1297,8 +1314,7 @@ private struct AccountRow: View {
             // inside, this warning would be swallowed by the very row that
             // makes everything look fine.
             if isConnected, provider.needsSignInRenewal {
-                Text("\(provider.name) usage needs its sign-in renewed — run "
-                     + "`claude` once in a terminal.")
+                Text(L10n.t("\(provider.name) usage needs its sign-in renewed — run `claude` once in a terminal."))
                     .font(.caption)
                     .foregroundStyle(.orange)
                     .padding(.leading, 48)
@@ -1360,20 +1376,41 @@ private struct AccountRow: View {
             
             // Antigravity limit dropdown
             if isConnected, provider.id == "gemini" {
-                HStack(spacing: 8) {
-                    Text(L10n.t("Notch reads"))
-                        .foregroundStyle(.secondary)
-                    Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
-                        ForEach(AntigravityHeadlineLimit.allCases) { limit in
-                            Text(limit.explanation).tag(limit)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Text(L10n.t("Notch reads"))
+                            .foregroundStyle(.secondary)
+                        Picker(L10n.t("Notch reads"), selection: $preferences.antigravityHeadlineLimit) {
+                            ForEach(AntigravityHeadlineLimit.allCases) { limit in
+                                Text(limit.title).tag(limit)
+                            }
                         }
+                        .labelsHidden()
+                        .pickerStyle(.menu)
+                        .frame(width: 140)
                     }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
-                    .frame(width: 140)
+                    
+                    HStack(spacing: 8) {
+                        Text(L10n.t("Model data"))
+                            .foregroundStyle(.secondary)
+                        Picker(L10n.t("Model data"), selection: $preferences.antigravityHeadlineModel) {
+                            ForEach(AntigravityHeadlineModel.allCases) { model in
+                                Text(model.explanation).tag(model)
+                            }
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.menu)
+                        .frame(width: 140)
+                    }
                 }
                 .padding(.top, 2)
                 .help(L10n.t("Choose which limit appears in the main notch for Antigravity."))
+                .onChange(of: preferences.antigravityHeadlineLimit) { _ in
+                    refresh(provider.id)
+                }
+                .onChange(of: preferences.antigravityHeadlineModel) { _ in
+                    refresh(provider.id)
+                }
             }
 
             // Google publishes no limit for a bare API key, so the ring has
@@ -1421,15 +1458,15 @@ private struct AccountRow: View {
         // own line instead, and `.small` comes off the controls — it bought
         // nothing but a cramped row.
         VStack(alignment: .leading, spacing: 4) {
-            Text("Ollama API key")
+            Text(L10n.t("Ollama API key"))
                 .foregroundStyle(.secondary)
             HStack(spacing: 8) {
-                SecureField("Paste your key", text: $ollamaKey)
+                SecureField(L10n.t("Paste your key"), text: $ollamaKey)
                     .textContentType(.password)
                     .textFieldStyle(.roundedBorder)
                     .labelsHidden()
                     .frame(maxWidth: 260)
-                Button("Save") {
+                Button(L10n.t("Save")) {
                     guard !ollamaKey.isEmpty else { return }
                     OllamaCredentials.store(ollamaKey)
                     ollamaKey = ""
@@ -1438,7 +1475,7 @@ private struct AccountRow: View {
                 }
                 .disabled(ollamaKey.isEmpty)
                 if ollamaKeySaved {
-                    Text("Saved")
+                    Text(L10n.t("Saved"))
                         .foregroundStyle(.green)
                 }
             }
@@ -1449,8 +1486,8 @@ private struct AccountRow: View {
     @ViewBuilder
     private var accountDetail: some View {
         if let model = provider.localModel {
-            Text(isConnected ? L10n.t("\(model.memoryText) \(model.memoryLabel) · via Ollama")
-                 : L10n.t("Hidden from the notch · Loaded in Ollama"))
+            Text(isConnected ? L10n.t("\(model.memoryText) \(model.memoryLabel) · via \(provider.runtimeName ?? "Ollama")")
+                 : L10n.t("Hidden from the notch · Loaded in \(provider.runtimeName ?? "Ollama")"))
                 .foregroundStyle(.secondary)
         } else if !isConnected {
             Text(L10n.t("Signed out — nothing is read, and no readings are kept."))

@@ -44,6 +44,12 @@ final class NotchLayoutTests: XCTestCase {
 
     /// The session list is extra card, so the hover region has to grow with it
     /// or the pointer falls out of the bottom of a card it is still over.
+    func testCardGrowsWhenAPlanSitsUnderTheTitle() {
+        let bare = NotchLayout.cardHeight(windowCount: 2)
+        let named = NotchLayout.cardHeight(windowCount: 2, hasPlan: true)
+        XCTAssertEqual(named - bare, NotchLayout.cardBodyLineHeight, accuracy: 0.001)
+    }
+
     func testCardGrowsWithTheSessionList() {
         let bare = NotchLayout.cardHeight(windowCount: 2)
         let one = NotchLayout.cardHeight(windowCount: 2, sessionCount: 1)

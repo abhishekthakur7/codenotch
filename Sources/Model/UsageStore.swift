@@ -204,10 +204,11 @@ final class UsageStore: ObservableObject {
     var localModelSummaries: [ProviderSummary] {
         ProviderOrder.cells(from: snapshots, keeping: notchSnapshots).compactMap { cell in
             guard let model = cell.localModel else { return nil }
+            let runtime = providers.first { $0.id == cell.providerID }?.displayName ?? cell.displayName
             return ProviderSummary(kind: .localRuntime, localModel: model,
-                                   sourceProviderID: cell.providerID,
+                                   sourceProviderID: cell.providerID, runtimeName: runtime,
                                    id: cell.id, name: model.name, glyph: cell.glyph,
-                                   account: nil, signIn: .guidance("Loaded in Ollama."))
+                                   account: nil, signIn: .guidance(L10n.t("Loaded in \(runtime).")))
         }
     }
 
@@ -410,8 +411,20 @@ final class UsageStore: ObservableObject {
     func updateOllamaEndpoint(_ endpoint: URL) {
         guard let provider = providers.first(where: { $0.id == "ollama-local" }) as? OllamaLocalProvider,
               provider.endpoint != endpoint else { return }
+        restart(provider) { provider.endpoint = endpoint }
+    }
+
+    func updateLMStudioEndpoint(_ endpoint: URL) {
+        guard let provider = providers.first(where: { $0.id == LMStudioMetrics.providerID }) as? LMStudioLocalProvider,
+              provider.endpoint != endpoint else { return }
+        restart(provider) { provider.endpoint = endpoint }
+    }
+
+    /// A changed address makes whatever the old one was about to answer
+    /// untrue; the reading is cleared and the new address asked at once.
+    private func restart(_ provider: UsageProvider, applying change: () -> Void) {
         cancelRefresh(providerID: provider.id)
-        provider.endpoint = endpoint
+        change()
         guard !disconnected.contains(provider.id) else { return }
         publish(Self.placeholder(provider))
         _ = beginRefresh(provider)
@@ -546,6 +559,19 @@ final class UsageStore: ObservableObject {
         }
     }
 
+    func reevaluate(providerID: String) {
+        guard let provider = providers.first(where: { $0.id == providerID }) else { return }
+        if let idx = snapshots.firstIndex(where: { $0.id == providerID }) {
+            var snapshot = snapshots[idx]
+            if let ag = provider as? AntigravityProvider {
+                snapshot.headlineID = ag.resolveHeadlineID(for: snapshot.windows)
+                snapshot.weeklyID = ag.resolveWeeklyID(for: snapshot.windows)
+                snapshots[idx] = snapshot
+                updateNotchSnapshots()
+            }
+        }
+    }
+
     private func snapshot(from provider: UsageProvider, generation: Int) async -> ProviderSnapshot? {
         // A scheduled task can be disconnected before it begins; avoid reading
         // its credential at all, as well as rejecting an obsolete response.
@@ -642,6 +668,10 @@ final class UsageStore: ObservableObject {
         // and still valid, we were simply not let in to re-read it. Discarding
         // the last number would punish someone for pressing the wrong button.
         case .accessDenied:            return false
+        // The account was not closed and the numbers were not wrong — the
+        // owning app dropped its own token. Blanking the ring here is what
+        // turned a recurring overnight glitch into apparent data loss.
+        case .signedOutByOwner:        return false
         case .ok, .stale, .error:      return false
         }
     }
@@ -672,6 +702,8 @@ final class UsageStore: ObservableObject {
             // Not an error the user can do anything about, and the last good
             // reading is still roughly true, so it reads as staleness.
             return .stale(since: Date())
+        case UsageProviderError.signedOutByOwner:
+            return .signedOutByOwner
         case UsageProviderError.accessDenied:
             return .accessDenied
         case UsageProviderError.timedOut:

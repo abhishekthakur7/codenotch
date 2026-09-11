@@ -21,6 +21,12 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(ollamaEndpoint, forKey: Keys.ollamaEndpoint) }
     }
 
+    /// Where LM Studio's server answers. Defaults to the port LM Studio's own
+    /// settings name, so a server moved off 1234 is found without typing.
+    @Published var lmstudioEndpoint: String {
+        didSet { defaults.set(lmstudioEndpoint, forKey: Keys.lmstudioEndpoint) }
+    }
+
     /// Providers whose threshold alerts are muted. Stored as the muted set so
     /// a provider added later alerts by default — the same reasoning as
     /// `disconnectedProviders`.
@@ -115,6 +121,11 @@ final class Preferences: ObservableObject {
     /// The preferred limit window to show for Antigravity provider (automatic, 5h, or weekly).
     @Published var antigravityHeadlineLimit: AntigravityHeadlineLimit {
         didSet { defaults.set(antigravityHeadlineLimit.rawValue, forKey: Keys.antigravityHeadlineLimit) }
+    }
+
+    /// The preferred model group to show for Antigravity provider (Gemini or Claude and GPT models).
+    @Published var antigravityHeadlineModel: AntigravityHeadlineModel {
+        didSet { defaults.set(antigravityHeadlineModel.rawValue, forKey: Keys.antigravityHeadlineModel) }
     }
 
     /// Where along that edge the notch sits, nudged from the centred default
@@ -249,6 +260,7 @@ final class Preferences: ObservableObject {
         /// The old name. Kept so existing choices survive the rename.
         static let disconnected = "hiddenProviders"
         static let ollamaEndpoint = "ollamaEndpoint"
+        static let lmstudioEndpoint = "lmstudioEndpoint"
         static let introducedOllama = "introducedOllama"
         static let migratedOllamaID = "migratedOllamaLocalID"
         static let ollamaMetricsEnabled = "ollamaMetricsEnabled"
@@ -278,6 +290,7 @@ final class Preferences: ObservableObject {
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
         static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
+        static let antigravityHeadlineModel = "antigravityHeadlineModel"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -301,6 +314,15 @@ final class Preferences: ObservableObject {
               let limit = AntigravityHeadlineLimit(rawValue: value)
         else { return .automatic }
         return limit
+    }
+
+    nonisolated static func storedAntigravityHeadlineModel(
+        defaults: UserDefaults = .standard
+    ) -> AntigravityHeadlineModel {
+        guard let value = defaults.string(forKey: Keys.antigravityHeadlineModel),
+              let model = AntigravityHeadlineModel(rawValue: value)
+        else { return .gemini }
+        return model
     }
 
     /// True the very first time this copy runs, and never again.
@@ -364,6 +386,12 @@ final class Preferences: ObservableObject {
         self.ollamaEndpoint = (try? OllamaEndpoint.parse(
             defaults.string(forKey: Keys.ollamaEndpoint) ?? OllamaEndpoint.defaultAddress
         ).absoluteString) ?? OllamaEndpoint.defaultAddress
+        // A stored choice wins; otherwise LM Studio's own configuration file
+        // says where it listens, and 1234 is what it ships with.
+        self.lmstudioEndpoint = (try? LMStudioEndpoint.parse(
+            defaults.string(forKey: Keys.lmstudioEndpoint)
+                ?? LMStudioEndpoint.configuredAddress() ?? LMStudioEndpoint.defaultAddress
+        ).absoluteString) ?? LMStudioEndpoint.defaultAddress
         self.mutedAlertProviders = Set(defaults.stringArray(forKey: Keys.mutedAlerts) ?? [])
         // Absent means never chosen, which is the hover behaviour the app was
         // designed around — not hidden, which would make a fresh install look
@@ -402,6 +430,8 @@ final class Preferences: ObservableObject {
             .flatMap(NotchScreenScope.init(rawValue:)) ?? .mainDisplay
         self.antigravityHeadlineLimit = defaults.string(forKey: Keys.antigravityHeadlineLimit)
             .flatMap(AntigravityHeadlineLimit.init(rawValue:)) ?? .automatic
+        self.antigravityHeadlineModel = defaults.string(forKey: Keys.antigravityHeadlineModel)
+            .flatMap(AntigravityHeadlineModel.init(rawValue:)) ?? .gemini
         // Follow the Mac unless the user explicitly chooses a Codenotch colour.
         // Off by default: an extra arc in a 44pt circle is a change to how
         // every reading looks, and nobody asked for it on their behalf.

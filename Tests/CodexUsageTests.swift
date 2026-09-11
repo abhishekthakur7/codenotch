@@ -37,6 +37,10 @@ final class CodexUsageTests: XCTestCase {
          "plan_type":"free"}
         """)
         XCTAssertEqual(result.map(\.id), ["primary"])
+        XCTAssertEqual(CodexUsage.plan(from: Data("""
+        {"rate_limit":{"primary_window":{"used_percent":16,"limit_window_seconds":2592000}},
+         "plan_type":"free"}
+        """.utf8)), "free")
         XCTAssertEqual(result.first?.label, "Monthly limit")
         XCTAssertEqual(result.first?.usedFraction ?? -1, 0.16, accuracy: 0.0001)
     }
@@ -155,6 +159,86 @@ final class CodexUsageTests: XCTestCase {
         XCTAssertEqual(usage.summary?.longestStreakDays, 11)
         XCTAssertEqual(usage.usageToday(now: now, calendar: calendar), nil,
                        "a missing current-day bucket should be shown as Pending")
+    }
+
+    /// `/wham/rate-limit-reset-credits` reports how many unused resets remain
+    /// and when the next one expires. The count is its own field because the
+    /// credits array can be truncated.
+    func testResetCreditsReadsAvailableCountAndSoonestExpiry() throws {
+        let json = """
+        {"credits":[
+          {"id":"later","reset_type":"rate_limit","status":"available",
+           "granted_at":"2026-09-01T12:00:00Z",
+           "expires_at":"2026-09-20T12:00:00.250Z",
+           "title":"Reset","description":"Unused reset","extra":true},
+          {"id":"spent","reset_type":"rate_limit","status":"redeemed",
+           "granted_at":"2026-08-01T00:00:00Z",
+           "expires_at":"2026-09-12T00:00:00Z"},
+          {"id":"sooner","reset_type":"rate_limit","status":"available",
+           "granted_at":"2026-09-02T00:00:00Z",
+           "expires_at":"2026-09-15T08:00:00Z"}
+         ],
+         "available_count":2,
+         "server_time":"2026-09-10T00:00:00Z"}
+        """
+        let result = try CodexUsage.resetCredits(from: Data(json.utf8))
+        XCTAssertEqual(result.availableCount, 2)
+        XCTAssertEqual(result.credits.map(\.id), ["later", "spent", "sooner"])
+        XCTAssertEqual(result.available.map(\.id), ["sooner", "later"])
+        XCTAssertEqual(result.nextExpiry, ISO8601DateFormatter().date(from: "2026-09-15T08:00:00Z"))
+
+        let fractional = ISO8601DateFormatter()
+        fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        XCTAssertEqual(result.available.last?.expiresAt,
+                       fractional.date(from: "2026-09-20T12:00:00.250Z"))
+    }
+
+    func testResetCreditsTrustsAvailableCountWhenTheArrayIsTruncated() throws {
+        let result = try CodexUsage.resetCredits(from: Data("""
+        {"available_count":3,"credits":[
+          {"id":"only","status":"available","expires_at":"2026-09-18T00:00:00Z"}
+        ]}
+        """.utf8))
+        XCTAssertEqual(result.availableCount, 3)
+        XCTAssertEqual(result.credits.map(\.id), ["only"])
+        XCTAssertEqual(result.available.count, 1)
+        XCTAssertEqual(result.nextExpiry, ISO8601DateFormatter().date(from: "2026-09-18T00:00:00Z"))
+    }
+
+    func testResetCreditsCountsAvailableCreditsWhenThePayloadOmitsTheCount() throws {
+        let result = try CodexUsage.resetCredits(from: Data("""
+        {"credits":[
+          {"id":"a","status":"available","expires_at":"2026-09-18T00:00:00Z"},
+          {"id":"b","status":"redeemed","expires_at":"2026-09-10T00:00:00Z"}
+        ]}
+        """.utf8))
+        XCTAssertEqual(result.availableCount, 1)
+        XCTAssertEqual(result.available.map(\.id), ["a"])
+    }
+
+    /// A non-object entry is skipped; an unreadable date becomes no expiry.
+    /// None of that is a reason to fail the usage fetch.
+    func testResetCreditsSkipsMalformedCreditsRatherThanFailing() throws {
+        let result = try CodexUsage.resetCredits(from: Data("""
+        {"credits":[
+          "nope",
+          {"id":"ok","status":"available","expires_at":null}
+        ],"available_count":1}
+        """.utf8))
+        XCTAssertEqual(result.credits.map(\.id), ["ok"])
+        XCTAssertNil(result.credits.first?.expiresAt)
+        XCTAssertEqual(result.availableCount, 1)
+        XCTAssertNil(result.nextExpiry)
+    }
+
+    func testResetCreditsThrowsOnlyOnInvalidJSON() throws {
+        XCTAssertThrowsError(try CodexUsage.resetCredits(from: Data("not-json".utf8))) { error in
+            guard case UsageProviderError.badResponse = error else {
+                return XCTFail("expected badResponse, got \(error)")
+            }
+        }
+        XCTAssertEqual(try CodexUsage.resetCredits(from: Data("{}".utf8)).availableCount, 0)
+        XCTAssertEqual(try CodexUsage.resetCredits(from: Data("[]".utf8)).credits, [])
     }
 
     func testAccountUsageCardGetsRoomForTheActivitySection() {

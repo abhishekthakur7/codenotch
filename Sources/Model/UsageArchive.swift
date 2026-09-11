@@ -82,7 +82,7 @@ struct UsageArchive {
             let snapshot = ProviderSnapshot(
                 id: entry.id,
                 displayName: entry.displayName,
-                glyph: entry.glyph,
+                glyph: entry.id == "devin" && entry.glyph == .third ? .devin : entry.glyph,
                 fidelity: entry.fidelity,
                 status: .stale(since: entry.fetchedAt),
                 windows: entry.windows,

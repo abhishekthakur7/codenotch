@@ -2,6 +2,14 @@ import Foundation
 
 /// How much to trust a provider's numbers. The UI never presents a derived or
 /// manual figure as if a vendor had published it.
+extension String {
+    /// Nil when this would be an empty plan line on the card.
+    var nonEmptyPlan: String? {
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+}
+
 enum Fidelity: String, Codable, Equatable {
     case official
     case derived
@@ -15,6 +23,9 @@ enum ProviderStatus: Equatable {
     case ok
     case stale(since: Date)
     case needsAuth
+    /// The owning app emptied its own credential. Distinct from `needsAuth`
+    /// because the last reading is kept — see `UsageProviderError`.
+    case signedOutByOwner
     /// macOS was asked for a credential that exists, and refused.
     case accessDenied
     case unsupported(String)
@@ -84,6 +95,9 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     /// How many have been spent, when the provider counts up rather than down
     /// and never states the ceiling. Cursor does this.
     let used: Int?
+    /// Optional display override for `used` — used when the raw count would
+    /// be the wrong unit (e.g. a dollar balance formatted as "$14.28").
+    let usedText: String?
     /// Nil when the provider does not say when the window rolls over.
     let resetsAt: Date?
 
@@ -91,7 +105,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     let duration: TimeInterval?
 
     init(id: String, group: String? = nil, label: String, usedFraction: Double? = nil,
-         remaining: Int? = nil, used: Int? = nil, resetsAt: Date? = nil,
+         remaining: Int? = nil, used: Int? = nil, usedText: String? = nil, resetsAt: Date? = nil,
          duration: TimeInterval? = nil) {
         self.id = id
         self.group = group
@@ -99,6 +113,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
         self.usedFraction = usedFraction
         self.remaining = remaining
         self.used = used
+        self.usedText = usedText
         self.resetsAt = resetsAt
         self.duration = duration
     }
@@ -134,6 +149,7 @@ struct LimitWindow: Identifiable, Codable, Equatable {
                 : L10n.t("\(Self.compact(remaining)) left", locale: locale)
         }
         if let used {
+            if let usedText { return usedText }
             return used < 10_000
                 ? L10n.t("\(used) used", locale: locale)
                 : L10n.t("\(Self.compact(used)) used", locale: locale)
@@ -195,6 +211,17 @@ struct ProviderSnapshot: Identifiable, Equatable {
     var localModel: LocalRuntimeReading.Model?
     var localPerformance: LocalModelPerformance?
     var showsLocalPerformance = false
+    /// How full the loaded context was on the last request, from the runtime's
+    /// own log. The local ring's arc: a window filling up is the one fraction
+    /// a local model has, where a cloud ring has a quota.
+    var localContextFraction: Double?
+    /// Today's tokens and requests and the shape of the last response, when
+    /// the runtime logs them. Read by the tooltip; absent for runtimes that
+    /// do not.
+    var localLedger: LocalTokenLedger.Summary?
+    /// The runtime measures responses itself, so speed is shown without the
+    /// Ollama relay switch.
+    var localRuntimeMeasuresSpeed = false
     /// A model cell has its own display preference, but polling belongs to the
     /// runtime that supplied it.
     var sourceProviderID: String?
@@ -207,7 +234,9 @@ struct ProviderSnapshot: Identifiable, Equatable {
             ProviderSnapshot(id: "\(id):model:\(model.id)", displayName: displayName,
                              glyph: model.brand?.glyph ?? glyph,
                              fidelity: fidelity, status: status, windows: [],
-                             kind: kind, localModel: model, sourceProviderID: id)
+                             kind: kind, localModel: model,
+                             localRuntimeMeasuresSpeed: localRuntime?.measuresSpeed ?? false,
+                             sourceProviderID: id)
         }
     }
     /// Codex's account-wide token activity, when its profile endpoint returned
@@ -215,6 +244,13 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// endpoint; it never changes the profile token buckets. Other providers
     /// leave this nil because they do not expose the same account-level data.
     var tokenUsage: CodexTokenUsage? = nil
+    /// The account's named tier, when the provider publishes one. Shown under
+    /// the tooltip title. Nil when there is nothing to name.
+    var plan: String? = nil
+
+    /// Unused rate-limit resets on this Codex account, listed by the same
+    /// backend as usage.
+    var resetCredits: CodexResetCredits? = nil
 
     /// The number on the cell: the provider's declared primary window — for
     /// Claude, the current session.
@@ -267,6 +303,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
         }
         if let usedFraction { return Percent.text(for: usedFraction) + "%" }
         if let remaining = headline?.remaining { return LimitWindow.compact(remaining) }
+        if let usedText = headline?.usedText { return usedText }
         if let used = headline?.used { return LimitWindow.compact(used) }
         return "—"
     }
@@ -284,8 +321,14 @@ struct ProviderSnapshot: Identifiable, Equatable {
         windows.filter { $0.usedFraction == nil && $0.used != nil }.count
     }
 
-    /// A ring can only be drawn when the provider said what the limit was.
-    var ringFraction: Double? { usedFraction }
+    /// A ring can only be drawn when the provider said what the limit was. A
+    /// local model has no limit; its arc is how full the context was.
+    var ringFraction: Double? { kind == .localRuntime ? localContextFraction : usedFraction }
+
+    /// Rows the tooltip adds for a logged runtime: context used, tokens and
+    /// requests today, reasoning share, draft acceptance. Counted here so the
+    /// card's budget and its contents cannot disagree.
+    var localLedgerRowCount: Int { localLedger == nil ? 0 : 5 }
 
     /// Signing in means something different per provider, so the prompt has to
     /// say which door to knock on.
@@ -312,6 +355,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
         // one wants a key, the local one wants the daemon running.
         case "ollama":       return L10n.t("Enter an Ollama API key in Settings, or export OLLAMA_API_KEY", locale: locale)
         case "ollama-local": return L10n.t("Start Ollama to monitor your local models", locale: locale)
+        case "lmstudio":     return L10n.t("Start LM Studio's server to monitor your local models", locale: locale)
         default:           return L10n.t("Sign in to \(displayName) to read your usage", locale: locale)
         }
     }
@@ -330,10 +374,17 @@ struct ProviderSnapshot: Identifiable, Equatable {
         let locale = L10n.locale
         switch status {
         case .needsAuth:      return authPrompt
+        case .signedOutByOwner:
+            // Names the cause, because "sign in again" on its own invites the
+            // reasonable conclusion that this app lost the login.
+            return L10n.t("Claude Code emptied this profile's saved login — it does that to every profile at once after it updates itself. Sign in again to \(displayName) to read your usage.", locale: locale)
         case .accessDenied:
             // Says what happened and what fixes it. "Sign in to Claude Code"
             // would send someone who *is* signed in to fix the wrong thing.
-            return L10n.t("Codenotch was refused access to \(displayName)'s saved login. Click this ring to ask again, and choose Always Allow.", locale: locale)
+            // Points at the one control that asks again. Clicking the ring
+            // only refreshes, and a refresh never shows the dialogue — polls
+            // are not allowed to.
+            return L10n.t("macOS refused Codenotch access to \(displayName)'s saved login. Use Allow access… in Settings to ask again.", locale: locale)
         case .unsupported(let why): return why
         case .error(let why): return L10n.t("Couldn't read usage — \(why)", locale: locale)
         case .stale, .ok:     return L10n.t("Waiting for the first reading…", locale: locale)

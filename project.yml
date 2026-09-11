@@ -74,6 +74,7 @@ targets:
         CFBundleLocalizations:
           - en
           - fr
+          - pt-BR
           - zh-Hans
         LSMinimumSystemVersion: "15.0"
         # Sources/Info.plist is *generated* from this block, so editing that

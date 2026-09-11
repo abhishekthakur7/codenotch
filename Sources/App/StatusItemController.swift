@@ -21,6 +21,12 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     /// The latest readings, mirrored from the store. The menu is rebuilt from
     /// these every time it opens, so reset countdowns and ages are fresh.
     var snapshots: [ProviderSnapshot] = []
+    /// The notch's decorated cells, read when the menu opens. A local runtime's
+    /// own snapshot only lists its models; what each one is doing, how fast it
+    /// answered and what it cost today are put on the cells by the view model,
+    /// and the menu says the same things the cells do.
+    var cells: () -> [ProviderSnapshot] = { [] }
+    var activity: (ProviderSnapshot) -> ActivitySummary? = { _ in nil }
 
     init(onOpenSettings: @escaping () -> Void) {
         self.onOpenSettings = onOpenSettings
@@ -65,9 +71,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             empty.isEnabled = false
             menu.addItem(empty)
         } else {
+            let cells = cells()
             for snapshot in snapshots {
                 menu.addItem(headerItem(for: snapshot, now: now))
-                for line in Self.detailLines(for: snapshot, now: now) {
+                for line in Self.detailLines(for: snapshot, cells: cells, activity: activity, now: now) {
                     let row = NSMenuItem(title: line, action: nil, keyEquivalent: "")
                     row.isEnabled = false
                     row.indentationLevel = 1
@@ -120,8 +127,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     /// The provider's own row: name, headline figure, and age when stale — the
     /// same three facts the tooltip header shows. Clicking re-reads it.
     private func headerItem(for snapshot: ProviderSnapshot, now: Date) -> NSMenuItem {
-        var title = "\(snapshot.displayName) — \(snapshot.hasReading ? snapshot.headlineText : "—")"
-        if let since = snapshot.status.staleSince, since != .distantPast {
+        var title = "\(snapshot.displayName) — \(Self.headline(for: snapshot))"
+        if snapshot.kind == .usage, let since = snapshot.status.staleSince, since != .distantPast {
             title += " · \(ElapsedCopy.ago(since: since, now: now))"
         }
         let header = NSMenuItem(title: title, action: #selector(refreshProvider(_:)), keyEquivalent: "")
@@ -130,11 +137,31 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         return header
     }
 
+    /// A runtime has no headline figure of its own; its models have. The row
+    /// says how many there are, and the lines under it say the rest.
+    static func headline(for snapshot: ProviderSnapshot) -> String {
+        if snapshot.kind == .localRuntime {
+            return snapshot.localRuntime?.summary ?? "—"
+        }
+        return snapshot.hasReading ? snapshot.headlineText : "—"
+    }
+
     /// Everything the tooltip says under its header: the blocked line first,
     /// then one row per limit window, or the status message when there is
-    /// nothing metered. Pure, so the wording can be tested without a menu.
-    static func detailLines(for snapshot: ProviderSnapshot, now: Date) -> [String] {
+    /// nothing metered. For a local runtime, one line per loaded model, built
+    /// from its decorated cell. Pure, so the wording can be tested without a
+    /// menu.
+    static func detailLines(for snapshot: ProviderSnapshot, cells: [ProviderSnapshot] = [],
+                            activity: (ProviderSnapshot) -> ActivitySummary? = { _ in nil },
+                            now: Date) -> [String] {
         let now = now
+        if snapshot.kind == .localRuntime {
+            let models = cells.filter { $0.providerID == snapshot.id && $0.localModel != nil }
+            guard models.isEmpty else { return models.map { modelLine(for: $0, activity: activity($0)) } }
+            // The header already says "No models loaded"; only a failure to
+            // reach the server is worth a line of its own.
+            return snapshot.localRuntime == nil ? [snapshot.statusMessage].compactMap { $0 } : []
+        }
         if let block = snapshot.block {
             var lines = [block.summary(now: now)]
             lines += snapshot.windows.map { windowLine(for: $0, now: now) }
@@ -144,6 +171,24 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             return [message]
         }
         return snapshot.windows.map { windowLine(for: $0, now: now) }
+    }
+
+    /// One loaded model on one line: what its cell prints, what it is doing,
+    /// how full its context was, and what it cost today — the tooltip's rows,
+    /// in the order the eye wants them.
+    static func modelLine(for cell: ProviderSnapshot, activity: ActivitySummary?) -> String {
+        guard let model = cell.localModel else { return cell.headlineText }
+        var parts = [cell.headlineText]
+        if let activity, activity.state == .working {
+            parts.append(activity.note ?? activity.sessions.first?.name ?? L10n.t("Thinking"))
+        }
+        if let fraction = cell.localContextFraction {
+            parts.append(L10n.t("Context \(Percent.text(for: fraction))%"))
+        }
+        if let ledger = cell.localLedger {
+            parts.append(L10n.t("Today \(ledger.tokensTodayText)"))
+        }
+        return "\(model.name): \(parts.joined(separator: " · "))"
     }
 
     /// One metered window on one line: label, percentage burned, and reset —

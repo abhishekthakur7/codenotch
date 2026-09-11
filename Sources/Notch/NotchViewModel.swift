@@ -4,37 +4,65 @@ import Combine
 @MainActor
 final class NotchViewModel: ObservableObject {
     @Published var snapshots: [ProviderSnapshot] = []
-    private var performances: [String: LocalModelPerformance] = [:]
+    /// Per runtime, so Ollama's relay switching off clears its own readings
+    /// and nobody else's.
+    private var performances: [String: [String: LocalModelPerformance]] = [:]
+    private var ledger = LocalTokenLedger()
     private var localMetricsEnabled = false
+
+    /// The Ollama relay's own id; its readings are keyed by model name.
+    static let ollamaSource = "ollama-local"
 
     func setLocalMetricsEnabled(_ enabled: Bool) {
         localMetricsEnabled = enabled
-        if !enabled { performances = [:]; thinkingModels = [:] }
-        snapshots = snapshots.map(withPerformance)
+        if !enabled { performances[Self.ollamaSource] = nil; thinkingModels = [:] }
+        snapshots = snapshots.map(decorated)
     }
 
     func updateSnapshots(_ providerSnapshots: [ProviderSnapshot]) {
         let hoveredID = hoveredSnapshot?.id
-        let next = ProviderOrder.cells(from: providerSnapshots, keeping: snapshots).map(withPerformance)
+        let next = ProviderOrder.cells(from: providerSnapshots, keeping: snapshots).map(decorated)
         let nextHoveredIndex = hoveredID.flatMap { id in next.firstIndex { $0.id == id } }
         if hoveredIndex != nextHoveredIndex { hoveredIndex = nextHoveredIndex }
         snapshots = next
     }
 
-    func updatePerformances(_ measurements: [String: LocalModelPerformance]) {
-        performances = measurements
-        snapshots = snapshots.map(withPerformance)
+    func updatePerformances(_ measurements: [String: LocalModelPerformance],
+                            source: String = NotchViewModel.ollamaSource) {
+        performances[source] = measurements
+        snapshots = snapshots.map(decorated)
     }
 
-    private func withPerformance(_ snapshot: ProviderSnapshot) -> ProviderSnapshot {
+    /// Logged tokens per cell, read against `now` as it is drawn so "today"
+    /// rolls over at midnight without a new line being written.
+    func updateLedger(_ ledger: LocalTokenLedger) {
+        self.ledger = ledger
+        snapshots = snapshots.map(decorated)
+    }
+
+    private func decorated(_ snapshot: ProviderSnapshot) -> ProviderSnapshot {
         guard let model = snapshot.localModel else { return snapshot }
         var snapshot = snapshot
-        snapshot.showsLocalPerformance = localMetricsEnabled
-        snapshot.localPerformance = localMetricsEnabled
-            ? performances[OllamaThinkingStream.modelKey(model.name)] : nil
+        let shows = localMetricsEnabled || snapshot.localRuntimeMeasuresSpeed
+        snapshot.showsLocalPerformance = shows
+        snapshot.localPerformance = shows
+            ? performances[snapshot.providerID]?[Self.performanceKey(for: snapshot, model: model)] : nil
+        snapshot.localLedger = ledger.summary(for: snapshot.id, now: now)
+        snapshot.localContextFraction = snapshot.localLedger?.contextFraction(contextLength: model.contextLength)
         return snapshot
     }
+
+    /// Ollama's relay knows a model by the name a client used, with Ollama's
+    /// implicit `:latest`; everything else reports by notch cell id.
+    static func performanceKey(for snapshot: ProviderSnapshot, model: LocalRuntimeReading.Model) -> String {
+        snapshot.providerID == ollamaSource ? OllamaThinkingStream.modelKey(model.name) : snapshot.id
+    }
+
     @Published var thinkingModels: [String: Date] = [:]
+    /// What each local model instance is doing, keyed by cell id. Ollama's
+    /// thinking relay reports through `thinkingModels`; LM Studio's state
+    /// poll reports here, phase and queue included.
+    @Published var localActivities: [String: LocalModelActivity] = [:]
 
     /// Live agent sessions, keyed by the provider they belong to. They surface
     /// inside that provider's own ring rather than as a cell of their own — one
@@ -98,6 +126,21 @@ final class NotchViewModel: ObservableObject {
     }
     /// The settings handle is under the cursor.
     @Published var isHoveringSettings = false
+    /// The move handle is under the cursor.
+    @Published var isHoveringMove = false
+    /// Bumped each time the move handle is pressed, on the same counter
+    /// pattern `settingsSpins` uses and for the same reason.
+    @Published var moveSpins = 0
+    /// The notch is in hand: the move handle has been held past its threshold
+    /// and the drop zones are up, waiting for a release.
+    @Published var isMoving = false
+    /// Which edge a release would land on. Nil before the pointer has moved
+    /// far enough for a target to be meaningful.
+    @Published var moveTarget: NotchEdge?
+    /// A move finished on `edge`. The controller owns persisting it, for the
+    /// same reason it owns `onReposition`: this type knows the geometry, not
+    /// where preferences live.
+    var onMove: ((NotchEdge) -> Void)?
     /// A direct SwiftUI tap on the settings orb, independent of the panel's
     /// own AppKit-level click routing (`NotchPanel.mouseDown` →
     /// `NotchWindowController.handleClick`). That path relies on the panel's
@@ -279,6 +322,22 @@ final class NotchViewModel: ObservableObject {
         max(0, orbAlong - shapeLength + NotchLayout.orbHotZone / 2).rounded(.up)
     }
 
+    /// Where the move handle sits: the settings orb's position mirrored to the
+    /// near end of the stack. Measured back from zero the same distance the
+    /// orb sits past `shapeLength`, so the pair stay symmetric about the notch
+    /// at every size and on every edge.
+    var moveAlong: CGFloat {
+        guard orbHugsCorner else { return 0 }
+        return cornerCentreAlong - shapeLength
+            + NotchLayout.orbCornerOffset(corner: drawnCornerRadius)
+    }
+
+    /// The mirror of `trailingExtent` at the near end — the room the move
+    /// handle needs before the notch's own start.
+    var leadingExtent: CGFloat {
+        max(0, -moveAlong + NotchLayout.orbHotZone / 2).rounded(.up)
+    }
+
     /// Where the bar's far corner actually turns, along the stack.
     ///
     /// Inset from the bar's end by the *flare* as well as by the corner's own
@@ -312,6 +371,16 @@ final class NotchViewModel: ObservableObject {
                       height: back * (edge.alongDirection.y + inward.y))
     }
 
+    /// `orbArcOffset` mirrored: the move handle hangs off the near corner, so
+    /// its arc tucks back *forward* along the stack rather than backward.
+    var moveArcOffset: CGSize {
+        guard orbHugsCorner else { return .zero }
+        let inward = CGPoint(x: -edge.outward.x, y: -edge.outward.y)
+        let forward = NotchLayout.orbCornerOffset(corner: drawnCornerRadius)
+        return CGSize(width: forward * (edge.alongDirection.x - inward.x),
+                      height: forward * (edge.alongDirection.y - inward.y))
+    }
+
     /// The points the settings handle answers around: the button you are
     /// reaching for, and — where it has parted company with it — the arc you
     /// can actually see.
@@ -341,6 +410,30 @@ final class NotchViewModel: ObservableObject {
     func isOnOrbHandle(along: CGFloat, across: CGFloat) -> Bool {
         let radius = NotchLayout.orbHotZone / 2
         return orbHandlePoints.contains {
+            hypot(along - $0.x, across - $0.y) <= radius
+        }
+    }
+
+    /// The move handle's own points, mirroring `orbHandlePoints` at the near
+    /// end of the stack.
+    var moveHandlePoints: [CGPoint] {
+        let button = CGPoint(x: moveAlong, y: orbInset)
+        guard orbHugsCorner else { return [button] }
+
+        let arcCentre = CGPoint(x: moveAlong + moveArcOffset.width,
+                                y: orbInset + moveArcOffset.height)
+        let reach = hypot(button.x - arcCentre.x, button.y - arcCentre.y)
+        guard reach > 0 else { return [button] }
+        let arcMid = CGPoint(
+            x: arcCentre.x + orbArcRadius * (button.x - arcCentre.x) / reach,
+            y: arcCentre.y + orbArcRadius * (button.y - arcCentre.y) / reach
+        )
+        return [button, arcMid]
+    }
+
+    func isOnMoveHandle(along: CGFloat, across: CGFloat) -> Bool {
+        let radius = NotchLayout.orbHotZone / 2
+        return moveHandlePoints.contains {
             hypot(along - $0.x, across - $0.y) <= radius
         }
     }
@@ -399,9 +492,14 @@ final class NotchViewModel: ObservableObject {
     /// somebody else's.
     func activity(for snapshot: ProviderSnapshot) -> ActivitySummary? {
         guard let model = snapshot.localModel else { return activity(for: snapshot.providerID) }
+        if let local = localActivities[snapshot.id] {
+            return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: local.label,
+                detail: snapshot.displayName, state: .busy, waitingFor: nil, since: local.since)],
+                queued: local.queued, note: local.note)
+        }
         guard let since = thinkingModels[OllamaThinkingStream.modelKey(model.name)] else { return nil }
-        return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: "Thinking",
-            detail: "Ollama", state: .busy, waitingFor: nil, since: since)])
+        return ActivitySummary(sessions: [AgentSession(id: snapshot.id, name: L10n.t("Thinking"),
+            detail: snapshot.displayName, state: .busy, waitingFor: nil, since: since)])
     }
 
     func activity(for providerID: String) -> ActivitySummary? {
@@ -437,11 +535,21 @@ final class NotchViewModel: ObservableObject {
         snapshots.contains { $0.tokenUsage != nil }
     }
 
+    private var hasPlan: Bool {
+        snapshots.contains { $0.plan != nil }
+    }
+
+    private var hasResetCredits: Bool {
+        snapshots.contains { $0.resetCredits != nil }
+    }
+
     func sessionCap(cellCount: Int) -> Int {
         guard screenSize != .zero else { return NotchLayout.defaultSessionCap }
         return NotchLayout.sessionsFitting(cardBudget: cardBudget(cellCount: cellCount),
                                            windowCount: NotchLayout.maxWindowCount,
-                                           hasTokenUsage: hasTokenUsage)
+                                           hasTokenUsage: hasTokenUsage,
+                                           hasPlan: hasPlan,
+                                           hasResetCredits: hasResetCredits)
     }
 
     private func contentCardHeight(sessionCap: Int) -> CGFloat {
@@ -453,8 +561,11 @@ final class NotchViewModel: ObservableObject {
                 statusMessage: snapshot.statusMessage,
                 blockMessage: snapshot.block?.summary(now: now),
                 hasTokenUsage: snapshot.tokenUsage != nil,
+                hasPlan: snapshot.plan != nil,
+                hasResetCredits: snapshot.resetCredits != nil,
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
                 compactRowCount: snapshot.compactRowCount)
         }.max() ?? 0
     }
@@ -462,7 +573,8 @@ final class NotchViewModel: ObservableObject {
     func maxCardHeight(cellCount: Int) -> CGFloat {
         let cap = sessionCap(cellCount: cellCount)
         return snapshots.isEmpty
-            ? NotchLayout.maxCardHeight(sessionCap: cap, hasTokenUsage: hasTokenUsage)
+            ? NotchLayout.maxCardHeight(sessionCap: cap, hasTokenUsage: hasTokenUsage, hasPlan: hasPlan,
+                                        hasResetCredits: hasResetCredits)
             : contentCardHeight(sessionCap: cap)
     }
 

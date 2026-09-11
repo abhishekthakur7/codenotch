@@ -115,13 +115,13 @@ final class AntigravityActivityMonitor: AgentActivityMonitor {
                     for call in toolCalls {
                         guard let name = call["name"] as? String else { continue }
                         if name.contains("ask_question") {
-                            return (.waiting, "Question")
+                            return (.waiting, L10n.t("Question"))
                         }
                         if name.contains("multi_replace_file_content") || name.contains("write_to_file") || name.contains("replace_file_content") {
                             if let args = call["arguments"] as? [String: Any],
                                let meta = args["ArtifactMetadata"] as? [String: Any],
                                meta["RequestFeedback"] as? Bool == true {
-                                return (.waiting, "Approval")
+                                return (.waiting, L10n.t("Approval"))
                             }
                         }
                     }
@@ -160,7 +160,7 @@ final class AntigravityActivityMonitor: AgentActivityMonitor {
                 let rows = SQLiteStore.rows(in: db, sql: "SELECT status FROM steps ORDER BY idx DESC LIMIT 1")
                 if let first = rows.first, first.first == "2" {
                     state = .waiting
-                    waitingFor = "Permission"
+                    waitingFor = L10n.t("Permission")
                 }
             }
         }

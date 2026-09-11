@@ -72,7 +72,6 @@ actor OllamaProvider: UsageProvider {
     }
 
     nonisolated func forgetCachedCredential() {
-        // Nothing is cached in memory — the key is re-read from the keychain or
-        // environment on every fetch.
+        OllamaCredentials.forgetCached()
     }
 }

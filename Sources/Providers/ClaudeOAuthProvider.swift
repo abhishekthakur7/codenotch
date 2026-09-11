@@ -95,6 +95,8 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// minute, so the last answer is reused in between.
     private let cliRefreshInterval: TimeInterval
     private var lastCLIWindows: (windows: [LimitWindow], at: Date)?
+    /// The named tier the last `/usage` print named, if it named one.
+    private var lastCLIPlan: String?
     /// Stamped on every spawn, successful or not. Without it a Claude Code that
     /// is installed but signed out costs a process on every tick, forever.
     private var lastCLIAttempt: Date?
@@ -126,6 +128,25 @@ actor ClaudeOAuthProvider: UsageProvider {
         self.retryNoEarlierThan = archive.loadBackoffUntil(providerID: profile.id)
     }
 
+    /// How close to expiry a back-off counts as already expired.
+    ///
+    /// The server hands back a 60s hint and `UsageStore` also ticks every 60s,
+    /// so the two run at the same period and the tick lands a few milliseconds
+    /// *before* the window opens — `retryAfter: 0.015` in the log. Refusing
+    /// that costs far more than the 15ms it saves: the caller is a timer, not a
+    /// retry loop, so the next attempt is not a moment later but a whole
+    /// refresh interval later. A 60s penalty silently becomes 120s and every
+    /// other tick is spent on nothing.
+    private let backoffSlack: TimeInterval = 1
+
+    /// Pure, so the resonance this exists to break can be tested without a
+    /// timer and a live endpoint.
+    nonisolated static func shouldHoldOff(until: Date?, slack: TimeInterval,
+                                          now: Date = Date()) -> Bool {
+        guard let until else { return false }
+        return until.timeIntervalSince(now) > slack
+    }
+
     func fetchSnapshot() async throws -> ProviderSnapshot {
         // Ahead of both the CLI and the back-off check. This is the cheapest
         // source and the only one that can never interrupt anyone: it reads a
@@ -138,9 +159,10 @@ actor ClaudeOAuthProvider: UsageProvider {
         // there is no reason for a 429 on one to darken a ring the other can
         // still fill.
         if let windows = await cliWindows() {
-            return snapshot(windows: windows)
+            return snapshot(windows: windows, plan: lastCLIPlan)
         }
-        if let retryNoEarlierThan, retryNoEarlierThan > Date() {
+        if Self.shouldHoldOff(until: retryNoEarlierThan, slack: backoffSlack),
+           let retryNoEarlierThan {
             let remaining = retryNoEarlierThan.timeIntervalSinceNow
             Log.usage.debug("skipping fetch, backing off for \(remaining, format: .fixed(precision: 0))s")
             throw UsageProviderError.rateLimited(retryAfter: remaining)
@@ -178,7 +200,7 @@ actor ClaudeOAuthProvider: UsageProvider {
     /// The snapshot shape every source produces. One place, so a window order or
     /// a headline changed for the endpoint cannot quietly differ from the CLI's or
     /// Desktop's — the three are the same reading taken from three places.
-    private func snapshot(windows: [LimitWindow]) -> ProviderSnapshot {
+    private func snapshot(windows: [LimitWindow], plan: String? = nil) -> ProviderSnapshot {
         ProviderSnapshot(
             id: id,
             displayName: displayName,
@@ -189,7 +211,8 @@ actor ClaudeOAuthProvider: UsageProvider {
             headlineID: "session",
             // #102's second ring. The helper is the only place a Claude
             // snapshot is built now, so this is the only place it can go.
-            weeklyID: "weekly_all"
+            weeklyID: "weekly_all",
+            plan: plan?.nonEmptyPlan
         )
     }
 
@@ -268,10 +291,11 @@ actor ClaudeOAuthProvider: UsageProvider {
         lastCLIAttempt = now
 
         do {
-            let windows = try await cli.read(profile: profile, now: now)
-            lastCLIWindows = (windows, now)
-            Log.usage.debug("\(self.id, privacy: .public): read \(windows.count) windows from claude /usage")
-            return windows
+            let reading = try await cli.readWithPlan(profile: profile, now: now)
+            lastCLIWindows = (reading.windows, now)
+            lastCLIPlan = reading.plan
+            Log.usage.debug("\(self.id, privacy: .public): read \(reading.windows.count) windows from claude /usage")
+            return reading.windows
         } catch {
             Log.usage.debug("\(self.id, privacy: .public): claude /usage did not answer, falling back to the token")
             return nil
@@ -316,7 +340,7 @@ actor ClaudeOAuthProvider: UsageProvider {
         }
 
         let payload = try UsageResponse.decoder.decode(UsageResponse.self, from: data)
-        return snapshot(windows: payload.limitWindows())
+        return snapshot(windows: payload.limitWindows(), plan: credentials?.subscriptionType)
     }
 
     private func currentToken() throws -> String {
@@ -379,7 +403,9 @@ actor ClaudeOAuthProvider: UsageProvider {
         .guidance(L10n.t("Run `\(profile.signInCommand)` once — it signs in and is what these readings come from. Use /login there to change account."))
     }
 
-    nonisolated func forgetCachedCredential() { keychain.forgetCached() }
+    /// Reached only from "Allow access…", so this is the one path allowed to
+    /// raise the keychain dialogue — see `ClaudeKeychain.askAgain`.
+    nonisolated func forgetCachedCredential() { keychain.askAgain() }
 
     /// Read the keychain again, ignoring anything held, and report the expiry.
     ///

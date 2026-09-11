@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var store: UsageStore?
     private var monitors: [String: any AgentActivityMonitor] = [:]
     private var ollamaRelay: OllamaActivityRelay?
+    private var lmstudioMetrics: LMStudioMetrics?
     private var preferences: Preferences?
     private var settings: SettingsWindowController?
     private var whatsNew: WhatsNewWindowController?
@@ -121,9 +122,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     + [CursorLocalProvider()]
                     + codexProfiles.map { CodexLocalProvider(profile: $0) }
                     + [AntigravityProvider(),
-                       GLMProvider(), GrokLocalProvider(), OpenCodeProvider(),
+                       GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
                        CommandCodeProvider(), GitHubCopilotProvider(),
                        OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
+                       LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
                        OllamaProvider(),
                        // A closure, not the value: the provider is an actor and
                        // re-reads the budget on every fetch, so a ceiling typed
@@ -178,6 +180,40 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 .store(in: &cancellables)
 
+            // LM Studio needs no relay: its own socket says what each model is
+            // doing and its own log says what every request cost. Monitoring
+            // follows the provider's switch, and the address follows Settings.
+            let lmstudio = LMStudioMetrics()
+            self.lmstudioMetrics = lmstudio
+            // Split like the relay's chain above, and for the same reason.
+            let lmstudioPreferences = Publishers.CombineLatest(
+                preferences.$disconnectedProviders, preferences.$lmstudioEndpoint)
+            let lmstudioConfiguration = lmstudioPreferences.map { values in
+                (enabled: !values.0.contains(LMStudioMetrics.providerID), endpoint: values.1)
+            }.eraseToAnyPublisher()
+            lmstudioConfiguration
+                .removeDuplicates { $0.enabled == $1.enabled && $0.endpoint == $1.endpoint }
+                .receive(on: RunLoop.main)
+                .sink { [weak lmstudio] configuration in
+                    lmstudio?.configure(enabled: configuration.enabled, endpoint: configuration.endpoint)
+                }
+                .store(in: &cancellables)
+            lmstudio.$activities
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.setLocalActivities($0) }
+                .store(in: &cancellables)
+            lmstudio.$performances
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet, weak store] measurements in
+                    fleet?.setPerformances(measurements, source: LMStudioMetrics.providerID)
+                    if !measurements.isEmpty { store?.refresh(providerID: LMStudioMetrics.providerID) }
+                }
+                .store(in: &cancellables)
+            lmstudio.$ledger
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.setLedger($0) }
+                .store(in: &cancellables)
+
             let settings = SettingsWindowController(
                 preferences: preferences,
                 // A closure so the sheet re-reads accounts each time it comes
@@ -199,7 +235,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     preferences?.setOffset(0, for: preferences?.notchEdge ?? .right)
                     fleet?.apply(alongOffset: 0)
                 },
-                usageStore: store, ollamaRelay: relay
+                usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio
             )
             // The gear toggles; everything else that opens settings opens it.
             fleet.onOpenSettings = { [weak settings] in settings?.toggle() }
@@ -232,6 +268,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem = statusItem
             statusItem.onRefreshProvider = { [weak store] id in store?.refresh(providerID: id) }
             statusItem.onRefreshAll = { [weak store] in store?.refreshNow() }
+            // Read when the menu opens, so a model's line is as current as its cell.
+            statusItem.cells = { [weak fleet] in fleet?.menuModel.snapshots ?? [] }
+            statusItem.activity = { [weak fleet] in fleet?.menuModel.activity(for: $0) }
 
             preferences.$appPresence
                 .receive(on: RunLoop.main)
@@ -307,6 +346,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             fleet.onReposition = { [weak preferences] offset in
                 preferences?.setOffset(offset, for: preferences?.notchEdge ?? .right)
             }
+            
+            fleet.onToggleKeepOpen = { [weak preferences] in
+                guard let prefs = preferences else { return }
+                prefs.notchVisibility = (prefs.notchVisibility == .alwaysShow) ? .onHover : .alwaysShow
+            }
+
+            // Writing the preference is the whole of it: `notchEdge` is
+            // `@Published` and the fleet already follows it, so the notch
+            // relocates by the same path the Settings picker uses.
+            fleet.onMoveToEdge = { [weak preferences] edge in
+                preferences?.notchEdge = edge
+            }
 
             preferences.$resetTimeFormat
                 .receive(on: RunLoop.main)
@@ -321,6 +372,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.$weeklyRing
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(weeklyRing: $0) }
+                .store(in: &cancellables)
+                
             preferences.$notchSurfaceStyle
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
@@ -336,6 +389,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak store] address in
                     guard let endpoint = try? OllamaEndpoint.parse(address) else { return }
                     store?.updateOllamaEndpoint(endpoint)
+                }
+                .store(in: &cancellables)
+
+            preferences.$lmstudioEndpoint
+                .receive(on: RunLoop.main)
+                .sink { [weak store] address in
+                    guard let endpoint = try? LMStudioEndpoint.parse(address) else { return }
+                    store?.updateLMStudioEndpoint(endpoint)
                 }
                 .store(in: &cancellables)
 
@@ -410,7 +471,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             "cursor": CursorActivityMonitor(),
             "gemini": AntigravityActivityMonitor(),
             "grok": GrokActivityMonitor(),
-            "gemini-api": GeminiCLIActivityMonitor(),
+            "gemini-api": GeminiAPIActivityMonitor(),
         ]
         var claudeMonitors: [ClaudeSessionMonitor] = []
         for profile in claudeProfiles {
@@ -474,8 +535,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .store(in: &cancellables)
             monitor.start()
         }
-        // Poll usage hard only while something is actually running.
-        store?.isBusy = { monitors.values.contains { m in m.sessions.contains { $0.state == .busy } } }
+        // Poll usage hard only while something is actually running — an agent's
+        // session, or a local model reading a prompt or generating.
+        store?.isBusy = { [weak self] in
+            monitors.values.contains { m in m.sessions.contains { $0.state == .busy } }
+                || (self?.lmstudioMetrics?.isBusy ?? false)
+        }
         self.monitors = monitors
 
         // Applied last, right before the panel goes up: every one of these
@@ -553,6 +618,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         ollamaRelay?.configure(enabled: false, endpoint: OllamaEndpoint.defaultAddress)
+        lmstudioMetrics?.stop()
         tokenRefresher?.stop()
         store?.stop()
         monitors.values.forEach { $0.stop() }

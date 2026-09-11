@@ -237,7 +237,7 @@ final class CursorActivityMonitor: ObservableObject, AgentActivityMonitor {
             name: (head["name"] as? String) ?? L10n.t("Untitled chat"),
             detail: (head["subtitle"] as? String) ?? "Cursor",
             state: state,
-            waitingFor: isWaiting ? "needs your input" : nil,
+            waitingFor: isWaiting ? L10n.t("needs your input") : nil,
             since: since
         )
     }

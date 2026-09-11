@@ -1,4 +1,3 @@
-import Combine
 import Foundation
 
 /// Notices when Gemini CLI is working.
@@ -8,51 +7,7 @@ import Foundation
 /// there is. It is a good one: the CLI appends a `$set lastUpdated` patch on
 /// every message, so a file written moments ago is a turn in progress. Cursor
 /// and Antigravity stand on the same substitute.
-///
-/// Only Gemini CLI gets a monitor. OpenCode and Hermes keep their token counts
-/// in databases that are written for reasons that have nothing to do with a
-/// Gemini call, so their modification dates would report work that is not this
-/// provider's.
-final class GeminiCLIActivityMonitor: AgentActivityMonitor {
-    @Published private(set) var sessions: [AgentSession] = []
-    var sessionsPublisher: AnyPublisher<[AgentSession], Never> { $sessions.eraseToAnyPublisher() }
-
-    private let root: URL
-    private let interval: TimeInterval
-    /// How recently a session file must have been written to count as live.
-    /// Generous, because a model can think for a while between two lines.
-    private let staleAfter: TimeInterval
-    private var timer: Timer?
-
-    init(root: URL = GeminiCLIUsage.sessionsRoot,
-         interval: TimeInterval = 2,
-         staleAfter: TimeInterval = 45) {
-        self.root = root
-        self.interval = interval
-        self.staleAfter = staleAfter
-    }
-
-    func start() {
-        stop()
-        poll()
-        let timer = Timer(timeInterval: interval, repeats: true) { [weak self] _ in
-            self?.poll()
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        self.timer = timer
-    }
-
-    func stop() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    private func poll() {
-        let found = Self.read(root: root, staleAfter: staleAfter)
-        guard found != sessions else { return }
-        sessions = found
-    }
-
+enum GeminiCLIActivity {
     static func read(root: URL, staleAfter: TimeInterval, now: Date = Date()) -> [AgentSession] {
         let manager = FileManager.default
         guard let projects = try? manager.contentsOfDirectory(
@@ -82,7 +37,7 @@ final class GeminiCLIActivityMonitor: AgentActivityMonitor {
         return [AgentSession(
             id: "gemini-api.\(newest.session.deletingPathExtension().lastPathComponent)",
             name: "Gemini CLI",
-            detail: "Working in \(projectName(of: newest.project))",
+            detail: L10n.t("Working in \(projectName(of: newest.project))"),
             state: .busy,
             waitingFor: nil,
             since: newest.modified

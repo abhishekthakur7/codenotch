@@ -224,23 +224,37 @@ private struct TooltipShell<Content: View>: View {
 
 private struct TooltipHeader<Mark: View>: View {
     let title: String
+    /// The account's named tier, when the provider publishes one.
+    var subtitle: String?
     /// Sits on the header's own line, so saying when a reading was taken costs
     /// the card no extra height.
     var note: String?
     @ViewBuilder let mark: Mark
 
     var body: some View {
-        HStack(spacing: NotchLayout.headerGap) {
+        HStack(alignment: .center, spacing: NotchLayout.headerGap) {
             mark
-            Text(title)
-                .font(Typography.cardTitle)
-                .foregroundStyle(Palette.textPrimary)
-            if let note {
-                Spacer(minLength: Design.px(20))
-                Text(note)
-                    .font(Typography.cardBody)
-                    .foregroundStyle(Palette.textSecondary)
-                    .lineLimit(1)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 0) {
+                    Text(title)
+                        .font(Typography.cardTitle)
+                        .foregroundStyle(Palette.textPrimary)
+                        // The title names the model; a long note yields before it does.
+                        .layoutPriority(1)
+                    if let note {
+                        Spacer(minLength: Design.px(20))
+                        Text(note)
+                            .font(Typography.cardBody)
+                            .foregroundStyle(Palette.textSecondary)
+                            .lineLimit(1)
+                    }
+                }
+                if let subtitle {
+                    Text(subtitle)
+                        .font(Typography.cardBody)
+                        .foregroundStyle(Palette.textSecondary)
+                        .lineLimit(1)
+                }
             }
         }
     }
@@ -382,7 +396,7 @@ private struct LimitWindowRow: View {
 
     var body: some View {
         if isCountRow {
-            SplitRow(leading: window.label, trailing: "\(window.used ?? 0)",
+            SplitRow(leading: window.label, trailing: window.usedText ?? "\(window.used ?? 0)",
                      trailingColor: Palette.textSecondary)
         } else {
             VStack(alignment: .leading, spacing: 0) {
@@ -411,7 +425,8 @@ private struct LimitWindowRow: View {
 }
 
 private struct ProviderTooltip: View {
-    var isThinking = false
+    /// What a local model is doing right now, for the header's note.
+    var activityNote: String?
     let snapshot: ProviderSnapshot
     let now: Date
     let resetTimeFormat: ResetTimeFormat
@@ -449,7 +464,8 @@ private struct ProviderTooltip: View {
             TooltipHeader(title: snapshot.kind == .localRuntime
                           ? L10n.t("\(snapshot.localModel?.brand?.displayName ?? snapshot.displayName) · Local")
                           : L10n.t("\(snapshot.displayName) Usage"),
-                          note: isThinking ? L10n.t("Thinking") : (snapshot.localModel?.brand != nil ? snapshot.displayName : readingAge)) {
+                          subtitle: snapshot.plan,
+                          note: activityNote ?? (snapshot.localModel?.brand != nil ? snapshot.displayName : readingAge)) {
                 ProviderGlyphView(glyph: snapshot.glyph)
                     .foregroundStyle(Palette.textPrimary)
             }
@@ -466,7 +482,9 @@ private struct ProviderTooltip: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, NotchLayout.headerToBlock)
             } else if let localModel = snapshot.localModel {
-                RuntimeModelDetails(model: localModel, performance: snapshot.localPerformance, showsPerformance: snapshot.showsLocalPerformance, now: now)
+                RuntimeModelDetails(model: localModel, performance: snapshot.localPerformance,
+                                    showsPerformance: snapshot.showsLocalPerformance,
+                                    ledger: snapshot.localLedger, now: now)
             } else {
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach(Array(groupedWindows.enumerated()), id: \.element.id) { groupIndex, group in
@@ -509,6 +527,9 @@ private struct RuntimeModelDetails: View {
     let model: LocalRuntimeReading.Model
     let performance: LocalModelPerformance?
     let showsPerformance: Bool
+    /// Present for a runtime that logs its requests; five more rows, counted
+    /// in `ProviderSnapshot.localLedgerRowCount`.
+    let ledger: LocalTokenLedger.Summary?
     let now: Date
 
     var body: some View {
@@ -532,6 +553,13 @@ private struct RuntimeModelDetails: View {
                 SplitRow(leading: "Unloads", trailing: model.unloadText(now: now))
                 if showsPerformance {
                     SplitRow(leading: "Measured", trailing: performance.map { ElapsedCopy.ago(since: $0.measuredAt, now: now) } ?? "—")
+                }
+                if let ledger {
+                    SplitRow(leading: "Context used", trailing: ledger.contextText(contextLength: model.contextLength))
+                    SplitRow(leading: "Tokens today", trailing: ledger.tokensTodayText)
+                    SplitRow(leading: "Requests today", trailing: ledger.requestsTodayText)
+                    SplitRow(leading: "Reasoning share", trailing: ledger.reasoningShareText)
+                    SplitRow(leading: "Draft accepted", trailing: ledger.draftAcceptanceText)
                 }
             }
             .padding(.top, NotchLayout.blockSpacing)
@@ -634,6 +662,75 @@ private struct CodexDailyUsageChart: View {
         }
         .frame(height: NotchLayout.codexChartHeight)
         .clipped()
+    }
+}
+
+/// Unused rate-limit resets on the Codex account.
+private struct CodexResetCreditsSection: View {
+    let credits: CodexResetCredits
+    let now: Date
+
+    private var countText: String {
+        switch credits.availableCount {
+        case 0: return L10n.t("No unused resets")
+        case 1: return L10n.t("1 unused reset")
+        case let n: return L10n.t("\(n) unused resets")
+        }
+    }
+
+    private var expiryText: String? {
+        guard credits.availableCount > 0, let date = credits.nextExpiry, date > now else {
+            return nil
+        }
+        let stamp = Self.stamp(for: date, now: now)
+        return credits.availableCount > 1
+            ? L10n.t("Next expires \(stamp)")
+            : L10n.t("Expires \(stamp)")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Rectangle()
+                .fill(Palette.ringTrack)
+                .frame(height: NotchLayout.hairline)
+                .padding(.top, NotchLayout.codexUsageTop)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(L10n.t("Unused resets"))
+                    .font(Typography.cardBody)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Palette.textPrimary)
+                    .padding(.top, NotchLayout.blockSpacing)
+
+                Text(countText)
+                    .font(Typography.cardBody)
+                    .foregroundStyle(Palette.textPrimary)
+                    .lineLimit(1)
+                    .padding(.top, NotchLayout.codexUsageRowGap)
+
+                if let expiryText {
+                    Text(expiryText)
+                        .font(Typography.cardBody)
+                        .foregroundStyle(Palette.textSecondary)
+                        .lineLimit(1)
+                        .padding(.top, NotchLayout.codexUsageRowGap)
+                }
+            }
+            .frame(height: NotchLayout.codexResetCreditsHeight, alignment: .top)
+        }
+    }
+
+    /// Same date templates `ResetCopy` uses past the hour, so this line and
+    /// the quota rows agree on what "soon" looks like.
+    private static func stamp(for date: Date, now: Date, calendar: Calendar = .current) -> String {
+        let formatter = ResetCopy.formatter(for: calendar)
+        formatter.locale = L10n.locale
+        if ResetCopy.daysApart(from: now, to: date, calendar: calendar) >= 7 {
+            formatter.setLocalizedDateFormatFromTemplate("MMM d")
+        } else {
+            formatter.setLocalizedDateFormatFromTemplate("E j:mm")
+        }
+        return formatter.string(from: date)
     }
 }
 
@@ -828,6 +925,13 @@ struct TooltipCard: View {
     var tailOffset: CGFloat = 0
     @AppStorage(Preferences.showUsagePaceKey) private var showUsagePace = false
 
+    /// The phase a local model is in, and the queue behind it, for the header.
+    /// Ollama's relay only knows thinking; LM Studio's poll names the phase.
+    private var localActivityNote: String? {
+        guard snapshot.localModel != nil, let activity, activity.state == .working else { return nil }
+        return activity.note ?? activity.sessions.first?.name ?? L10n.t("Thinking")
+    }
+
     /// The same figure the hover region uses, so what is drawn and what is
     /// reachable can never drift apart.
     private var height: CGFloat {
@@ -839,8 +943,11 @@ struct TooltipCard: View {
             statusMessage: snapshot.statusMessage,
             blockMessage: snapshot.block?.summary(now: now),
             hasTokenUsage: snapshot.tokenUsage != nil,
+            hasPlan: snapshot.plan != nil,
+            hasResetCredits: snapshot.resetCredits != nil,
             localModelName: snapshot.localModel?.name,
             showsLocalPerformance: snapshot.showsLocalPerformance,
+                localLedgerRows: snapshot.localLedgerRowCount,
             compactRowCount: snapshot.compactRowCount
         )
     }
@@ -853,8 +960,11 @@ struct TooltipCard: View {
             // drifts while the card resizes around them.
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 0) {
-                    ProviderTooltip(isThinking: snapshot.localModel != nil && activity?.state == .working, snapshot: snapshot, now: now, resetTimeFormat: resetTimeFormat,
+                    ProviderTooltip(activityNote: localActivityNote, snapshot: snapshot, now: now, resetTimeFormat: resetTimeFormat,
                                     showUsagePace: showUsagePace)
+                    if let resetCredits = snapshot.resetCredits {
+                        CodexResetCreditsSection(credits: resetCredits, now: now)
+                    }
                     if let tokenUsage = snapshot.tokenUsage {
                         CodexUsageSection(usage: tokenUsage, now: now)
                     }

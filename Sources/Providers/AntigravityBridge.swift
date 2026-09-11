@@ -166,51 +166,11 @@ enum AntigravityBridge {
     /// The server reports what is **left**, not what is spent — the notch shows
     /// the opposite, so every fraction is inverted here rather than in the view,
     /// where it would be a percentage whose meaning depended on the provider.
-    static func windows(in data: Data) -> [LimitWindow] {
-        struct Response: Decodable {
-            struct Bucket: Decodable {
-                let bucketId: String?
-                let displayName: String?
-                let remainingFraction: Double?
-                let resetTime: String?
-                let window: String?
-            }
-            struct Group: Decodable {
-                let displayName: String?
-                let buckets: [Bucket]?
-            }
-            struct Body: Decodable { let groups: [Group]? }
-            let response: Body?
-        }
-
-        guard let decoded = try? JSONDecoder().decode(Response.self, from: data),
-              let groups = decoded.response?.groups
-        else { return [] }
-
-        return groups.flatMap { group -> [LimitWindow] in
-            (group.buckets ?? []).compactMap { bucket in
-                guard let remaining = bucket.remainingFraction,
-                      remaining >= 0, remaining <= 1
-                else { return nil }
-                let id = bucket.bucketId ?? group.displayName ?? "quota"
-                
-                var bucketLabel = bucket.displayName ?? "Usage"
-                if bucketLabel.hasSuffix(" Remaining") {
-                    bucketLabel = String(bucketLabel.dropLast(" Remaining".count))
-                }
-                
-                let groupLabel = group.displayName ?? ""
-
-                return LimitWindow(
-                    id: id,
-                    group: groupLabel.isEmpty ? nil : groupLabel,
-                    label: bucketLabel,
-                    usedFraction: 1 - remaining,
-                    resetsAt: bucket.resetTime.flatMap(AntigravityCredentials.parse),
-                    duration: bucket.window == "weekly" ? 7 * 86400 : nil
-                )
-            }
-        }
+    static func windows(in data: Data, now: Date = Date()) -> [LimitWindow] {
+        // Keep the loopback and direct Cloud Code paths on one parser. Their
+        // envelopes drift independently; normalizing them in one place prevents
+        // the same account from changing shape when the source changes.
+        AntigravityProvider.windows(in: data, now: now)
     }
 
     // MARK: - Plumbing

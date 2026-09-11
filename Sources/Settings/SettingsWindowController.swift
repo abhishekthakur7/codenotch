@@ -22,6 +22,9 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let ollamaRelay: OllamaActivityRelay?
     private let lmstudioMetrics: LMStudioMetrics?
     private let usageStore: UsageStore?
+    let phoneLinkPairing: PhoneLinkPairing?
+    let phoneLinkRegistry: PhoneLinkRegistry?
+    let phoneLinkServerStatus: PhoneLinkServerStatus?
     private let resetPosition: () -> Void
 
     init(preferences: Preferences,
@@ -34,10 +37,13 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          resetPosition: @escaping () -> Void,
          usageStore: UsageStore? = nil,
          ollamaRelay: OllamaActivityRelay? = nil,
-         lmstudioMetrics: LMStudioMetrics? = nil) {
+         lmstudioMetrics: LMStudioMetrics? = nil, phoneLinkPairing: PhoneLinkPairing? = nil, phoneLinkRegistry: PhoneLinkRegistry? = nil, phoneLinkServerStatus: PhoneLinkServerStatus? = nil) {
         self.ollamaRelay = ollamaRelay
         self.lmstudioMetrics = lmstudioMetrics
         self.usageStore = usageStore
+        self.phoneLinkPairing = phoneLinkPairing
+        self.phoneLinkRegistry = phoneLinkRegistry
+        self.phoneLinkServerStatus = phoneLinkServerStatus
         self.resetPosition = resetPosition
         self.switchAccount = switchAccount
         self.retry = retry
@@ -170,7 +176,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         window.delegate = self
         window.contentView = NSHostingView(
             rootView: SettingsView(preferences: preferences,
-                                   providers: providers,
+                                   providers: providers, phoneLinkPairing: phoneLinkPairing, phoneLinkRegistry: phoneLinkRegistry, phoneLinkServerStatus: phoneLinkServerStatus,
                                    signOut: signOut,
                                    signIn: signIn,
                                    switchAccount: switchAccount,

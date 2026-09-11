@@ -5,6 +5,10 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var notchFleet: NotchFleet?
     private var store: UsageStore?
+    var phoneLinkServer: PhoneLinkServer?
+    var phoneLinkServerStatus: PhoneLinkServerStatus?
+    var phoneLinkPairing: PhoneLinkPairing?
+    var phoneLinkRegistry: PhoneLinkRegistry?
     private var monitors: [String: any AgentActivityMonitor] = [:]
     private var ollamaRelay: OllamaActivityRelay?
     private var lmstudioMetrics: LMStudioMetrics?
@@ -218,6 +222,55 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.setLedger($0) }
                 .store(in: &cancellables)
 
+            let phoneRegistry = PhoneLinkRegistry()
+            let phonePairing = PhoneLinkPairing()
+            self.phoneLinkRegistry = phoneRegistry
+            self.phoneLinkPairing = phonePairing
+            
+            let server = PhoneLinkServer(
+                pairing: phonePairing,
+                registry: phoneRegistry,
+                getSnapshot: { @Sendable [weak store, weak fleet, weak preferences] in
+                    guard let store, let fleet, let preferences else { return nil }
+                    let snap = await MainActor.run {
+                        PhoneLinkSnapshotBuilder.build(
+                            snapshots: store.snapshots,
+                            sessions: Array(fleet.sessions.values.flatMap { $0 }),
+                            disconnected: preferences.disconnectedProviders,
+                            order: preferences.providerOrder,
+                            serverName: PhoneLinkNetwork.getComputerName(),
+                            serverVersion: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0",
+                            now: Date()
+                        )
+                    }
+                    return try? JSONEncoder().encode(snap)
+                },
+                refreshAndGetSnapshot: { @Sendable [weak store, weak fleet, weak preferences] in
+                    guard let store, let fleet, let preferences else { return nil }
+                    await MainActor.run { store.refreshNow() }
+                    for _ in 0..<20 {
+                        let isRef = await MainActor.run { !store.refreshing.isEmpty }
+                        if !isRef { break }
+                        try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    }
+                    let snap = await MainActor.run {
+                        PhoneLinkSnapshotBuilder.build(
+                            snapshots: store.snapshots,
+                            sessions: Array(fleet.sessions.values.flatMap { $0 }),
+                            disconnected: preferences.disconnectedProviders,
+                            order: preferences.providerOrder,
+                            serverName: PhoneLinkNetwork.getComputerName(),
+                            serverVersion: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0",
+                            now: Date()
+                        )
+                    }
+                    return try? JSONEncoder().encode(snap)
+                }
+            )
+            let serverStatus = PhoneLinkServerStatus()
+            self.phoneLinkServerStatus = serverStatus
+            self.phoneLinkServer = server
+
             let settings = SettingsWindowController(
                 preferences: preferences,
                 // A closure so the sheet re-reads accounts each time it comes
@@ -239,7 +292,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     preferences?.setOffset(0, for: preferences?.notchEdge ?? .right)
                     fleet?.apply(alongOffset: 0)
                 },
-                usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio
+                usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio,
+                phoneLinkPairing: phonePairing, phoneLinkRegistry: phoneRegistry, phoneLinkServerStatus: serverStatus
             )
             // The gear toggles; everything else that opens settings opens it.
             fleet.onOpenSettings = { [weak settings] in settings?.toggle() }
@@ -565,6 +619,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // doing exactly nothing. `fleet.show()`'s own reconcile only ever
         // repositions an existing controller — it does not re-copy them —
         // so this has to be the very last thing that can create one.
+        
+        preferences.$phoneLinkEnabled
+            .receive(on: RunLoop.main)
+            .sink { [weak self] enabled in
+                guard let self = self, let srv = self.phoneLinkServer else { return }
+                Task { @MainActor in
+                    if enabled {
+                        self.phoneLinkServerStatus?.state = .starting
+                        do {
+                            let prefPort = self.preferences?.phoneLinkPort ?? 8788
+                            let port = try await srv.start(port: prefPort)
+                            self.preferences?.phoneLinkPort = port
+                            self.phoneLinkServerStatus?.state = .ready(port: port)
+                        } catch {
+                            self.phoneLinkServerStatus?.state = .failed(error.localizedDescription)
+                        }
+                    } else {
+                        await srv.stop()
+                        self.phoneLinkServerStatus?.state = .off
+                    }
+                }
+            }
+            .store(in: &cancellables)
         fleet.apply(displayPreference: preferences.displayPreference)
         fleet.apply(alongOffset: preferences.offset(for: preferences.notchEdge))
         fleet.apply(scale: preferences.notchScale)
@@ -625,6 +702,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @MainActor func openSettings() { settings?.show() }
+    @MainActor func openConnectPhone() {
+        guard let pairing = phoneLinkPairing, let registry = phoneLinkRegistry, let status = phoneLinkServerStatus else { return }
+        if preferences?.phoneLinkEnabled == false { preferences?.phoneLinkEnabled = true }
+        PhoneLinkWindowController.shared.show(pairing: pairing, registry: registry, port: preferences?.phoneLinkPort ?? 8788, serverStatus: status)
+    }
 
     func applicationWillTerminate(_ notification: Notification) {
         ollamaRelay?.configure(enabled: false, endpoint: OllamaEndpoint.defaultAddress)
@@ -633,5 +715,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         store?.stop()
         monitors.values.forEach { $0.stop() }
         notchFleet?.stop()
+        Task { await phoneLinkServer?.stop() }
     }
 }

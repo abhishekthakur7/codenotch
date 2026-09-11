@@ -23,6 +23,15 @@ final class Preferences: ObservableObject {
 
     /// Where LM Studio's server answers. Defaults to the port LM Studio's own
     /// settings name, so a server moved off 1234 is found without typing.
+    @Published var phoneLinkEnabled: Bool {
+        didSet { defaults.set(phoneLinkEnabled, forKey: Keys.phoneLinkEnabled) }
+    }
+
+    @Published var phoneLinkPort: Int {
+        didSet { defaults.set(phoneLinkPort, forKey: Keys.phoneLinkPort) }
+    }
+
+
     @Published var lmstudioEndpoint: String {
         didSet { defaults.set(lmstudioEndpoint, forKey: Keys.lmstudioEndpoint) }
     }
@@ -265,6 +274,9 @@ final class Preferences: ObservableObject {
         /// The old name. Kept so existing choices survive the rename.
         static let disconnected = "hiddenProviders"
         static let ollamaEndpoint = "ollamaEndpoint"
+        static let phoneLinkEnabled = "phoneLinkEnabled"
+        static let phoneLinkPort = "phoneLinkPort"
+
         static let lmstudioEndpoint = "lmstudioEndpoint"
         static let introducedOllama = "introducedOllama"
         static let migratedOllamaID = "migratedOllamaLocalID"
@@ -394,6 +406,9 @@ final class Preferences: ObservableObject {
         ).absoluteString) ?? OllamaEndpoint.defaultAddress
         // A stored choice wins; otherwise LM Studio's own configuration file
         // says where it listens, and 1234 is what it ships with.
+        self.phoneLinkEnabled = defaults.object(forKey: Keys.phoneLinkEnabled) as? Bool ?? false
+        self.phoneLinkPort = defaults.object(forKey: Keys.phoneLinkPort) as? Int ?? 8788
+
         self.lmstudioEndpoint = (try? LMStudioEndpoint.parse(
             defaults.string(forKey: Keys.lmstudioEndpoint)
                 ?? LMStudioEndpoint.configuredAddress() ?? LMStudioEndpoint.defaultAddress

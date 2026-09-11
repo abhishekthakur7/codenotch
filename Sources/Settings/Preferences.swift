@@ -223,6 +223,21 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(sessionBlockedSoundName, forKey: Keys.sessionBlockedSoundName) }
     }
 
+    /// Show a notification modal from the notch when a provider's limit resets.
+    @Published var announceUsageReset: Bool {
+        didSet { defaults.set(announceUsageReset, forKey: Keys.announceUsageReset) }
+    }
+
+    /// Sound an alert alongside the usage reset notification modal.
+    @Published var usageResetSound: Bool {
+        didSet { defaults.set(usageResetSound, forKey: Keys.usageResetSound) }
+    }
+
+    /// Which sound a usage reset notification makes.
+    @Published var usageResetSoundName: String {
+        didSet { defaults.set(usageResetSoundName, forKey: Keys.usageResetSoundName) }
+    }
+
     /// The ceiling the Gemini API ring fills against, counted in tokens.
     ///
     /// In tokens rather than money because a bare `GEMINI_API_KEY` publishes no
@@ -293,6 +308,9 @@ final class Preferences: ObservableObject {
         static let peekDuration = "peekDuration"
         static let sessionEndSoundName = "sessionEndSoundName"
         static let sessionBlockedSoundName = "sessionBlockedSoundName"
+        static let announceUsageReset = "announceUsageReset"
+        static let usageResetSound = "usageResetSound"
+        static let usageResetSoundName = "usageResetSoundName"
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
         static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
@@ -469,6 +487,10 @@ final class Preferences: ObservableObject {
             ?? SessionChime.defaultFinished
         self.sessionBlockedSoundName = defaults.string(forKey: Keys.sessionBlockedSoundName)
             ?? SessionChime.defaultBlocked
+        self.announceUsageReset = defaults.object(forKey: Keys.announceUsageReset) as? Bool ?? true
+        self.usageResetSound = defaults.object(forKey: Keys.usageResetSound) as? Bool ?? true
+        self.usageResetSoundName = defaults.string(forKey: Keys.usageResetSoundName)
+            ?? SessionChime.defaultFinished
         self.geminiAPIMonthlyTokenBudget = Self.storedGeminiAPIMonthlyTokenBudget(defaults: defaults)
         // Read from the system rather than from our own store: the user can turn
         // this off in System Settings, and a remembered `true` would then be a lie.

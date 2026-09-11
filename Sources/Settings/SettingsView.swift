@@ -765,6 +765,20 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            Section(L10n.t("When a limit resets")) {
+                Toggle(L10n.t("Show notification from notch"), isOn: $preferences.announceUsageReset)
+
+                Toggle(L10n.t("Play a sound"), isOn: $preferences.usageResetSound)
+
+                SoundRow(label: L10n.t("Reset sound"), name: $preferences.usageResetSoundName,
+                         pickerEnabled: preferences.usageResetSound)
+
+                Text(L10n.t("Displays a notification card from the side of the notch when a provider's usage limit resets."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             // The mute switch itself lives on each provider's own row in
             // Accounts — muting is a fact about that provider's reading, not
             // about notifications in general — but the mechanism it silences

@@ -664,6 +664,17 @@ final class AntigravityBridgeTests: XCTestCase {
 final class CredentialCacheTests: XCTestCase {
     private struct Token { let expired: Bool }
 
+    /// -60008 is what a refusal looks like when a prompt was needed and could
+    /// not be shown — seen five seconds before a clamshell sleep. It has to
+    /// age the reading like a dark wake does, not sign the account out.
+    func testAPromptThatCouldNotBeShownIsTransientNotASignOut() {
+        XCTAssertTrue(ClaudeCredentials.wasTransient(-60008))
+        XCTAssertTrue(ClaudeCredentials.wasTransient(-25320))
+        XCTAssertFalse(ClaudeCredentials.wasTransient(errSecItemNotFound))
+        XCTAssertFalse(ClaudeCredentials.wasTransient(errSecAuthFailed),
+                       "an explicit refusal stays a refusal, and is not re-asked on a timer")
+    }
+
     func testItReadsOnceAndThenHoldsWhatItHas() throws {
         var reads = 0
         let cache = CredentialCache<Token> { $0.expired }

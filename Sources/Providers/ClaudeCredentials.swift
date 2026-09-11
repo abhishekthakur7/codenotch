@@ -126,7 +126,14 @@ struct ClaudeCredentials {
     /// would be needed. Security doesn't export a named constant for it, so
     /// the raw value is what there is to check.
     static func wasTransient(_ status: OSStatus) -> Bool {
-        status == -25320   // errSecInDarkWake
+        status == -25320       // errSecInDarkWake
+            // errAuthorizationInternal. What a refusal looks like when macOS
+            // decided a prompt was needed and there was no way to show one —
+            // observed five seconds before a clamshell sleep. The credential is
+            // untouched, so this is "not right now", not "signed out"; left to
+            // fall through it read as `needsAuth` and showed a valid account
+            // as signed out for 2h42m.
+            || status == -60008
     }
 
     static func explain(_ status: OSStatus) -> String {

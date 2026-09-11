@@ -74,6 +74,7 @@ targets:
         CFBundleLocalizations:
           - en
           - fr
+          - ja
           - pt-BR
           - zh-Hans
         LSMinimumSystemVersion: "15.0"

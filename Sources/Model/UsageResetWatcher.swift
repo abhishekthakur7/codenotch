@@ -1,7 +1,15 @@
 import Foundation
 
-/// One reset event for a provider's headline limit window.
-struct UsageResetEvent: Equatable {
+/// The kind of usage alert event.
+enum UsageAlertKind: Equatable {
+    case reset
+    case sessionLimitReached
+    case weeklyLimitReached
+}
+
+/// One alert event for a provider's usage window (reset or limit reached).
+struct UsageAlertEvent: Equatable {
+    let kind: UsageAlertKind
     let providerID: String
     let providerName: String
     let windowLabel: String
@@ -11,6 +19,7 @@ struct UsageResetEvent: Equatable {
     let resetsAt: Date?
 
     init(
+        kind: UsageAlertKind = .reset,
         providerID: String,
         providerName: String,
         windowLabel: String,
@@ -19,6 +28,7 @@ struct UsageResetEvent: Equatable {
         currentFraction: Double,
         resetsAt: Date?
     ) {
+        self.kind = kind
         self.providerID = providerID
         self.providerName = providerName
         self.windowLabel = windowLabel
@@ -28,6 +38,8 @@ struct UsageResetEvent: Equatable {
         self.resetsAt = resetsAt
     }
 }
+
+typealias UsageResetEvent = UsageAlertEvent
 
 /// Watches store snapshots and detects when a provider's limit window rolls over
 /// or its usage drops back down to reset levels.

@@ -181,7 +181,7 @@ final class NotchFleet {
     func apply(alongOffset: CGFloat) {
         self.alongOffset = alongOffset
         for controller in controllers.values {
-            controller.model.alongOffset = alongOffset
+            controller.apply(alongOffset: alongOffset)
         }
     }
 

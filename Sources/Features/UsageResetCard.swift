@@ -28,6 +28,55 @@ struct UsageResetCard: View {
             }
     }
 
+    private var titleText: String {
+        switch event.kind {
+        case .reset:
+            return L10n.t("\(event.providerName) Reset")
+        case .sessionLimitReached:
+            return L10n.t("\(event.providerName) Limit Reached")
+        case .weeklyLimitReached:
+            return L10n.t("\(event.providerName) Weekly Limit")
+        }
+    }
+
+    private var subtitleText: String {
+        switch event.kind {
+        case .reset:
+            return L10n.t("\(event.windowLabel) limit refreshed")
+        case .sessionLimitReached, .weeklyLimitReached:
+            return L10n.t("\(event.windowLabel) limit is spent")
+        }
+    }
+
+    private var statusColor: Color {
+        switch event.kind {
+        case .reset:
+            return Palette.ample
+        case .sessionLimitReached, .weeklyLimitReached:
+            return Palette.critical
+        }
+    }
+
+    private var statusText: String {
+        switch event.kind {
+        case .reset:
+            return L10n.t("Quota is available (0% used)")
+        case .sessionLimitReached:
+            return L10n.t("Session limit reached (100% used)")
+        case .weeklyLimitReached:
+            return L10n.t("Weekly limit reached (100% used)")
+        }
+    }
+
+    private var resetTimePrefix: String {
+        switch event.kind {
+        case .reset:
+            return L10n.t("Next reset")
+        case .sessionLimitReached, .weeklyLimitReached:
+            return L10n.t("Resets at")
+        }
+    }
+
     private var card: some View {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: NotchLayout.cardCorner, style: .circular)
@@ -41,7 +90,7 @@ struct UsageResetCard: View {
 
                     VStack(alignment: .leading, spacing: 0) {
                         HStack(spacing: 0) {
-                            Text(L10n.t("\(event.providerName) Reset"))
+                            Text(titleText)
                                 .font(Typography.cardTitle)
                                 .foregroundStyle(Palette.textPrimary)
                                 .layoutPriority(1)
@@ -59,7 +108,7 @@ struct UsageResetCard: View {
                             }
                         }
 
-                        Text(L10n.t("\(event.windowLabel) limit refreshed"))
+                        Text(subtitleText)
                             .font(Typography.cardBody)
                             .foregroundStyle(Palette.textSecondary)
                             .lineLimit(1)
@@ -68,12 +117,12 @@ struct UsageResetCard: View {
 
                 HStack(spacing: Design.px(12)) {
                     Circle()
-                        .fill(Palette.ample)
+                        .fill(statusColor)
                         .frame(width: Design.px(16), height: Design.px(16))
 
-                    Text(L10n.t("Quota is available (0% used)"))
+                    Text(statusText)
                         .font(Typography.cardBody)
-                        .foregroundStyle(Palette.ample)
+                        .foregroundStyle(statusColor)
                         .lineLimit(1)
 
                     Spacer(minLength: 0)
@@ -81,7 +130,7 @@ struct UsageResetCard: View {
                 .padding(.top, NotchLayout.headerToBlock)
 
                 if let resetsAt = event.resetsAt {
-                    Text(L10n.t("Next reset \(resetsAt.formatted(date: .omitted, time: .shortened))"))
+                    Text("\(resetTimePrefix) \(resetsAt.formatted(date: .omitted, time: .shortened))")
                         .font(Typography.cardBody)
                         .foregroundStyle(Palette.textSecondary)
                         .lineLimit(1)

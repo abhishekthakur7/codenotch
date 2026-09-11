@@ -15,6 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var updater: Updater?
     private var thresholdNotifier: ThresholdNotifier?
     private var resetWatcher: UsageResetWatcher?
+    private var limitWatcher: UsageLimitWatcher?
     private var statusItem: StatusItemController?
     /// Keeps the Claude keychain token from ageing out on a Mac where the CLI
     /// is never run by hand. See `ClaudeTokenRefresher`.
@@ -243,6 +244,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 previewResetAlert: { [weak self] in
                     self?.previewUsageResetAlert()
                 },
+                previewSessionLimitAlert: { [weak self] in
+                    self?.previewSessionLimitAlert()
+                },
+                previewWeeklyLimitAlert: { [weak self] in
+                    self?.previewWeeklyLimitAlert()
+                },
                 usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio
             )
             // The gear toggles; everything else that opens settings opens it.
@@ -451,6 +458,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             self.resetWatcher = resetWatcher
 
+            let limitWatcher = UsageLimitWatcher(
+                isMuted: { [weak preferences] in preferences?.isMutedAlerts(for: $0) ?? false },
+                deliver: { [weak self] event in
+                    MainActor.assumeIsolated {
+                        self?.announceUsageLimit(event: event)
+                    }
+                }
+            )
+            self.limitWatcher = limitWatcher
+
             store.$notchSnapshots
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.setSnapshots($0) }
@@ -462,6 +479,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     statusItem?.snapshots = snapshots
                     notifier.observe(snapshots)
                     resetWatcher.observe(snapshots)
+                    limitWatcher.observe(snapshots)
                 }
                 .store(in: &cancellables)
             store.start()
@@ -633,6 +651,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor
     private func previewUsageResetAlert() {
+        guard let preferences, let fleet = notchFleet else { return }
         let demo = UsageResetEvent(
             providerID: "claude",
             providerName: "Claude",
@@ -642,7 +661,73 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             currentFraction: 0.00,
             resetsAt: Date().addingTimeInterval(5 * 3600)
         )
-        announceUsageReset(event: demo)
+        if preferences.usageResetSound {
+            SessionChime.play(preferences.usageResetSoundName)
+        }
+        fleet.showResetAlert(demo, duration: 5.0)
+    }
+
+    /// Open the notch and show a usage limit reached notification modal when a limit is exhausted.
+    @MainActor
+    private func announceUsageLimit(event: UsageAlertEvent) {
+        guard let preferences, let fleet = notchFleet else { return }
+
+        let isAnnounceEnabled: Bool
+        switch event.kind {
+        case .sessionLimitReached:
+            isAnnounceEnabled = preferences.announceSessionLimitReached
+        case .weeklyLimitReached:
+            isAnnounceEnabled = preferences.announceWeeklyLimitReached
+        case .reset:
+            isAnnounceEnabled = preferences.announceUsageReset
+        }
+
+        guard isAnnounceEnabled else { return }
+
+        Log.usage.info("usage limit reached for \(event.providerName, privacy: .public) (\(event.windowLabel, privacy: .public))")
+
+        if preferences.limitReachedSound {
+            SessionChime.play(preferences.limitReachedSoundName)
+        }
+        fleet.showResetAlert(event, duration: 6.0)
+    }
+
+    @MainActor
+    private func previewSessionLimitAlert() {
+        guard let preferences, let fleet = notchFleet else { return }
+        let demo = UsageAlertEvent(
+            kind: .sessionLimitReached,
+            providerID: "claude",
+            providerName: "Claude",
+            windowLabel: "5-hour",
+            glyph: .claude,
+            previousFraction: 0.95,
+            currentFraction: 1.00,
+            resetsAt: Date().addingTimeInterval(45 * 60)
+        )
+        if preferences.limitReachedSound {
+            SessionChime.play(preferences.limitReachedSoundName)
+        }
+        fleet.showResetAlert(demo, duration: 6.0)
+    }
+
+    @MainActor
+    private func previewWeeklyLimitAlert() {
+        guard let preferences, let fleet = notchFleet else { return }
+        let demo = UsageAlertEvent(
+            kind: .weeklyLimitReached,
+            providerID: "claude",
+            providerName: "Claude",
+            windowLabel: "Weekly",
+            glyph: .claude,
+            previousFraction: 0.98,
+            currentFraction: 1.00,
+            resetsAt: Date().addingTimeInterval(3 * 86400)
+        )
+        if preferences.limitReachedSound {
+            SessionChime.play(preferences.limitReachedSoundName)
+        }
+        fleet.showResetAlert(demo, duration: 6.0)
     }
 
     /// Closing the settings window must not take the app with it.

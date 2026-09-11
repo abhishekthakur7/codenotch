@@ -572,3 +572,83 @@ final class ClaudeAccountSourceTests: XCTestCase {
         XCTAssertNil(provider { throw UsageProviderError.needsAuth }.account())
     }
 }
+
+/// Only a person asking may raise the keychain dialogue.
+///
+/// Claude Code recreates its keychain item on every token rotation, and a new
+/// item admits only Apple's own tools, so an app that is let in once is
+/// refused again an hour later. Reading from a poll therefore raised the
+/// password dialogue on a timer. Background reads must never prompt; the one
+/// read that may is the one somebody clicked "Allow access…" for.
+final class ClaudeKeychainPromptTests: XCTestCase {
+    private final class Reads: @unchecked Sendable {
+        var interactive: [Bool] = []
+        var fails = false
+    }
+
+    private func keychain(_ reads: Reads) -> ClaudeKeychain {
+        ClaudeKeychain(services: ["codenotch-test-\(UUID().uuidString)"]) { _, interactive in
+            reads.interactive.append(interactive)
+            if reads.fails { throw UsageProviderError.accessDenied }
+            return ClaudeCredentials(accessToken: "t", expiresAt: .distantFuture,
+                                     subscriptionType: nil)
+        }
+    }
+
+    func testABackgroundReadNeverPrompts() throws {
+        let reads = Reads()
+        _ = try keychain(reads).load()
+        XCTAssertEqual(reads.interactive, [false])
+    }
+
+    /// The server rejecting a token, and the token refresher checking its
+    /// work, both drop the cache too — and neither is a person.
+    func testDroppingTheCacheOnItsOwnDoesNotPrompt() throws {
+        let reads = Reads(), k = keychain(reads)
+        _ = try k.load()
+        k.forgetCached()
+        _ = try k.load()
+        XCTAssertEqual(reads.interactive, [false, false])
+    }
+
+    func testAskingAgainPromptsForTheNextReadOnly() throws {
+        let reads = Reads(), k = keychain(reads)
+        _ = try k.load()
+        k.askAgain()
+        _ = try k.load()
+        k.forgetCached()
+        _ = try k.load()
+        XCTAssertEqual(reads.interactive, [false, true, false])
+    }
+
+    /// A Deny must not leave the permission lying around for the next poll to
+    /// spend: the dialogue would then appear on a timer, which is the bug.
+    func testADeniedPromptDoesNotLeaveTheNextPollAllowedToPrompt() {
+        let reads = Reads(), k = keychain(reads)
+        reads.fails = true
+        k.askAgain()
+        XCTAssertThrowsError(try k.load())
+        k.forgetCached()
+        XCTAssertThrowsError(try k.load())
+        XCTAssertEqual(reads.interactive, [true, false])
+    }
+}
+
+extension ClaudeKeychainPromptTests {
+    /// An "Allow access…" whose refresh never reached the keychain — the CLI
+    /// answered instead — must not be spent by a poll much later.
+    func testAnUnspentPermissionExpires() throws {
+        final class Clock: @unchecked Sendable { var now = Date(timeIntervalSince1970: 1_000) }
+        let clock = Clock()
+        var interactive: [Bool] = []
+        let k = ClaudeKeychain(services: ["codenotch-test-\(UUID().uuidString)"],
+                               now: { clock.now }) { _, flag in
+            interactive.append(flag)
+            return ClaudeCredentials(accessToken: "t", expiresAt: .distantFuture, subscriptionType: nil)
+        }
+        k.askAgain()
+        clock.now = clock.now.addingTimeInterval(ClaudeKeychain.promptWindow + 1)
+        _ = try k.load()
+        XCTAssertEqual(interactive, [false])
+    }
+}

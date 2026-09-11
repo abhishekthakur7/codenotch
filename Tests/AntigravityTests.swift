@@ -1367,8 +1367,13 @@ final class KeychainRefusalTests: XCTestCase {
         )
         let message = snapshot.statusMessage ?? ""
         XCTAssertTrue(message.contains("refused"))
-        XCTAssertTrue(message.contains("Always Allow"))
+        XCTAssertTrue(message.contains("Allow access"),
+                      "it has to name the control that actually asks again")
         XCTAssertFalse(message.contains("Sign in"), "it tells a signed-in user to sign in")
+        XCTAssertFalse(message.contains("ring"),
+                       "clicking a ring only refreshes, and a refresh never prompts")
+        XCTAssertFalse(message.contains("fix-keychain"),
+                       "the script is in the repository, not in the installed app")
     }
 
     /// The credential is still valid — we were simply not let in to re-read it.

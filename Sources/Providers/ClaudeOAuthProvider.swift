@@ -403,7 +403,9 @@ actor ClaudeOAuthProvider: UsageProvider {
         .guidance(L10n.t("Run `\(profile.signInCommand)` once — it signs in and is what these readings come from. Use /login there to change account."))
     }
 
-    nonisolated func forgetCachedCredential() { keychain.forgetCached() }
+    /// Reached only from "Allow access…", so this is the one path allowed to
+    /// raise the keychain dialogue — see `ClaudeKeychain.askAgain`.
+    nonisolated func forgetCachedCredential() { keychain.askAgain() }
 
     /// Read the keychain again, ignoring anything held, and report the expiry.
     ///

@@ -10,12 +10,23 @@ make run                 # build and launch
 ```
 
 None of these need an Apple Developer account. `xcodebuild` ad-hoc signs a
-Debug build automatically, which is enough to run and debug locally. The one
-thing an unsigned build can't do is keep a keychain "Always Allow" grant across
-rebuilds — Claude Code's and Antigravity's credentials are guarded by an ACL
-keyed on the signing identity, and an ad-hoc identity changes every build. In
-practice this means the keychain prompt reappears each time you rebuild during
-development; that's expected and doesn't affect anything else.
+Debug build automatically, which is enough to run and debug locally.
+
+A note on the keychain, because it is not only a development annoyance. A
+keychain item has an access list, which is what "Always Allow" writes to, and a
+*partition list*, which nothing in the GUI ever writes to. An app outside the
+partition list is refused before the access list is consulted, so approving the
+dialogue is good for one read. Claude Code recreates its keychain items on every
+token rotation, and a new item's partition list admits only Apple's own tools —
+which refuses a properly signed release build as surely as an ad-hoc one.
+
+So `ClaudeCredentials.read` never shows the dialogue from a background refresh:
+interaction is switched off for the read, and a refusal is retried through
+`/usr/bin/security`, which is Apple-signed and on the item's access list. The
+one read that may prompt is the one somebody clicks **Allow access…** for in
+Settings. To stop the refusal happening at all, `Scripts/fix-keychain-partitions.sh`
+adds Codenotch's Team ID to those items' partition lists — once, with your login
+password.
 
 `make release` is different: it archives, signs with a Developer ID
 certificate, notarizes with Apple, and regenerates the Sparkle auto-update

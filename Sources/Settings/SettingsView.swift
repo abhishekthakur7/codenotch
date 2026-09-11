@@ -1279,7 +1279,10 @@ private struct AccountRow: View {
                 if isConnected, provider.wasRefusedAccess {
                     Button(L10n.t("Allow access…")) { retry(provider.id) }
                         .controlSize(.small)
-                        .help(L10n.t("Asks macOS for \(provider.name)'s saved login again. Choose Always Allow and it will stop asking."))
+                        // Not "it will stop asking": for Claude it will not.
+                        // Claude Code recreates its login when the token
+                        // rotates, and a recreated item forgets the grant.
+                        .help(L10n.t("Asks macOS for \(provider.name)'s saved login again. Always Allow means it is asked less often."))
                 }
 
                 if isConnected, let destination {

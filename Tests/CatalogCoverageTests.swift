@@ -40,6 +40,22 @@ final class CatalogCoverageTests: XCTestCase {
         }
     }
 
+    func testRussianCatalogCoversEverySourceKey() throws {
+        let catalog = try loadCatalog().json
+        let missing = catalog.strings.compactMap { key, entry in
+            guard let unit = entry.localizations?["ru"]?.stringUnit,
+                  unit.state == "translated",
+                  let value = unit.value,
+                  !value.isEmpty else { return key }
+            return nil
+        }
+
+        XCTAssertTrue(
+            missing.isEmpty,
+            "missing Russian translations for: \(missing.joined(separator: ", "))"
+        )
+    }
+
     // MARK: - Loading
 
     /// Repo `Tests/`, so the catalog is `../Sources/Localizable.xcstrings`.
@@ -75,5 +91,6 @@ private struct CatalogLocalization: Decodable {
 }
 
 private struct CatalogStringUnit: Decodable {
+    var state: String?
     var value: String?
 }

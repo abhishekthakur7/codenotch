@@ -1696,7 +1696,7 @@ struct PhoneSettingsPane: View {
                         let hasIP = hosts.first(where: { PhoneLinkNetwork.isPrivateIPv4($0) }) != nil
                         if hasIP {
                             Circle().fill(Color.green).frame(width: 8, height: 8)
-                            Text(L10n.t("Ready on \(hosts.first ?? ""):\(port)"))
+                            Text(L10n.t("Ready on \(hosts.first ?? ""):\(String(port))"))
                         } else {
                             Circle().fill(Color.orange).frame(width: 8, height: 8)
                             Text(L10n.t("This Mac isn't on a local network"))

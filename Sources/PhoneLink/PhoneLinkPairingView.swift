@@ -16,7 +16,7 @@ struct PhoneLinkPairingView: View {
         let name = PhoneLinkNetwork.getComputerName()
         let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_.~"))
         let encodedName = name.addingPercentEncoding(withAllowedCharacters: allowed) ?? name
-        return "codenotch://pair?v=2&h=\(hosts)&p=\(port)&c=\(pairing.currentCode)&n=\(encodedName)"
+        return "codenotch://pair?v=2&h=\(hosts)&p=\(String(port))&c=\(pairing.currentCode)&n=\(encodedName)"
     }
     
     var body: some View {

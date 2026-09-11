@@ -427,6 +427,63 @@ final class AntigravityQuotaTests: XCTestCase {
         XCTAssertEqual(thirdPartyWeekly.usedFraction ?? 0, 0.15, accuracy: 0.0001)
     }
 
+    func testCodexBarQuotaSummaryEnvelopeIsNormalizedForEverySource() throws {
+        let body = Data("""
+        {
+          "groups": [
+            {
+              "displayName": "Gemini Models",
+              "buckets": [
+                {
+                  "bucketId": "gemini-5h",
+                  "displayName": "5-hour Limit",
+                  "remaining": {"case": "remainingFraction", "value": 0.86}
+                },
+                {
+                  "bucketId": "gemini-weekly",
+                  "displayName": "Weekly Limit",
+                  "remaining": {"remainingFraction": 0.55}
+                }
+              ]
+            },
+            {
+              "displayName": "Claude and GPT models",
+              "buckets": [
+                {
+                  "bucketId": "3p-5h",
+                  "displayName": "5-hour Limit",
+                  "remainingFraction": 1
+                },
+                {
+                  "bucketId": "3p-weekly",
+                  "displayName": "Weekly Limit",
+                  "remainingFraction": 1
+                }
+              ]
+            }
+          ]
+        }
+        """.utf8)
+
+        let providerWindows = AntigravityProvider.windows(in: body)
+        let bridgeWindows = AntigravityBridge.windows(in: body)
+
+        XCTAssertEqual(bridgeWindows, providerWindows)
+        XCTAssertEqual(providerWindows.count, 4)
+        XCTAssertEqual(providerWindows[0].id, "gemini-5h")
+        XCTAssertEqual(providerWindows[1].id, "gemini-weekly")
+        XCTAssertEqual(providerWindows[2].id, "3p-5h")
+        XCTAssertEqual(providerWindows[3].id, "3p-weekly")
+        XCTAssertEqual(providerWindows[0].duration, 5 * 3600)
+        XCTAssertEqual(providerWindows[1].duration, 7 * 86400)
+        XCTAssertEqual(providerWindows[2].duration, 5 * 3600)
+        XCTAssertEqual(providerWindows[3].duration, 7 * 86400)
+        XCTAssertEqual(providerWindows[0].usedFraction ?? -1, 0.14, accuracy: 0.0001)
+        XCTAssertEqual(providerWindows[1].usedFraction ?? -1, 0.45, accuracy: 0.0001)
+        XCTAssertEqual(providerWindows[2].usedFraction ?? -1, 0, accuracy: 0.0001)
+        XCTAssertEqual(providerWindows[3].usedFraction ?? -1, 0, accuracy: 0.0001)
+    }
+
     func testDirectCloudCodeIgnoresInvalidFractions() {
         let body = Data("""
         {

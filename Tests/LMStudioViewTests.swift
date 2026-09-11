@@ -45,7 +45,9 @@ final class LMStudioViewTests: XCTestCase {
         let vm = NotchViewModel()
         vm.now = LMStudioLogFixtures.date(2026, 9, 10, 12, 0, 0)
         vm.updateSnapshots([try runtime()])
-        var ledger = LocalTokenLedger()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = LMStudioLogFixtures.zone
+        var ledger = LocalTokenLedger(calendar: calendar)
         ledger.record(LocalPrediction(instance: "qwen3.8-27b", at: vm.now.addingTimeInterval(-60), inputTokens: 8192,
                                       outputTokens: 400, reasoningTokens: 100, draftTokens: 10, acceptedDraftTokens: 4),
                       as: qwen)

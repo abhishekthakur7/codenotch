@@ -26,6 +26,7 @@ final class PhoneLinkWindowController: NSWindowController {
     @MainActor
     func show(pairing: PhoneLinkPairing, registry: PhoneLinkRegistry, port: Int, serverStatus: PhoneLinkServerStatus) {
         pairing.rotateCode()
+        pairing.lastPaired = nil
         let view = PhoneLinkPairingView(pairing: pairing, registry: registry, port: port, serverStatus: serverStatus)
         window?.contentView = NSHostingView(rootView: view)
         window?.center()

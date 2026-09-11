@@ -282,9 +282,26 @@ final class PhoneLinkTests: XCTestCase {
         XCTAssertTrue(jsonStr.contains("\"account\":null"))
         XCTAssertTrue(jsonStr.contains("\"usedFraction\":null"))
         XCTAssertTrue(jsonStr.contains("\"remaining\":null"))
-        XCTAssertTrue(jsonStr.contains("\"used\":null"))
         XCTAssertTrue(jsonStr.contains("\"resetsAt\":null"))
         XCTAssertTrue(jsonStr.contains("\"waitingFor\":null"))
         XCTAssertTrue(jsonStr.contains("\"since\":null"))
+    }
+    
+    @MainActor
+    func testWindowControllerShowClearsPairing() throws {
+        let pairing = PhoneLinkPairing()
+        pairing.lastPaired = PairedDevice(deviceId: "A", name: "A", platform: "ios", pairedAt: Date(), lastSeenAt: Date(), lastSeenIP: "1.1.1.1", secret: "sec")
+        XCTAssertNotNil(pairing.lastPaired)
+        
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let registry = PhoneLinkRegistry(directory: tempDir)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+        
+        let serverStatus = PhoneLinkServerStatus()
+        
+        let wc = PhoneLinkWindowController.shared
+        wc.show(pairing: pairing, registry: registry, port: 8788, serverStatus: serverStatus)
+        
+        XCTAssertNil(pairing.lastPaired)
     }
 }

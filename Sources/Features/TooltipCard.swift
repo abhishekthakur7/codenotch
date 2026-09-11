@@ -5,7 +5,7 @@ import SwiftUI
 /// Its shoulders leave the card tangent to the card's edge. That continuous
 /// tangent is what makes the two pieces read as one moulded silhouette rather
 /// than a triangle pasted onto a rounded rectangle.
-private struct TooltipTail: Shape {
+struct TooltipTail: Shape {
     /// Which way the card sits relative to the notch — the tip points back the
     /// other way, at the cell.
     let direction: NotchEdge.TooltipDirection

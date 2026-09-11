@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Held for the life of the app: releasing it stops the scheduled checks.
     private var updater: Updater?
     private var thresholdNotifier: ThresholdNotifier?
+    private var resetWatcher: UsageResetWatcher?
     private var statusItem: StatusItemController?
     /// Keeps the Claude keychain token from ageing out on a Mac where the CLI
     /// is never run by hand. See `ClaudeTokenRefresher`.
@@ -437,6 +438,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             self.thresholdNotifier = notifier
 
+            let resetWatcher = UsageResetWatcher(
+                isMuted: { [weak preferences] in preferences?.isMutedAlerts(for: $0) ?? false },
+                deliver: { [weak self] event in
+                    MainActor.assumeIsolated {
+                        self?.announceUsageReset(event: event)
+                    }
+                }
+            )
+            self.resetWatcher = resetWatcher
+
             store.$notchSnapshots
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.setSnapshots($0) }
@@ -447,6 +458,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak statusItem] snapshots in
                     statusItem?.snapshots = snapshots
                     notifier.observe(snapshots)
+                    resetWatcher.observe(snapshots)
                 }
                 .store(in: &cancellables)
             store.start()
@@ -601,6 +613,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard preferences.announceSessionEnd else { return }
         fleet.peek(for: preferences.peekDuration.seconds,
                    focusing: event.session.processID)
+    }
+
+    /// Open the notch and show a usage reset notification modal when a limit resets.
+    @MainActor
+    private func announceUsageReset(event: UsageResetEvent) {
+        guard let preferences, let fleet = notchFleet else { return }
+        Log.usage.info("usage reset for \(event.providerName, privacy: .public) (\(event.windowLabel, privacy: .public))")
+
+        if preferences.usageResetSound {
+            SessionChime.play(preferences.usageResetSoundName)
+        }
+        guard preferences.announceUsageReset else { return }
+        fleet.showResetAlert(event, duration: 5.0)
     }
 
     /// Closing the settings window must not take the app with it.

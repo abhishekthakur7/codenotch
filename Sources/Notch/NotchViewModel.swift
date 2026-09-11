@@ -79,6 +79,13 @@ final class NotchViewModel: ObservableObject {
     @Published var now: Date = Date()
     @Published var resetTimeFormat: ResetTimeFormat = .automatic
 
+    /// Active usage reset notification event to present beside the notch.
+    @Published var activeResetAlert: UsageResetEvent?
+
+    func resetAlertIndex(for event: UsageResetEvent) -> Int? {
+        snapshots.firstIndex { $0.id == event.providerID }
+    }
+
     /// Whether the notch is open or folded away to its pill.
     @Published var isExpanded = false
     /// Clicked open, so it stays open until clicked shut again. A gesture,

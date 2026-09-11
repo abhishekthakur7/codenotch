@@ -222,8 +222,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.setLedger($0) }
                 .store(in: &cancellables)
 
-            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            let dir = appSupport.appendingPathComponent("Codenotch/phone-link", isDirectory: true)
+            let dir: URL
+            if NSClassFromString("XCTestCase") != nil {
+                dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            } else {
+                let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                dir = appSupport.appendingPathComponent("Codenotch/phone-link", isDirectory: true)
+            }
             let phoneRegistry = PhoneLinkRegistry(directory: dir)
             let phonePairing = PhoneLinkPairing()
             self.phoneLinkRegistry = phoneRegistry

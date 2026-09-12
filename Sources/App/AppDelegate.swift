@@ -239,6 +239,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     preferences?.setOffset(0, for: preferences?.notchEdge ?? .right)
                     fleet?.apply(alongOffset: 0)
                 },
+                quit: { NSApp.terminate(nil) },
                 usageStore: store, ollamaRelay: relay, lmstudioMetrics: lmstudio
             )
             // The gear toggles; everything else that opens settings opens it.

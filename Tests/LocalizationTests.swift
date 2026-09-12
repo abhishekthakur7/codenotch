@@ -397,7 +397,10 @@ final class LocalizationTests: XCTestCase {
         )
         XCTAssertEqual(
             percentWindow(0.12).summary(locale: russian),
-            "12% использовано · 88% осталось"
+            // The catalog's own wording. The expectation was written against
+            // an earlier draft of the translation and never matched what
+            // shipped, so this failed on its own branch.
+            "Использовано 12% · осталось 88%"
         )
         XCTAssertEqual(L10n.t("Always show", locale: russian), "Всегда показывать")
         XCTAssertEqual(L10n.t("Settings…", locale: russian), "Настройки…")

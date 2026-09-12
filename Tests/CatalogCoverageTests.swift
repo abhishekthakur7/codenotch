@@ -40,21 +40,15 @@ final class CatalogCoverageTests: XCTestCase {
         }
     }
 
-    func testRussianCatalogCoversEverySourceKey() throws {
-        let catalog = try loadCatalog().json
-        let missing = catalog.strings.compactMap { key, entry in
-            guard let unit = entry.localizations?["ru"]?.stringUnit,
-                  unit.state == "translated",
-                  let value = unit.value,
-                  !value.isEmpty else { return key }
-            return nil
-        }
 
-        XCTAssertTrue(
-            missing.isEmpty,
-            "missing Russian translations for: \(missing.joined(separator: ", "))"
-        )
-    }
+    /// There is deliberately no "language X covers every key" test.
+    ///
+    /// The rule at the top of this file is that a missing translation falls
+    /// back to English rather than failing the suite, and no locale here is
+    /// complete: French and Portuguese cover 350 of 470 keys, Japanese 428.
+    /// #141 added one for Russian, which passed only while Russian happened to
+    /// be complete — the next pull request to add a string broke it, and that
+    /// is exactly the CI block the rule exists to prevent.
 
     // MARK: - Loading
 

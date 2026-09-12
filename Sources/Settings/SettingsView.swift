@@ -508,6 +508,7 @@ struct SettingsView: View {
         // A row switched off jumps from one group to the other. Scoped to that
         // one value so nothing else on the page inherits an animation.
         .animation(.snappy(duration: 0.25), value: preferences.connectedProviders)
+        .animation(.snappy(duration: 0.25), value: preferences.disabledModels)
     }
 
     // One pane, because they are one question: what Codenotch looks like and

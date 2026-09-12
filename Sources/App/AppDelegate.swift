@@ -390,12 +390,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
                 .store(in: &cancellables)
 
-            preferences.$connectedProviders
+            Publishers.CombineLatest(preferences.$connectedProviders, preferences.$disabledModels)
                 .receive(on: RunLoop.main)
-                .sink { [weak store, weak preferences] connected in
+                .sink { [weak store, weak preferences] _, _ in
                     guard let store, let preferences else { return }
                     store.disconnected = preferences.disconnectedIDs(among: store.knownIDs)
-                    _ = connected
                 }
                 .store(in: &cancellables)
 

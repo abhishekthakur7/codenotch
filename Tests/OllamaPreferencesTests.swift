@@ -31,6 +31,7 @@ final class OllamaPreferencesTests: XCTestCase {
         XCTAssertFalse(preferences.isConnected("cursor"))
         XCTAssertFalse(preferences.isConnected("ollama-local"))
         XCTAssertFalse(preferences.isConnected("ollama-local:model:qwen3"))
+        XCTAssertEqual(preferences.disabledModels, ["ollama-local:model:qwen3"])
         XCTAssertEqual(preferences.providerOrder, ["ollama-local:model:qwen3", "codex", "ollama-local"])
         XCTAssertEqual(preferences.mutedAlertProviders, ["ollama-local", "claude"])
         XCTAssertFalse(preferences.ollamaMetricsEnabled)

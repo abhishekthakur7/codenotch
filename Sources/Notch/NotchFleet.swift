@@ -252,6 +252,13 @@ final class NotchFleet {
         }
     }
 
+    /// Shows a usage reset notification modal on every panel.
+    func showResetAlert(_ event: UsageResetEvent, duration: TimeInterval = 5.0) {
+        for controller in controllers.values {
+            controller.showResetAlert(event, duration: duration)
+        }
+    }
+
     func setRefreshing(_ ids: Set<String>) {
         self.refreshing = ids
         for controller in controllers.values {

@@ -77,7 +77,27 @@ struct NotchRootView: View {
                             .animation(motion(orbMotion), value: model.isExpanded)
                 }
 
-                if let snapshot = model.hoveredSnapshot, let index = model.hoveredIndex,
+                if let resetEvent = model.activeResetAlert,
+                   model.isExpanded,
+                   model.hoveredIndex == nil {
+                    let index = model.resetAlertIndex(for: resetEvent) ?? 0
+                    let snapshot = model.snapshots[safe: index] ?? model.snapshots.first ?? Fixtures.snapshots().first!
+                    UsageResetCard(
+                        event: resetEvent,
+                        direction: model.edge.tooltipDirection,
+                        tailOffset: tooltipTailOffset(index: index, snapshot: snapshot),
+                        onDismiss: {
+                            withAnimation(.easeOut(duration: 0.18)) {
+                                model.activeResetAlert = nil
+                            }
+                        }
+                    )
+                    .position(resetCardCentre(place, index: index))
+                    .transition(.opacity.combined(with: .offset(
+                        x: model.edge.outward.x * Design.px(24),
+                        y: model.edge.outward.y * Design.px(24)
+                    )))
+                } else if let snapshot = model.hoveredSnapshot, let index = model.hoveredIndex,
                    model.isExpanded {
                     TooltipCard(
                         snapshot: snapshot,
@@ -402,6 +422,15 @@ struct NotchRootView: View {
         // `tooltipInset` already ends where the drawn notch does.
         return place.point(
             along: model.tooltipAlong(index: index, length: tooltipLength(snapshot)),
+            across: model.tooltipInset + (NotchLayout.tailLength + card) / 2
+        )
+    }
+
+    private func resetCardCentre(_ place: NotchPlacement, index: Int) -> CGPoint {
+        let card = model.edge.isVertical ? NotchLayout.cardWidth : UsageResetCard.cardHeight
+        let cardAlong = model.edge.isVertical ? UsageResetCard.cardHeight : NotchLayout.cardWidth
+        return place.point(
+            along: model.tooltipAlong(index: index, length: cardAlong),
             across: model.tooltipInset + (NotchLayout.tailLength + card) / 2
         )
     }

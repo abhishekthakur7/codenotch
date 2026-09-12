@@ -32,6 +32,40 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.10.0",
+                headline: L10n.t("Tells you when a limit resets or runs out, speaks Russian, and reads Kimi."),
+                changes: [
+                    ReleaseNote.Change(
+                        title: L10n.t("A card when a limit resets, and when one runs out"),
+                        detail: L10n.t("The notch slides out a card the moment a provider's limit rolls over, and again when a session or weekly limit reaches 100%. Notifications in Settings chooses which of those you want, with an optional chime.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Kimi"),
+                        detail: L10n.t("Its weekly and 5-hour limits, the sessions it is running, and clicking one now raises the exact terminal tab it is in rather than only the app.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Русский"),
+                        detail: L10n.t("A fifth language, on the Mac and on Windows.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Quit from Settings"),
+                        detail: L10n.t("A quit action in the Settings sidebar, for when the menu bar icon is switched off.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("A web page cannot reach Codenotch's local servers"),
+                        detail: L10n.t("The Ollama relay and the Windows event server now refuse browser requests from other sites, and raw responses are kept out of the system log. Reading DeepSeek also checks the page's address exactly, where a lookalike domain could have passed before.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Windows"),
+                        detail: L10n.t("Diagnostics print the shape of a value rather than the value, so nothing sensitive lands in a report, and the port's build is checked on every change.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Smaller fixes"),
+                        detail: L10n.t("The move handle lines up with the camera housing, and more of Settings is translated into Simplified Chinese.")
+                    ),
+                ]
+            ),
+            ReleaseNote(
                 version: "1.9.0",
                 headline: L10n.t("LM Studio, DeepSeek and Devin, Japanese and Portuguese, and no more keychain password on a timer."),
                 changes: [

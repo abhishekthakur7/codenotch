@@ -21,7 +21,7 @@ pub struct TraySlot {
 pub struct Config {
     #[serde(default = "default_port")]
     pub port: u16,
-    /// "auto" | "zh" | "en" | "ja" | "ko"
+    /// "auto" | "zh" | "en" | "ja" | "ko" | "ru"
     #[serde(default = "default_lang")]
     pub lang: String,
     #[serde(default)]
@@ -134,7 +134,7 @@ pub fn load() -> Config {
     let raw = std::fs::read_to_string(&path).ok();
     let mut cfg: Config = raw
         .as_deref()
-        .and_then(|t| serde_json::from_str(&t).ok())
+        .and_then(|t| serde_json::from_str(t).ok())
         .unwrap_or_default();
 
     // Discoverability without surprising anyone. `default_tray_mode` gives a NEW install the

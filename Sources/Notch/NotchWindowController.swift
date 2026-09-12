@@ -157,6 +157,12 @@ final class NotchWindowController {
             }
             .store(in: &cancellables)
 
+        model.$activeResetAlert
+            .sink { [weak self] _ in
+                MainActor.assumeIsolated { self?.updateInteractiveRects() }
+            }
+            .store(in: &cancellables)
+
         // A model can gain speed rows without changing the cell count. Read
         // after Published's willSet so sizing sees the new card contents too.
         model.$snapshots
@@ -424,8 +430,24 @@ final class NotchWindowController {
         )
     }
 
+    private func resetCardRect(event: UsageResetEvent) -> CGRect? {
+        let index = model.resetAlertIndex(for: event) ?? 0
+        let cardAcross = model.edge.isVertical ? NotchLayout.cardWidth : UsageResetCard.cardHeight
+        let cardAlong = model.edge.isVertical ? UsageResetCard.cardHeight : NotchLayout.cardWidth
+        let centre = model.tooltipAlong(index: index, length: cardAlong)
+        return placement.rect(
+            along: centre - cardAlong / 2,
+            across: model.notchDrawnDepth,
+            length: cardAlong,
+            depth: NotchLayout.tailGap + NotchLayout.tailLength + cardAcross
+        )
+    }
+
     private func updateInteractiveRects() {
         var rects = [liveRect]
+        if model.isExpanded, let event = model.activeResetAlert, let card = resetCardRect(event: event) {
+            rects.append(card)
+        }
         if model.isExpanded, let index = model.hoveredIndex, let card = tooltipRect(index: index) {
             rects.append(card)
         }
@@ -626,6 +648,13 @@ final class NotchWindowController {
             }
             setPointing(false)
             updateInteractiveRects()
+            return
+        }
+        // Clicks on the tooltip card belong to whatever is drawn there — the
+        // session rows take their own taps — and must not fall through to the
+        // cell refetch or the pin toggle underneath.
+        if model.isExpanded, let index = model.hoveredIndex,
+           let card = tooltipRect(index: index), card.contains(local) {
             return
         }
         guard model.isExpanded else {
@@ -953,6 +982,28 @@ final class NotchWindowController {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: work)
     }
 
+    /// Open the notch and show a usage reset notification modal card.
+    func showResetAlert(_ event: UsageResetEvent, duration: TimeInterval = 5.0) {
+        guard visibility != .hidden, let panel else {
+            Log.usage.debug("reset alert skipped: notch hidden")
+            return
+        }
+        model.activeResetAlert = event
+        peek(for: duration, focusing: nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                if self.model.activeResetAlert == event {
+                    withAnimation(.easeOut(duration: 0.18)) {
+                        self.model.activeResetAlert = nil
+                    }
+                    self.updateInteractiveRects()
+                }
+            }
+        }
+    }
+
     /// How long after a peek folds a click still counts as answering it. Covers
     /// the reach for the mouse that started while the notch was still open.
     private static let focusGrace: TimeInterval = 2
@@ -964,7 +1015,9 @@ final class NotchWindowController {
             return false
         }
         pendingFocus = nil
-        return SessionFocus.activateApp(owning: pending.pid)
+        // The same exact-tab jump a session row gives, not just the app.
+        Task { _ = await SessionFocus.focus(pid: pending.pid) }
+        return true
     }
 
     /// Tear down a controller whose display is gone: hide first so no panel

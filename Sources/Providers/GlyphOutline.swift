@@ -409,6 +409,20 @@ enum GlyphOutline {
          CGPoint(x: 0.6820, y: 0.2000), CGPoint(x: 0.0200, y: 0.2000)]
     ]
 
+    /// Kimi's mark: a bold geometric K, defined rather than traced, the same
+    /// approach as `glm` — eleven vertices in the unit box, exact at any size.
+    ///
+    /// One loop, no counters. The stem and both arms share one stroke depth
+    /// (0.2), so the letter reads at one weight.
+    static let kimi: [[CGPoint]] = [
+        [CGPoint(x: 0.0600, y: 1.0000), CGPoint(x: 0.0600, y: 0.0000),
+         CGPoint(x: 0.2600, y: 0.0000), CGPoint(x: 0.2600, y: 0.3800),
+         CGPoint(x: 0.6800, y: 0.0000), CGPoint(x: 0.9400, y: 0.0000),
+         CGPoint(x: 0.4800, y: 0.4400), CGPoint(x: 0.9800, y: 1.0000),
+         CGPoint(x: 0.7000, y: 1.0000), CGPoint(x: 0.2600, y: 0.5400),
+         CGPoint(x: 0.2600, y: 1.0000)]
+    ]
+
     /// Grok's mark, flattened from grok.com's favicon SVG.
     ///
     /// Two filled loops — the interlocking swirls with the diagonal slash —

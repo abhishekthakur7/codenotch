@@ -79,6 +79,13 @@ final class NotchViewModel: ObservableObject {
     @Published var now: Date = Date()
     @Published var resetTimeFormat: ResetTimeFormat = .automatic
 
+    /// Active usage reset notification event to present beside the notch.
+    @Published var activeResetAlert: UsageResetEvent?
+
+    func resetAlertIndex(for event: UsageResetEvent) -> Int? {
+        snapshots.firstIndex { $0.id == event.providerID }
+    }
+
     /// Whether the notch is open or folded away to its pill.
     @Published var isExpanded = false
     /// Clicked open, so it stays open until clicked shut again. A gesture,
@@ -149,6 +156,9 @@ final class NotchViewModel: ObservableObject {
     /// the one action people actually get stuck without a second, ordinary
     /// route that only needs SwiftUI's own gesture recognition to work.
     var onOpenSettings: (() -> Void)?
+    /// A tap on a session row in the tooltip: jump to the terminal tab the
+    /// session runs in. Takes the session's pid; wired to `SessionFocus`.
+    var onFocusSession: ((pid_t) -> Void)?
     /// Which screen edge the notch is welded to. Everything geometric reads
     /// this through `placement` rather than assuming an axis.
     @Published var edge: NotchEdge = .right
@@ -330,9 +340,7 @@ final class NotchViewModel: ObservableObject {
     /// orb sits past `shapeLength`, so the pair stay symmetric about the notch
     /// at every size and on every edge.
     var moveAlong: CGFloat {
-        guard orbHugsCorner else { return 0 }
-        return cornerCentreAlong - shapeLength
-            + NotchLayout.orbCornerOffset(corner: drawnCornerRadius)
+        shapeLength - orbAlong
     }
 
     /// The mirror of `trailingExtent` at the near end — the room the move

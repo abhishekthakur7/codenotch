@@ -229,14 +229,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
                 dir = appSupport.appendingPathComponent("Codenotch/phone-link", isDirectory: true)
             }
-            let phoneRegistry = PhoneLinkRegistry(directory: dir)
+            let phoneSecretStore: PhoneLinkSecretStore = NSClassFromString("XCTestCase") != nil
+                ? InMemoryPhoneLinkSecretStore()
+                : PhoneLinkKeychainSecretStore()
+            let phoneRegistry = PhoneLinkRegistry(directory: dir, secretStore: phoneSecretStore)
             let phonePairing = PhoneLinkPairing()
+            let serverStatus = PhoneLinkServerStatus()
             self.phoneLinkRegistry = phoneRegistry
             self.phoneLinkPairing = phonePairing
             
             let server = PhoneLinkServer(
                 pairing: phonePairing,
                 registry: phoneRegistry,
+                status: serverStatus,
                 getSnapshot: { @Sendable [weak store, weak fleet, weak preferences] in
                     guard let store, let fleet, let preferences else { return nil }
                     let snap = await MainActor.run {
@@ -274,7 +279,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     return try? JSONEncoder().encode(snap)
                 }
             )
-            let serverStatus = PhoneLinkServerStatus()
             self.phoneLinkServerStatus = serverStatus
             self.phoneLinkServer = server
 

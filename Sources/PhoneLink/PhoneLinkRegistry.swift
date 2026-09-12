@@ -7,15 +7,16 @@ struct PairedDevice: Codable, Identifiable, Equatable, Sendable {
     let pairedAt: Date
     var lastSeenAt: Date
     var lastSeenIP: String
-    let secret: String
     
     var id: String { deviceId }
 }
 
 final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
     @Published private(set) var devices: [PairedDevice] = []
+    @Published private(set) var discardedLegacyDevices = false
     
     private let url: URL
+    private let secretStore: PhoneLinkSecretStore
     private let queue = DispatchQueue(label: "PhoneLinkRegistry")
     private var lastWrite: Date = Date.distantPast
     private var pendingWrite = false
@@ -28,10 +29,12 @@ final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
             }
         }
     }
+    private var secrets: [String: Data] = [:]
     
-    init(directory: URL) {
+    init(directory: URL, secretStore: PhoneLinkSecretStore = PhoneLinkKeychainSecretStore()) {
         let dir = directory
         self.url = dir.appendingPathComponent("devices.json")
+        self.secretStore = secretStore
         
         do {
             try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
@@ -44,10 +47,32 @@ final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
     
     private func load() {
         guard let data = try? Data(contentsOf: url),
-              let decoded = try? JSONDecoder().decode([PairedDevice].self, from: data) else { return }
+              let records = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return }
+
+        var decoded: [PairedDevice] = []
+        var discardedLegacy = false
+        for record in records {
+            if record["secret"] != nil {
+                discardedLegacy = true
+                continue
+            }
+            guard JSONSerialization.isValidJSONObject(record),
+                  let recordData = try? JSONSerialization.data(withJSONObject: record),
+                  let device = try? JSONDecoder().decode(PairedDevice.self, from: recordData) else {
+                continue
+            }
+            decoded.append(device)
+            if let secret = secretStore.read(deviceId: device.deviceId) {
+                secrets[device.deviceId] = secret
+            }
+        }
         lock.lock()
         backingDevices = decoded
         lock.unlock()
+        discardedLegacyDevices = discardedLegacy
+        if discardedLegacy {
+            performSave(decoded)
+        }
     }
     
     private func saveImmediate() {
@@ -111,11 +136,23 @@ final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
             scheduleThrottledSave()
         }
     }
+
+    @discardableResult
+    func addOrUpdate(device: PairedDevice, secret: Data) -> Bool {
+        guard secretStore.store(secret, deviceId: device.deviceId) else { return false }
+        lock.lock()
+        secrets[device.deviceId] = secret
+        lock.unlock()
+        addOrUpdate(device: device)
+        return true
+    }
     
     func remove(deviceId: String) {
         lock.lock()
         backingDevices.removeAll { $0.deviceId == deviceId }
+        secrets.removeValue(forKey: deviceId)
         lock.unlock()
+        secretStore.remove(deviceId: deviceId)
         saveImmediate()
     }
     
@@ -123,5 +160,11 @@ final class PhoneLinkRegistry: ObservableObject, @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         return backingDevices.first { $0.deviceId == id }
+    }
+
+    func secret(deviceId: String) -> Data? {
+        lock.lock()
+        defer { lock.unlock() }
+        return secrets[deviceId]
     }
 }

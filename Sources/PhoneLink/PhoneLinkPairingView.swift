@@ -10,13 +10,18 @@ struct PhoneLinkPairingView: View {
     
     @State private var copied = false
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+
+    private var advertisedPort: Int {
+        if case .ready(let boundPort) = serverStatus.state { return boundPort }
+        return port
+    }
     
     var link: String {
         let hosts = PhoneLinkNetwork.getHosts().joined(separator: ",")
         let name = PhoneLinkNetwork.getComputerName()
         let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_.~"))
         let encodedName = name.addingPercentEncoding(withAllowedCharacters: allowed) ?? name
-        return "codenotch://pair?v=2&h=\(hosts)&p=\(String(port))&c=\(pairing.currentCode)&n=\(encodedName)"
+        return "codenotch://pair?v=3&h=\(hosts)&p=\(String(advertisedPort))&c=\(pairing.currentCode ?? "")&n=\(encodedName)"
     }
     
     var body: some View {
@@ -38,7 +43,7 @@ struct PhoneLinkPairingView: View {
                 
                 Button(L10n.t("Connect another phone")) {
                     pairing.lastPaired = nil
-                    pairing.rotateCode()
+                    pairing.openWindow()
                 }
                 .buttonStyle(.link)
             } else {
@@ -57,15 +62,13 @@ struct PhoneLinkPairingView: View {
                     }
                     
                     Button(L10n.t("Retry")) {
-                        // In reality, it should reconnect or check again.
-                        // Wait, just closing or the user can retry.
-                        // Actually, rotating code doesn't start the server.
-                        // Settings starts the server. So Retry here might just be closing.
-                        // Or if the user enabled it, wait.
-                        // The prompt says "show that message and a Retry button".
-                        // Wait, maybe we just do nothing on retry, or just refresh network?
-                        // Let's just force a view redraw.
-                        pairing.rotateCode() // cheap way to get a new code / re-evaluate
+                        pairing.openWindow()
+                    }
+                } else if !pairing.isOpen {
+                    Text(L10n.t("Pairing code expired"))
+                        .font(.headline)
+                    Button(L10n.t("Generate a new code")) {
+                        pairing.openWindow()
                     }
                 } else {
                     Text(L10n.t("Connect your phone"))
@@ -87,7 +90,7 @@ struct PhoneLinkPairingView: View {
                         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: pairing.currentCode)
                     
                     TimelineView(.periodic(from: .now, by: 1)) { _ in
-                        let diff = max(0, pairing.expiresAt.timeIntervalSinceNow)
+                        let diff = max(0, pairing.expiresAt?.timeIntervalSinceNow ?? 0)
                         let min = Int(diff) / 60
                         let sec = Int(diff) % 60
                         Text(L10n.t("Expires in \(String(format: "%d:%02d", min, sec))"))

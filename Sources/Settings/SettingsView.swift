@@ -1718,6 +1718,10 @@ struct PhoneSettingsPane: View {
             }
             
             Section(L10n.t("Paired phones")) {
+                if registry.discardedLegacyDevices {
+                    Text(L10n.t("Re-pair your phone after updating"))
+                        .foregroundColor(.orange)
+                }
                 if registry.devices.isEmpty {
                     Text(L10n.t("No phones yet."))
                         .foregroundColor(.secondary)

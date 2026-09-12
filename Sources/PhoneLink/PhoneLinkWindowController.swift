@@ -1,8 +1,9 @@
 import AppKit
 import SwiftUI
 
-final class PhoneLinkWindowController: NSWindowController {
+final class PhoneLinkWindowController: NSWindowController, NSWindowDelegate {
     static let shared = PhoneLinkWindowController()
+    private weak var pairing: PhoneLinkPairing?
     
     private init() {
         let window = NSWindow(
@@ -17,6 +18,7 @@ final class PhoneLinkWindowController: NSWindowController {
         window.center()
         window.isReleasedWhenClosed = false
         super.init(window: window)
+        window.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -25,12 +27,17 @@ final class PhoneLinkWindowController: NSWindowController {
     
     @MainActor
     func show(pairing: PhoneLinkPairing, registry: PhoneLinkRegistry, port: Int, serverStatus: PhoneLinkServerStatus) {
-        pairing.rotateCode()
+        self.pairing = pairing
+        pairing.openWindow()
         pairing.lastPaired = nil
         let view = PhoneLinkPairingView(pairing: pairing, registry: registry, port: port, serverStatus: serverStatus)
         window?.contentView = NSHostingView(rootView: view)
         window?.center()
         showWindow(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        pairing?.closeWindow()
     }
 }

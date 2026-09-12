@@ -1,47 +1,43 @@
+import CryptoKit
 import Foundation
 import NIOCore
 import NIOHTTP1
-import CryptoKit
 
-// Using a dictionary to track nonces per IP for rate limiting/replay protection.
 actor SecurityStore {
-    // ip -> [nonce: expiry]
     private var nonces: [String: [String: Date]] = [:]
-    // ip -> [time]
     private var pairRequests: [String: [Date]] = [:]
-    // ip -> [time]
     private var apiRequests: [String: [Date]] = [:]
-    
-    func checkAndStoreNonce(ip: String, nonce: String, timestamp: Int) -> Bool {
+
+    func checkAndStoreNonce(key: String, nonce: String) -> Bool {
         cleanup()
-        var ipNonces = nonces[ip] ?? [:]
-        if ipNonces[nonce] != nil { return false }
-        ipNonces[nonce] = Date(timeIntervalSince1970: TimeInterval(timestamp)).addingTimeInterval(300)
-        nonces[ip] = ipNonces
+        var values = nonces[key] ?? [:]
+        if values[nonce] != nil { return false }
+        values[nonce] = Date().addingTimeInterval(300)
+        nonces[key] = values
         return true
     }
-    
+
     func checkPairRateLimit(ip: String) -> Bool {
         cleanup()
-        var reqs = pairRequests[ip] ?? []
-        reqs.append(Date())
-        pairRequests[ip] = reqs
-        return reqs.count <= 10
+        var requests = pairRequests[ip] ?? []
+        requests.append(Date())
+        pairRequests[ip] = requests
+        return requests.count <= 10
     }
-    
+
     func checkAPIRateLimit(ip: String) -> Bool {
         cleanup()
-        var reqs = apiRequests[ip] ?? []
-        reqs.append(Date())
-        apiRequests[ip] = reqs
-        return reqs.count <= 120
+        var requests = apiRequests[ip] ?? []
+        requests.append(Date())
+        apiRequests[ip] = requests
+        return requests.count <= 120
     }
-    
+
     private func cleanup() {
         let now = Date()
-        for ip in nonces.keys {
-            nonces[ip] = nonces[ip]?.filter { $0.value > now }
-            if nonces[ip]?.isEmpty == true { nonces.removeValue(forKey: ip) }
+        for key in nonces.keys {
+            nonces[key] = nonces[key]?.filter { $0.value > now }
+            if nonces[key]?.isEmpty == true { nonces.removeValue(forKey: key) }
         }
         for ip in pairRequests.keys {
             pairRequests[ip] = pairRequests[ip]?.filter { now.timeIntervalSince($0) < 60 }
@@ -54,266 +50,430 @@ actor SecurityStore {
     }
 }
 
-let sharedSecurityStore = SecurityStore()
-
 final class PhoneLinkRequestHandler: ChannelInboundHandler {
     typealias InboundIn = HTTPServerRequestPart
-    
+
+    private static let maximumEnvelopeBytes = 64 * 1024
+
     private let pairing: PhoneLinkPairing
     private let registry: PhoneLinkRegistry
+    private let securityStore: SecurityStore
     private let getSnapshot: @Sendable () async -> Data?
     private let refreshAndGetSnapshot: @Sendable () async -> Data?
-    
+
     private var head: HTTPRequestHead?
     private var body = Data()
-    
-    init(pairing: PhoneLinkPairing, registry: PhoneLinkRegistry, getSnapshot: @escaping @Sendable () async -> Data?, refreshAndGetSnapshot: @escaping @Sendable () async -> Data?) {
+    private var rejectedRequest = false
+
+    init(
+        pairing: PhoneLinkPairing,
+        registry: PhoneLinkRegistry,
+        securityStore: SecurityStore,
+        getSnapshot: @escaping @Sendable () async -> Data?,
+        refreshAndGetSnapshot: @escaping @Sendable () async -> Data?
+    ) {
         self.pairing = pairing
         self.registry = registry
+        self.securityStore = securityStore
         self.getSnapshot = getSnapshot
         self.refreshAndGetSnapshot = refreshAndGetSnapshot
     }
-    
+
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
-        let reqPart = unwrapInboundIn(data)
-        switch reqPart {
+        switch unwrapInboundIn(data) {
         case .head(let request):
-            self.head = request
+            head = request
+            body = Data()
+            rejectedRequest = false
         case .body(var buffer):
-            guard body.count + buffer.readableBytes <= 64 * 1024 else {
-                fail(context.channel, status: .payloadTooLarge)
+            guard !rejectedRequest else { return }
+            guard body.count + buffer.readableBytes <= Self.maximumEnvelopeBytes else {
+                rejectedRequest = true
+                fail(
+                    context.channel,
+                    status: .payloadTooLarge,
+                    jsonBody: Data("{\"error\":\"payload-too-large\"}".utf8)
+                )
                 return
             }
-            let bytes = buffer.readBytes(length: buffer.readableBytes)!
-            body.append(contentsOf: bytes)
-
+            if let bytes = buffer.readBytes(length: buffer.readableBytes) {
+                body.append(contentsOf: bytes)
+            }
         case .end:
-            let requestHead = self.head!
-            handleRequest(channel: context.channel, head: requestHead, bodyData: body)
-            self.head = nil
-            self.body = Data()
+            guard !rejectedRequest, let requestHead = head else {
+                head = nil
+                body = Data()
+                return
+            }
+            let requestBody = body
+            head = nil
+            body = Data()
+            handleRequest(channel: context.channel, head: requestHead, bodyData: requestBody)
         }
     }
-    
+
+    private func handleRequest(channel: Channel, head: HTTPRequestHead, bodyData: Data) {
+        guard let ip = extractIP(channel.remoteAddress) else {
+            fail(channel, status: .forbidden)
+            return
+        }
+        guard PhoneLinkNetwork.isPrivateIP(ip) else {
+            fail(channel, status: .forbidden, jsonBody: Data("{\"error\":\"local-network-only\"}".utf8))
+            return
+        }
+
+        let path = head.uri.components(separatedBy: "?").first ?? "/"
+        if head.method == .GET, path == "/health" {
+            let version = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0"
+            respondPlaintext(
+                channel,
+                jsonBody: Data("{\"ok\":true,\"app\":\"codenotch\",\"api\":3,\"version\":\"\(version)\"}".utf8)
+            )
+            return
+        }
+
+        if head.method == .POST, path == "/api/v3/pair" {
+            Task {
+                await handlePair(channel: channel, head: head, bodyData: bodyData, ip: ip)
+            }
+            return
+        }
+
+        let isSnapshot = head.method == .GET && path == "/api/v3/snapshot"
+        let isRefresh = head.method == .POST && path == "/api/v3/refresh"
+        guard isSnapshot || isRefresh else {
+            fail(channel, status: .notFound)
+            return
+        }
+        Task {
+            await handleAPI(channel: channel, head: head, path: path, bodyData: bodyData, ip: ip, refresh: isRefresh)
+        }
+    }
+
+    private func handlePair(channel: Channel, head: HTTPRequestHead, bodyData: Data, ip: String) async {
+        let codes = await pairing.authenticationCodes()
+        guard let activeCode = codes.active else {
+            fail(channel, status: .forbidden, jsonBody: Data("{\"error\":\"pairing-closed\"}".utf8))
+            return
+        }
+
+        guard await securityStore.checkPairRateLimit(ip: ip) else {
+            fail(channel, status: .tooManyRequests, jsonBody: Data("{\"error\":\"rate-limited\"}".utf8))
+            return
+        }
+        guard let headers = authenticatedHeaders(head) else {
+            fail(channel, status: .unauthorized)
+            return
+        }
+        guard timestampIsCurrent(headers.timestamp) else {
+            clockSkew(channel)
+            return
+        }
+        guard await securityStore.checkAndStoreNonce(key: "pair:\(ip)", nonce: headers.nonce) else {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"replayed-nonce\"}".utf8))
+            return
+        }
+
+        let activeKeys: PhoneLinkCrypto.PairingKeys
+        do {
+            activeKeys = try PhoneLinkCrypto.pairingKeys(code: activeCode)
+        } catch {
+            fail(channel, status: .internalServerError)
+            return
+        }
+
+        let actualSignature = PhoneLinkCrypto.signature(
+            key: activeKeys.signature,
+            ts: headers.timestamp,
+            nonce: headers.nonce,
+            method: head.method.rawValue,
+            uri: head.uri,
+            bodyAsSent: bodyData
+        )
+        if !PhoneLinkCrypto.constantTimeEqual(headers.signature, actualSignature) {
+            for retiredCode in codes.retired {
+                guard let retiredKeys = try? PhoneLinkCrypto.pairingKeys(code: retiredCode) else { continue }
+                let retiredSignature = PhoneLinkCrypto.signature(
+                    key: retiredKeys.signature,
+                    ts: headers.timestamp,
+                    nonce: headers.nonce,
+                    method: head.method.rawValue,
+                    uri: head.uri,
+                    bodyAsSent: bodyData
+                )
+                if PhoneLinkCrypto.constantTimeEqual(headers.signature, retiredSignature) {
+                    fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"code-expired\"}".utf8))
+                    return
+                }
+            }
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-code\"}".utf8))
+            return
+        }
+
+        let plaintext: Data
+        do {
+            plaintext = try PhoneLinkCrypto.open(
+                bodyData,
+                key: activeKeys.encryption,
+                aad: PhoneLinkCrypto.pairingRequestAAD(
+                    ts: headers.timestamp,
+                    nonce: headers.nonce,
+                    deviceId: headers.deviceId
+                )
+            )
+        } catch {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-code\"}".utf8))
+            return
+        }
+
+        struct PairRequest: Decodable {
+            let deviceId: String
+            let name: String
+            let platform: String
+        }
+        guard let request = try? JSONDecoder().decode(PairRequest.self, from: plaintext),
+              request.deviceId == headers.deviceId else {
+            fail(channel, status: .badRequest)
+            return
+        }
+        guard await pairing.consume(code: activeCode) else {
+            fail(channel, status: .forbidden, jsonBody: Data("{\"error\":\"pairing-closed\"}".utf8))
+            return
+        }
+
+        let secret: Data
+        do {
+            secret = try PhoneLinkCrypto.deviceSecret(code: activeCode, deviceId: request.deviceId)
+        } catch {
+            fail(channel, status: .internalServerError)
+            return
+        }
+        let device = PairedDevice(
+            deviceId: request.deviceId,
+            name: request.name,
+            platform: request.platform,
+            pairedAt: Date(),
+            lastSeenAt: Date(),
+            lastSeenIP: ip
+        )
+        guard registry.addOrUpdate(device: device, secret: secret) else {
+            fail(channel, status: .internalServerError)
+            return
+        }
+
+        await MainActor.run { pairing.lastPaired = device }
+        let version = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0"
+        struct PairResponse: Encodable {
+            let paired: Bool
+            let server: String
+            let version: String
+            let api: Int
+            let deviceId: String
+        }
+        guard let responseJSON = try? JSONEncoder().encode(PairResponse(
+            paired: true,
+            server: PhoneLinkNetwork.getComputerName(),
+            version: version,
+            api: 3,
+            deviceId: request.deviceId
+        )) else {
+            fail(channel, status: .internalServerError)
+            return
+        }
+        respondEncrypted(
+            channel,
+            plaintext: responseJSON,
+            key: activeKeys.encryption,
+            aad: PhoneLinkCrypto.pairingResponseAAD(
+                ts: headers.timestamp,
+                nonce: headers.nonce,
+                deviceId: request.deviceId,
+                status: 200
+            )
+        )
+    }
+
+    private func handleAPI(
+        channel: Channel,
+        head: HTTPRequestHead,
+        path: String,
+        bodyData: Data,
+        ip: String,
+        refresh: Bool
+    ) async {
+        guard await securityStore.checkAPIRateLimit(ip: ip) else {
+            fail(channel, status: .tooManyRequests, jsonBody: Data("{\"error\":\"rate-limited\"}".utf8))
+            return
+        }
+        guard let requestedDeviceId = head.headers["x-cn-device"].first, !requestedDeviceId.isEmpty else {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"unknown-device\"}".utf8))
+            return
+        }
+        guard let headers = authenticatedHeaders(head) else {
+            fail(channel, status: .unauthorized)
+            return
+        }
+        guard timestampIsCurrent(headers.timestamp) else {
+            clockSkew(channel)
+            return
+        }
+        guard let device = registry.getDevice(id: requestedDeviceId),
+              let secret = registry.secret(deviceId: requestedDeviceId) else {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"unknown-device\"}".utf8))
+            return
+        }
+        guard await securityStore.checkAndStoreNonce(key: "device:\(headers.deviceId)", nonce: headers.nonce) else {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"replayed-nonce\"}".utf8))
+            return
+        }
+
+        let keys = PhoneLinkCrypto.deviceKeys(secret: secret)
+        let expectedSignature = PhoneLinkCrypto.signature(
+            key: keys.signature,
+            ts: headers.timestamp,
+            nonce: headers.nonce,
+            method: head.method.rawValue,
+            uri: head.uri,
+            bodyAsSent: bodyData
+        )
+        guard PhoneLinkCrypto.constantTimeEqual(headers.signature, expectedSignature) else {
+            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-signature\"}".utf8))
+            return
+        }
+        if !bodyData.isEmpty {
+            do {
+                _ = try PhoneLinkCrypto.open(
+                    bodyData,
+                    key: keys.encryption,
+                    aad: PhoneLinkCrypto.requestAAD(
+                        ts: headers.timestamp,
+                        nonce: headers.nonce,
+                        method: head.method.rawValue,
+                        path: path,
+                        deviceId: headers.deviceId
+                    )
+                )
+            } catch {
+                fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-signature\"}".utf8))
+                return
+            }
+        }
+
+        var updatedDevice = device
+        updatedDevice.lastSeenAt = Date()
+        updatedDevice.lastSeenIP = ip
+        registry.addOrUpdate(device: updatedDevice, immediate: false)
+
+        let snapshot = refresh ? await refreshAndGetSnapshot() : await getSnapshot()
+        guard let snapshot else {
+            fail(channel, status: .internalServerError)
+            return
+        }
+        respondEncrypted(
+            channel,
+            plaintext: snapshot,
+            key: keys.encryption,
+            aad: PhoneLinkCrypto.responseAAD(
+                ts: headers.timestamp,
+                nonce: headers.nonce,
+                method: head.method.rawValue,
+                path: path,
+                deviceId: headers.deviceId,
+                status: 200
+            )
+        )
+    }
+
+    private struct AuthenticatedHeaders {
+        let timestamp: String
+        let nonce: String
+        let deviceId: String
+        let signature: Data
+    }
+
+    private func authenticatedHeaders(_ head: HTTPRequestHead) -> AuthenticatedHeaders? {
+        guard let timestamp = head.headers["x-cn-timestamp"].first,
+              Int64(timestamp) != nil,
+              let nonce = head.headers["x-cn-nonce"].first,
+              Data(hexString: nonce)?.count == 16,
+              let deviceId = head.headers["x-cn-device"].first,
+              !deviceId.isEmpty,
+              let signatureHex = head.headers["x-cn-signature"].first,
+              let signature = Data(hexString: signatureHex),
+              signature.count == 32 else {
+            return nil
+        }
+        return AuthenticatedHeaders(
+            timestamp: timestamp,
+            nonce: nonce,
+            deviceId: deviceId,
+            signature: signature
+        )
+    }
+
+    private func timestampIsCurrent(_ timestamp: String) -> Bool {
+        guard let value = Int64(timestamp) else { return false }
+        let now = Int64(Date().timeIntervalSince1970)
+        return value >= now - 120 && value <= now + 120
+    }
+
+    private func clockSkew(_ channel: Channel) {
+        let now = Int(Date().timeIntervalSince1970)
+        fail(
+            channel,
+            status: .unauthorized,
+            jsonBody: Data("{\"error\":\"clock-skew\",\"serverTime\":\(now)}".utf8)
+        )
+    }
+
+    private func extractIP(_ address: SocketAddress?) -> String? {
+        guard let address else { return nil }
+        switch address {
+        case .v4(let value): return value.host
+        case .v6(let value): return value.host
+        case .unixDomainSocket: return nil
+        }
+    }
+
     private func fail(_ channel: Channel, status: HTTPResponseStatus, jsonBody: Data? = nil) {
+        respond(channel, status: status, contentType: "application/json", body: jsonBody)
+    }
+
+    private func respondPlaintext(_ channel: Channel, status: HTTPResponseStatus = .ok, jsonBody: Data) {
+        respond(channel, status: status, contentType: "application/json", body: jsonBody)
+    }
+
+    private func respondEncrypted(_ channel: Channel, plaintext: Data, key: SymmetricKey, aad: Data) {
+        do {
+            let envelope = try PhoneLinkCrypto.seal(plaintext, key: key, aad: aad)
+            respond(channel, status: .ok, contentType: "application/codenotch-v3", body: envelope)
+        } catch {
+            fail(channel, status: .internalServerError)
+        }
+    }
+
+    private func respond(
+        _ channel: Channel,
+        status: HTTPResponseStatus,
+        contentType: String,
+        body: Data?
+    ) {
         channel.eventLoop.execute {
-            let head = HTTPResponseHead(version: .http1_1, status: status, headers: HTTPHeaders([("content-type", "application/json"), ("connection", "close")]))
+            var headers = HTTPHeaders([
+                ("content-type", contentType),
+                ("connection", "close")
+            ])
+            if let body { headers.add(name: "content-length", value: String(body.count)) }
+            let head = HTTPResponseHead(version: .http1_1, status: status, headers: headers)
             channel.write(NIOAny(HTTPServerResponsePart.head(head)), promise: nil)
-            if let json = jsonBody {
-                var buffer = channel.allocator.buffer(capacity: json.count)
-                buffer.writeBytes(json)
+            if let body {
+                var buffer = channel.allocator.buffer(capacity: body.count)
+                buffer.writeBytes(body)
                 channel.write(NIOAny(HTTPServerResponsePart.body(.byteBuffer(buffer))), promise: nil)
             }
             channel.writeAndFlush(NIOAny(HTTPServerResponsePart.end(nil))).whenComplete { _ in
                 channel.close(promise: nil)
             }
         }
-    }
-    
-    private func respond(_ channel: Channel, status: HTTPResponseStatus = .ok, jsonBody: Data) {
-        channel.eventLoop.execute {
-            let head = HTTPResponseHead(version: .http1_1, status: status, headers: HTTPHeaders([("content-type", "application/json"), ("connection", "close")]))
-            channel.write(NIOAny(HTTPServerResponsePart.head(head)), promise: nil)
-            var buffer = channel.allocator.buffer(capacity: jsonBody.count)
-            buffer.writeBytes(jsonBody)
-            channel.write(NIOAny(HTTPServerResponsePart.body(.byteBuffer(buffer))), promise: nil)
-            channel.writeAndFlush(NIOAny(HTTPServerResponsePart.end(nil))).whenComplete { _ in
-                channel.close(promise: nil)
-            }
-        }
-    }
-    
-    private func extractIP(_ address: SocketAddress?) -> String? {
-        guard let addr = address else { return nil }
-        switch addr {
-        case .v4(let v4):
-            return v4.host
-        case .v6(let v6):
-            return v6.host
-        case .unixDomainSocket:
-            return nil
-        }
-    }
-    
-    private func handleRequest(channel: Channel, head: HTTPRequestHead, bodyData: Data) {
-        guard let ip = extractIP(channel.remoteAddress) else {
-            fail(channel, status: .forbidden)
-            return
-        }
-        
-        if !PhoneLinkNetwork.isPrivateIP(ip) {
-            fail(channel, status: .forbidden, jsonBody: Data("{\"error\":\"local-network-only\"}".utf8))
-            return
-        }
-        
-        let path = head.uri.components(separatedBy: "?").first ?? "/"
-        
-        if head.method == .GET && path == "/health" {
-            let info = Bundle.main.infoDictionary
-            let version = (info?["CFBundleShortVersionString"] as? String) ?? "1.0.0"
-            let json = "{\"ok\":true,\"app\":\"codenotch\",\"api\":2,\"version\":\"\(version)\"}".data(using: .utf8)!
-            respond(channel, jsonBody: json)
-            return
-        }
-        
-        // Auth common checks
-        guard let tsString = head.headers["x-cn-timestamp"].first,
-              let ts = Int(tsString),
-              let nonce = head.headers["x-cn-nonce"].first,
-              let signatureHeader = head.headers["x-cn-signature"].first else {
-            fail(channel, status: .unauthorized)
-            return
-        }
-        
-        let now = Int(Date().timeIntervalSince1970)
-        if abs(now - ts) > 120 {
-            fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"clock-skew\",\"serverTime\":\(now)}".utf8))
-            return
-        }
-        
-        Task {
-            let isNonceFresh = await sharedSecurityStore.checkAndStoreNonce(ip: ip, nonce: nonce, timestamp: ts)
-            if !isNonceFresh {
-                self.fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"replayed-nonce\"}".utf8))
-                return
-            }
-            
-            if path == "/api/v2/pair" && head.method == .POST {
-                let allowed = await sharedSecurityStore.checkPairRateLimit(ip: ip)
-                if !allowed {
-                    self.fail(channel, status: .tooManyRequests, jsonBody: Data("{\"error\":\"rate-limited\"}".utf8))
-                    return
-                }
-                await self.handlePair(channel: channel, head: head, bodyData: bodyData, ts: tsString, nonce: nonce, signatureHeader: signatureHeader, ip: ip)
-            } else if path.hasPrefix("/api/v1/") {
-                let allowed = await sharedSecurityStore.checkAPIRateLimit(ip: ip)
-                if !allowed {
-                    self.fail(channel, status: .tooManyRequests, jsonBody: Data("{\"error\":\"rate-limited\"}".utf8))
-                    return
-                }
-                guard let deviceId = head.headers["x-cn-device"].first else {
-                    self.fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"unknown-device\"}".utf8))
-                    return
-                }
-                guard let device = self.registry.getDevice(id: deviceId) else {
-                    self.fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"unknown-device\"}".utf8))
-                    return
-                }
-                
-                let bodyHash = SHA256.hash(data: bodyData)
-                let bodyHashHex = bodyHash.compactMap { String(format: "%02x", $0) }.joined()
-                let payload = "\(tsString).\(nonce).\(head.method.rawValue).\(head.uri).\(bodyHashHex)"
-                
-                let symKey = SymmetricKey(data: Data(device.secret.utf8))
-                let expectedSig = HMAC<SHA256>.authenticationCode(for: Data(payload.utf8), using: symKey)
-                let expectedSigHex = expectedSig.compactMap { String(format: "%02x", $0) }.joined()
-                
-                if !constantTimeCompare(signatureHeader, expectedSigHex) {
-                    self.fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-signature\"}".utf8))
-                    return
-                }
-                
-                var updatedDevice = device
-                updatedDevice.lastSeenAt = Date()
-                updatedDevice.lastSeenIP = ip
-                self.registry.addOrUpdate(device: updatedDevice, immediate: false)
-                
-                if head.method == .GET && path == "/api/v1/snapshot" {
-                    if let snap = await self.getSnapshot() {
-                        self.respond(channel, jsonBody: snap)
-                    } else {
-                        self.fail(channel, status: .internalServerError)
-                    }
-                } else if head.method == .POST && path == "/api/v1/refresh" {
-                    if let snap = await self.refreshAndGetSnapshot() {
-                        self.respond(channel, jsonBody: snap)
-                    } else {
-                        self.fail(channel, status: .internalServerError)
-                    }
-                } else {
-                    self.fail(channel, status: .notFound)
-                }
-            } else {
-                self.fail(channel, status: .notFound)
-            }
-        }
-    }
-    
-    private func constantTimeCompare(_ a: String, _ b: String) -> Bool {
-        let aBytes = Array(a.utf8)
-        let bBytes = Array(b.utf8)
-        if aBytes.count != bBytes.count { return false }
-        var result: UInt8 = 0
-        for i in 0..<aBytes.count {
-            result |= aBytes[i] ^ bBytes[i]
-        }
-        return result == 0
-    }
-    
-    private func handlePair(channel: Channel, head: HTTPRequestHead, bodyData: Data, ts: String, nonce: String, signatureHeader: String, ip: String) async {
-        struct PairReq: Decodable { let deviceId: String; let name: String; let platform: String }
-        guard let req = try? JSONDecoder().decode(PairReq.self, from: bodyData) else {
-            fail(channel, status: .badRequest)
-            return
-        }
-        
-        let bodyHash = SHA256.hash(data: bodyData)
-        let bodyHashHex = bodyHash.compactMap { String(format: "%02x", $0) }.joined()
-        let payload = "\(ts).\(nonce).\(head.method.rawValue).\(head.uri).\(bodyHashHex)"
-        
-        func calcSig(_ codeString: String) -> String {
-            let key = SymmetricKey(data: Data(codeString.utf8))
-            return HMAC<SHA256>.authenticationCode(for: Data(payload.utf8), using: key)
-                .compactMap { String(format: "%02x", $0) }.joined()
-        }
-        
-        let consumedCode = await pairing.consume(matching: { expected in
-            constantTimeCompare(signatureHeader, calcSig(expected))
-        })
-        
-        if let validCode = consumedCode {
-            let key = SymmetricKey(data: Data(validCode.utf8))
-            let devSecretBytes = HMAC<SHA256>.authenticationCode(for: Data("codenotch-device-v2:\(req.deviceId)".utf8), using: key)
-            let devSecret = devSecretBytes.compactMap { String(format: "%02x", $0) }.joined()
-            
-            let device = PairedDevice(
-                deviceId: req.deviceId,
-                name: req.name,
-                platform: req.platform,
-                pairedAt: Date(),
-                lastSeenAt: Date(),
-                lastSeenIP: ip,
-                secret: devSecret
-            )
-            
-            self.registry.addOrUpdate(device: device)
-            
-            await MainActor.run {
-                self.pairing.lastPaired = device
-            }
-            
-            let info = Bundle.main.infoDictionary
-            let version = (info?["CFBundleShortVersionString"] as? String) ?? "1.0.0"
-            let respObj: [String: Any] = [
-                "paired": true,
-                "server": Host.current().localizedName ?? "Mac",
-                "version": version,
-                "api": 2,
-                "deviceId": req.deviceId
-            ]
-            let respData = try! JSONSerialization.data(withJSONObject: respObj)
-            self.respond(channel, jsonBody: respData)
-            return
-        }
-        
-        let retired = await pairing.retiredCodes
-        for (code, _) in retired {
-            if constantTimeCompare(signatureHeader, calcSig(code)) {
-                fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"code-expired\"}".utf8))
-                return
-            }
-        }
-        
-        fail(channel, status: .unauthorized, jsonBody: Data("{\"error\":\"bad-code\"}".utf8))
     }
 }

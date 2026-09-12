@@ -126,7 +126,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     + codexProfiles.map { CodexLocalProvider(profile: $0) }
                     + [AntigravityProvider(),
                        GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
-                       CommandCodeProvider(), GitHubCopilotProvider(),
+                       CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(),
                        OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
                        LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
                        OllamaProvider(),
@@ -255,6 +255,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             // The gear toggles; everything else that opens settings opens it.
             fleet.onOpenSettings = { [weak settings] in settings?.toggle() }
+            // A session row answers where it runs by taking you there.
+            fleet.onFocusSession = { pid in
+                Task { _ = await SessionFocus.focus(pid: pid) }
+            }
             self.settings = settings
 
             // What changed, once per version — including on a fresh install,
@@ -515,6 +519,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             "gemini": AntigravityActivityMonitor(),
             "grok": GrokActivityMonitor(),
             "gemini-api": GeminiAPIActivityMonitor(),
+            "kimi": KimiActivityMonitor(),
         ]
         var claudeMonitors: [ClaudeSessionMonitor] = []
         for profile in claudeProfiles {

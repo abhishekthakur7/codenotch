@@ -106,7 +106,8 @@ struct NotchRootView: View {
                         direction: model.edge.tooltipDirection,
                         sessionCap: model.sessionCap,
                         resetTimeFormat: model.resetTimeFormat,
-                        tailOffset: tooltipTailOffset(index: index, snapshot: snapshot)
+                        tailOffset: tooltipTailOffset(index: index, snapshot: snapshot),
+                        onFocusSession: model.onFocusSession
                     )
                         // Deliberately *no* `.id` here: the card is one object
                         // that travels and resizes between cells, which reads

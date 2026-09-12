@@ -69,6 +69,7 @@ final class NotchFleet {
     var onToggleKeepOpen: (() -> Void)?
     var onRefreshProvider: ((String) async -> Void)?
     var onOpenSettings: (() -> Void)?
+    var onFocusSession: ((pid_t) -> Void)?
     var signInItems: [(title: String, action: () -> Void)] = []
     /// An ⌥-drag on any one panel settled at a new offset. Persisting it is
     /// Preferences' job, same division `apply(edge:)` already keeps.
@@ -376,6 +377,7 @@ final class NotchFleet {
         controller.onRefreshProvider = onRefreshProvider
         controller.onOpenSettings = onOpenSettings
         controller.model.onOpenSettings = onOpenSettings
+        controller.model.onFocusSession = onFocusSession
         controller.onReposition = onReposition
         controller.onMoveToEdge = onMoveToEdge
         controller.onToggleKeepOpen = onToggleKeepOpen

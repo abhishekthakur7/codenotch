@@ -42,4 +42,25 @@ final class WebSessionSignInTests: XCTestCase {
         XCTAssertFalse(UserDefaults.standard.bool(forKey: "deepseek.signedIn"),
                        "opening the sheet is not a sign-in for a site that can confirm one")
     }
+
+    func testDeepSeekOriginValidationRejectsContainingHostnames() {
+        let origin = Sites.deepSeek.origin
+        XCTAssertTrue(WebSessionProvider.matchesOrigin(origin, expected: origin))
+        XCTAssertTrue(WebSessionProvider.matchesOrigin(
+            URL(string: "HTTPS://PLATFORM.DEEPSEEK.COM:443/usage"), expected: origin
+        ))
+
+        for value in [
+            "https://platform.deepseek.com.attacker.example/",
+            "https://attacker-platform.deepseek.com/",
+            "http://platform.deepseek.com/",
+            "https://platform.deepseek.com:444/",
+            "https://[::1]/",
+            "https:/usage"
+        ] {
+            let url = URL(string: value)
+            XCTAssertNotNil(url, value)
+            XCTAssertFalse(WebSessionProvider.matchesOrigin(url, expected: origin), value)
+        }
+    }
 }

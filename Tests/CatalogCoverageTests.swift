@@ -19,6 +19,43 @@ final class CatalogCoverageTests: XCTestCase {
         )
     }
 
+    func testRussianCoreCopyIsTranslated() throws {
+        let catalog = try loadCatalog().json
+        let expected = [
+            "just now": "только что",
+            "Resets in %lld min": "Сброс через %lld мин",
+            "%lld%% Used · %lld%% left": "Использовано %lld%% · осталось %lld%%",
+            "Always show": "Всегда показывать",
+            "Settings…": "Настройки…",
+            "Sign in to %@": "Войти в %@",
+            "%lld%% of its %@ limit used.": "Использовано %lld%% от лимита «%@»."
+        ]
+
+        for (key, value) in expected {
+            XCTAssertEqual(
+                catalog.strings[key]?.localizations?["ru"]?.stringUnit?.value,
+                value,
+                "missing Russian translation for \(key)"
+            )
+        }
+    }
+
+    func testRussianCatalogCoversEverySourceKey() throws {
+        let catalog = try loadCatalog().json
+        let missing = catalog.strings.compactMap { key, entry in
+            guard let unit = entry.localizations?["ru"]?.stringUnit,
+                  unit.state == "translated",
+                  let value = unit.value,
+                  !value.isEmpty else { return key }
+            return nil
+        }
+
+        XCTAssertTrue(
+            missing.isEmpty,
+            "missing Russian translations for: \(missing.joined(separator: ", "))"
+        )
+    }
+
     // MARK: - Loading
 
     /// Repo `Tests/`, so the catalog is `../Sources/Localizable.xcstrings`.
@@ -54,5 +91,6 @@ private struct CatalogLocalization: Decodable {
 }
 
 private struct CatalogStringUnit: Decodable {
+    var state: String?
     var value: String?
 }

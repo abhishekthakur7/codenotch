@@ -16,6 +16,7 @@ final class NotchPanel: NSPanel {
     /// event — not a cumulative offset, so the caller decides what "along the
     /// edge" means for the current one. Chosen over a plain click-and-hold
     /// threshold so an ordinary click never risks being read as a tiny nudge.
+    var onDragStart: (() -> Void)?
     var onDrag: ((CGFloat, CGFloat) -> Void)?
     /// The ⌥-drag ended. Where to persist the offset the drags above moved to.
     var onDragEnd: (() -> Void)?
@@ -39,6 +40,7 @@ final class NotchPanel: NSPanel {
             onClick?(event.locationInWindow)
             return
         }
+        onDragStart?()
         trackOptionDrag()
     }
 

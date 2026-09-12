@@ -181,10 +181,14 @@ struct SettingsView: View {
     /// nothing would tell the notch to move, and the setting would only take
     /// effect the next time the edge changed.
     let resetPosition: () -> Void
+    let quit: () -> Void
     @ObservedObject var updater: Updater
     var ollamaRelay: OllamaActivityRelay? = nil
     var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
+    var previewResetAlert: (() -> Void)? = nil
+    var previewSessionLimitAlert: (() -> Void)? = nil
+    var previewWeeklyLimitAlert: (() -> Void)? = nil
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
 
     var body: some View {
@@ -311,6 +315,22 @@ struct SettingsView: View {
             }
             .padding(.trailing, 14)
             .frame(height: SettingsView.headerHeight - SettingsView.sidebarInset)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Button(role: .destructive, action: quit) {
+                Label {
+                    Text(L10n.t("Quit Codenotch"))
+                } icon: {
+                    SidebarIcon(systemName: "power", tint: .red)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 10)
+            .padding(.bottom, 10)
         }
         .frame(width: SettingsView.sidebarWidth)
         // Liquid Glass, the way System Settings draws its own floating
@@ -777,6 +797,54 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            Section(L10n.t("When a limit is reached")) {
+                Toggle(L10n.t("Show notification for session limit"), isOn: $preferences.announceSessionLimitReached)
+
+                Toggle(L10n.t("Show notification for weekly limit"), isOn: $preferences.announceWeeklyLimitReached)
+
+                Toggle(L10n.t("Play a sound"), isOn: $preferences.limitReachedSound)
+
+                SoundRow(label: L10n.t("Alert sound"), name: $preferences.limitReachedSoundName,
+                         pickerEnabled: preferences.limitReachedSound)
+
+                if let previewSessionLimitAlert {
+                    Button(L10n.t("Preview session limit alert")) {
+                        previewSessionLimitAlert()
+                    }
+                }
+
+                if let previewWeeklyLimitAlert {
+                    Button(L10n.t("Preview weekly limit alert")) {
+                        previewWeeklyLimitAlert()
+                    }
+                }
+
+                Text(L10n.t("Displays a notification card from the side of the notch when a provider's session or weekly usage limit is reached."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(L10n.t("When a limit resets")) {
+                Toggle(L10n.t("Show notification from notch"), isOn: $preferences.announceUsageReset)
+
+                Toggle(L10n.t("Play a sound"), isOn: $preferences.usageResetSound)
+
+                SoundRow(label: L10n.t("Reset sound"), name: $preferences.usageResetSoundName,
+                         pickerEnabled: preferences.usageResetSound)
+
+                if let previewResetAlert {
+                    Button(L10n.t("Preview notification")) {
+                        previewResetAlert()
+                    }
+                }
+
+                Text(L10n.t("Displays a notification card from the side of the notch when a provider's usage limit resets."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             // The mute switch itself lives on each provider's own row in
             // Accounts — muting is a fact about that provider's reading, not
             // about notifications in general — but the mechanism it silences
@@ -954,7 +1022,7 @@ struct SettingsView: View {
     /// this, sees four blank rings and concludes it is broken — and the
     /// distinction that catches them out is Claude *Code*, not the Claude app.
     static var setupCopy: String {
-        L10n.t("Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch.")
+        L10n.t("Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot, Kimi Code or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch.")
     }
 
     /// Said before it happens rather than after. A system dialogue asking to

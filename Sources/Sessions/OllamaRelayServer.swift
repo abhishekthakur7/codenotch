@@ -66,6 +66,28 @@ private func relayHeaders(_ original: HTTPHeaders) -> HTTPHeaders {
     return HTTPHeaders(original.filter { !hop.contains($0.name.lowercased()) }.map { ($0.name, $0.value) })
 }
 
+// Browser requests from third-party websites must not reach the loopback relay (CSRF / drive-by attacks).
+// Sandboxed iframes (`<iframe sandbox="allow-scripts">`) and data: URLs serialize origin as "null".
+// Rejecting "null" prevents drive-by CSRF attacks from untrusted web pages; native CLI callers do not send Origin at all.
+func isLoopbackOrigin(_ origin: String) -> Bool {
+    let trimmed = origin.trimmingCharacters(in: .whitespaces)
+    if trimmed.isEmpty || trimmed.caseInsensitiveCompare("null") == .orderedSame { return false }
+    guard let url = URL(string: trimmed),
+          let scheme = url.scheme?.lowercased(),
+          scheme == "http" || scheme == "https",
+          url.user == nil, url.password == nil,
+          url.path.isEmpty || url.path == "/",
+          url.query == nil,
+          url.fragment == nil,
+          let host = url.host?.lowercased(),
+          ["127.0.0.1", "localhost", "::1", "[::1]"].contains(host) else {
+        return false
+    }
+    if let port = url.port { return (1...65535).contains(port) }
+    if trimmed.hasSuffix(":") || trimmed.hasSuffix(":/") { return false }
+    return true
+}
+
 private final class RelayRequestHandler: ChannelInboundHandler {
     typealias InboundIn = HTTPServerRequestPart
     private let upstream: URL
@@ -99,6 +121,11 @@ private final class RelayRequestHandler: ChannelInboundHandler {
                   !request.uri.contains("\\"), request.method != .CONNECT,
                   request.headers["upgrade"].isEmpty else {
                 fail(context.channel, status: .badRequest); return
+            }
+            let origins = request.headers["origin"]
+            let crossSite = request.headers["sec-fetch-site"].contains { $0.caseInsensitiveCompare("cross-site") == .orderedSame }
+            guard !crossSite, origins.count <= 1, origins.allSatisfy(isLoopbackOrigin) else {
+                fail(context.channel, status: .forbidden); return
             }
             head = request
             if request.headers["expect"].contains(where: { $0.lowercased() == "100-continue" }) {

@@ -199,6 +199,84 @@ final class OllamaRelayTransportTests: XCTestCase {
         XCTAssertEqual((rejected as? HTTPURLResponse)?.statusCode, 400)
         await server.stop()
     }
+
+    func testCrossOriginAndCSRFRequestsAreForbidden() async throws {
+        let payload = Data(#"{"status":"ok"}"#.utf8)
+        let stub = try await RelayStub.start(payload: payload)
+        let server = OllamaRelayServer(upstream: stub.url) { _, _, _ in }
+        let port = try await server.start(port: 0)
+
+        var untrusted = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        untrusted.setValue("https://malicious.example", forHTTPHeaderField: "Origin")
+        let (_, untrustedResponse) = try await URLSession.shared.data(for: untrusted)
+        XCTAssertEqual((untrustedResponse as? HTTPURLResponse)?.statusCode, 403)
+
+        var crossSite = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        crossSite.setValue("cross-site", forHTTPHeaderField: "Sec-Fetch-Site")
+        let (_, crossSiteResponse) = try await URLSession.shared.data(for: crossSite)
+        XCTAssertEqual((crossSiteResponse as? HTTPURLResponse)?.statusCode, 403)
+
+        var loopback = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        loopback.setValue("http://127.0.0.1:11435", forHTTPHeaderField: "Origin")
+        let (loopbackData, loopbackResponse) = try await URLSession.shared.data(for: loopback)
+        XCTAssertEqual((loopbackResponse as? HTTPURLResponse)?.statusCode, 200)
+        XCTAssertEqual(loopbackData, payload)
+
+        var noOrigin = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        let (noOriginData, noOriginResponse) = try await URLSession.shared.data(for: noOrigin)
+        XCTAssertEqual((noOriginResponse as? HTTPURLResponse)?.statusCode, 200)
+        XCTAssertEqual(noOriginData, payload)
+
+        var nullOrigin = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        nullOrigin.setValue("null", forHTTPHeaderField: "Origin")
+        let (_, nullResponse) = try await URLSession.shared.data(for: nullOrigin)
+        XCTAssertEqual((nullResponse as? HTTPURLResponse)?.statusCode, 403)
+
+        var multipleOrigins = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/api/tags")!)
+        multipleOrigins.setValue("http://localhost:3000", forHTTPHeaderField: "Origin")
+        multipleOrigins.addValue("http://127.0.0.1:11435", forHTTPHeaderField: "Origin")
+        let (_, multipleResponse) = try await URLSession.shared.data(for: multipleOrigins)
+        XCTAssertEqual((multipleResponse as? HTTPURLResponse)?.statusCode, 403)
+
+        await server.stop()
+        await stub.stop()
+    }
+
+    func testIsLoopbackOrigin() {
+        XCTAssertTrue(isLoopbackOrigin("http://127.0.0.1:48666"))
+        XCTAssertTrue(isLoopbackOrigin("http://localhost:5173"))
+        XCTAssertTrue(isLoopbackOrigin("http://127.0.0.1"))
+        XCTAssertTrue(isLoopbackOrigin("http://localhost"))
+        XCTAssertTrue(isLoopbackOrigin("https://127.0.0.1:48666"))
+        XCTAssertTrue(isLoopbackOrigin("https://localhost:3000"))
+        XCTAssertTrue(isLoopbackOrigin("http://[::1]:8080"))
+        XCTAssertTrue(isLoopbackOrigin("http://[::1]"))
+        XCTAssertTrue(isLoopbackOrigin("http://LOCALHOST:3000"))
+
+        XCTAssertFalse(isLoopbackOrigin("null"))
+        XCTAssertFalse(isLoopbackOrigin("NULL"))
+        XCTAssertFalse(isLoopbackOrigin(""))
+        XCTAssertFalse(isLoopbackOrigin("   "))
+        XCTAssertFalse(isLoopbackOrigin("https://evil.com"))
+        XCTAssertFalse(isLoopbackOrigin("http://attacker.com:8080"))
+        XCTAssertFalse(isLoopbackOrigin("https://evil-localhost.com"))
+        XCTAssertFalse(isLoopbackOrigin("https://localhost.attacker.com"))
+        XCTAssertFalse(isLoopbackOrigin("http://127.0.0.1.attacker.com"))
+        XCTAssertFalse(isLoopbackOrigin("http://attacker.com:127.0.0.1"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost@attacker.com"))
+        XCTAssertFalse(isLoopbackOrigin("http://attacker.com/localhost"))
+        XCTAssertFalse(isLoopbackOrigin("http://attacker.com?localhost"))
+        XCTAssertFalse(isLoopbackOrigin("http://attacker.com#localhost"))
+        XCTAssertFalse(isLoopbackOrigin("file:///etc/passwd"))
+        XCTAssertFalse(isLoopbackOrigin("javascript:alert(1)"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost:abc"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost:70000"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost:0"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost:"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost:/"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost#evil"))
+        XCTAssertFalse(isLoopbackOrigin("http://localhost?evil=1"))
+    }
 }
 
 private final class RelayStub {

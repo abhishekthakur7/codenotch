@@ -328,7 +328,9 @@ dmg-ci: build-ci
 	mkdir -p $(CI_DIR)/stage
 	cp -R $(CI_APP) $(CI_DIR)/stage/
 	ln -s /Applications $(CI_DIR)/stage/Applications
-	hdiutil create -volname "$(APP_NAME)" -srcfolder $(CI_DIR)/stage \
-		-ov -format UDZO $(CI_DMG)
+	for i in 1 2 3; do \
+		hdiutil create -volname "$(APP_NAME)" -srcfolder $(CI_DIR)/stage \
+			-ov -format UDZO $(CI_DMG) && break || sleep 2; \
+	done
 	rm -rf $(CI_DIR)/stage
 	@echo "Unsigned disk image: $(CI_DMG)"

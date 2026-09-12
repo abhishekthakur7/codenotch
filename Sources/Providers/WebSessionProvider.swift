@@ -137,6 +137,27 @@ final class WebSessionProvider: NSObject, UsageProvider {
 
     // MARK: - The browser
 
+    nonisolated static func matchesOrigin(_ url: URL?, expected origin: URL) -> Bool {
+        guard let url,
+              let scheme = url.scheme?.lowercased(),
+              let host = url.host?.lowercased(),
+              let expectedScheme = origin.scheme?.lowercased(),
+              let expectedHost = origin.host?.lowercased()
+        else { return false }
+        return scheme == expectedScheme
+            && host == expectedHost
+            && effectivePort(for: url) == effectivePort(for: origin)
+    }
+
+    private nonisolated static func effectivePort(for url: URL) -> Int? {
+        if let port = url.port { return port }
+        switch url.scheme?.lowercased() {
+        case "http": return 80
+        case "https": return 443
+        default: return nil
+        }
+    }
+
     private func makeWebViewIfNeeded() -> WKWebView {
         if let webView { return webView }
         let configuration = WKWebViewConfiguration()
@@ -175,11 +196,11 @@ final class WebSessionProvider: NSObject, UsageProvider {
 
     private func ensureLoaded() async throws {
         let webView = makeWebViewIfNeeded()
-        if isLoaded, webView.url != nil { return }
+        if isLoaded, Self.matchesOrigin(webView.url, expected: site.origin) { return }
         webView.load(URLRequest(url: site.origin))
         for _ in 0..<40 {
             try await Task.sleep(nanoseconds: 250_000_000)
-            if let host = webView.url?.host, host.contains(site.origin.host ?? ""), !webView.isLoading {
+            if Self.matchesOrigin(webView.url, expected: site.origin), !webView.isLoading {
                 isLoaded = true
                 return
             }
@@ -367,6 +388,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
             for _ in 0..<240 {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
                 guard !Task.isCancelled, let self, let webView else { return }
+                guard Self.matchesOrigin(webView.url, expected: site.origin) else { continue }
                 let result = try? await webView.callAsyncJavaScript(
                     probe, arguments: [:], in: nil, contentWorld: .page
                 )

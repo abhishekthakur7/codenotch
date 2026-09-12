@@ -26,6 +26,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     let phoneLinkRegistry: PhoneLinkRegistry?
     let phoneLinkServerStatus: PhoneLinkServerStatus?
     private let resetPosition: () -> Void
+    private let quit: () -> Void
+    private let previewResetAlert: (() -> Void)?
+    private let previewSessionLimitAlert: (() -> Void)?
+    private let previewWeeklyLimitAlert: (() -> Void)?
 
     init(preferences: Preferences,
          providers: @escaping () -> [ProviderSummary],
@@ -35,6 +39,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          switchAccount: @escaping (String) -> Bool,
          retry: @escaping (String) -> Void,
          resetPosition: @escaping () -> Void,
+         quit: @escaping () -> Void,
+         previewResetAlert: (() -> Void)? = nil,
+         previewSessionLimitAlert: (() -> Void)? = nil,
+         previewWeeklyLimitAlert: (() -> Void)? = nil,
          usageStore: UsageStore? = nil,
          ollamaRelay: OllamaActivityRelay? = nil,
          lmstudioMetrics: LMStudioMetrics? = nil, phoneLinkPairing: PhoneLinkPairing? = nil, phoneLinkRegistry: PhoneLinkRegistry? = nil, phoneLinkServerStatus: PhoneLinkServerStatus? = nil) {
@@ -45,6 +53,10 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         self.phoneLinkRegistry = phoneLinkRegistry
         self.phoneLinkServerStatus = phoneLinkServerStatus
         self.resetPosition = resetPosition
+        self.quit = quit
+        self.previewResetAlert = previewResetAlert
+        self.previewSessionLimitAlert = previewSessionLimitAlert
+        self.previewWeeklyLimitAlert = previewWeeklyLimitAlert
         self.switchAccount = switchAccount
         self.retry = retry
         self.updater = updater
@@ -182,9 +194,13 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
                                    switchAccount: switchAccount,
                                    retry: retry,
                                    resetPosition: resetPosition,
+                                   quit: quit,
                                    updater: updater,
                                    ollamaRelay: ollamaRelay, lmstudioMetrics: lmstudioMetrics,
-                                   usageStore: usageStore)
+                                   usageStore: usageStore,
+                                   previewResetAlert: previewResetAlert,
+                                   previewSessionLimitAlert: previewSessionLimitAlert,
+                                   previewWeeklyLimitAlert: previewWeeklyLimitAlert)
         )
         window.center()
         window.isReleasedWhenClosed = false

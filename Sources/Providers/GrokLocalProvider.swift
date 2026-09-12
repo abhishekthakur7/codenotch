@@ -31,7 +31,7 @@ actor GrokLocalProvider: UsageProvider {
         if credentials.isExpired { throw UsageProviderError.credentialExpired }
 
         let credits = try await body(from: creditsURL, token: credentials.accessToken)
-        Log.usage.debug("grok credits -> \(credits.prefix(400), privacy: .public)")
+        Log.usage.debug("grok credits -> \(credits.prefix(400), privacy: .private)")
 
         return ProviderSnapshot(
             id: id,

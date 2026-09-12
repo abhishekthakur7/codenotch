@@ -52,7 +52,7 @@ actor OllamaProvider: UsageProvider {
         }
 
         let body = String(data: data, encoding: .utf8) ?? ""
-        Log.usage.debug("ollama usage -> \(body.prefix(900), privacy: .public)")
+        Log.usage.debug("ollama usage -> \(body.prefix(900), privacy: .private)")
 
         let result = try OllamaUsage.parse(body)
         return ProviderSnapshot(

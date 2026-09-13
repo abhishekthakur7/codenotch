@@ -10,6 +10,7 @@ endif
 
 PROJECT := Codenotch.xcodeproj
 SCHEME  := Codenotch
+RESOLVED_PACKAGES := $(PROJECT)/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 ARCH    ?= $(shell uname -m)
 DEST    ?= platform=macOS,arch=$(ARCH)
 
@@ -53,10 +54,12 @@ DEV_SIGN := CODE_SIGN_IDENTITY="Apple Development" CODE_SIGN_STYLE=Manual \
 endif
 endif
 
-.PHONY: gen build test test-ci run install clean
+.PHONY: gen build test test-ci verify-deps run install clean
 
 gen:
 	xcodegen generate
+	mkdir -p $(dir $(RESOLVED_PACKAGES))
+	cp Package.resolved $(RESOLVED_PACKAGES)
 
 build: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
@@ -73,6 +76,15 @@ test-ci: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Debug test \
 		CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+verify-deps:
+	rm -rf $(PROJECT)
+	$(MAKE) gen
+	xcodebuild -resolvePackageDependencies -project $(PROJECT) -scheme $(SCHEME)
+	@diff -u Package.resolved $(RESOLVED_PACKAGES) || { \
+		echo "SwiftPM resolution drifted; intentionally update Package.resolved and commit it if dependencies changed."; \
+		exit 1; \
+	}
 
 run: build
 	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \

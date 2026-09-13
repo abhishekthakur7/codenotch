@@ -34,3 +34,6 @@ jobs:
       # read fixtures rather than keychains — see `make test-ci`.
       - name: Run unit tests
         run: make test-ci
+
+      - name: Verify SwiftPM resolution
+        run: make verify-deps

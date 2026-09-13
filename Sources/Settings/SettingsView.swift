@@ -26,13 +26,15 @@ extension View {
 /// crossing-and-notification machinery it switches is Notifications' to
 /// explain.
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
-    case accounts, ollama, lmstudio, appearance, notifications, general
+    case accounts, phone, ollama, lmstudio, appearance, notifications, general
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .accounts:      return L10n.t("Accounts")
+        case .phone:         return L10n.t("Phone")
+
         case .ollama:        return "Ollama"   // a product name, the same in every language
         case .lmstudio:      return "LM Studio"
         case .appearance:    return L10n.t("Appearance")
@@ -44,6 +46,8 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     var icon: String {
         switch self {
         case .accounts:      return "person.crop.circle.fill"
+        case .phone:         return "iphone"
+
         case .ollama:        return "desktopcomputer"
         case .lmstudio:      return "cpu"
         case .appearance:    return "paintbrush.fill"
@@ -58,6 +62,8 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     var tint: Color {
         switch self {
         case .accounts:      return .blue
+        case .phone:         return .green
+
         case .ollama:        return .teal
         case .lmstudio:      return .purple
         case .appearance:    return .indigo
@@ -132,6 +138,10 @@ private struct SidebarIcon: View {
 struct SettingsView: View {
     @ObservedObject var preferences: Preferences
     let providers: () -> [ProviderSummary]
+    var phoneLinkPairing: PhoneLinkPairing?
+    var phoneLinkRegistry: PhoneLinkRegistry?
+    var phoneLinkServerStatus: PhoneLinkServerStatus?
+
     /// Re-read whenever the sheet comes forward. Switching account happens in
     /// another app, so the user is always coming *back* here to see it — which
     /// makes returning focus the exact moment the old value is wrong.
@@ -441,6 +451,8 @@ struct SettingsView: View {
     private func paneContent(for section: SettingsSection) -> some View {
         switch section {
         case .accounts:      accountsPane
+        case .phone:         phonePane
+
         case .ollama:
             if let usageStore {
                 Form {
@@ -1715,4 +1727,128 @@ private struct AccountRow: View {
         )
     }
 
+}
+
+extension SettingsView {
+    @ViewBuilder
+    private var phonePane: some View {
+        if let pairing = phoneLinkPairing, let registry = phoneLinkRegistry, let status = phoneLinkServerStatus {
+            PhoneSettingsPane(preferences: preferences, pairing: pairing, registry: registry, serverStatus: status)
+        } else {
+            Text("Phone linking is not available.")
+        }
+    }
+}
+
+struct PhoneSettingsPane: View {
+    @ObservedObject var preferences: Preferences
+    @ObservedObject var pairing: PhoneLinkPairing
+    @ObservedObject var registry: PhoneLinkRegistry
+    @ObservedObject var serverStatus: PhoneLinkServerStatus
+    
+    @State private var deviceToRemove: PairedDevice?
+    
+    private func lastSeenText(for device: PairedDevice) -> String {
+        let diff = Date().timeIntervalSince(device.lastSeenAt)
+        if diff < 60 {
+            return "Active now"
+        }
+        if device.lastSeenAt == device.pairedAt {
+            let df = DateFormatter()
+            df.dateStyle = .medium
+            df.timeStyle = .none
+            return "Paired \(df.string(from: device.pairedAt))"
+        }
+        let rf = RelativeDateTimeFormatter()
+        rf.unitsStyle = .full
+        return "Last seen \(rf.localizedString(for: device.lastSeenAt, relativeTo: Date()))"
+    }
+    
+    var body: some View {
+        Form {
+            Section {
+                Toggle(isOn: $preferences.phoneLinkEnabled) {
+                    Text(L10n.t("Allow phones on this network"))
+                    Text(L10n.t("Your phone reads usage from this Mac over your Wi-Fi. Nothing leaves your network."))
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                
+                HStack {
+                    switch serverStatus.state {
+                    case .off:
+                        Circle().fill(Color.gray).frame(width: 8, height: 8)
+                        Text(L10n.t("Off"))
+                    case .starting:
+                        Circle().fill(Color.orange).frame(width: 8, height: 8)
+                        Text(L10n.t("Starting…"))
+                    case .ready(let port):
+                        let hosts = PhoneLinkNetwork.getHosts()
+                        let hasIP = hosts.first(where: { PhoneLinkNetwork.isPrivateIPv4($0) }) != nil
+                        if hasIP {
+                            Circle().fill(Color.green).frame(width: 8, height: 8)
+                            Text(L10n.t("Ready on \(hosts.first ?? ""):\(String(port))"))
+                        } else {
+                            Circle().fill(Color.orange).frame(width: 8, height: 8)
+                            Text(L10n.t("This Mac isn't on a local network"))
+                        }
+                    case .failed(let err):
+                        Circle().fill(Color.red).frame(width: 8, height: 8)
+                        Text(err)
+                    }
+                }
+                
+                Button(L10n.t("Connect a Phone…")) {
+                    if !preferences.phoneLinkEnabled {
+                        preferences.phoneLinkEnabled = true
+                    }
+                    PhoneLinkWindowController.shared.show(pairing: pairing, registry: registry, port: preferences.phoneLinkPort, serverStatus: serverStatus)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+            }
+            
+            Section(L10n.t("Paired phones")) {
+                if registry.discardedLegacyDevices {
+                    Text(L10n.t("Re-pair your phone after updating"))
+                        .foregroundColor(.orange)
+                }
+                if registry.devices.isEmpty {
+                    Text(L10n.t("No phones yet."))
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(registry.devices) { device in
+                        HStack {
+                            Image(systemName: device.platform == "ios" ? "iphone" : "smartphone")
+                                .font(.title2)
+                            VStack(alignment: .leading) {
+                                Text(device.name)
+                                Text(lastSeenText(for: device))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Button(L10n.t("Remove")) {
+                                deviceToRemove = device
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .alert(item: Binding<PairedDevice?>(
+            get: { deviceToRemove },
+            set: { deviceToRemove = $0 }
+        )) { device in
+            Alert(
+                title: Text(L10n.t("Remove “\(device.name)”?")),
+                message: Text(L10n.t("It will need to scan a new code to connect again.")),
+                primaryButton: .destructive(Text(L10n.t("Remove"))) {
+                    registry.remove(deviceId: device.deviceId)
+                },
+                secondaryButton: .cancel()
+            )
+        }
+    }
 }

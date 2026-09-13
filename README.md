@@ -50,6 +50,29 @@ instead, see [Building](#building).
 
 A Windows port — Rust/Tauri 2, same design and providers — lives in [`windows/`](windows/README.md).
 
+## Connect your phone
+
+The Codenotch phone app (iOS and Android) can show the same usage
+percentages, reset times and session states as the notch on your Mac.
+It reads only what the notch already displays — never tokens, credentials
+or raw API responses.
+
+To pair, open **Settings › Phone › Connect a Phone…** (or the menu item)
+on your Mac. A QR code appears with a five-minute countdown; scan it with
+the Codenotch phone app, or copy the link and paste it into the app. The
+Mac and phone must be on the same Wi-Fi network — the server answers only
+local-network addresses and rejects anything routed over the internet.
+
+Each code is single-use and expires after five minutes. Reopening the
+window always mints a fresh one.
+
+To remove a paired phone, open **Settings › Phone**, find the device in
+the list and click **Remove**. Its credentials are deleted immediately and
+any subsequent request from that phone is rejected.
+
+See [docs/phone-link-protocol.md](docs/phone-link-protocol.md) for the
+wire-level details.
+
 ## What it reads
 
 | Provider | Source | How |

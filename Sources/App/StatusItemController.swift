@@ -87,6 +87,9 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             withTitle: L10n.t("Refresh all"), action: #selector(refreshAll), keyEquivalent: "r"
         ).target = self
         menu.addItem(
+            withTitle: L10n.t("Connect Phone…"), action: #selector(connectPhone), keyEquivalent: ""
+        ).target = self
+        menu.addItem(
             withTitle: L10n.t("Settings…"), action: #selector(openSettings), keyEquivalent: ","
         ).target = self
         menu.addItem(.separator())
@@ -112,6 +115,12 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         image.size = NSSize(width: 18, height: 18)
         image.isTemplate = true
         return image
+    }
+
+@objc private func connectPhone() {
+        if let appDelegate = NSApp.delegate as? AppDelegate {
+            appDelegate.openConnectPhone()
+        }
     }
 
     @objc private func openSettings() { onOpenSettings() }

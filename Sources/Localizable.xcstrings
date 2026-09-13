@@ -17326,6 +17326,106 @@
           }
         }
       }
+    },
+    "Allow phones on this network": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Your phone reads usage from this Mac over your Wi-Fi. Nothing leaves your network.": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Starting…": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Ready on %@:%d": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "This Mac isn't on a local network": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Connect a Phone…": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Paired phones": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "No phones yet.": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Active now": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Paired %@": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Remove": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Remove “%@”?": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "It will need to scan a new code to connect again.": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "%@ is connected": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Done": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Connect another phone": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Connect your phone": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Scan this code with the Codenotch app on your phone.": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Expires in %@": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Copied ✓": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Copy Link": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "1. Open Codenotch on your phone": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "2. Tap Scan QR Code": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "3. Point your phone at this code": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Your phone must be on the same Wi-Fi as this Mac.": {
+      "extractionState": "manual",
+      "localizations": {}
     }
   },
   "version": "1.0"

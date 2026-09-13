@@ -22,6 +22,9 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let ollamaRelay: OllamaActivityRelay?
     private let lmstudioMetrics: LMStudioMetrics?
     private let usageStore: UsageStore?
+    let phoneLinkPairing: PhoneLinkPairing?
+    let phoneLinkRegistry: PhoneLinkRegistry?
+    let phoneLinkServerStatus: PhoneLinkServerStatus?
     private let resetPosition: () -> Void
     private let quit: () -> Void
     private let previewResetAlert: (() -> Void)?
@@ -42,10 +45,13 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
          previewWeeklyLimitAlert: (() -> Void)? = nil,
          usageStore: UsageStore? = nil,
          ollamaRelay: OllamaActivityRelay? = nil,
-         lmstudioMetrics: LMStudioMetrics? = nil) {
+         lmstudioMetrics: LMStudioMetrics? = nil, phoneLinkPairing: PhoneLinkPairing? = nil, phoneLinkRegistry: PhoneLinkRegistry? = nil, phoneLinkServerStatus: PhoneLinkServerStatus? = nil) {
         self.ollamaRelay = ollamaRelay
         self.lmstudioMetrics = lmstudioMetrics
         self.usageStore = usageStore
+        self.phoneLinkPairing = phoneLinkPairing
+        self.phoneLinkRegistry = phoneLinkRegistry
+        self.phoneLinkServerStatus = phoneLinkServerStatus
         self.resetPosition = resetPosition
         self.quit = quit
         self.previewResetAlert = previewResetAlert
@@ -182,7 +188,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         window.delegate = self
         window.contentView = NSHostingView(
             rootView: SettingsView(preferences: preferences,
-                                   providers: providers,
+                                   providers: providers, phoneLinkPairing: phoneLinkPairing, phoneLinkRegistry: phoneLinkRegistry, phoneLinkServerStatus: phoneLinkServerStatus,
                                    signOut: signOut,
                                    signIn: signIn,
                                    switchAccount: switchAccount,

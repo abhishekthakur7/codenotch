@@ -156,6 +156,10 @@ struct SettingsView: View {
     /// A gesture for this sitting, not a setting: the sidebar comes back on
     /// the next open, the same way a window's own sidebar toggle behaves.
     @State private var isSidebarVisible = true
+    /// A short-lived acknowledgement for the recenter action. The notch may
+    /// already be centred, in which case the action has no visible movement;
+    /// the acknowledgement keeps the button from feeling inert.
+    @State private var didRecentre = false
     /// Switching off has to reach the store's archive, not just the preference
     /// — see `UsageStore.signOut(providerID:)`.
     let signOut: (String) -> Void
@@ -654,8 +658,26 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer()
-                    Button(L10n.t("Recentre"), action: resetPosition)
-                        .controlSize(.small)
+                    Button {
+                        resetPosition()
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            didRecentre = true
+                        }
+                        Task { @MainActor in
+                            try? await Task.sleep(nanoseconds: 1_200_000_000)
+                            guard !Task.isCancelled else { return }
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                didRecentre = false
+                            }
+                        }
+                    } label: {
+                        Label(
+                            L10n.t("Recentre"),
+                            systemImage: didRecentre ? "checkmark" : "arrow.counterclockwise"
+                        )
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
                 }
 
                 // The arc above the notch. Hiding it loses nothing that cannot

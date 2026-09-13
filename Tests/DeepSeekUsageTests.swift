@@ -81,6 +81,19 @@ final class DeepSeekUsageTests: XCTestCase {
         XCTAssertTrue(gate.observe(authenticated: true, fingerprint: "old"))
     }
 
+    func testNormalSignInCanCommitWhenTheSessionTokenChangedInThisPage() {
+        var gate = WebSessionAuthenticationGate(
+            baselineFingerprint: "old",
+            requiresNewFingerprint: false
+        )
+
+        XCTAssertTrue(gate.observe(
+            authenticated: true,
+            fingerprint: "new",
+            storageMutations: 1
+        ))
+    }
+
     func testManualCloseCanCommitACompletedNormalSignIn() {
         let gate = WebSessionAuthenticationGate(
             baselineFingerprint: "old",
@@ -114,6 +127,7 @@ final class DeepSeekUsageTests: XCTestCase {
         let probe = try! XCTUnwrap(Sites.deepSeek.authProbeScript)
 
         XCTAssertTrue(probe.contains("'x-client-platform': 'web'"))
+        XCTAssertTrue(probe.contains("storageMutations"))
     }
 
     func testSwitchGateCommitsOnlyAfterLogoutAndANewSession() {

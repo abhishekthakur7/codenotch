@@ -106,7 +106,11 @@ enum Sites {
             const digest = await crypto.subtle.digest('SHA-256', bytes);
             const fingerprint = Array.from(new Uint8Array(digest))
                 .map(byte => byte.toString(16).padStart(2, '0')).join('');
-            return JSON.stringify({ authenticated: true, fingerprint });
+            return JSON.stringify({
+                authenticated: true,
+                fingerprint,
+                storageMutations: Number(window.__notchAuthStorageMutations || 0)
+            });
         } catch (_) { return JSON.stringify({ authenticated: false }); }
         """#,
         detailParse: DeepSeekUsage.detail(fromJSON:),

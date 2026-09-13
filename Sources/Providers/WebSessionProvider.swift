@@ -9,17 +9,23 @@ struct WebSessionAuthenticationGate: Equatable {
     private(set) var sawLogout = false
     private let requiresNewFingerprint: Bool
     private var unauthenticatedSamples = 0
+    private var sessionMutations = 0
 
     init(baselineFingerprint: String?, requiresNewFingerprint: Bool = true) {
         self.baselineFingerprint = baselineFingerprint
         self.requiresNewFingerprint = requiresNewFingerprint
     }
 
-    /// A sign-in window commits only after a real logout/login transition.
-    /// Switching accounts additionally requires a new session identity. This
-    /// keeps an already-authenticated old page from being mistaken for the new
-    /// account and avoids false positives from one transient probe failure.
-    mutating func observe(authenticated: Bool, fingerprint: String?) -> Bool {
+    /// A sign-in window commits after a real logout/login transition or an
+    /// observed session-storage mutation in this page load. Switching accounts
+    /// additionally requires a new session identity. This keeps an already-
+    /// authenticated old page from being mistaken for the new account.
+    mutating func observe(
+        authenticated: Bool,
+        fingerprint: String?,
+        storageMutations: Int = 0
+    ) -> Bool {
+        if storageMutations > 0 { sessionMutations = storageMutations }
         guard authenticated else {
             unauthenticatedSamples += 1
             // A normal sign-in only needs one settled logged-out sample because
@@ -33,7 +39,7 @@ struct WebSessionAuthenticationGate: Equatable {
         }
 
         unauthenticatedSamples = 0
-        guard sawLogout else {
+        guard sawLogout || (!requiresNewFingerprint && sessionMutations > 0) else {
             if baselineFingerprint == nil { baselineFingerprint = fingerprint }
             return false
         }
@@ -51,7 +57,7 @@ struct WebSessionAuthenticationGate: Equatable {
 
     /// A user closing the window is an explicit end to the flow, so one final
     /// authenticated probe can commit a completed login even when the polling
-    /// task did not get a chance to observe the two logged-out samples first.
+    /// task did not get a chance to observe the logged-out state first.
     /// A switch still cannot commit the existing account on close.
     func acceptsAuthenticatedStateOnManualClose(
         authenticated: Bool,
@@ -61,6 +67,7 @@ struct WebSessionAuthenticationGate: Equatable {
         guard requiresNewFingerprint else { return true }
         return baselineFingerprint == nil || fingerprint == nil || fingerprint != baselineFingerprint
     }
+
 }
 
 /// Reads a provider's usage from the endpoint its own web app uses, by running
@@ -192,7 +199,30 @@ final class WebSessionProvider: NSObject, UsageProvider {
         configuration.userContentController.addUserScript(WKUserScript(
             source: #"""
             window.__notchCalls = [];
+            window.__notchAuthStorageMutations = 0;
             (function () {
+                const storage = window.localStorage;
+                const setItem = Storage.prototype.setItem;
+                Storage.prototype.setItem = function (key, value) {
+                    if (this === storage && key === 'userToken') {
+                        window.__notchAuthStorageMutations += 1;
+                    }
+                    return setItem.apply(this, arguments);
+                };
+                const removeItem = Storage.prototype.removeItem;
+                Storage.prototype.removeItem = function (key) {
+                    if (this === storage && key === 'userToken') {
+                        window.__notchAuthStorageMutations += 1;
+                    }
+                    return removeItem.apply(this, arguments);
+                };
+                const clear = Storage.prototype.clear;
+                Storage.prototype.clear = function () {
+                    if (this === storage && this.getItem('userToken')) {
+                        window.__notchAuthStorageMutations += 1;
+                    }
+                    return clear.apply(this, arguments);
+                };
                 const fetchImpl = window.fetch;
                 window.fetch = function (...args) {
                     try {
@@ -433,7 +463,11 @@ final class WebSessionProvider: NSObject, UsageProvider {
                 )
                 guard let state = Self.authenticationState(from: result) else { continue }
                 if var gate = self.switchGate {
-                    if gate.observe(authenticated: state.authenticated, fingerprint: state.fingerprint) {
+                    if gate.observe(
+                        authenticated: state.authenticated,
+                        fingerprint: state.fingerprint,
+                        storageMutations: state.storageMutations
+                    ) {
                         self.switchGate = nil
                         self.lastAuthFingerprint = state.fingerprint
                         self.authenticationDidComplete()
@@ -451,11 +485,12 @@ final class WebSessionProvider: NSObject, UsageProvider {
     private struct AuthenticationState {
         let authenticated: Bool
         let fingerprint: String?
+        let storageMutations: Int
     }
 
     private static func authenticationState(from result: Any?) -> AuthenticationState? {
         if let authenticated = result as? Bool {
-            return AuthenticationState(authenticated: authenticated, fingerprint: nil)
+            return AuthenticationState(authenticated: authenticated, fingerprint: nil, storageMutations: 0)
         }
         guard let text = result as? String,
               let data = text.data(using: .utf8),
@@ -463,7 +498,8 @@ final class WebSessionProvider: NSObject, UsageProvider {
               let authenticated = object["authenticated"] as? Bool
         else { return nil }
         return AuthenticationState(authenticated: authenticated,
-                                   fingerprint: object["fingerprint"] as? String)
+                                   fingerprint: object["fingerprint"] as? String,
+                                   storageMutations: object["storageMutations"] as? Int ?? 0)
     }
 
     private func authenticationDidComplete() {

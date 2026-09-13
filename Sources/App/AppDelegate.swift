@@ -120,24 +120,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Log.usage.info("codex profiles: \(self.codexProfiles.map(\.displayPath).joined(separator: ", "), privacy: .public)")
             let claudeProviders = claudeProfiles.map { ClaudeOAuthProvider(profile: $0) }
             self.claudeProviders = claudeProviders
+            let allProviders: [UsageProvider] = claudeProviders
+                + [CursorLocalProvider()]
+                + codexProfiles.map { CodexLocalProvider(profile: $0) }
+                + [AntigravityProvider(),
+                   GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
+                   CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(),
+                   OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
+                   LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
+                   OllamaProvider(),
+                   // A closure, not the value: the provider is an actor and
+                   // re-reads the budget on every fetch, so a ceiling typed
+                   // into Settings applies without a restart.
+                   GeminiAPIProvider(budget: {
+                       Preferences.storedGeminiAPIMonthlyTokenBudget()
+                   })]
+                + webProviders
+            preferences.reconcile(discoveredIDs: allProviders.map(\.id))
             let store = UsageStore(
-                providers: claudeProviders
-                    + [CursorLocalProvider()]
-                    + codexProfiles.map { CodexLocalProvider(profile: $0) }
-                    + [AntigravityProvider(),
-                       GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
-                       CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(),
-                       OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
-                       LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
-                       OllamaProvider(),
-                       // A closure, not the value: the provider is an actor and
-                       // re-reads the budget on every fetch, so a ceiling typed
-                       // into Settings applies without a restart.
-                       GeminiAPIProvider(budget: {
-                           Preferences.storedGeminiAPIMonthlyTokenBudget()
-                       })]
-                    + webProviders,
-                disconnected: preferences.disconnectedProviders,
+                providers: allProviders,
+                disconnected: preferences.disconnectedIDs(among: allProviders.map(\.id)),
                 // Passed at construction, not left to the sink below, for the
                 // same reason `disconnected` is: the sink delivers a run loop
                 // turn later, so without this every launch draws the built-in
@@ -155,11 +157,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.ollamaRelay = relay
             // A single publisher chain exceeds Swift's type-checking time limit.
             let relayPreferences = Publishers.CombineLatest3(
-                preferences.$disconnectedProviders,
+                preferences.$connectedProviders,
                 preferences.$ollamaEndpoint,
                 preferences.$ollamaMetricsEnabled)
             let relayConfiguration = relayPreferences.map { values in
-                (enabled: !values.0.contains("ollama-local") && values.2, endpoint: values.1)
+                (enabled: values.0.contains("ollama-local") && values.2, endpoint: values.1)
             }.eraseToAnyPublisher()
             relayConfiguration
                 .removeDuplicates { $0.enabled == $1.enabled && $0.endpoint == $1.endpoint }
@@ -193,9 +195,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.lmstudioMetrics = lmstudio
             // Split like the relay's chain above, and for the same reason.
             let lmstudioPreferences = Publishers.CombineLatest(
-                preferences.$disconnectedProviders, preferences.$lmstudioEndpoint)
+                preferences.$connectedProviders, preferences.$lmstudioEndpoint)
             let lmstudioConfiguration = lmstudioPreferences.map { values in
-                (enabled: !values.0.contains(LMStudioMetrics.providerID), endpoint: values.1)
+                (enabled: values.0.contains(LMStudioMetrics.providerID), endpoint: values.1)
             }.eraseToAnyPublisher()
             lmstudioConfiguration
                 .removeDuplicates { $0.enabled == $1.enabled && $0.endpoint == $1.endpoint }
@@ -404,9 +406,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .sink { [weak fleet] in fleet?.apply(surfaceStyle: $0) }
                 .store(in: &cancellables)
 
-            preferences.$disconnectedProviders
+            Publishers.CombineLatest(preferences.$connectedProviders, preferences.$disabledModels)
                 .receive(on: RunLoop.main)
-                .sink { [weak store] in store?.disconnected = $0 }
+                .sink { [weak store, weak preferences] _, _ in
+                    guard let store, let preferences else { return }
+                    store.disconnected = preferences.disconnectedIDs(among: store.knownIDs)
+                }
                 .store(in: &cancellables)
 
             preferences.$ollamaEndpoint

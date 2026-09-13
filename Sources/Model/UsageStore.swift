@@ -27,6 +27,11 @@ final class UsageStore: ObservableObject {
     @Published private(set) var needsRenewal: Set<String> = []
 
     private let providers: [UsageProvider]
+
+    /// Provider ids plus any model cells currently on screen.
+    var knownIDs: [String] {
+        Array(Set(providers.map(\.id) + snapshots.map(\.id) + localModelSummaries.map(\.id)))
+    }
     /// Provider IDs block fetching before credential access. Model IDs only hide
     /// their cells so disabling one model does not stop the shared runtime.
     @Published var disconnected: Set<String> = [] {

@@ -8,10 +8,30 @@ import os
 final class Preferences: ObservableObject {
     static let showUsagePaceKey = "showUsagePace"
 
-    /// Disabled model IDs hide cells without stopping their shared runtime.
-    @Published var disconnectedProviders: Set<String> {
-        didSet { defaults.set(Array(disconnectedProviders), forKey: Keys.disconnected) }
+    /// Provider IDs that currently have a ring. Stored as the ones that are
+    /// on, so a provider added later stays off until someone switches it on —
+    /// Claude and Codex excepted, which still default on as a family.
+    @Published var connectedProviders: Set<String> {
+        didSet { defaults.set(Array(connectedProviders), forKey: Keys.connected) }
     }
+
+    /// Every provider id this copy has already decided on, so a later version's
+    /// new provider is recognised as new rather than as "never chosen".
+    @Published private(set) var seenProviders: Set<String> {
+        didSet { defaults.set(Array(seenProviders), forKey: Keys.seen) }
+    }
+
+    /// Loaded-model cells hide without stopping the shared runtime. Stored as
+    /// the ones that are off: a model Ollama or LM Studio loads later stays
+    /// visible until someone hides it. Providers cannot share this list —
+    /// their on-list treats absence as off.
+    @Published private(set) var disabledModels: Set<String> {
+        didSet { defaults.set(Array(disabledModels), forKey: Keys.disabledModels) }
+    }
+
+    /// The old hidden-providers list, kept only until `reconcile` can invert it
+    /// against the ids actually on this Mac.
+    private var pendingHidden: Set<String>?
 
     @Published var ollamaMetricsEnabled: Bool {
         didSet { defaults.set(ollamaMetricsEnabled, forKey: Keys.ollamaMetricsEnabled) }
@@ -28,8 +48,8 @@ final class Preferences: ObservableObject {
     }
 
     /// Providers whose threshold alerts are muted. Stored as the muted set so
-    /// a provider added later alerts by default — the same reasoning as
-    /// `disconnectedProviders`.
+    /// a provider added later alerts by default. Connection is stored the
+    /// other way: the ones that are on.
     @Published var mutedAlertProviders: Set<String> {
         didSet { defaults.set(Array(mutedAlertProviders), forKey: Keys.mutedAlerts) }
     }
@@ -297,8 +317,11 @@ final class Preferences: ObservableObject {
 
     private let defaults: UserDefaults
     private enum Keys {
-        /// The old name. Kept so existing choices survive the rename.
+        /// The old off-list. Kept so a 1.9 install can invert it once.
         static let disconnected = "hiddenProviders"
+        static let connected = "connectedProviders"
+        static let seen = "seenProviders"
+        static let disabledModels = "disabledModels"
         static let ollamaEndpoint = "ollamaEndpoint"
         static let lmstudioEndpoint = "lmstudioEndpoint"
         static let introducedOllama = "introducedOllama"
@@ -426,11 +449,55 @@ final class Preferences: ObservableObject {
             }
             defaults.set(true, forKey: Keys.migratedOllamaID)
         }
-        let disconnected = Set(defaults.stringArray(forKey: Keys.disconnected) ?? [])
-        self.disconnectedProviders = disconnected
+        let storedConnected = defaults.stringArray(forKey: Keys.connected)
+        let storedSeen = Set(defaults.stringArray(forKey: Keys.seen) ?? [])
+        let connected: Set<String>
+        let seen: Set<String>
+        let hidden: Set<String>?
+        if let storedConnected {
+            connected = Set(storedConnected)
+            seen = storedSeen.isEmpty ? connected : storedSeen
+            hidden = nil
+        } else if defaults.object(forKey: Keys.disconnected) != nil {
+            // An empty off-list is still a choice: everyone was on.
+            hidden = Set(defaults.stringArray(forKey: Keys.disconnected) ?? [])
+            connected = []
+            seen = storedSeen
+        } else if !self.isFirstLaunch || defaults.bool(forKey: Keys.introducedOllama) {
+            // Launched before this key existed, and never hid anyone.
+            hidden = []
+            connected = []
+            seen = storedSeen
+        } else {
+            hidden = nil
+            connected = []
+            seen = storedSeen
+        }
+        self.connectedProviders = connected.filter { !Self.isModelCell($0) }
+        self.seenProviders = seen.filter { !Self.isModelCell($0) }
+        self.pendingHidden = hidden
+        let models: Set<String>
+        if let storedDisabled = defaults.stringArray(forKey: Keys.disabledModels) {
+            models = Set(storedDisabled)
+        } else {
+            // Model cells that lived on the old off-list stay off. Read the
+            // leftover even after `connectedProviders` exists: an earlier
+            // invert left those ids in `hiddenProviders` and then ignored them.
+            let leftover = hidden ?? Set(defaults.stringArray(forKey: Keys.disconnected) ?? [])
+            models = leftover.filter(Self.isModelCell)
+        }
+        self.disabledModels = models
+        defaults.set(Array(models), forKey: Keys.disabledModels)
+        let ollamaOn: Bool
+        if storedConnected != nil {
+            ollamaOn = connected.contains("ollama-local")
+        } else if let hidden {
+            ollamaOn = !hidden.contains("ollama-local")
+        } else {
+            ollamaOn = false
+        }
         self.ollamaMetricsEnabled = defaults.object(forKey: Keys.ollamaMetricsEnabled) as? Bool
-            ?? (defaults.bool(forKey: Keys.introducedOllama)
-                && !disconnected.contains("ollama-local"))
+            ?? (defaults.bool(forKey: Keys.introducedOllama) && ollamaOn)
         self.ollamaEndpoint = (try? OllamaEndpoint.parse(
             defaults.string(forKey: Keys.ollamaEndpoint) ?? OllamaEndpoint.defaultAddress
         ).absoluteString) ?? OllamaEndpoint.defaultAddress
@@ -540,16 +607,91 @@ final class Preferences: ObservableObject {
         }
     }
 
+    /// Claude and Codex stay on for a first install and for a newly discovered
+    /// profile. Everyone else starts off.
+    static func isDefaultOnFamily(_ providerID: String) -> Bool {
+        ClaudeProfile.isClaude(providerID: providerID)
+            || CodexProfile.isCodex(providerID: providerID)
+    }
+
+    /// Model cells are `providerID:model:…`. A new loaded model is not a new
+    /// provider, and absence on the provider on-list cannot mean on for these.
+    static func isModelCell(_ id: String) -> Bool {
+        id.contains(":model:")
+    }
+
     func isConnected(_ providerID: String) -> Bool {
-        !disconnectedProviders.contains(providerID)
+        if Self.isModelCell(providerID) {
+            return !disabledModels.contains(providerID)
+        }
+        if defaults.object(forKey: Keys.connected) != nil {
+            return connectedProviders.contains(providerID)
+        }
+        if let hidden = pendingHidden {
+            return !hidden.contains(providerID)
+        }
+        return Self.isDefaultOnFamily(providerID)
     }
 
     func setConnected(_ connected: Bool, for providerID: String) {
-        if connected {
-            disconnectedProviders.remove(providerID)
-        } else {
-            disconnectedProviders.insert(providerID)
+        if Self.isModelCell(providerID) {
+            if connected {
+                disabledModels.remove(providerID)
+            } else {
+                disabledModels.insert(providerID)
+            }
+            return
         }
+        if defaults.object(forKey: Keys.connected) == nil, let hidden = pendingHidden {
+            let next = connected ? hidden.subtracting([providerID]) : hidden.union([providerID])
+            pendingHidden = next
+            defaults.set(Array(next), forKey: Keys.disconnected)
+            seenProviders.insert(providerID)
+            return
+        }
+        if defaults.object(forKey: Keys.connected) == nil {
+            // First install: persist Claude and Codex as on, then apply this toggle.
+            connectedProviders = ["claude", "codex"]
+        }
+        if connected {
+            connectedProviders.insert(providerID)
+        } else {
+            connectedProviders.remove(providerID)
+        }
+        seenProviders.insert(providerID)
+    }
+
+    /// Fold this Mac's current provider ids into the stored on-list.
+    ///
+    /// First launch writes Claude and Codex. An upgrade from `hiddenProviders`
+    /// inverts that off-list against `discoveredIDs`. After that, only a
+    /// never-seen Claude or Codex id is added automatically. Model cells stay
+    /// on `disabledModels` and are not inverted.
+    func reconcile(discoveredIDs: [String]) {
+        let discovered = Set(discoveredIDs.filter { !Self.isModelCell($0) })
+        if defaults.object(forKey: Keys.connected) != nil {
+            connectedProviders.subtract(connectedProviders.filter(Self.isModelCell))
+            seenProviders.subtract(seenProviders.filter(Self.isModelCell))
+            let novel = discovered.subtracting(seenProviders)
+            for id in novel where Self.isDefaultOnFamily(id) {
+                connectedProviders.insert(id)
+            }
+            seenProviders.formUnion(discovered)
+            return
+        }
+        if let hidden = pendingHidden {
+            connectedProviders = discovered.subtracting(hidden.filter { !Self.isModelCell($0) })
+            seenProviders = discovered
+            pendingHidden = nil
+            return
+        }
+        connectedProviders = Set(discovered.filter(Self.isDefaultOnFamily))
+        seenProviders = discovered
+    }
+
+    /// What `UsageStore` still treats as the off-list, among ids it knows.
+    func disconnectedIDs(among discovered: [String]) -> Set<String> {
+        Set(discovered.filter { !isConnected($0) })
     }
 
     /// Record a new order, keeping the ids that are not on this Mac today.

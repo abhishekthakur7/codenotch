@@ -21,7 +21,7 @@ struct OllamaSettingsRow: View {
                     get: { enabled },
                     set: { on in
                         preferences.setConnected(on, for: "ollama-local")
-                        store.disconnected = preferences.disconnectedProviders
+                        store.disconnected = preferences.disconnectedIDs(among: store.knownIDs)
                     }
                 ))
                 .labelsHidden()

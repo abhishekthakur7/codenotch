@@ -74,6 +74,7 @@ targets:
         CFBundleLocalizations:
           - en
           - fr
+          - de
           - ja
           - pt-BR
           - ru

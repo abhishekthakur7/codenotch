@@ -77,8 +77,6 @@ final class DeepSeekUsageTests: XCTestCase {
         )
 
         XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
-        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
-        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
         XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
         XCTAssertTrue(gate.observe(authenticated: true, fingerprint: "old"))
     }

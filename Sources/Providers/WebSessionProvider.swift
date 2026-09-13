@@ -22,7 +22,13 @@ struct WebSessionAuthenticationGate: Equatable {
     mutating func observe(authenticated: Bool, fingerprint: String?) -> Bool {
         guard authenticated else {
             unauthenticatedSamples += 1
-            if unauthenticatedSamples >= 2 { sawLogout = true }
+            // A normal sign-in only needs one settled logged-out sample because
+            // the page is newly opened for this flow. Switching accounts keeps
+            // two samples to avoid treating a transient probe failure as a
+            // completed logout of the old account.
+            if unauthenticatedSamples >= (requiresNewFingerprint ? 2 : 1) {
+                sawLogout = true
+            }
             return false
         }
 
@@ -411,8 +417,10 @@ final class WebSessionProvider: NSObject, UsageProvider {
         guard signInWindow != nil, let probe = site.authProbeScript, let webView else { return }
         signInProbeTask?.cancel()
         signInProbeTask = Task { [weak self, weak webView] in
-            for _ in 0..<240 {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
+            for attempt in 0..<240 {
+                if attempt > 0 {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                }
                 guard !Task.isCancelled, let self, let webView else { return }
                 // `url` can continue to point at the old same-origin document
                 // while a new navigation is in flight. Never authenticate from

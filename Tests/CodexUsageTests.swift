@@ -267,6 +267,39 @@ final class CodexUsageTests: XCTestCase {
 final class CodexActivityTests: XCTestCase {
     private let now = Date(timeIntervalSince1970: 1_788_000_000)
 
+    private func rollout(_ records: [String]) throws -> URL {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("CodenotchCodexRollout-\(UUID().uuidString).jsonl")
+        try records.joined(separator: "\n").data(using: .utf8)!.write(to: url)
+        addTeardownBlock { try? FileManager.default.removeItem(at: url) }
+        return url
+    }
+
+    func testTaskCompleteIsTheSuccessfulTerminalEvent() throws {
+        let url = try rollout([
+            #"{"type":"event_msg","payload":{"type":"task_started"}}"#,
+            #"{"type":"event_msg","payload":{"type":"item_completed"}}"#,
+            #"{"type":"event_msg","payload":{"type":"task_complete"}}"#
+        ])
+        XCTAssertEqual(CodexRolloutActivity.state(from: url), .success)
+    }
+
+    func testChildItemCompletionDoesNotEndTheTask() throws {
+        let url = try rollout([
+            #"{"type":"event_msg","payload":{"type":"task_started"}}"#,
+            #"{"type":"event_msg","payload":{"type":"item_completed"}}"#
+        ])
+        XCTAssertEqual(CodexRolloutActivity.state(from: url), .busy)
+    }
+
+    func testAbortedTurnIsNotSuccessful() throws {
+        let url = try rollout([
+            #"{"type":"event_msg","payload":{"type":"task_started"}}"#,
+            #"{"type":"event_msg","payload":{"type":"turn_aborted"}}"#
+        ])
+        XCTAssertNil(CodexRolloutActivity.state(from: url))
+    }
+
     func testARolloutWrittenJustNowIsBusy() throws {
         let s = try XCTUnwrap(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
@@ -276,7 +309,8 @@ final class CodexActivityTests: XCTestCase {
         XCTAssertEqual(s.name, "Codex")
     }
 
-    /// It errs short on purpose: a finished turn must not keep the ring spinning.
+    /// It errs short on purpose: a stale rollout must not keep the ring spinning
+    /// or be mistaken for a completed turn.
     func testAnOlderRolloutIsNotActivity() {
         XCTAssertNil(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
@@ -290,15 +324,10 @@ final class CodexActivityTests: XCTestCase {
             modified: now.addingTimeInterval(-8), staleAfter: 8, now: now
         )?.state, .busy)
 
-        XCTAssertEqual(CodexActivityMonitor.session(
+        XCTAssertNil(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",
             modified: now.addingTimeInterval(-15), staleAfter: 8, now: now
-        )?.state, .success)
-
-        XCTAssertEqual(CodexActivityMonitor.session(
-            id: "codex.x", name: "Codex",
-            modified: now.addingTimeInterval(-20), staleAfter: 8, now: now
-        )?.state, .idle)
+        ))
 
         XCTAssertNil(CodexActivityMonitor.session(
             id: "codex.x", name: "Codex",

@@ -151,7 +151,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 order: preferences.providerOrder
             )
             deepSeek.onAuthenticated = { [weak store] in
-                store?.refresh(providerID: "deepseek")
+                store?.providerAuthenticationChanged(providerID: "deepseek")
             }
 
             let updater = Updater()
@@ -370,6 +370,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.$notchVisibility
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply($0) }
+                .store(in: &cancellables)
+
+            preferences.$deepSeekPricingEnabled
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(deepSeekPricingEnabled: $0) }
+                .store(in: &cancellables)
+
+            preferences.$deepSeekPricingSchedule
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] in fleet?.apply(deepSeekPricingSchedule: $0) }
                 .store(in: &cancellables)
 
             preferences.$notchEdge
@@ -705,6 +715,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(weeklyRing: preferences.weeklyRing)
         fleet.apply(showsMoveHandle: preferences.showsMoveHandle)
         fleet.apply(surfaceStyle: preferences.notchSurfaceStyle)
+        fleet.apply(deepSeekPricingEnabled: preferences.deepSeekPricingEnabled)
+        fleet.apply(deepSeekPricingSchedule: preferences.deepSeekPricingSchedule)
         fleet.show()
     }
 

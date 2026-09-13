@@ -180,6 +180,32 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(showUsagePace, forKey: Self.showUsagePaceKey) }
     }
 
+    /// Whether DeepSeek's current peak/off-peak billing phase is shown in its
+    /// usage card. Enabled by default because the card's pricing rows are
+    /// useful only when the rule is visible and understood.
+    @Published var deepSeekPricingEnabled: Bool {
+        didSet { defaults.set(deepSeekPricingEnabled, forKey: Keys.deepSeekPricingEnabled) }
+    }
+
+    /// The locally maintained DeepSeek billing rule. It is stored as one
+    /// Codable value so adding another rule field does not scatter more keys
+    /// through the preferences store.
+    @Published var deepSeekPricingSchedule: DeepSeekPricing.Schedule {
+        didSet {
+            let normalized = deepSeekPricingSchedule.normalized
+            if normalized != deepSeekPricingSchedule {
+                deepSeekPricingSchedule = normalized
+                return
+            }
+            guard let data = try? JSONEncoder().encode(deepSeekPricingSchedule) else { return }
+            defaults.set(data, forKey: Keys.deepSeekPricingSchedule)
+        }
+    }
+
+    func resetDeepSeekPricingSchedule() {
+        deepSeekPricingSchedule = .current
+    }
+
     /// Whether the weekly limit gets a ring of its own, and where it sits.
     @Published var weeklyRing: WeeklyRing {
         didSet { defaults.set(weeklyRing.rawValue, forKey: Keys.weeklyRing) }
@@ -374,6 +400,8 @@ final class Preferences: ObservableObject {
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
         static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
         static let antigravityHeadlineModel = "antigravityHeadlineModel"
+        static let deepSeekPricingEnabled = "deepSeekPricingEnabled"
+        static let deepSeekPricingSchedule = "deepSeekPricingSchedule"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -553,6 +581,13 @@ final class Preferences: ObservableObject {
         self.resetTimeFormat = defaults.string(forKey: Keys.resetTimeFormat)
             .flatMap(ResetTimeFormat.init(rawValue:)) ?? .automatic
         self.showUsagePace = defaults.bool(forKey: Self.showUsagePaceKey)
+        self.deepSeekPricingEnabled = defaults.object(forKey: Keys.deepSeekPricingEnabled) as? Bool ?? true
+        if let data = defaults.data(forKey: Keys.deepSeekPricingSchedule),
+           let schedule = try? JSONDecoder().decode(DeepSeekPricing.Schedule.self, from: data) {
+            self.deepSeekPricingSchedule = schedule.normalized
+        } else {
+            self.deepSeekPricingSchedule = .current
+        }
         // Absent means never chosen. Main display only, because that is what a
         // single-panel setup always did — all-displays on a fresh install
         // would put notches where none were expected.

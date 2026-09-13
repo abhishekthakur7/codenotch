@@ -75,6 +75,8 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertTrue(preferences.isConnected("claude-work"))
         XCTAssertFalse(preferences.isConnected("cursor"))
         XCTAssertFalse(preferences.isConnected("glm"))
+        XCTAssertTrue(preferences.deepSeekPricingEnabled)
+        XCTAssertEqual(preferences.deepSeekPricingSchedule, .current)
     }
 
     func testAFirstLaunchSeedsClaudeAndCodexOnceDiscovered() {
@@ -200,6 +202,24 @@ final class PreferencesMigrationTests: XCTestCase {
         let shown = Preferences(defaults: UserDefaults(suiteName: name)!)
         XCTAssertTrue(shown.isConnected(model))
         XCTAssertFalse(shown.connectedProviders.contains(model))
+    }
+
+    func testDeepSeekPricingSettingsSurviveARelaunchAndCanBeReset() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.deepSeekPricingEnabled = false
+        preferences.deepSeekPricingSchedule = DeepSeekPricing.Schedule(
+            peakWeekdays: [2],
+            windows: [.init(startMinute: 120, endMinute: 180)]
+        )
+
+        let reloaded = Preferences(defaults: UserDefaults(suiteName: name)!)
+        XCTAssertFalse(reloaded.deepSeekPricingEnabled)
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule.peakWeekdays, [2])
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule.windows.first?.startMinute, 120)
+
+        reloaded.resetDeepSeekPricingSchedule()
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule, .current)
     }
 
     /// Off by default, and it has to stay chosen once it is chosen: an extra

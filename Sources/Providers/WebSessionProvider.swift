@@ -7,19 +7,28 @@ import os
 struct WebSessionAuthenticationGate: Equatable {
     private(set) var baselineFingerprint: String?
     private(set) var sawLogout = false
+    private let requiresNewFingerprint: Bool
     private var unauthenticatedSamples = 0
 
-    init(baselineFingerprint: String?) {
+    init(baselineFingerprint: String?, requiresNewFingerprint: Bool = true) {
         self.baselineFingerprint = baselineFingerprint
+        self.requiresNewFingerprint = requiresNewFingerprint
     }
 
-    /// A switch commits only after a real logout/login transition. This keeps
-    /// an already-authenticated old page from being mistaken for the new
-    /// account and avoids false positives from one transient probe failure.
+    /// A sign-in window commits only after a real logout/login transition.
+    /// Switching accounts additionally requires a new session identity. This
+    /// keeps an already-authenticated old page from being mistaken for the new
+    /// account.
     mutating func observe(authenticated: Bool, fingerprint: String?) -> Bool {
         guard authenticated else {
             unauthenticatedSamples += 1
-            if unauthenticatedSamples >= 2 { sawLogout = true }
+            // A normal sign-in only needs one settled logged-out sample because
+            // the page is newly opened for this flow. Switching accounts keeps
+            // two samples to avoid treating a transient probe failure as a
+            // completed logout of the old account.
+            if unauthenticatedSamples >= (requiresNewFingerprint ? 2 : 1) {
+                sawLogout = true
+            }
             return false
         }
 
@@ -29,14 +38,30 @@ struct WebSessionAuthenticationGate: Equatable {
             return false
         }
 
-        // Providers with no fingerprint can still use the explicit
-        // logout/login transition. DeepSeek supplies one, so the same-account
-        // re-login does not look like an account switch unless its session
-        // identity changed.
-        guard baselineFingerprint == nil || fingerprint == nil || fingerprint != baselineFingerprint
-        else { return false }
+        // A normal sign-in only needs a real logged-out -> logged-in
+        // transition. Switching accounts additionally requires a different
+        // fingerprint, so signing back into the old account cannot commit a
+        // switch accidentally.
+        if requiresNewFingerprint {
+            guard baselineFingerprint == nil || fingerprint == nil || fingerprint != baselineFingerprint
+            else { return false }
+        }
         return true
     }
+
+    /// A user closing the window is an explicit end to the flow, so one final
+    /// authenticated probe can commit a completed login even when the polling
+    /// task did not get a chance to observe the logged-out state first.
+    /// A switch still cannot commit the existing account on close.
+    func acceptsAuthenticatedStateOnManualClose(
+        authenticated: Bool,
+        fingerprint: String?
+    ) -> Bool {
+        guard authenticated else { return false }
+        guard requiresNewFingerprint else { return true }
+        return baselineFingerprint == nil || fingerprint == nil || fingerprint != baselineFingerprint
+    }
+
 }
 
 /// Reads a provider's usage from the endpoint its own web app uses, by running
@@ -189,7 +214,6 @@ final class WebSessionProvider: NSObject, UsageProvider {
         ))
         let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 1100, height: 800),
                                 configuration: configuration)
-        webView.navigationDelegate = self
         self.webView = webView
         return webView
     }
@@ -335,14 +359,18 @@ final class WebSessionProvider: NSObject, UsageProvider {
     }
 
     private func presentSignIn(switching: Bool) {
-        switchGate = switching
-            ? WebSessionAuthenticationGate(baselineFingerprint: lastAuthFingerprint)
-            : nil
+        // Both flows must see an actual unauthenticated page before accepting
+        // an authenticated probe. Otherwise a stale but valid WebView session
+        // makes ordinary Sign in close immediately. The switching flow keeps
+        // the additional different-fingerprint requirement.
+        switchGate = WebSessionAuthenticationGate(
+            baselineFingerprint: lastAuthFingerprint,
+            requiresNewFingerprint: switching
+        )
         let webView = makeWebViewIfNeeded()
         if let signInWindow {
             signInWindow.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
-            watchForAuthentication()
             return
         }
         let window = NSWindow(
@@ -378,35 +406,9 @@ final class WebSessionProvider: NSObject, UsageProvider {
             return
         }
         isLoaded = false
-        watchForAuthentication()
-    }
-
-    private func watchForAuthentication() {
-        guard signInWindow != nil, let probe = site.authProbeScript, let webView else { return }
-        signInProbeTask?.cancel()
-        signInProbeTask = Task { [weak self, weak webView] in
-            for _ in 0..<240 {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
-                guard !Task.isCancelled, let self, let webView else { return }
-                guard Self.matchesOrigin(webView.url, expected: site.origin) else { continue }
-                let result = try? await webView.callAsyncJavaScript(
-                    probe, arguments: [:], in: nil, contentWorld: .page
-                )
-                guard let state = Self.authenticationState(from: result) else { continue }
-                if var gate = self.switchGate {
-                    if gate.observe(authenticated: state.authenticated, fingerprint: state.fingerprint) {
-                        self.switchGate = nil
-                        self.lastAuthFingerprint = state.fingerprint
-                        self.authenticationDidComplete()
-                    } else {
-                        self.switchGate = gate
-                    }
-                } else if state.authenticated {
-                    self.lastAuthFingerprint = state.fingerprint
-                    self.authenticationDidComplete()
-                }
-            }
-        }
+        // Authentication is confirmed once, after the user closes the window.
+        // Keeping the page open avoids false positives while the site is still
+        // loading or restoring its existing session.
     }
 
     private struct AuthenticationState {
@@ -439,20 +441,38 @@ final class WebSessionProvider: NSObject, UsageProvider {
     }
 }
 
-extension WebSessionProvider: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        watchForAuthentication()
-    }
-}
-
 extension WebSessionProvider: NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         guard let window = notification.object as? NSWindow, window === signInWindow else { return }
+        let pendingGate = switchGate
+        let pendingWebView = webView
         signInWindow = nil
         signInProbeTask?.cancel()
         signInProbeTask = nil
-        // Closing a switch window is a cancellation, not a successful account
-        // change. Leave the committed session and usage untouched.
         switchGate = nil
+
+        // Closing before login is a cancellation. If the page is already
+        // authenticated, however, the user may simply have closed it after
+        // finishing the login before the polling task noticed. Confirm that
+        // final state and publish it so Settings does not need a relaunch.
+        guard let pendingGate,
+              let probe = site.authProbeScript,
+              let pendingWebView else { return }
+        let expectedOrigin = site.origin
+        signInProbeTask = Task { [weak self, weak pendingWebView] in
+            guard let self, let pendingWebView else { return }
+            guard !pendingWebView.isLoading,
+                  Self.matchesOrigin(pendingWebView.url, expected: expectedOrigin),
+                  let result = try? await pendingWebView.callAsyncJavaScript(
+                      probe, arguments: [:], in: nil, contentWorld: .page
+                  ),
+                  let state = Self.authenticationState(from: result),
+                  pendingGate.acceptsAuthenticatedStateOnManualClose(
+                      authenticated: state.authenticated,
+                      fingerprint: state.fingerprint)
+            else { return }
+            self.lastAuthFingerprint = state.fingerprint
+            self.authenticationDidComplete()
+        }
     }
 }

@@ -191,6 +191,11 @@ final class NotchViewModel: ObservableObject {
     /// Mirrors the persisted Appearance choice so the separate notch window
     /// redraws immediately when Settings changes it.
     @Published var surfaceStyle: NotchSurfaceStyle = .glass
+    /// Whether DeepSeek's billing phase rows are visible in its usage card.
+    @Published var deepSeekPricingEnabled = true
+    /// The rule used by the DeepSeek card, mirrored from Preferences so a
+    /// settings change is reflected in every notch immediately.
+    @Published var deepSeekPricingSchedule = DeepSeekPricing.Schedule.current
     /// The display's own notch, when this edge has to share the bezel with one.
     ///
     /// Set by the window controller from the screen the panel is on, because
@@ -584,7 +589,8 @@ final class NotchViewModel: ObservableObject {
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
                 localLedgerRows: snapshot.localLedgerRowCount,
-                compactRowCount: snapshot.compactRowCount)
+                compactRowCount: snapshot.compactRowCount,
+                showsDeepSeekPricing: deepSeekPricingEnabled)
         }.max() ?? 0
     }
 

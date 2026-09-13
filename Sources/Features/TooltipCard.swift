@@ -995,6 +995,8 @@ struct TooltipCard: View {
     /// rather than fixed, so a big screen hides nothing.
     var sessionCap: Int = NotchLayout.defaultSessionCap
     var resetTimeFormat: ResetTimeFormat = .automatic
+    var deepSeekPricingEnabled: Bool = true
+    var deepSeekPricingSchedule: DeepSeekPricing.Schedule = .current
     var tailOffset: CGFloat = 0
     /// A tap on a session row jumps to that session's terminal — nil leaves
     /// the rows as plain text.
@@ -1026,7 +1028,8 @@ struct TooltipCard: View {
             localModelName: snapshot.localModel?.name,
             showsLocalPerformance: snapshot.showsLocalPerformance,
                 localLedgerRows: snapshot.localLedgerRowCount,
-            compactRowCount: snapshot.compactRowCount
+            compactRowCount: snapshot.compactRowCount,
+            showsDeepSeekPricing: deepSeekPricingEnabled
         )
     }
 
@@ -1047,7 +1050,9 @@ struct TooltipCard: View {
                         CodexUsageSection(usage: tokenUsage, now: now)
                     }
                     if let usageDetail = snapshot.usageDetail, usageDetail.hasUsage {
-                        DeepSeekUsageDetail(detail: usageDetail)
+                        DeepSeekUsageDetail(detail: usageDetail, now: now,
+                                            schedule: deepSeekPricingSchedule,
+                                            showsPricing: deepSeekPricingEnabled)
                     }
                     if let activity, snapshot.localModel == nil {
                         SessionList(summary: activity, now: now, cap: sessionCap,

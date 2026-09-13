@@ -252,7 +252,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                         PhoneLinkSnapshotBuilder.build(
                             snapshots: store.snapshots,
                             sessions: Array(fleet.sessions.values.flatMap { $0 }),
-                            disconnected: preferences.disconnectedProviders,
+                            disconnected: store.disconnected,
                             order: preferences.providerOrder,
                             serverName: PhoneLinkNetwork.getComputerName(),
                             serverVersion: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0",
@@ -273,7 +273,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                         PhoneLinkSnapshotBuilder.build(
                             snapshots: store.snapshots,
                             sessions: Array(fleet.sessions.values.flatMap { $0 }),
-                            disconnected: preferences.disconnectedProviders,
+                            disconnected: store.disconnected,
                             order: preferences.providerOrder,
                             serverName: PhoneLinkNetwork.getComputerName(),
                             serverVersion: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "1.0.0",

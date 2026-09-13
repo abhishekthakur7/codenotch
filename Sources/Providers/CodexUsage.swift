@@ -118,13 +118,38 @@ struct CodexResetCredits: Equatable, Sendable {
     var nextExpiry: Date? { available.compactMap(\.expiresAt).min() }
 }
 
-/// Only the account's main rate-limit windows belong in the usage rings —
-/// `additional_rate_limits` and `code_review_rate_limit` meter something else
-/// and are deliberately left out.
+/// The account's main rate-limit windows belong in the usage rings. Spark
+/// (`additional_rate_limits`) and code review belong on the hover card, not
+/// the rings.
 enum CodexUsage {
     private struct Response: Decodable {
         let rate_limit: RateLimit?
         let plan_type: String?
+        let additional_rate_limits: [AdditionalRateLimit]
+        let code_review_rate_limit: RateLimit?
+
+        private enum CodingKeys: String, CodingKey {
+            case rate_limit
+            case plan_type
+            case additional_rate_limits
+            case code_review_rate_limit
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            // A bad main object must not discard Spark/code review, and a bad
+            // extra must not discard a good main pair. `try` here used to
+            // turn a single unreadable window into a failed fetch.
+            rate_limit = try? container.decodeIfPresent(RateLimit.self, forKey: .rate_limit)
+            plan_type = try? container.decodeIfPresent(String.self, forKey: .plan_type)
+            let extras = (try? container.decodeIfPresent(
+                [FailableAdditionalRateLimit].self, forKey: .additional_rate_limits
+            )) ?? []
+            additional_rate_limits = extras.compactMap(\.value)
+            code_review_rate_limit = try? container.decodeIfPresent(
+                RateLimit.self, forKey: .code_review_rate_limit
+            )
+        }
     }
 
     private struct ProfileUsageResponse: Decodable {
@@ -148,6 +173,32 @@ enum CodexUsage {
     private struct RateLimit: Decodable {
         let primary_window: Window?
         let secondary_window: Window?
+
+        private enum CodingKeys: String, CodingKey {
+            case primary_window, secondary_window
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            // One unreadable window must not take its sibling with it —
+            // code review's weekly once vanished because the 5h object
+            // could not decode.
+            primary_window = try? container.decode(Window.self, forKey: .primary_window)
+            secondary_window = try? container.decode(Window.self, forKey: .secondary_window)
+        }
+    }
+
+    private struct AdditionalRateLimit: Decodable {
+        let limit_name: String?
+        let metered_feature: String?
+        let rate_limit: RateLimit?
+    }
+
+    private struct FailableAdditionalRateLimit: Decodable {
+        let value: AdditionalRateLimit?
+        init(from decoder: Decoder) throws {
+            value = try? AdditionalRateLimit(from: decoder)
+        }
     }
 
     private struct Window: Decodable {
@@ -155,6 +206,25 @@ enum CodexUsage {
         let used_percent: Double?
         let reset_at: Double?
         let reset_after_seconds: Double?
+
+        private enum CodingKeys: String, CodingKey {
+            case limit_window_seconds, used_percent, reset_at, reset_after_seconds
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            // Null or non-numeric `used_percent` used to fail the whole
+            // RateLimit object, so a good weekly window never made it out.
+            limit_window_seconds = Self.number(container, .limit_window_seconds)
+            used_percent = Self.number(container, .used_percent)
+            reset_at = Self.number(container, .reset_at)
+            reset_after_seconds = Self.number(container, .reset_after_seconds)
+        }
+
+        private static func number(_ container: KeyedDecodingContainer<CodingKeys>,
+                                   _ key: CodingKeys) -> Double? {
+            try? container.decode(Double.self, forKey: key)
+        }
     }
 
     private struct ResetCreditsResponse: Decodable {
@@ -205,7 +275,8 @@ enum CodexUsage {
         }
     }
 
-    static func windows(from data: Data, now: Date = Date()) throws -> [LimitWindow] {
+    static func windows(from data: Data, now: Date = Date(),
+                        includeExtras: Bool = true) throws -> [LimitWindow] {
         let response: Response
         do {
             response = try JSONDecoder().decode(Response.self, from: data)
@@ -220,16 +291,34 @@ enum CodexUsage {
             // One malformed window must not discard the other: a null
             // `used_percent` on the 5h window once threw the whole fetch away,
             // hiding a perfectly good weekly window behind an error.
-            guard let percent = window.used_percent else { continue }
-            let resetsAt = window.reset_at.map { Date(timeIntervalSince1970: $0) }
-                ?? window.reset_after_seconds.map { now.addingTimeInterval($0) }
-            windows.append(LimitWindow(
-                id: id,
-                label: label(windowSeconds: window.limit_window_seconds ?? 0, fallback: id),
-                usedFraction: percent / 100,
-                resetsAt: resetsAt,
-                duration: window.limit_window_seconds
-            ))
+            if let item = limitWindow(id: id, from: window, fallback: id, now: now) {
+                windows.append(item)
+            }
+        }
+        // After the main pair so `windows.first` stays primary. Two Spark
+        // extras (plain "Spark" and "GPT-5.3-Codex-Spark") must not emit the
+        // same ids twice: the tooltip ForEach, the archive, and Phone Link
+        // all key windows by id, and a duplicate 5h row is what reads as a
+        // second session limit.
+        if includeExtras {
+            for extra in response.additional_rate_limits where isSpark(extra) {
+                appendExtra(
+                    extra.rate_limit,
+                    primaryID: "spark",
+                    secondaryID: "spark-secondary",
+                    group: L10n.t("Spark"),
+                    now: now,
+                    to: &windows
+                )
+            }
+            appendExtra(
+                response.code_review_rate_limit,
+                primaryID: "code-review",
+                secondaryID: "code-review-secondary",
+                group: L10n.t("Code review"),
+                now: now,
+                to: &windows
+            )
         }
         guard !windows.isEmpty else {
             throw UsageProviderError.nothingMetered(L10n.t("Codex reported no usage windows"))
@@ -297,6 +386,60 @@ enum CodexUsage {
         fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         if let date = fractional.date(from: text) { return date }
         return ISO8601DateFormatter().date(from: text)
+    }
+
+    private static func limitWindow(
+        id: String,
+        group: String? = nil,
+        from window: Window,
+        fallback: String,
+        now: Date
+    ) -> LimitWindow? {
+        guard let percent = window.used_percent else { return nil }
+        let resetsAt = window.reset_at.map { Date(timeIntervalSince1970: $0) }
+            ?? window.reset_after_seconds.map { now.addingTimeInterval($0) }
+        return LimitWindow(
+            id: id,
+            group: group,
+            label: label(windowSeconds: window.limit_window_seconds ?? 0, fallback: fallback),
+            usedFraction: percent / 100,
+            resetsAt: resetsAt,
+            duration: window.limit_window_seconds
+        )
+    }
+
+    private static func appendExtra(
+        _ rateLimit: RateLimit?,
+        primaryID: String,
+        secondaryID: String,
+        group: String,
+        now: Date,
+        to windows: inout [LimitWindow]
+    ) {
+        appendUnique(id: primaryID, window: rateLimit?.primary_window,
+                     group: group, fallback: "primary", now: now, to: &windows)
+        appendUnique(id: secondaryID, window: rateLimit?.secondary_window,
+                     group: group, fallback: "secondary", now: now, to: &windows)
+    }
+
+    private static func appendUnique(
+        id: String,
+        window: Window?,
+        group: String,
+        fallback: String,
+        now: Date,
+        to windows: inout [LimitWindow]
+    ) {
+        guard let window, !windows.contains(where: { $0.id == id }) else { return }
+        guard let item = limitWindow(id: id, group: group, from: window,
+                                     fallback: fallback, now: now) else { return }
+        windows.append(item)
+    }
+
+    private static func isSpark(_ extra: AdditionalRateLimit) -> Bool {
+        [extra.limit_name, extra.metered_feature].contains { name in
+            name?.range(of: "spark", options: .caseInsensitive) != nil
+        }
     }
 
     /// The plan an account is on decides what its primary window actually is

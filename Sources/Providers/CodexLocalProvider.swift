@@ -70,9 +70,15 @@ actor CodexLocalProvider: UsageProvider {
             throw UsageProviderError.badResponse(status: status)
         }
 
-        let windows = try CodexUsage.windows(from: data)
-
+        // Unused resets are a separate endpoint from the extra Spark / code-review
+        // windows. Start that fetch before parsing extras so a slow or empty
+        // extras payload cannot skip the credits row.
         async let resetCredits = Self.fetchResetCredits(session: session, credential: credential)
+
+        let windows = try CodexUsage.windows(
+            from: data,
+            includeExtras: Preferences.storedShowCodexExtraLimits()
+        )
 
         // The profile page's token statistics are the source for the chart and
         // totals.
@@ -84,7 +90,11 @@ actor CodexLocalProvider: UsageProvider {
         return ProviderSnapshot(
             id: id, displayName: displayName, glyph: glyph,
             fidelity: .official, status: .ok, windows: windows,
-            headlineID: windows.first?.id,
+            // Named, not positional. `windows.first` would let Spark take the
+            // ring whenever primary is missing — extras are appended after the
+            // main pair, but a Spark-only payload still leads with spark.
+            headlineID: "primary",
+            // The weekly ring is the account weekly, never Spark's own weekly.
             weeklyID: "secondary",
             tokenUsage: profileUsage,
             plan: CodexUsage.plan(from: data) ?? account()?.plan?.nonEmptyPlan,

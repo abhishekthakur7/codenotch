@@ -578,6 +578,17 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
+                Toggle(L10n.t("Show Spark and code review"), isOn: $preferences.showCodexExtraLimits)
+                    .onChange(of: preferences.showCodexExtraLimits) { _ in
+                        for account in providers() where CodexProfile.isCodex(providerID: account.id) {
+                            usageStore?.refresh(providerID: account.id)
+                        }
+                    }
+                Text(L10n.t("The ring still follows the main Codex window. Spark and code review stay in the hover card."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
                 Picker(L10n.t("Weekly ring"), selection: $preferences.weeklyRing) {
                     ForEach(WeeklyRing.allCases) { Text($0.title).tag($0) }
                 }

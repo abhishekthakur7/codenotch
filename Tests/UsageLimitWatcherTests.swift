@@ -140,4 +140,39 @@ final class UsageLimitWatcherTests: XCTestCase {
         XCTAssertEqual(alerts.count, 2)
         XCTAssertEqual(alerts[1].providerID, "cursor")
     }
+
+    /// Codex extras reuse the same "5h limit" label as the headline. The
+    /// watcher must still key off the declared headline/weekly ids, or Spark
+    /// hitting 100% would fire a session-limit card.
+    func testCodexExtrasAtLimitDoNotFireSessionOrWeeklyCards() {
+        func snap(session: Double, weekly: Double, spark: Double) -> ProviderSnapshot {
+            ProviderSnapshot(
+                id: "codex", displayName: "Codex", glyph: .openai,
+                fidelity: .official, status: .ok,
+                windows: [
+                    LimitWindow(id: "primary", label: "5h limit", usedFraction: session),
+                    LimitWindow(id: "secondary", label: "Weekly limit", usedFraction: weekly),
+                    LimitWindow(id: "spark", group: "Spark", label: "5h limit",
+                                usedFraction: spark),
+                    LimitWindow(id: "spark-secondary", group: "Spark", label: "Weekly limit",
+                                usedFraction: 1.0),
+                    LimitWindow(id: "code-review", group: "Code review", label: "Weekly limit",
+                                usedFraction: 1.0)
+                ],
+                headlineID: "primary",
+                weeklyID: "secondary"
+            )
+        }
+
+        watcher.observe([snap(session: 0.50, weekly: 0.40, spark: 0.80)])
+        watcher.observe([snap(session: 0.50, weekly: 0.40, spark: 1.00)])
+        XCTAssertTrue(alerts.isEmpty, "Spark and code review at 100% are not the session")
+
+        watcher.observe([snap(session: 1.00, weekly: 0.40, spark: 1.00)])
+        XCTAssertEqual(alerts.map(\.kind), [.sessionLimitReached])
+        XCTAssertEqual(alerts[0].windowLabel, "5h limit")
+
+        watcher.observe([snap(session: 1.00, weekly: 1.00, spark: 1.00)])
+        XCTAssertEqual(alerts.map(\.kind), [.sessionLimitReached, .weeklyLimitReached])
+    }
 }

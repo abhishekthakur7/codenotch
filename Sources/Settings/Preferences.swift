@@ -330,6 +330,15 @@ final class Preferences: ObservableObject {
         }
     }
 
+    /// Which MiniMax console the Coding Plan is read from.
+    ///
+    /// International and China mainland are different hosts, and a key issued
+    /// on one is refused by the other. Absent means never chosen, which is
+    /// international.
+    @Published var minimaxRegion: MiniMaxRegion {
+        didSet { defaults.set(minimaxRegion.rawValue, forKey: Keys.minimaxRegion) }
+    }
+
     /// The version whose changes have already been shown.
     ///
     /// Written when the What's New dialogue is dismissed rather than when it
@@ -398,6 +407,7 @@ final class Preferences: ObservableObject {
         static let limitReachedSoundName = "limitReachedSoundName"
         /// A new key, so there is nothing under the old app name to migrate.
         static let geminiAPIMonthlyTokenBudget = "geminiAPIMonthlyTokenBudget"
+        static let minimaxRegion = "minimaxRegion"
         static let antigravityHeadlineLimit = "antigravityHeadlineLimit"
         static let antigravityHeadlineModel = "antigravityHeadlineModel"
         static let deepSeekPricingEnabled = "deepSeekPricingEnabled"
@@ -434,6 +444,20 @@ final class Preferences: ObservableObject {
               let model = AntigravityHeadlineModel(rawValue: value)
         else { return .gemini }
         return model
+    }
+
+    /// The MiniMax region read straight from disk, off the main actor.
+    ///
+    /// The provider is an actor and asks for this on every fetch, and
+    /// `@Published` state is main-actor-isolated where `UserDefaults` is
+    /// thread-safe — so the provider reads the store, not the object.
+    nonisolated static func storedMinimaxRegion(
+        defaults: UserDefaults = .standard
+    ) -> MiniMaxRegion {
+        guard let value = defaults.string(forKey: Keys.minimaxRegion),
+              let region = MiniMaxRegion(rawValue: value)
+        else { return .international }
+        return region
     }
 
     /// True the very first time this copy runs, and never again.
@@ -638,6 +662,7 @@ final class Preferences: ObservableObject {
         self.limitReachedSoundName = defaults.string(forKey: Keys.limitReachedSoundName)
             ?? SessionChime.defaultBlocked
         self.geminiAPIMonthlyTokenBudget = Self.storedGeminiAPIMonthlyTokenBudget(defaults: defaults)
+        self.minimaxRegion = Self.storedMinimaxRegion(defaults: defaults)
         // Read from the system rather than from our own store: the user can turn
         // this off in System Settings, and a remembered `true` would then be a lie.
         self.launchAtLogin = Self.isRegisteredForLogin
@@ -678,6 +703,10 @@ final class Preferences: ObservableObject {
             return connectedProviders.contains(providerID)
         }
         if let hidden = pendingHidden {
+            // Absence from the old off-list means on — for providers that
+            // off-list could have named. MiniMax did not exist then, so
+            // missing from it is not a choice to show it.
+            if providerID == "minimax" { return false }
             return !hidden.contains(providerID)
         }
         return Self.isDefaultOnFamily(providerID)
@@ -730,7 +759,11 @@ final class Preferences: ObservableObject {
             return
         }
         if let hidden = pendingHidden {
-            connectedProviders = discovered.subtracting(hidden.filter { !Self.isModelCell($0) })
+            // Invert the old off-list, then drop MiniMax: it did not exist
+            // when that list was written, so absence from it is not "on".
+            connectedProviders = discovered
+                .subtracting(hidden.filter { !Self.isModelCell($0) })
+                .subtracting(["minimax"])
             seenProviders = discovered
             pendingHidden = nil
             return

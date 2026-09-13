@@ -19,6 +19,7 @@ enum Sites {
         try { const p = JSON.parse(text); delete p.sources; trimmed = JSON.stringify(p); } catch (_) {}
         return JSON.stringify({ status: response.status, body: trimmed });
         """,
+        associatedHosts: [],
         parse: PerplexityUsage.windows(fromJSON:)
     )
 
@@ -109,6 +110,7 @@ enum Sites {
             return JSON.stringify({ authenticated: true, fingerprint });
         } catch (_) { return JSON.stringify({ authenticated: false }); }
         """#,
+        associatedHosts: [],
         detailParse: DeepSeekUsage.detail(fromJSON:),
         parse: { json in
             let payload = try DeepSeekUsage.payload(fromJSON: json)
@@ -129,5 +131,65 @@ enum Sites {
             return windows
         }
     )
+
+    /// MiniMax is signed into from Codenotch's own WKWebView, the same way
+    /// DeepSeek is. Login lives on the regional platform origin; coding-plan
+    /// remains is a www host, so the fetch is absolute and sign-out has to
+    /// clear that host as well as the platform one.
+    static func minimax(region: MiniMaxRegion) -> WebSessionProvider.Site {
+        let remains = region.remainsURL.absoluteString
+        // Absolute www URL: a relative path would be resolved against the
+        // platform origin the WebView is sitting on, which does not serve
+        // remains. 1004 is MiniMax's missing-cookie code and often rides
+        // under HTTP 200, so the envelope has to become 401 or the session
+        // stays signed in.
+        let readRemains = """
+        const response = await fetch('\(remains)', {
+            credentials: 'include',
+            headers: { 'Accept': 'application/json' }
+        });
+        let status = response.status;
+        const body = await response.text();
+        try {
+            const parsed = JSON.parse(body);
+            const resp = (parsed && parsed.base_resp)
+                || (parsed && parsed.data && parsed.data.base_resp);
+            const code = resp && resp.status_code;
+            if (status === 1004 || Number(code) === 1004) status = 401;
+        } catch (_) {}
+        """
+        return WebSessionProvider.Site(
+            id: "minimax",
+            displayName: "MiniMax",
+            glyph: .minimax,
+            origin: region.platformOrigin,
+            script: """
+            \(readRemains)
+            return JSON.stringify({ status: status, body: body });
+            """,
+            fidelity: .derived,
+            authProbeScript: """
+            try {
+                \(readRemains)
+                if (status < 200 || status >= 300) {
+                    return JSON.stringify({ authenticated: false });
+                }
+                let fingerprint = null;
+                try {
+                    const session = localStorage.getItem('access_token');
+                    if (session) {
+                        const bytes = new TextEncoder().encode(session);
+                        const digest = await crypto.subtle.digest('SHA-256', bytes);
+                        fingerprint = Array.from(new Uint8Array(digest))
+                            .map(byte => byte.toString(16).padStart(2, '0')).join('');
+                    }
+                } catch (_) {}
+                return JSON.stringify({ authenticated: true, fingerprint });
+            } catch (_) { return JSON.stringify({ authenticated: false }); }
+            """,
+            associatedHosts: [region.remainsURL.host].compactMap { $0 },
+            parse: { try MiniMaxUsage.windows(fromJSON: $0) }
+        )
+    }
 
 }

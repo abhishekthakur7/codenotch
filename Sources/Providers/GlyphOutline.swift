@@ -423,6 +423,23 @@ enum GlyphOutline {
          CGPoint(x: 0.2600, y: 1.0000)]
     ]
 
+    /// MiniMax's mark: a compact geometric M, defined rather than traced, the
+    /// same approach as `glm` — twelve vertices in the unit box, exact at any
+    /// size.
+    ///
+    /// One loop, no counters. The stems and both diagonals share one stroke
+    /// depth (0.2), so the letter reads at one weight. The inner V stops at
+    /// mid-height: MiniMax's own compact M, not a tall athletic letter and
+    /// not a seashell.
+    static let minimax: [[CGPoint]] = [
+        [CGPoint(x: 0.0200, y: 1.0000), CGPoint(x: 0.0200, y: 0.0000),
+         CGPoint(x: 0.2200, y: 0.0000), CGPoint(x: 0.5000, y: 0.4200),
+         CGPoint(x: 0.7800, y: 0.0000), CGPoint(x: 0.9800, y: 0.0000),
+         CGPoint(x: 0.9800, y: 1.0000), CGPoint(x: 0.7800, y: 1.0000),
+         CGPoint(x: 0.7800, y: 0.3600), CGPoint(x: 0.5000, y: 0.7800),
+         CGPoint(x: 0.2200, y: 0.3600), CGPoint(x: 0.2200, y: 1.0000)]
+    ]
+
     /// Grok's mark, flattened from grok.com's favicon SVG.
     ///
     /// Two filled loops — the interlocking swirls with the diagonal slash —

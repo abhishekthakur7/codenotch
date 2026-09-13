@@ -72,6 +72,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// refresher needs to ask one of them how long its token has left, and the
     /// protocol has no business carrying that.
     private var claudeProviders: [ClaudeOAuthProvider] = []
+    /// MiniMax Platform sign-in sheet. Not a UsageProvider — that is MiniMaxProvider.
+    private var miniMaxWeb: WebSessionProvider?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Set here, not in the Info.plist: this call is applied at launch and
@@ -106,10 +108,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // login is explicit, stays in Codenotch's own WKWebView store, and
             // the page-local requests are refreshed only after that login.
             let deepSeek = WebSessionProvider(site: Sites.deepSeek)
+            // MiniMax's ring is MiniMaxProvider. The sheet is the same kind of
+            // WebView DeepSeek uses, but it must not join `webProviders`:
+            // those are appended to `allProviders`, and two adapters with
+            // id `minimax` would both poll, both draw a row, and fight over
+            // the same archive key. Region is applied here and again when
+            // Settings changes it, because the fetch URLs live on the site.
+            let miniMaxWeb = WebSessionProvider(site: Sites.minimax(region: preferences.minimaxRegion))
+            self.miniMaxWeb = miniMaxWeb
             let webProviders: [WebSessionProvider] = [deepSeek]
-            fleet.signInItems = webProviders.map { provider in
-                (title: L10n.t("Sign in to \(provider.displayName)…"),
-                 action: { [weak provider] in provider?.presentSignIn() })
+            fleet.signInItems = [deepSeek, miniMaxWeb].map { provider in
+                let name = provider.displayName
+                return (title: L10n.t("Sign in to \(name)…"),
+                        action: { [weak provider] in provider?.presentSignIn() })
             }
 
             // Cursor reads the editor's session, or cursor-agent's if the
@@ -128,7 +139,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 + [CursorLocalProvider()]
                 + codexProfiles.map { CodexLocalProvider(profile: $0) }
                 + [AntigravityProvider(),
-                   GLMProvider(), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
+                   GLMProvider(), MiniMaxProvider(web: miniMaxWeb),
+                   GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
                    CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(),
                    OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
                    LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
@@ -152,6 +164,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             deepSeek.onAuthenticated = { [weak store] in
                 store?.providerAuthenticationChanged(providerID: "deepseek")
+            }
+            miniMaxWeb.onAuthenticated = { [weak store] in
+                store?.providerAuthenticationChanged(providerID: "minimax")
             }
 
             let updater = Updater()
@@ -380,6 +395,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.$deepSeekPricingSchedule
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(deepSeekPricingSchedule: $0) }
+                .store(in: &cancellables)
+
+            preferences.$minimaxRegion
+                .dropFirst()
+                .removeDuplicates()
+                .receive(on: RunLoop.main)
+                .sink { [weak miniMaxWeb, weak store] region in
+                    miniMaxWeb?.apply(site: Sites.minimax(region: region))
+                    store?.refresh(providerID: "minimax")
+                }
                 .store(in: &cancellables)
 
             preferences.$notchEdge

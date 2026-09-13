@@ -9,23 +9,17 @@ struct WebSessionAuthenticationGate: Equatable {
     private(set) var sawLogout = false
     private let requiresNewFingerprint: Bool
     private var unauthenticatedSamples = 0
-    private var sessionMutations = 0
 
     init(baselineFingerprint: String?, requiresNewFingerprint: Bool = true) {
         self.baselineFingerprint = baselineFingerprint
         self.requiresNewFingerprint = requiresNewFingerprint
     }
 
-    /// A sign-in window commits after a real logout/login transition or an
-    /// observed session-storage mutation in this page load. Switching accounts
-    /// additionally requires a new session identity. This keeps an already-
-    /// authenticated old page from being mistaken for the new account.
-    mutating func observe(
-        authenticated: Bool,
-        fingerprint: String?,
-        storageMutations: Int = 0
-    ) -> Bool {
-        if storageMutations > 0 { sessionMutations = storageMutations }
+    /// A sign-in window commits only after a real logout/login transition.
+    /// Switching accounts additionally requires a new session identity. This
+    /// keeps an already-authenticated old page from being mistaken for the new
+    /// account.
+    mutating func observe(authenticated: Bool, fingerprint: String?) -> Bool {
         guard authenticated else {
             unauthenticatedSamples += 1
             // A normal sign-in only needs one settled logged-out sample because
@@ -39,7 +33,7 @@ struct WebSessionAuthenticationGate: Equatable {
         }
 
         unauthenticatedSamples = 0
-        guard sawLogout || (!requiresNewFingerprint && sessionMutations > 0) else {
+        guard sawLogout else {
             if baselineFingerprint == nil { baselineFingerprint = fingerprint }
             return false
         }
@@ -199,30 +193,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
         configuration.userContentController.addUserScript(WKUserScript(
             source: #"""
             window.__notchCalls = [];
-            window.__notchAuthStorageMutations = 0;
             (function () {
-                const storage = window.localStorage;
-                const setItem = Storage.prototype.setItem;
-                Storage.prototype.setItem = function (key, value) {
-                    if (this === storage && key === 'userToken') {
-                        window.__notchAuthStorageMutations += 1;
-                    }
-                    return setItem.apply(this, arguments);
-                };
-                const removeItem = Storage.prototype.removeItem;
-                Storage.prototype.removeItem = function (key) {
-                    if (this === storage && key === 'userToken') {
-                        window.__notchAuthStorageMutations += 1;
-                    }
-                    return removeItem.apply(this, arguments);
-                };
-                const clear = Storage.prototype.clear;
-                Storage.prototype.clear = function () {
-                    if (this === storage && this.getItem('userToken')) {
-                        window.__notchAuthStorageMutations += 1;
-                    }
-                    return clear.apply(this, arguments);
-                };
                 const fetchImpl = window.fetch;
                 window.fetch = function (...args) {
                     try {
@@ -243,7 +214,6 @@ final class WebSessionProvider: NSObject, UsageProvider {
         ))
         let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 1100, height: 800),
                                 configuration: configuration)
-        webView.navigationDelegate = self
         self.webView = webView
         return webView
     }
@@ -401,7 +371,6 @@ final class WebSessionProvider: NSObject, UsageProvider {
         if let signInWindow {
             signInWindow.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
-            watchForAuthentication()
             return
         }
         let window = NSWindow(
@@ -437,60 +406,19 @@ final class WebSessionProvider: NSObject, UsageProvider {
             return
         }
         isLoaded = false
-        // A new load may still expose the previous document through `url` for
-        // a moment. Waiting for `WKNavigationDelegate.didFinish` prevents the
-        // probe from reading that stale page and closing a fresh login window
-        // before the user can interact with it.
-    }
-
-    private func watchForAuthentication() {
-        guard signInWindow != nil, let probe = site.authProbeScript, let webView else { return }
-        signInProbeTask?.cancel()
-        signInProbeTask = Task { [weak self, weak webView] in
-            for attempt in 0..<240 {
-                if attempt > 0 {
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                }
-                guard !Task.isCancelled, let self, let webView else { return }
-                // `url` can continue to point at the old same-origin document
-                // while a new navigation is in flight. Never authenticate from
-                // that document; `didFinish` starts a new watcher once the
-                // page is settled.
-                guard !webView.isLoading else { continue }
-                guard Self.matchesOrigin(webView.url, expected: site.origin) else { continue }
-                let result = try? await webView.callAsyncJavaScript(
-                    probe, arguments: [:], in: nil, contentWorld: .page
-                )
-                guard let state = Self.authenticationState(from: result) else { continue }
-                if var gate = self.switchGate {
-                    if gate.observe(
-                        authenticated: state.authenticated,
-                        fingerprint: state.fingerprint,
-                        storageMutations: state.storageMutations
-                    ) {
-                        self.switchGate = nil
-                        self.lastAuthFingerprint = state.fingerprint
-                        self.authenticationDidComplete()
-                    } else {
-                        self.switchGate = gate
-                    }
-                } else if state.authenticated {
-                    self.lastAuthFingerprint = state.fingerprint
-                    self.authenticationDidComplete()
-                }
-            }
-        }
+        // Authentication is confirmed once, after the user closes the window.
+        // Keeping the page open avoids false positives while the site is still
+        // loading or restoring its existing session.
     }
 
     private struct AuthenticationState {
         let authenticated: Bool
         let fingerprint: String?
-        let storageMutations: Int
     }
 
     private static func authenticationState(from result: Any?) -> AuthenticationState? {
         if let authenticated = result as? Bool {
-            return AuthenticationState(authenticated: authenticated, fingerprint: nil, storageMutations: 0)
+            return AuthenticationState(authenticated: authenticated, fingerprint: nil)
         }
         guard let text = result as? String,
               let data = text.data(using: .utf8),
@@ -498,8 +426,7 @@ final class WebSessionProvider: NSObject, UsageProvider {
               let authenticated = object["authenticated"] as? Bool
         else { return nil }
         return AuthenticationState(authenticated: authenticated,
-                                   fingerprint: object["fingerprint"] as? String,
-                                   storageMutations: object["storageMutations"] as? Int ?? 0)
+                                   fingerprint: object["fingerprint"] as? String)
     }
 
     private func authenticationDidComplete() {
@@ -511,12 +438,6 @@ final class WebSessionProvider: NSObject, UsageProvider {
         signInWindow = nil
         isLoaded = false
         onAuthenticated?()
-    }
-}
-
-extension WebSessionProvider: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        watchForAuthentication()
     }
 }
 

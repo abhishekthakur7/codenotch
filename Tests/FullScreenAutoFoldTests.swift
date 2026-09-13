@@ -113,6 +113,36 @@ final class FullScreenAutoFoldTests: XCTestCase {
         XCTAssertTrue(controller.model.isExpanded, "The notch should stay open if the active space is not full-screen")
     }
 
+    func testControllerDoesNotFoldWhenAutoFoldIsOff() {
+        let controller = NotchWindowController()
+        controller.show()
+        defer { controller.stop() }
+
+        controller.model.isAlwaysOn = true
+        controller.model.isExpanded = true
+        controller.foldsForFullScreen = false
+        controller.isFullScreenActive = { true }
+        controller.handleActiveSpaceOrAppChange()
+
+        XCTAssertTrue(controller.model.isExpanded, "With the fold off, a full-screen app must leave the notch alone")
+    }
+
+    func testApplyAutoFoldReEvaluatesImmediately() {
+        let controller = NotchWindowController()
+        controller.show()
+        defer { controller.stop() }
+
+        controller.model.isAlwaysOn = true
+        controller.model.isExpanded = true
+        controller.foldsForFullScreen = false
+        controller.isFullScreenActive = { true }
+        controller.handleActiveSpaceOrAppChange()
+        XCTAssertTrue(controller.model.isExpanded)
+
+        controller.apply(foldsForFullScreen: true)
+        XCTAssertFalse(controller.model.isExpanded, "Re-enabling the fold under a frontmost full-screen app must fold now, not on the next cursor poll")
+    }
+
     func testAlwaysOnRestoresExpandedWhenLeavingFullScreen() {
         let controller = NotchWindowController()
         controller.show()

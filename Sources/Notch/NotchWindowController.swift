@@ -90,10 +90,15 @@ final class NotchWindowController {
         FullScreenDetector.isFullScreenAppFrontmost(on: self?.currentScreen())
     }
 
+    /// Whether a frontmost full-screen app may fold the notch at all. A
+    /// setting rather than a rule: on a screen kept full-screen all day the
+    /// fold reads as the notch refusing to stay put, not as it tidying up.
+    var foldsForFullScreen = true
+
     /// When a full-screen app is active on the current space, auto-folds the notch.
     /// When returning to a desktop space with `isAlwaysOn`, restores the unfolded state.
     func handleActiveSpaceOrAppChange() {
-        if isFullScreenActive() {
+        if foldsForFullScreen && isFullScreenActive() {
             if let panel {
                 let local = localCursor(in: panel.frame)
                 let overTooltip = model.hoveredIndex
@@ -125,6 +130,14 @@ final class NotchWindowController {
         }
         setPointing(false)
         updateInteractiveRects()
+    }
+
+    /// Re-evaluated on the spot rather than on the next cursor poll, so the
+    /// notch answers the setting in the same beat: switched off under a
+    /// frontmost full-screen app, an always-on notch comes straight back.
+    func apply(foldsForFullScreen: Bool) {
+        self.foldsForFullScreen = foldsForFullScreen
+        handleActiveSpaceOrAppChange()
     }
 
     func show() {

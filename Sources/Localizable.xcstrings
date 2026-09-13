@@ -17686,6 +17686,138 @@
           }
         }
       }
+    },
+    "When a limit is reached": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "额度用尽时"
+          }
+        }
+      }
+    },
+    "Show notification for session limit": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "会话额度用尽时显示通知"
+          }
+        }
+      }
+    },
+    "Show notification for weekly limit": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周额度用尽时显示通知"
+          }
+        }
+      }
+    },
+    "Alert sound": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提示音"
+          }
+        }
+      }
+    },
+    "Preview session limit alert": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预览会话额度提醒"
+          }
+        }
+      }
+    },
+    "Preview weekly limit alert": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预览周额度提醒"
+          }
+        }
+      }
+    },
+    "Displays a notification card from the side of the notch when a provider's session or weekly usage limit is reached.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当某家服务的会话或周额度用尽时，刘海侧面滑出一张通知卡片。"
+          }
+        }
+      }
+    },
+    "When a limit resets": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "额度重置时"
+          }
+        }
+      }
+    },
+    "Show notification from notch": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从刘海显示通知"
+          }
+        }
+      }
+    },
+    "Reset sound": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重置提示音"
+          }
+        }
+      }
+    },
+    "Preview notification": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预览通知"
+          }
+        }
+      }
+    },
+    "Displays a notification card from the side of the notch when a provider's usage limit resets.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当某家服务的额度窗口滚动过后，刘海侧面滑出一张通知卡片。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

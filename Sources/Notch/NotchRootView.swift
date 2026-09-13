@@ -106,6 +106,8 @@ struct NotchRootView: View {
                         direction: model.edge.tooltipDirection,
                         sessionCap: model.sessionCap,
                         resetTimeFormat: model.resetTimeFormat,
+                        deepSeekPricingEnabled: model.deepSeekPricingEnabled,
+                        deepSeekPricingSchedule: model.deepSeekPricingSchedule,
                         tailOffset: tooltipTailOffset(index: index, snapshot: snapshot),
                         onFocusSession: model.onFocusSession
                     )
@@ -384,7 +386,8 @@ struct NotchRootView: View {
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
                 localLedgerRows: snapshot.localLedgerRowCount,
-                compactRowCount: snapshot.compactRowCount
+                compactRowCount: snapshot.compactRowCount,
+                showsDeepSeekPricing: model.deepSeekPricingEnabled
             )
             : NotchLayout.cardWidth
     }
@@ -416,7 +419,8 @@ struct NotchRootView: View {
                 localModelName: snapshot.localModel?.name,
                 showsLocalPerformance: snapshot.showsLocalPerformance,
                 localLedgerRows: snapshot.localLedgerRowCount,
-                compactRowCount: snapshot.compactRowCount
+                compactRowCount: snapshot.compactRowCount,
+                showsDeepSeekPricing: model.deepSeekPricingEnabled
             )
         // The ring it points at has moved with the notch, so the tail follows
         // it — but the card beyond the tail is drawn at its own size, and

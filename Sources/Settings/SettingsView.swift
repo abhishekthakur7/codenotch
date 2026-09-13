@@ -26,13 +26,14 @@ extension View {
 /// crossing-and-notification machinery it switches is Notifications' to
 /// explain.
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
-    case accounts, ollama, lmstudio, appearance, notifications, general
+    case accounts, deepseek, ollama, lmstudio, appearance, notifications, general
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .accounts:      return L10n.t("Accounts")
+        case .deepseek:      return "DeepSeek"
         case .ollama:        return "Ollama"   // a product name, the same in every language
         case .lmstudio:      return "LM Studio"
         case .appearance:    return L10n.t("Appearance")
@@ -44,6 +45,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     var icon: String {
         switch self {
         case .accounts:      return "person.crop.circle.fill"
+        case .deepseek:      return "chart.line.uptrend.xyaxis"
         case .ollama:        return "desktopcomputer"
         case .lmstudio:      return "cpu"
         case .appearance:    return "paintbrush.fill"
@@ -58,6 +60,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     var tint: Color {
         switch self {
         case .accounts:      return .blue
+        case .deepseek:      return .orange
         case .ollama:        return .teal
         case .lmstudio:      return .purple
         case .appearance:    return .indigo
@@ -265,6 +268,14 @@ struct SettingsView: View {
                 }
                 accounts = ProviderOrder.arrange(updated, by: preferences.providerOrder, id: \.id)
             }
+        .onReceive((usageStore?.$providerAccountRevision.eraseToAnyPublisher()
+                    ?? Empty<Int, Never>().eraseToAnyPublisher())
+            .receive(on: RunLoop.main)) { _ in
+                // Authentication can finish in a separate WebView window while
+                // this pane remains alive. Re-read only the account summaries
+                // for that explicit event, not on every usage poll.
+                accounts = providers()
+            }
     }
 
     /// The subject list, drawn as a card floating inside the window rather
@@ -437,6 +448,7 @@ struct SettingsView: View {
     private func paneContent(for section: SettingsSection) -> some View {
         switch section {
         case .accounts:      accountsPane
+        case .deepseek:      DeepSeekPricingSettingsView(preferences: preferences)
         case .ollama:
             if let usageStore {
                 Form {

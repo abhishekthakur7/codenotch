@@ -14221,6 +14221,61 @@
         }
       }
     },
+    "Pricing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "计价"
+          }
+        }
+      }
+    },
+    "Peak pricing · 2× off-peak": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "高峰计价 · 闲时 2 倍"
+          }
+        }
+      }
+    },
+    "Off-peak pricing · baseline": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "闲时计价 · 基准价"
+          }
+        }
+      }
+    },
+    "Next off-peak": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下次闲时"
+          }
+        }
+      }
+    },
+    "Next peak": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下次高峰"
+          }
+        }
+      }
+    },
     "Tokens": {
       "extractionState": "manual",
       "localizations": {
@@ -14505,6 +14560,120 @@
             "value": "要测量回复，把聊天客户端指向 http://127.0.0.1:11435，并保持 Codenotch 打开。"
           }
         }
+      }
+    },
+    "Peak/off-peak pricing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "峰谷计价" } }
+      }
+    },
+    "Show DeepSeek pricing": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "显示 DeepSeek 计价" } }
+      }
+    },
+    "Shows the current billing phase and the next peak/off-peak change on the DeepSeek usage card.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "在 DeepSeek 用量卡片上显示当前计价阶段和下次峰谷切换时间。" } }
+      }
+    },
+    "Peak rule": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "高峰规则" } }
+      }
+    },
+    "The schedule is maintained locally because it cannot be read reliably from an official API. Times below are UTC; the card converts the next change to your local time.": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "由于无法可靠地从官方接口读取，这个规则由本地维护。以下时间为 UTC；卡片会将下次切换转换为你的本地时间。" } }
+      }
+    },
+    "Peak days": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "高峰日" } }
+      }
+    },
+    "Sun": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周日" } }
+      }
+    },
+    "Mon": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周一" } }
+      }
+    },
+    "Tue": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周二" } }
+      }
+    },
+    "Wed": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周三" } }
+      }
+    },
+    "Thu": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周四" } }
+      }
+    },
+    "Fri": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周五" } }
+      }
+    },
+    "Sat": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "周六" } }
+      }
+    },
+    "Window 1": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "时段 1" } }
+      }
+    },
+    "Window 2": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "时段 2" } }
+      }
+    },
+    "Start": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "开始" } }
+      }
+    },
+    "End": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "结束" } }
+      }
+    },
+    "to": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "至" } }
+      }
+    },
+    "Restore current default rule": {
+      "extractionState": "manual",
+      "localizations": {
+        "zh-Hans": { "stringUnit": { "state": "translated", "value": "恢复当前默认规则" } }
       }
     }
   },

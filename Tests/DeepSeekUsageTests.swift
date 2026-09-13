@@ -4,6 +4,63 @@ import SwiftUI
 
 @MainActor
 final class DeepSeekUsageTests: XCTestCase {
+    func testPricingUsesDeepSeekUTCWeekdayAndWindows() throws {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+        XCTAssertEqual(DeepSeekPricing.phase(at: try XCTUnwrap(formatter.date(from: "2026-09-14T02:00:00Z"))), .peak)
+        XCTAssertEqual(DeepSeekPricing.phase(at: try XCTUnwrap(formatter.date(from: "2026-09-14T04:00:00Z"))), .offPeak)
+        XCTAssertEqual(DeepSeekPricing.phase(at: try XCTUnwrap(formatter.date(from: "2026-09-14T07:00:00Z"))), .peak)
+        XCTAssertEqual(DeepSeekPricing.phase(at: try XCTUnwrap(formatter.date(from: "2026-09-14T10:00:00Z"))), .offPeak)
+        XCTAssertEqual(DeepSeekPricing.phase(at: try XCTUnwrap(formatter.date(from: "2026-09-13T02:00:00Z"))), .offPeak)
+    }
+
+    func testPricingFindsTheNextLocalBillingPhaseBoundaryInUTC() throws {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        let now = try XCTUnwrap(formatter.date(from: "2026-09-14T02:30:00Z"))
+        let transition = DeepSeekPricing.nextTransition(after: now)
+
+        XCTAssertEqual(transition.phase, .offPeak)
+        XCTAssertEqual(transition.date,
+                       try XCTUnwrap(formatter.date(from: "2026-09-14T04:00:00Z")))
+
+        let friday = try XCTUnwrap(formatter.date(from: "2026-09-18T10:30:00Z"))
+        let monday = DeepSeekPricing.nextTransition(after: friday)
+        XCTAssertEqual(monday.phase, .peak)
+        XCTAssertEqual(monday.date,
+                       try XCTUnwrap(formatter.date(from: "2026-09-21T01:00:00Z")))
+    }
+
+    func testPricingUsesTheMaintainedSchedule() throws {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        let schedule = DeepSeekPricing.Schedule(
+            peakWeekdays: [2],
+            windows: [.init(startMinute: 120, endMinute: 180)]
+        )
+
+        XCTAssertEqual(DeepSeekPricing.phase(
+            at: try XCTUnwrap(formatter.date(from: "2026-09-14T02:30:00Z")),
+            schedule: schedule
+        ), .peak)
+        XCTAssertEqual(DeepSeekPricing.phase(
+            at: try XCTUnwrap(formatter.date(from: "2026-09-14T03:00:00Z")),
+            schedule: schedule
+        ), .offPeak)
+        XCTAssertEqual(DeepSeekPricing.phase(
+            at: try XCTUnwrap(formatter.date(from: "2026-09-15T02:30:00Z")),
+            schedule: schedule
+        ), .offPeak)
+    }
+
+    func testDisablingPricingOnlyRemovesPricingRowsFromTheCardHeight() {
+        XCTAssertGreaterThan(
+            NotchLayout.usageDetailHeight(1, showsPricing: true),
+            NotchLayout.usageDetailHeight(1, showsPricing: false)
+        )
+    }
+
     func testSwitchGateIgnoresTheExistingSession() {
         var gate = WebSessionAuthenticationGate(baselineFingerprint: "old")
 
@@ -11,6 +68,54 @@ final class DeepSeekUsageTests: XCTestCase {
         XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
         XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
         XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+    }
+
+    func testNormalSignInDoesNotCommitAnExistingSessionBeforeLogout() {
+        var gate = WebSessionAuthenticationGate(
+            baselineFingerprint: "old",
+            requiresNewFingerprint: false
+        )
+
+        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+        XCTAssertFalse(gate.observe(authenticated: true, fingerprint: "old"))
+        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
+        XCTAssertFalse(gate.observe(authenticated: false, fingerprint: nil))
+        XCTAssertTrue(gate.observe(authenticated: true, fingerprint: "old"))
+    }
+
+    func testManualCloseCanCommitACompletedNormalSignIn() {
+        let gate = WebSessionAuthenticationGate(
+            baselineFingerprint: "old",
+            requiresNewFingerprint: false
+        )
+
+        XCTAssertTrue(gate.acceptsAuthenticatedStateOnManualClose(
+            authenticated: true,
+            fingerprint: "old"
+        ))
+        XCTAssertFalse(gate.acceptsAuthenticatedStateOnManualClose(
+            authenticated: false,
+            fingerprint: nil
+        ))
+    }
+
+    func testManualCloseCannotCommitTheExistingAccountDuringASwitch() {
+        let gate = WebSessionAuthenticationGate(baselineFingerprint: "old")
+
+        XCTAssertFalse(gate.acceptsAuthenticatedStateOnManualClose(
+            authenticated: true,
+            fingerprint: "old"
+        ))
+        XCTAssertTrue(gate.acceptsAuthenticatedStateOnManualClose(
+            authenticated: true,
+            fingerprint: "new"
+        ))
+    }
+
+    func testDeepSeekAuthenticationProbeUsesThePlatformHeader() {
+        let probe = try! XCTUnwrap(Sites.deepSeek.authProbeScript)
+
+        XCTAssertTrue(probe.contains("'x-client-platform': 'web'"))
     }
 
     func testSwitchGateCommitsOnlyAfterLogoutAndANewSession() {

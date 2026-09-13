@@ -317,12 +317,18 @@ enum NotchLayout {
     /// The tooltip's height for a given number of limit windows and live
     /// sessions. Worked out here rather than left to SwiftUI so the hover region
     /// can be computed before the card is ever laid out.
-    static func usageDetailHeight(_ groupCount: Int) -> CGFloat {
+    static func usageDetailHeight(_ groupCount: Int, showsPricing: Bool = true) -> CGFloat {
         guard groupCount > 0 else { return 0 }
         let summary = hairline + blockSpacing + cardBodyLineHeight
             + blockSpacing + 2 * cardBodyLineHeight + moneyStatGap
         let chart = cardBodyLineHeight + usageDetailLabelToBar + usageDetailChartHeight
-        return blockSpacing + summary + blockSpacing + 2 * chart + usageDetailChartGap
+        let usageDivider = blockSpacing + hairline
+        let pricing = showsPricing
+            ? blockSpacing + 2 * cardBodyLineHeight + usageDetailIdentityGap
+            : 0
+        let chartDivider = blockSpacing + hairline
+        return blockSpacing + summary + (showsPricing ? usageDivider : 0) + pricing + chartDivider
+            + blockSpacing + 2 * chart + usageDetailChartGap
     }
 
     static func cardHeight(windowCount: Int, groupCount: Int = 0,
@@ -336,7 +342,8 @@ enum NotchLayout {
                            hasResetCredits: Bool = false,
                            localModelName: String? = nil, showsLocalPerformance: Bool = false,
                            localLedgerRows: Int = 0,
-                           compactRowCount: Int = 0) -> CGFloat {
+                           compactRowCount: Int = 0,
+                           showsDeepSeekPricing: Bool = true) -> CGFloat {
         let header = max(glyphSize, cardTitleLineHeight)
             + (hasPlan ? cardBodyLineHeight : 0)
         var height = 2 * cardPadding + header
@@ -390,7 +397,8 @@ enum NotchLayout {
             height += codexUsageTop + hairline + codexResetCreditsHeight
         }
 
-        height += usageDetailHeight(usageDetailGroupCount)
+        height += usageDetailHeight(usageDetailGroupCount,
+                                    showsPricing: showsDeepSeekPricing)
 
         if hasTokenUsage {
             height += codexUsageTop + hairline + blockSpacing

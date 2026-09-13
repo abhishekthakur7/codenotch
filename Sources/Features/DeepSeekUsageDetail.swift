@@ -5,6 +5,10 @@ import SwiftUI
 /// cost and API-key/model aggregation explicit.
 struct DeepSeekUsageDetail: View {
     let detail: ProviderUsageDetail
+    let now: Date
+    let schedule: DeepSeekPricing.Schedule
+    let showsPricing: Bool
+    @Environment(\.codenotchAccentColor) private var accentColor
 
     private var timeZoneText: String {
         let absolute = abs(detail.timeZoneSeconds)
@@ -32,6 +36,41 @@ struct DeepSeekUsageDetail: View {
         Self.money(detail.totalCost, currency: detail.currency)
     }
 
+    private var pricingText: String {
+        switch DeepSeekPricing.phase(at: now, schedule: schedule) {
+        case .peak:
+            return L10n.t("Peak pricing · 2× off-peak")
+        case .offPeak:
+            return L10n.t("Off-peak pricing · baseline")
+        }
+    }
+
+    private var pricingColor: Color {
+        switch DeepSeekPricing.phase(at: now, schedule: schedule) {
+        case .peak: return Palette.watch
+        case .offPeak: return accentColor
+        }
+    }
+
+    private var nextPricingTransition: DeepSeekPricing.Transition {
+        DeepSeekPricing.nextTransition(after: now, schedule: schedule)
+    }
+
+    private var nextPricingLabel: String {
+        switch nextPricingTransition.phase {
+        case .peak: return L10n.t("Next peak")
+        case .offPeak: return L10n.t("Next off-peak")
+        }
+    }
+
+    private var nextPricingTime: String {
+        let formatter = ResetCopy.formatter(for: Calendar.current)
+        formatter.locale = L10n.locale
+        formatter.timeZone = .current
+        formatter.setLocalizedDateFormatFromTemplate("E j:mm")
+        return formatter.string(from: nextPricingTransition.date)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Rectangle()
@@ -50,6 +89,25 @@ struct DeepSeekUsageDetail: View {
             }
             .frame(width: NotchLayout.cardTextWidth)
             .padding(.top, NotchLayout.blockSpacing)
+
+            if showsPricing {
+                Rectangle()
+                    .fill(Palette.ringTrack)
+                    .frame(height: NotchLayout.hairline)
+                    .padding(.top, NotchLayout.blockSpacing)
+
+                SplitRow(leading: L10n.t("Pricing"), trailing: pricingText,
+                         trailingColor: pricingColor)
+                    .padding(.top, NotchLayout.blockSpacing)
+
+                SplitRow(leading: nextPricingLabel, trailing: nextPricingTime)
+                    .padding(.top, NotchLayout.usageDetailIdentityGap)
+            }
+
+            Rectangle()
+                .fill(Palette.ringTrack)
+                .frame(height: NotchLayout.hairline)
+                .padding(.top, NotchLayout.blockSpacing)
 
             DeepSeekUsageChart(title: L10n.t("Daily tokens"), values: points.map { Double($0.tokens) }, formatter: {
                 UsageFormat.tokens(Int($0))

@@ -25,6 +25,10 @@ final class UsageStore: ObservableObject {
     /// reading went unnoticed for twelve hours. Reading it off the snapshot
     /// would reproduce the bug.
     @Published private(set) var needsRenewal: Set<String> = []
+    /// Bumped when a provider's authentication state changes. Settings listens
+    /// to this separately from usage snapshots so it can re-read account
+    /// summaries without re-reading every credential on every polling pass.
+    @Published private(set) var providerAccountRevision = 0
 
     private let providers: [UsageProvider]
     /// Provider IDs block fetching before credential access. Model IDs only hide
@@ -506,6 +510,13 @@ final class UsageStore: ObservableObject {
         }
 
         return openAccountSource(providerID: providerID)
+    }
+
+    /// Tell consumers that a provider has just confirmed authentication. The
+    /// refresh updates the notch; the revision updates Settings' account row.
+    func providerAuthenticationChanged(providerID: String) {
+        providerAccountRevision &+= 1
+        refresh(providerID: providerID)
     }
 
     /// Say that a provider's saved login needs renewing by hand.

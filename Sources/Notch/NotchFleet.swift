@@ -56,6 +56,8 @@ final class NotchFleet {
     private var weeklyRing: WeeklyRing = .off
     private var showsMoveHandle = true
     private var surfaceStyle: NotchSurfaceStyle = .glass
+    private var deepSeekPricingEnabled = true
+    private var deepSeekPricingSchedule = DeepSeekPricing.Schedule.current
     /// The ⌥-drag nudge along the current edge. One value for the whole
     /// fleet, the same as `edge` itself — displays do not each get their own
     /// edge, so they do not each get their own nudge either.
@@ -184,6 +186,20 @@ final class NotchFleet {
         self.surfaceStyle = surfaceStyle
         for controller in controllers.values {
             controller.model.surfaceStyle = surfaceStyle
+        }
+    }
+
+    func apply(deepSeekPricingEnabled: Bool) {
+        self.deepSeekPricingEnabled = deepSeekPricingEnabled
+        for controller in controllers.values {
+            controller.model.deepSeekPricingEnabled = deepSeekPricingEnabled
+        }
+    }
+
+    func apply(deepSeekPricingSchedule: DeepSeekPricing.Schedule) {
+        self.deepSeekPricingSchedule = deepSeekPricingSchedule
+        for controller in controllers.values {
+            controller.model.deepSeekPricingSchedule = deepSeekPricingSchedule
         }
     }
 
@@ -373,6 +389,8 @@ final class NotchFleet {
         controller.model.weeklyRing = weeklyRing
         controller.model.showsMoveHandle = showsMoveHandle
         controller.model.surfaceStyle = surfaceStyle
+        controller.model.deepSeekPricingEnabled = deepSeekPricingEnabled
+        controller.model.deepSeekPricingSchedule = deepSeekPricingSchedule
         controller.onRefresh = onRefresh
         controller.onRefreshProvider = onRefreshProvider
         controller.onOpenSettings = onOpenSettings

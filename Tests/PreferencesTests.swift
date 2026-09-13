@@ -69,6 +69,26 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertEqual(preferences.notchEdge, .right)
         XCTAssertEqual(preferences.notchSize, .medium)
         XCTAssertEqual(preferences.weeklyRing, .off)
+        XCTAssertTrue(preferences.deepSeekPricingEnabled)
+        XCTAssertEqual(preferences.deepSeekPricingSchedule, .current)
+    }
+
+    func testDeepSeekPricingSettingsSurviveARelaunchAndCanBeReset() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.deepSeekPricingEnabled = false
+        preferences.deepSeekPricingSchedule = DeepSeekPricing.Schedule(
+            peakWeekdays: [2],
+            windows: [.init(startMinute: 120, endMinute: 180)]
+        )
+
+        let reloaded = Preferences(defaults: UserDefaults(suiteName: name)!)
+        XCTAssertFalse(reloaded.deepSeekPricingEnabled)
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule.peakWeekdays, [2])
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule.windows.first?.startMinute, 120)
+
+        reloaded.resetDeepSeekPricingSchedule()
+        XCTAssertEqual(reloaded.deepSeekPricingSchedule, .current)
     }
 
     /// Off by default, and it has to stay chosen once it is chosen: an extra

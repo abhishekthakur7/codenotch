@@ -250,7 +250,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     guard let store, let fleet, let preferences else { return nil }
                     let snap = await MainActor.run {
                         PhoneLinkSnapshotBuilder.build(
-                            snapshots: store.snapshots,
+                            snapshots: DailyPace.apply(to: store.snapshots,
+                                                       enabled: preferences.claudeDailyPaceRing),
                             sessions: Array(fleet.sessions.values.flatMap { $0 }),
                             disconnected: store.disconnected,
                             order: preferences.providerOrder,
@@ -271,7 +272,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                     let snap = await MainActor.run {
                         PhoneLinkSnapshotBuilder.build(
-                            snapshots: store.snapshots,
+                            snapshots: DailyPace.apply(to: store.snapshots,
+                                                       enabled: preferences.claudeDailyPaceRing),
                             sessions: Array(fleet.sessions.values.flatMap { $0 }),
                             disconnected: store.disconnected,
                             order: preferences.providerOrder,
@@ -553,14 +555,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             )
             self.limitWatcher = limitWatcher
 
+            // The daily-pace window is laid over the store's snapshots here,
+            // on the way out, rather than inside a provider: it is a reading
+            // of a preference as much as of the account, and the store keeps
+            // what the vendor said. Paired with the preference so flipping the
+            // toggle redraws at once, without a fetch.
             store.$notchSnapshots
+                .combineLatest(preferences.$claudeDailyPaceRing)
                 .receive(on: RunLoop.main)
-                .sink { [weak fleet] in fleet?.setSnapshots($0) }
+                .sink { [weak fleet] snapshots, paced in
+                    fleet?.setSnapshots(DailyPace.apply(to: snapshots, enabled: paced))
+                }
                 .store(in: &cancellables)
 
             store.$snapshots
+                .combineLatest(preferences.$claudeDailyPaceRing)
                 .receive(on: RunLoop.main)
-                .sink { [weak statusItem] snapshots in
+                .sink { [weak statusItem] snapshots, paced in
+                    let snapshots = DailyPace.apply(to: snapshots, enabled: paced)
                     statusItem?.snapshots = snapshots
                     notifier.observe(snapshots)
                     resetWatcher.observe(snapshots)

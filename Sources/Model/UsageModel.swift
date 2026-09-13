@@ -216,7 +216,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
     let glyph: ProviderGlyph
     let fidelity: Fidelity
     var status: ProviderStatus
-    let windows: [LimitWindow]
+    var windows: [LimitWindow]
     /// Which window the ring means, declared by the provider rather than left to
     /// position. Without it the headline is "whichever window happens to be
     /// first", and a window dropping out of the response silently promotes

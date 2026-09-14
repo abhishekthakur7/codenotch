@@ -729,7 +729,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         preferences.$phoneLinkEnabled
             .receive(on: RunLoop.main)
             .sink { [weak self] enabled in
-                guard let self = self, let srv = self.phoneLinkServer else { return }
+                guard PhoneLink.isAvailable, let self = self, let srv = self.phoneLinkServer else { return }
                 Task { @MainActor in
                     if enabled {
                         self.phoneLinkServerStatus?.state = .starting
@@ -910,7 +910,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor func openSettings() { settings?.show() }
     @MainActor func openConnectPhone() {
-        guard let pairing = phoneLinkPairing, let registry = phoneLinkRegistry, let status = phoneLinkServerStatus else { return }
+        guard PhoneLink.isAvailable, let pairing = phoneLinkPairing, let registry = phoneLinkRegistry, let status = phoneLinkServerStatus else { return }
         if preferences?.phoneLinkEnabled == false { preferences?.phoneLinkEnabled = true }
         PhoneLinkWindowController.shared.show(pairing: pairing, registry: registry, port: preferences?.phoneLinkPort ?? 8788, serverStatus: status)
     }

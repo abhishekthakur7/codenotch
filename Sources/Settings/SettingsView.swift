@@ -28,6 +28,11 @@ extension View {
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     case accounts, phone, deepseek, ollama, lmstudio, appearance, notifications, general
 
+    /// The sections the sidebar lists; Phone only once pairing is offered.
+    static var visible: [SettingsSection] {
+        allCases.filter { $0 != .phone || PhoneLink.isAvailable }
+    }
+
     var id: String { rawValue }
 
     var title: String {
@@ -298,7 +303,7 @@ struct SettingsView: View {
     /// traffic lights land inside it, which is why the rows start a clear
     /// `trafficLightClearance` below the top rather than at it.
     private var sidebar: some View {
-        List(SettingsSection.allCases, selection: $selection) { section in
+        List(SettingsSection.visible, selection: $selection) { section in
             Label {
                 Text(section.title)
             } icon: {

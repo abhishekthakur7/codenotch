@@ -4,6 +4,15 @@ import NIOCore
 import NIOHTTP1
 import NIOPosix
 
+/// Whether phone pairing is offered at all.
+///
+/// Off until a phone app people can actually install exists: without one the
+/// Phone pane and "Connect Phone…" lead nowhere. While off, the server never
+/// listens, even for someone who switched it on in a development build.
+enum PhoneLink {
+    static let isAvailable = false
+}
+
 enum PhoneLinkServerState: Equatable {
     case off
     case starting

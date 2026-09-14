@@ -86,9 +86,11 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(
             withTitle: L10n.t("Refresh all"), action: #selector(refreshAll), keyEquivalent: "r"
         ).target = self
-        menu.addItem(
-            withTitle: L10n.t("Connect Phone…"), action: #selector(connectPhone), keyEquivalent: ""
-        ).target = self
+        if PhoneLink.isAvailable {
+            menu.addItem(
+                withTitle: L10n.t("Connect Phone…"), action: #selector(connectPhone), keyEquivalent: ""
+            ).target = self
+        }
         menu.addItem(
             withTitle: L10n.t("Settings…"), action: #selector(openSettings), keyEquivalent: ","
         ).target = self

@@ -55,6 +55,7 @@ final class NotchFleet {
     /// ring on one display and not another would read as a bug.
     private var weeklyRing: WeeklyRing = .off
     private var showsMoveHandle = true
+    private var foldsForFullScreen = true
     private var surfaceStyle: NotchSurfaceStyle = .glass
     private var deepSeekPricingEnabled = true
     private var deepSeekPricingSchedule = DeepSeekPricing.Schedule.current
@@ -165,6 +166,13 @@ final class NotchFleet {
         self.showsMoveHandle = showsMoveHandle
         for controller in controllers.values {
             controller.apply(showsMoveHandle: showsMoveHandle)
+        }
+    }
+
+    func apply(foldsForFullScreen: Bool) {
+        self.foldsForFullScreen = foldsForFullScreen
+        for controller in controllers.values {
+            controller.apply(foldsForFullScreen: foldsForFullScreen)
         }
     }
 
@@ -384,6 +392,7 @@ final class NotchFleet {
         let controller = NotchWindowController()
         controller.assignedScreen = screen
         controller.displayPreference = displayPreference
+        controller.foldsForFullScreen = foldsForFullScreen
         controller.model.edge = edge
         controller.model.alongOffset = alongOffset
         // Set before `show()`, so a display plugged in later builds its panel

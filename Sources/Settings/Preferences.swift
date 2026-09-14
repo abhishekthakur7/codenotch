@@ -83,6 +83,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(notchVisibility.rawValue, forKey: Keys.visibility) }
     }
 
+    /// Whether a frontmost full-screen app folds the notch away.
+    @Published var foldsForFullScreen: Bool {
+        didSet { defaults.set(foldsForFullScreen, forKey: Keys.foldsForFullScreen) }
+    }
+
     /// Which screen edge the notch is welded to.
     @Published var notchEdge: NotchEdge {
         didSet { defaults.set(notchEdge.rawValue, forKey: Keys.edge) }
@@ -368,6 +373,7 @@ final class Preferences: ObservableObject {
         static let mutedAlerts = "mutedAlertProviders"
         static let hasLaunched = "hasLaunchedBefore"
         static let visibility = "notchVisibility"
+        static let foldsForFullScreen = "foldsForFullScreen"
         static let presence = "appPresence"
         static let edge = "notchEdge"
         // A new key, so there is nothing under the old app name to migrate.
@@ -556,6 +562,9 @@ final class Preferences: ObservableObject {
         // like it failed to start.
         self.notchVisibility = defaults.string(forKey: Keys.visibility)
             .flatMap(NotchVisibility.init(rawValue:)) ?? .onHover
+        // Absent means the fold that has shipped since full-screen detection
+        // exists — the setting silences it, it does not introduce it.
+        self.foldsForFullScreen = defaults.object(forKey: Keys.foldsForFullScreen) as? Bool ?? true
         // Absent means never chosen. The Dock is the default because it is the
         // findable one — a new user who cannot see the app anywhere has no way
         // to learn it is running.

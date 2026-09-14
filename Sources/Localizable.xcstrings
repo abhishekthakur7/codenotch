@@ -17851,6 +17851,129 @@
           }
         }
       }
+    },
+    "Daily pace": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дневной темп"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rythme quotidien"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tagestempo"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日次ペース"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ritmo diário"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日节奏"
+          }
+        }
+      }
+    },
+    "Claude daily pace ring": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кольцо дневного темпа Claude"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anneau du rythme quotidien Claude"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude-Tagestempo-Ring"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude 日次ペースリング"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anel de ritmo diário do Claude"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude 每日节奏圆环"
+          }
+        }
+      }
+    },
+    "Claude's main ring shows today's share of the weekly limit — a seventh a day, counted from the weekly reset — instead of the session. The session moves to the thin ring and the card; alerts follow the daily ring.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Большое кольцо Claude показывает сегодняшнюю долю недельного лимита — по одной седьмой в день, отсчитывая от недельного сброса — вместо сессии. Сессия переходит в тонкое кольцо и в карточку; уведомления следуют за дневным кольцом."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'anneau principal de Claude affiche la part du jour dans la limite hebdomadaire — un septième par jour, compté depuis la réinitialisation hebdomadaire — au lieu de la session. La session passe dans l'anneau fin et la carte ; les alertes suivent l'anneau quotidien."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claudes Hauptring zeigt den heutigen Anteil am Wochenlimit — ein Siebtel pro Tag, gezählt ab dem wöchentlichen Reset — statt der Sitzung. Die Sitzung wandert in den dünnen Ring und die Karte; Hinweise folgen dem Tagesring."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude のメインリングに、セッションの代わりに週間上限の今日の割り当て（週次リセットから数えて 1 日あたり 7 分の 1）を表示します。セッションは細いリングとカードに移り、通知は日次リングに従います。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O anel principal do Claude mostra a parcela de hoje do limite semanal — um sétimo por dia, contado a partir da redefinição semanal — em vez da sessão. A sessão passa para o anel fino e o cartão; os alertas seguem o anel diário."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude 的主圆环显示今日在每周限额中的份额（自每周重置起每天七分之一），而不是会话。会话移至细圆环和卡片；提醒跟随每日圆环。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -185,6 +185,12 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(showUsagePace, forKey: Self.showUsagePaceKey) }
     }
 
+    /// Whether Claude's big ring shows the day's share of the weekly limit
+    /// instead of the session. See `DailyPace`.
+    @Published var claudeDailyPaceRing: Bool {
+        didSet { defaults.set(claudeDailyPaceRing, forKey: Keys.claudeDailyPaceRing) }
+    }
+
     /// Whether DeepSeek's current peak/off-peak billing phase is shown in its
     /// usage card. Enabled by default because the card's pricing rows are
     /// useful only when the rule is visible and understood.
@@ -386,6 +392,7 @@ final class Preferences: ObservableObject {
         static let accentColor = "accentColor"
         // A new key, so there is nothing under the old app name to migrate.
         static let weeklyRing = "weeklyRing"
+        static let claudeDailyPaceRing = "claudeDailyPaceRing"
         static let showsMoveHandle = "showsMoveHandle"
         static let notchSurfaceStyle = "notchSurfaceStyle"
         static let lastSeenVersion = "lastSeenVersion"
@@ -590,6 +597,9 @@ final class Preferences: ObservableObject {
         self.resetTimeFormat = defaults.string(forKey: Keys.resetTimeFormat)
             .flatMap(ResetTimeFormat.init(rawValue:)) ?? .automatic
         self.showUsagePace = defaults.bool(forKey: Self.showUsagePaceKey)
+        // Off by default: it swaps what Claude's ring means, and that is a
+        // choice for whoever budgets their week that way.
+        self.claudeDailyPaceRing = defaults.bool(forKey: Keys.claudeDailyPaceRing)
         self.deepSeekPricingEnabled = defaults.object(forKey: Keys.deepSeekPricingEnabled) as? Bool ?? true
         if let data = defaults.data(forKey: Keys.deepSeekPricingSchedule),
            let schedule = try? JSONDecoder().decode(DeepSeekPricing.Schedule.self, from: data) {

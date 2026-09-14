@@ -191,6 +191,13 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(claudeDailyPaceRing, forKey: Keys.claudeDailyPaceRing) }
     }
 
+    /// Whether Spark and code-review Codex windows appear in the hover card.
+    /// On by default so a first launch shows them; the ring still follows
+    /// the main Codex window either way.
+    @Published var showCodexExtraLimits: Bool {
+        didSet { defaults.set(showCodexExtraLimits, forKey: Keys.showCodexExtraLimits) }
+    }
+
     /// Whether DeepSeek's current peak/off-peak billing phase is shown in its
     /// usage card. Enabled by default because the card's pricing rows are
     /// useful only when the rule is visible and understood.
@@ -415,6 +422,7 @@ final class Preferences: ObservableObject {
         static let antigravityHeadlineModel = "antigravityHeadlineModel"
         static let deepSeekPricingEnabled = "deepSeekPricingEnabled"
         static let deepSeekPricingSchedule = "deepSeekPricingSchedule"
+        static let showCodexExtraLimits = "showCodexExtraLimits"
     }
 
     /// The budget read straight from disk, off the main actor.
@@ -447,6 +455,20 @@ final class Preferences: ObservableObject {
               let model = AntigravityHeadlineModel(rawValue: value)
         else { return .gemini }
         return model
+    }
+
+    /// Whether extra Codex windows (Spark, code review) are shown, read off
+    /// the main actor.
+    ///
+    /// The Codex provider is an actor and asks for this on every fetch, and
+    /// `@Published` state is main-actor-isolated where `UserDefaults` is
+    /// thread-safe — so the provider reads the store, not the object. Absent
+    /// means on: a first launch should show them. `bool(forKey:)` cannot stand
+    /// in for that default — it answers false for a key that was never written.
+    nonisolated static func storedShowCodexExtraLimits(
+        defaults: UserDefaults = .standard
+    ) -> Bool {
+        defaults.object(forKey: Keys.showCodexExtraLimits) as? Bool ?? true
     }
 
     /// True the very first time this copy runs, and never again.
@@ -600,6 +622,7 @@ final class Preferences: ObservableObject {
         // Off by default: it swaps what Claude's ring means, and that is a
         // choice for whoever budgets their week that way.
         self.claudeDailyPaceRing = defaults.bool(forKey: Keys.claudeDailyPaceRing)
+        self.showCodexExtraLimits = Self.storedShowCodexExtraLimits(defaults: defaults)
         self.deepSeekPricingEnabled = defaults.object(forKey: Keys.deepSeekPricingEnabled) as? Bool ?? true
         if let data = defaults.data(forKey: Keys.deepSeekPricingSchedule),
            let schedule = try? JSONDecoder().decode(DeepSeekPricing.Schedule.self, from: data) {

@@ -74,11 +74,16 @@ struct UsageArchive {
 
         var result: [String: (snapshot: ProviderSnapshot, fetchedAt: Date)] = [:]
         for entry in entries {
-            // Older Codex readings came from rollouts and may include quotas
-            // the live provider no longer displays. Wait for a fresh reading.
-            if entry.id == "codex",
-               entry.windows.contains(where: { $0.id != "primary" && $0.id != "secondary" }) {
-                continue
+            // Spark and code-review are live windows. Older Codex readings also
+            // carried rollout quotas the provider no longer displays. Strip
+            // those leftovers rather than discarding a Spark snapshot — and
+            // do it for every Codex profile, not only the default.
+            let windows: [LimitWindow]
+            if CodexProfile.isCodex(providerID: entry.id) {
+                windows = entry.windows.filter { Self.isLiveCodexWindow($0.id) }
+                if windows.isEmpty { continue }
+            } else {
+                windows = entry.windows
             }
             let snapshot = ProviderSnapshot(
                 id: entry.id,
@@ -86,7 +91,7 @@ struct UsageArchive {
                 glyph: entry.id == "devin" && entry.glyph == .third ? .devin : entry.glyph,
                 fidelity: entry.fidelity,
                 status: .stale(since: entry.fetchedAt),
-                windows: entry.windows,
+                windows: windows,
                 headlineID: entry.headlineID,
                 weeklyID: entry.weeklyID,
                 tokenUsage: entry.tokenUsage,
@@ -95,6 +100,13 @@ struct UsageArchive {
             result[entry.id] = (snapshot, entry.fetchedAt)
         }
         return result
+    }
+
+    /// Window ids the live Codex provider still displays.
+    private static func isLiveCodexWindow(_ id: String) -> Bool {
+        id == "primary" || id == "secondary"
+            || id.hasPrefix("spark")
+            || id.hasPrefix("code-review")
     }
 
     func save(_ readings: [String: (snapshot: ProviderSnapshot, fetchedAt: Date)]) {

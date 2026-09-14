@@ -14,13 +14,22 @@ final class CodexUsageTests: XCTestCase {
           "secondary_window":{"used_percent":10,"limit_window_seconds":604800,"reset_at":1800600000}},
          "additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
           "primary_window":{"used_percent":99,"limit_window_seconds":18000}}}],
-         "code_review_rate_limit":{"primary_window":{"used_percent":90,"limit_window_seconds":604800}},
+         "code_review_rate_limit":{
+           "primary_window":{"used_percent":90,"limit_window_seconds":604800},
+           "secondary_window":{"used_percent":15,"limit_window_seconds":18000}},
          "credits":{"balance":"100"},"model_usage":{"spark":99}}
         """)
-        XCTAssertEqual(result.map(\.duration), [18000, 604800])
-        XCTAssertEqual(result.map(\.id), ["primary", "secondary"])
-        XCTAssertEqual(result.map(\.label), ["5h limit", "Weekly limit"])
-        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10])
+        // Spark is 99% used and listed first in the extras, but the ring
+        // follows `windows.first`, which has to stay the main primary.
+        XCTAssertEqual(result.map(\.duration), [18000, 604800, 18000, 604800, 18000])
+        XCTAssertEqual(result.map(\.id),
+                       ["primary", "secondary", "spark", "code-review", "code-review-secondary"])
+        XCTAssertEqual(result.map(\.group),
+                       [nil, nil, "Spark", "Code review", "Code review"] as [String?])
+        XCTAssertEqual(result.map(\.label),
+                       ["5h limit", "Weekly limit", "5h limit", "Weekly limit", "5h limit"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10, 0.99, 0.90, 0.15])
+        XCTAssertEqual(result.first?.id, "primary")
         XCTAssertEqual(result.first?.resetsAt, Date(timeIntervalSince1970: 1_800_001_000))
     }
 
@@ -122,13 +131,220 @@ final class CodexUsageTests: XCTestCase {
     }
 
     /// Both windows malformed is still an error, not an empty success — the
-    /// store turns it into "waiting", not a silent 0%.
+    /// store turns it into "waiting", not a silent 0%. A decode failure used
+    /// to surface as `badResponse` instead, which looks like a broken fetch.
     func testBothWindowsMissingLeavesNothingMetered() {
         XCTAssertThrowsError(try windows("""
         {"rate_limit":{
           "primary_window":{"used_percent":null,"limit_window_seconds":18000},
           "secondary_window":null}}
-        """))
+        """)) { error in
+            guard case UsageProviderError.nothingMetered = error else {
+                return XCTFail("expected nothingMetered, got \(error)")
+            }
+        }
+    }
+
+    /// Spark meters a 5-hour window and a weekly one, same lengths as the
+    /// main pair. Both belong on the hover card, grouped together. Extras
+    /// alone are still a valid reading.
+    func testSparkFiveHourAndWeeklyWindowsAreRead() throws {
+        let result = try windows("""
+        {"additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+          "primary_window":{"used_percent":40,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":70,"limit_window_seconds":604800}}}]}
+        """)
+        XCTAssertEqual(result.map(\.id), ["spark", "spark-secondary"])
+        XCTAssertEqual(result.map(\.group), ["Spark", "Spark"] as [String?])
+        XCTAssertEqual(result.map(\.label), ["5h limit", "Weekly limit"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.40, 0.70])
+    }
+
+    /// An additional limit that is not Spark is not a window we show.
+    func testAnUnknownAdditionalLimitIsIgnored() throws {
+        let result = try windows("""
+        {"rate_limit":{
+          "primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}},
+         "additional_rate_limits":[{"limit_name":"Credits","rate_limit":{
+          "primary_window":{"used_percent":50,"limit_window_seconds":86400}}}]}
+        """)
+        XCTAssertEqual(result.map(\.id), ["primary", "secondary"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10])
+    }
+
+    /// A null `used_percent` on Spark must not fail a fetch that already has
+    /// a good main pair — same skip rule as the main windows. Code review's
+    /// weekly used to vanish with its 5h sibling when that object had no
+    /// percent at all.
+    func testANullExtraUsedPercentIsSkippedRatherThanFailing() throws {
+        let result = try windows("""
+        {"rate_limit":{
+          "primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}},
+         "additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+          "primary_window":{"used_percent":null,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":40,"limit_window_seconds":604800}}}],
+         "code_review_rate_limit":{
+           "primary_window":{"limit_window_seconds":604800},
+           "secondary_window":{"used_percent":8,"limit_window_seconds":18000}}}
+        """)
+        XCTAssertEqual(result.map(\.id),
+                       ["primary", "secondary", "spark-secondary", "code-review-secondary"])
+        XCTAssertEqual(result.map(\.group),
+                       [nil, nil, "Spark", "Code review"] as [String?])
+        XCTAssertEqual(result.map(\.label),
+                       ["5h limit", "Weekly limit", "Weekly limit", "5h limit"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10, 0.40, 0.08])
+    }
+
+    /// An unreadable 5h object (string percent, not a number) used to fail
+    /// the whole RateLimit decode, so code review's weekly never appeared.
+    func testAMalformedCodeReviewPrimaryDoesNotDropItsSecondary() throws {
+        let result = try windows("""
+        {"rate_limit":{"primary_window":{"used_percent":1,"limit_window_seconds":18000}},
+         "code_review_rate_limit":{
+           "primary_window":{"used_percent":"n/a","limit_window_seconds":604800},
+           "secondary_window":{"used_percent":8,"limit_window_seconds":18000}}}
+        """)
+        XCTAssertEqual(result.map(\.id), ["primary", "code-review-secondary"])
+        XCTAssertEqual(result.last?.group, "Code review")
+        XCTAssertEqual(result.last?.usedFraction ?? -1, 0.08, accuracy: 0.0001)
+    }
+
+    /// Same skip rule on the main pair: a non-numeric percent must not turn
+    /// a good weekly window (or a good Spark extra) into a failed fetch.
+    func testAMalformedMainWindowDoesNotFailTheRest() throws {
+        let result = try windows("""
+        {"rate_limit":{
+          "primary_window":{"used_percent":"n/a","limit_window_seconds":18000},
+          "secondary_window":{"used_percent":29,"limit_window_seconds":604800}},
+         "additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+          "primary_window":{"used_percent":40,"limit_window_seconds":18000}}}]}
+        """)
+        XCTAssertEqual(result.map(\.id), ["secondary", "spark"])
+        XCTAssertEqual(result.first?.id, "secondary")
+        XCTAssertEqual(result.map(\.usedFraction), [0.29, 0.40])
+    }
+
+    /// An empty additional_rate_limits array is the same as omitting it.
+    func testEmptyAdditionalRateLimitsLeaveTheMainWindowsUnchanged() throws {
+        let result = try windows("""
+        {"rate_limit":{
+          "primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}},
+         "additional_rate_limits":[]}
+        """)
+        XCTAssertEqual(result.map(\.id), ["primary", "secondary"])
+        XCTAssertEqual(result.map(\.label), ["5h limit", "Weekly limit"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10])
+        XCTAssertEqual(result.map(\.group), [nil, nil] as [String?])
+    }
+
+    /// The additional limit is named after the model, not "Spark", and still
+    /// maps to the spark window id — via `limit_name` or `metered_feature`.
+    /// Matching only the exact word "spark" used to drop GPT-5.3-Codex-Spark.
+    func testGPT53CodexSparkStillMapsToSpark() throws {
+        for field in ["limit_name", "metered_feature"] {
+            let result = try windows("""
+            {"rate_limit":{
+              "primary_window":{"used_percent":25,"limit_window_seconds":18000}},
+             "additional_rate_limits":[{"\(field)":"GPT-5.3-Codex-Spark","rate_limit":{
+              "primary_window":{"used_percent":99,"limit_window_seconds":18000},
+              "secondary_window":{"used_percent":5,"limit_window_seconds":604800}}}]}
+            """)
+            XCTAssertEqual(result.map(\.id), ["primary", "spark", "spark-secondary"], field)
+            XCTAssertEqual(result.map(\.group), [nil, "Spark", "Spark"] as [String?], field)
+            XCTAssertEqual(result.map(\.label), ["5h limit", "5h limit", "Weekly limit"], field)
+            XCTAssertEqual(result.dropFirst().map(\.usedFraction), [0.99, 0.05], field)
+        }
+    }
+
+    /// Credits and `codex_other` are real extras on some accounts. Showing
+    /// them as windows made the hover card grow by a row that has no home.
+    func testUnknownExtrasAloneLeaveNothingMetered() {
+        XCTAssertThrowsError(try windows("""
+        {"additional_rate_limits":[{"limit_name":"Credits","metered_feature":"codex_other",
+          "rate_limit":{"primary_window":{"used_percent":50,"limit_window_seconds":86400}}}]}
+        """)) { error in
+            guard case UsageProviderError.nothingMetered = error else {
+                return XCTFail("expected nothingMetered, got \(error)")
+            }
+        }
+    }
+
+    /// Code review with no main pair is still a reading, same as Spark-only.
+    func testCodeReviewAloneIsStillMetered() throws {
+        let result = try windows("""
+        {"code_review_rate_limit":{
+          "primary_window":{"used_percent":90,"limit_window_seconds":604800},
+          "secondary_window":{"used_percent":15,"limit_window_seconds":18000}}}
+        """)
+        XCTAssertEqual(result.map(\.id), ["code-review", "code-review-secondary"])
+        XCTAssertEqual(result.map(\.group), ["Code review", "Code review"] as [String?])
+        XCTAssertEqual(result.map(\.usedFraction), [0.90, 0.15])
+    }
+
+    /// Extras listed first in the JSON must not become `windows.first`.
+    func testSparkListedBeforeMainStillFollowsTheMainPair() throws {
+        let result = try windows("""
+        {"additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+          "primary_window":{"used_percent":99,"limit_window_seconds":18000}}}],
+         "code_review_rate_limit":{"primary_window":{"used_percent":90,"limit_window_seconds":604800}},
+         "rate_limit":{"primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}}}
+        """)
+        XCTAssertEqual(result.map(\.id), ["primary", "secondary", "spark", "code-review"])
+        XCTAssertEqual(result.first?.id, "primary")
+        XCTAssertEqual(result.first?.usedFraction, 0.25)
+    }
+
+    /// A payload that names Spark twice (the generic limit and the model
+    /// feature) must not emit two 5h rows with the same id. Duplicate ids
+    /// make the tooltip ForEach and Phone Link list explode, and the second
+    /// ungrouped "5h limit" reads as another session window.
+    func testTwoSparkExtrasDoNotDuplicateWindowIDs() throws {
+        let result = try windows("""
+        {"rate_limit":{
+          "primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}},
+         "additional_rate_limits":[
+           {"limit_name":"Spark","rate_limit":{
+             "primary_window":{"used_percent":40,"limit_window_seconds":18000}}},
+           {"limit_name":"GPT-5.3-Codex-Spark","metered_feature":"spark","rate_limit":{
+             "primary_window":{"used_percent":99,"limit_window_seconds":18000},
+             "secondary_window":{"used_percent":12,"limit_window_seconds":604800}}}
+         ]}
+        """)
+        XCTAssertEqual(result.map(\.id), ["primary", "secondary", "spark", "spark-secondary"])
+        XCTAssertEqual(Set(result.map(\.id)).count, result.count)
+        XCTAssertEqual(result.map(\.group), [nil, nil, "Spark", "Spark"] as [String?])
+        XCTAssertEqual(result.map(\.label), ["5h limit", "Weekly limit", "5h limit", "Weekly limit"])
+        XCTAssertEqual(result.map(\.usedFraction), [0.25, 0.10, 0.40, 0.12])
+    }
+
+    /// Hiding extras must drop Spark and code review rather than leaving an
+    /// empty success when those were the only windows.
+    func testHidingExtrasDropsSparkAndCodeReview() throws {
+        let json = """
+        {"rate_limit":{
+          "primary_window":{"used_percent":25,"limit_window_seconds":18000},
+          "secondary_window":{"used_percent":10,"limit_window_seconds":604800}},
+         "additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+          "primary_window":{"used_percent":99,"limit_window_seconds":18000}}}],
+         "code_review_rate_limit":{"primary_window":{"used_percent":90,"limit_window_seconds":604800}}}
+        """
+        let hidden = try CodexUsage.windows(
+            from: Data(json.utf8), now: Date(timeIntervalSince1970: 1_800_000_000),
+            includeExtras: false
+        )
+        XCTAssertEqual(hidden.map(\.id), ["primary", "secondary"])
+        XCTAssertThrowsError(try CodexUsage.windows(
+            from: Data("""
+            {"additional_rate_limits":[{"limit_name":"Spark","rate_limit":{
+              "primary_window":{"used_percent":40,"limit_window_seconds":18000}}}]}
+            """.utf8), includeExtras: false
+        ))
     }
 
     func testDecodesProfileTokenUsageAndBuildsAThirtyDaySeries() throws {

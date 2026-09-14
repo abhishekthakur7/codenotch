@@ -76,20 +76,40 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertTrue(preferences.isConnected("claude-work"))
         XCTAssertFalse(preferences.isConnected("cursor"))
         XCTAssertFalse(preferences.isConnected("glm"))
+        XCTAssertFalse(preferences.isConnected("kiro"))
         XCTAssertTrue(preferences.deepSeekPricingEnabled)
         XCTAssertEqual(preferences.deepSeekPricingSchedule, .current)
+    }
+
+    /// Kiro is discovered like everyone else, and stays off until switched on.
+    /// Claude and Codex are the only families that default on.
+    func testKiroStaysOffAfterReconcile() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "kiro"])
+        XCTAssertFalse(preferences.isConnected("kiro"))
+        XCTAssertTrue(preferences.isConnected("claude"))
+
+        let again = Preferences(defaults: UserDefaults(suiteName: name)!)
+        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "deepseek"])
+        XCTAssertFalse(again.isConnected("kiro"))
+        XCTAssertFalse(again.isConnected("cursor"))
+        XCTAssertFalse(again.isConnected("deepseek"))
+        XCTAssertTrue(again.isConnected("claude"))
     }
 
     func testAFirstLaunchSeedsClaudeAndCodexOnceDiscovered() {
         let (fresh, name) = makeDefaults()
         let preferences = Preferences(defaults: fresh)
-        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "claude-work"])
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "claude-work"])
         XCTAssertEqual(preferences.connectedProviders, ["claude", "codex", "claude-work"])
         XCTAssertFalse(preferences.isConnected("cursor"))
+        XCTAssertFalse(preferences.isConnected("kiro"))
 
         let again = Preferences(defaults: UserDefaults(suiteName: name)!)
-        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "claude-work", "deepseek"])
+        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "claude-work", "deepseek"])
         XCTAssertFalse(again.isConnected("cursor"))
+        XCTAssertFalse(again.isConnected("kiro"))
         XCTAssertFalse(again.isConnected("deepseek"))
         XCTAssertTrue(again.isConnected("claude"))
     }

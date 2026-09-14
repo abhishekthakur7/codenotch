@@ -139,10 +139,11 @@ private struct TooltipShell<Content: View>: View {
     /// Reduce transparency means "no see-through chrome", which for this card
     /// is the solid style — the same precedence the Settings window applies to
     /// its own translucent chrome.
-    private var glassy: Bool { surfaceStyle.effective == .glass && !reduceTransparency }
+    private var glassy: Bool { surfaceStyle.isGlass && !reduceTransparency }
 
     /// Clear on glass: anything of ours under it would override the Clear or
-    /// Tinted choice in Appearance settings.
+    /// Tinted choice in Appearance settings. `darkGlass` is the one deliberate
+    /// exception, and its dim is drawn behind the glass itself, not here.
     private var surfaceFill: Color { glassy ? .clear : Palette.card }
 
     private var card: some View {
@@ -193,14 +194,19 @@ private struct TooltipShell<Content: View>: View {
             // re-solved as `height` animates, so one piece of glass covers both
             // pieces however tall the card is.
             .background {
-                // `effective` is only ever `.glass` where `glassEffect` exists;
+                // `isGlass` is only ever true where `glassEffect` exists;
                 // the availability check is what tells the compiler so. Below
                 // that, `surfaceFill` has already painted the card opaque.
                 if glassy {
                     if #available(macOS 26.0, *) {
                         Color.clear
-                            .glassEffect(.regular, in: TooltipSilhouette(direction: direction,
-                                                                         tailOffset: tailOffset))
+                            .glassEffect(surfaceStyle.glass, in: TooltipSilhouette(direction: direction,
+                                                                                   tailOffset: tailOffset))
+                            .background {
+                                if let dim = surfaceStyle.glassDim {
+                                    TooltipSilhouette(direction: direction, tailOffset: tailOffset).fill(dim)
+                                }
+                            }
                     }
                 }
             }

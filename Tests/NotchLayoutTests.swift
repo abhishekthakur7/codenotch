@@ -566,6 +566,16 @@ final class PreferencesTests: XCTestCase {
         XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .solid)
     }
 
+    func testDarkGlassSurvivesARestart() {
+        let name = "PreferencesDarkGlassTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: name)!
+        defaults.removePersistentDomain(forName: name)
+        addTeardownBlock { defaults.removePersistentDomain(forName: name) }
+
+        Preferences(defaults: defaults).notchSurfaceStyle = .darkGlass
+        XCTAssertEqual(Preferences(defaults: defaults).notchSurfaceStyle, .darkGlass)
+    }
+
     func testAnUnknownSurfaceStyleFallsBackToLiquidGlass() {
         let name = "PreferencesSurfaceStyleFallbackTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: name)!
@@ -658,6 +668,58 @@ final class PreferencesTests: XCTestCase {
 
         XCTAssertNil(Preferences(defaults: defaults).geminiAPIMonthlyTokenBudget)
         XCTAssertNil(Preferences.storedGeminiAPIMonthlyTokenBudget(defaults: defaults))
+    }
+}
+
+/// The two glass styles differ in the `Glass` variant they ask for (`.regular`
+/// for `glass`, `.clear` for `darkGlass`) and the wash drawn beneath it
+/// (`glassDim`: nil for `glass`, `Palette.darkGlassDim` for `darkGlass`).
+/// Both are pinned on the enum so the views cannot drift apart.
+final class NotchSurfaceStyleTests: XCTestCase {
+    func testTheStylesAreOfferedGlassFirst() {
+        XCTAssertEqual(NotchSurfaceStyle.allCases, [.glass, .darkGlass, .solid])
+    }
+
+    func testOnlyDarkGlassCarriesADimBeneathTheGlass() {
+        XCTAssertNil(NotchSurfaceStyle.glass.glassDim)
+        XCTAssertNil(NotchSurfaceStyle.solid.glassDim)
+        guard NotchSurfaceStyle.glassAvailable else { return }
+        XCTAssertNotNil(NotchSurfaceStyle.darkGlass.glassDim)
+    }
+
+    /// A black `tint` on adaptive `.regular` glass rendered lighter, not
+    /// darker, so `darkGlass` asks for the clear variant and does its own
+    /// darkening underneath. `glass` must keep asking for plain `.regular`.
+    func testDarkGlassAsksForClearGlassAndGlassForRegular() throws {
+        guard #available(macOS 26.0, *) else {
+            throw XCTSkip("Glass does not exist before macOS 26")
+        }
+        XCTAssertEqual(NotchSurfaceStyle.darkGlass.glass, .clear)
+        XCTAssertEqual(NotchSurfaceStyle.glass.glass, .regular)
+    }
+
+    func testSolidIsNotGlass() {
+        XCTAssertFalse(NotchSurfaceStyle.solid.isGlass)
+    }
+
+    /// Dark glass is glass, so it still draws a `glassEffect`; it is the panel
+    /// appearance, not the material, that keeps it dark.
+    func testDarkGlassIsGlassWhereThereIsGlass() {
+        guard NotchSurfaceStyle.glassAvailable else {
+            XCTAssertFalse(NotchSurfaceStyle.darkGlass.isGlass)
+            return
+        }
+        XCTAssertTrue(NotchSurfaceStyle.darkGlass.isGlass)
+        XCTAssertEqual(NotchSurfaceStyle.darkGlass.effective, .darkGlass)
+    }
+
+    func testDarkGlassPinsTheDarkAppearanceAndGlassDoesNot() {
+        XCTAssertEqual(
+            NotchSurfaceStyle.darkGlass.panelAppearance(reduceTransparency: false)?.name, .darkAqua,
+            "dark glass has to keep Palette's frame hexes whatever the Mac's appearance"
+        )
+        guard NotchSurfaceStyle.glassAvailable else { return }
+        XCTAssertNil(NotchSurfaceStyle.glass.panelAppearance(reduceTransparency: false))
     }
 }
 

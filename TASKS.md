@@ -1640,8 +1640,8 @@ although the layer order was right all along. Earlier offscreen renders do not
 trigger it, and `stop()` does not undo it. The fix is the
 `\.codenotchHeadlessGlass` environment flag: it lets the two glass pixel tests
 render the glass path with the system material left out, so they check only
-what is ours — the transparent body fill and the opaque band — since the
-material itself is the system's and is not testable headless.
+what is ours — the transparent body fill, the `darkGlass` dim and the opaque
+band — since the material itself is the system's and is not testable headless.
 
 Within one test process, the first `ImageRenderer` render of a given pixel
 size in a test method can hand back the *previous* test method's image at
@@ -1666,6 +1666,37 @@ learns about a live accessibility change from
 `NSWorkspace.accessibilityDisplayOptionsDidChangeNotification` and re-applies
 the panel's appearance from that subscription, rather than only checking once
 at launch.
+
+### Dark glass
+
+`NotchSurfaceStyle.darkGlass` pins `darkAqua` on the panel for the same reason
+`solid` does: so `Palette`'s frame hexes apply exactly as specified rather
+than following the Mac into light mode. It is also the one deliberate
+exception to "nothing underneath" above — the user asked for black glass
+regardless of the Mac's own Appearance setting, so every glass site the notch
+draws (the body, the tooltip, the usage-reset card, the settings orb and the
+move handle) uses `Glass.clear` with `Palette.darkGlassDim` (black at 0.60)
+drawn in a `.background` beneath it when the style is `.darkGlass`. `glass`
+keeps using plain `Glass.regular` with nothing beneath it at every one of
+those sites, so it stays byte-for-byte the system's own glass. 0.60 replaced
+an initial 0.45, which read too light through `Glass.clear` on a real Mac
+(macOS 27) against a light desktop.
+
+The first attempt tried a black `Glass.tint(_:)` on `.regular` instead, and it
+rendered lighter and whiter than plain regular glass rather than darker.
+`Glass.regular` is adaptive — it adjusts its content to the luminosity of
+whatever is behind it — and `tint` only colourises the material toward a hue;
+a zero-chroma black tint has no hue to push toward and cannot lower
+luminance. The SDK's own `Glass.clear` doc comment gives the actual recipe for
+a dark glass: `.glassEffect(.clear)` over "a transparent black color beneath
+your glass", which is what `darkGlass` now does. The hardware's band is
+unaffected either way: it is painted opaque black regardless of surface
+style, as above.
+
+The dim is the one part of the style a headless render can see, so
+`testTheFoldedPillCarriesTheDimInTheDarkGlassStyle` probes it — at `cells: 5`,
+a panel size of its own, because the hand-me-down above would otherwise hand
+this test's dim to the folded-pill test that sorts right before it.
 
 ## Decisions needed
 - [ ] Final app name (`Codenotch` is a placeholder)

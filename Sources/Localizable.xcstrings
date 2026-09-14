@@ -14670,6 +14670,35 @@
         }
       }
     },
+    "Dark glass": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ダークガラス"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深色玻璃"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тёмное стекло"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dunkles Glas"
+          }
+        }
+      }
+    },
     "System Liquid Glass. Follows this Mac's Appearance settings, including Clear or Tinted glass and light or dark mode.": {
       "extractionState": "manual",
       "localizations": {
@@ -14724,6 +14753,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die ursprüngliche, deckend schwarze Notch. Immer dunkel, unabhängig vom Erscheinungsbild des Mac."
+          }
+        }
+      }
+    },
+    "Liquid Glass tinted black. Always dark, whatever the Mac's appearance.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "黒く色付けした Liquid Glass。Mac の外観設定にかかわらず、常にダークです。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "染成黑色的 Liquid Glass。无论 Mac 的外观设置如何，始终保持深色。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liquid Glass с чёрным оттенком. Всегда тёмное, независимо от оформления Mac."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liquid Glass, schwarz getönt. Immer dunkel, unabhängig vom Erscheinungsbild des Mac."
           }
         }
       }

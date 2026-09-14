@@ -154,7 +154,7 @@ struct NotchRootView: View {
         // Reduce transparency means "no see-through chrome", which for the
         // notch is the solid style — the same precedence the Settings window
         // applies to its own translucent chrome.
-        let glassy = model.surfaceStyle.effective == .glass
+        let glassy = model.surfaceStyle.isGlass
             && !reduceTransparency
 
         return ZStack {
@@ -168,11 +168,21 @@ struct NotchRootView: View {
                     if headlessGlass {
                         Color.clear
                             .frame(width: place.panelSize.width, height: place.panelSize.height)
+                            .background {
+                                if let dim = model.surfaceStyle.glassDim {
+                                    Rectangle().fill(dim)
+                                }
+                            }
                             .id(model.isExpanded)
                     } else {
                         Color.clear
                             .frame(width: place.panelSize.width, height: place.panelSize.height)
-                            .glassEffect(.regular, in: Rectangle())
+                            .glassEffect(model.surfaceStyle.glass, in: Rectangle())
+                            .background {
+                                if let dim = model.surfaceStyle.glassDim {
+                                    Rectangle().fill(dim)
+                                }
+                            }
                             .id(model.isExpanded)
                     }
                 }
@@ -181,7 +191,9 @@ struct NotchRootView: View {
             ZStack {
                 // Nothing of ours underneath: a wash of our own would override the
                 // Clear/Tinted choice in Appearance settings, which is the whole
-                // point of handing this surface to the system.
+                // point of handing this surface to the system. `darkGlass` is the
+                // one deliberate exception, and its dim sits behind the glass
+                // itself above, not here.
                 //
                 // No `else`: the solid fill below is mounted in every style anyway,
                 // and below macOS 26 `glassy` is always false, so it is simply left

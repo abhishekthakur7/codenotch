@@ -16616,16 +16616,22 @@
     "A system notification the moment a provider's headline limit crosses 80%, and again at 100% — once per crossing, and again only after the window rolls over. Mute one from the bell beside its row in Accounts.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当某家服务的主额度越过 80% 时发一条系统通知，100% 时再发一次 — 每次越过只发一次，要等额度窗口滚动过后才会再发。可在「账号」里该行旁边的铃铛上静音。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Eine Systembenachrichtigung, sobald das Hauptlimit eines Anbieters 80 % überschreitet, und erneut bei 100 % — jeweils einmal pro Überschreitung, danach erst wieder, wenn sich das Zeitfenster erneuert hat. Über die Glocke neben seiner Zeile in Konten lässt sich ein Anbieter stummschalten."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスの主な上限が 80% を超えた瞬間と、100% に達したときにシステム通知を出します。超えるたびに 1 回で、次は期間が切り替わったあとだけです。「アカウント」の各行の横にあるベルからミュートできます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当某家服务的主额度越过 80% 时发一条系统通知，100% 时再发一次 — 每次越过只发一次，要等额度窗口滚动过后才会再发。可在「账号」里该行旁边的铃铛上静音。"
           }
         }
       }
@@ -16633,16 +16639,22 @@
     "Codenotch already knows the moment an agent stops working or stops to ask you something. Clicking the notch while it is open brings that session's app to the front — the app, not the tab: only some terminals let anything outside them choose a tab, so the tooltip names the session instead.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Codenotch 已经知道助手何时停下来、或停下来问你。刘海展开时点一下，会把那个会话的应用带到前台 — 是应用，不是标签页：只有部分终端允许外部选定标签，所以提示里会写会话名称。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch weiß bereits in dem Moment Bescheid, in dem ein Agent aufhört zu arbeiten oder dich etwas fragt. Ein Klick auf die geöffnete Notch holt die App dieser Sitzung in den Vordergrund — die App, nicht den Tab: Nur manche Terminals erlauben es, von außen einen Tab auszuwählen, deshalb nennt der Tooltip stattdessen die Sitzung."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は、エージェントが作業を止めた瞬間や、あなたに質問するために止まった瞬間をすでに把握しています。開いているノッチをクリックすると、そのセッションのアプリが前面に出ます。タブではなくアプリです。外部からタブを選べるターミナルは一部に限られるため、代わりにツールチップがセッション名を示します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch 已经知道助手何时停下来、或停下来问你。刘海展开时点一下，会把那个会话的应用带到前台 — 是应用，不是标签页：只有部分终端允许外部选定标签，所以提示里会写会话名称。"
           }
         }
       }
@@ -16650,16 +16662,22 @@
     "The sound plays on the ordinary output, not the interface sound-effects channel — so it is still heard with “Play user interface sound effects” switched off in System Settings → Sound.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "声音走普通输出，不是界面音效通道 — 所以在系统设置 → 声音里关掉「播放用户界面声音效果」之后仍然听得见。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Der Ton wird über die normale Audioausgabe abgespielt, nicht über den Kanal für Bedienklänge — er ist also auch zu hören, wenn „Bedienklänge abspielen“ in Systemeinstellungen → Ton ausgeschaltet ist."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サウンドは通常の出力で再生され、インターフェイスの効果音チャンネルは使いません。そのため、システム設定 → サウンドで「ユーザインターフェイスのサウンドエフェクトを再生」をオフにしていても聞こえます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "声音走普通输出，不是界面音效通道 — 所以在系统设置 → 声音里关掉「播放用户界面声音效果」之后仍然听得见。"
           }
         }
       }
@@ -16667,16 +16685,22 @@
     "Most readings are borrowed from a tool that already holds the account. DeepSeek is the exception: clicking Sign in opens its own Codenotch WebView, and signing out here clears only that session and its saved reading.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "大多数读数借自已经持有该账号的工具。DeepSeek 是例外：点「登录」会打开 Codenotch 自己的 WebView，在这里退出只会清掉这次会话和已保存的读数。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Die meisten Messwerte werden von einem Tool geliehen, das das Konto bereits besitzt. DeepSeek ist die Ausnahme: Ein Klick auf „Anmelden“ öffnet eine eigene WebView von Codenotch, und eine Abmeldung hier löscht nur diese Sitzung und ihren gespeicherten Messwert."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ほとんどの読み取りは、すでにアカウントを持っているツールから借りています。DeepSeek だけは例外で、「サインイン」をクリックすると Codenotch 専用の WebView が開きます。ここでサインアウトしても、消えるのはそのセッションと保存された読み取りだけです。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "大多数读数借自已经持有该账号的工具。DeepSeek 是例外：点「登录」会打开 Codenotch 自己的 WebView，在这里退出只会清掉这次会话和已保存的读数。"
           }
         }
       }
@@ -16684,16 +16708,22 @@
     "Lifetime tokens": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "累计 token"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Tokens insgesamt"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "累計トークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "累计 token"
           }
         }
       }
@@ -16701,16 +16731,22 @@
     "Peak tokens": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "峰值 token"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Spitzenwert Tokens"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最大トークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "峰值 token"
           }
         }
       }
@@ -16718,16 +16754,22 @@
     "Longest chat": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最长对话"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Längster Chat"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最長のチャット"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最长对话"
           }
         }
       }
@@ -16735,16 +16777,22 @@
     "Current streak": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前连续"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Aktuelle Serie"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在の連続日数"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前连续"
           }
         }
       }
@@ -16752,16 +16800,22 @@
     "Longest streak": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最长连续"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Längste Serie"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最長の連続日数"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最长连续"
           }
         }
       }
@@ -16769,16 +16823,22 @@
     "Today": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "今日"
           }
         },
-        "de": {
+        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Heute"
+            "value": "今日"
           }
         }
       }
@@ -16786,16 +16846,22 @@
     "30-day tokens": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30 天 token"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "30-Tage-Tokens"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 日間のトークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 天 token"
           }
         }
       }
@@ -16803,16 +16869,22 @@
     "Pending": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待出"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Ausstehend"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保留中"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待出"
           }
         }
       }
@@ -16820,16 +16892,22 @@
     "Spent": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已花费"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Aufgebraucht"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用済み"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已花费"
           }
         }
       }
@@ -16837,16 +16915,22 @@
     "Remaining": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "剩余"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Verbleibend"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "残り"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剩余"
           }
         }
       }
@@ -16854,16 +16938,22 @@
     "Funded": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已充值"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Aufgeladen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "入金済み"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已充值"
           }
         }
       }
@@ -16871,16 +16961,22 @@
     "Usage details": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用量明细"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Nutzungsdetails"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量の詳細"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用量明细"
           }
         }
       }
@@ -16888,16 +16984,22 @@
     "Tokens": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Token"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Tokens"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token"
           }
         }
       }
@@ -16905,16 +17007,22 @@
     "Cost": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "费用"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Kosten"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "料金"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "费用"
           }
         }
       }
@@ -16922,16 +17030,22 @@
     "Requests": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请求"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Anfragen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リクエスト"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请求"
           }
         }
       }
@@ -16939,16 +17053,22 @@
     "API keys": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "API 密钥"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "API-Schlüssel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API キー"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 密钥"
           }
         }
       }
@@ -16956,16 +17076,22 @@
     "Daily tokens": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每日 token"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Tägliche Tokens"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 日のトークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日 token"
           }
         }
       }
@@ -16973,16 +17099,22 @@
     "Daily cost": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每日费用"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Tägliche Kosten"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 日の料金"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日费用"
           }
         }
       }
@@ -16990,16 +17122,22 @@
     "peak %@": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "峰值 %@"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Spitzenwert %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最大 %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "峰值 %@"
           }
         }
       }
@@ -17007,16 +17145,22 @@
     "Account usage (%@)": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账号用量（%@）"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Kontonutzung (%@)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウントの使用量（%@）"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账号用量（%@）"
           }
         }
       }
@@ -17024,16 +17168,22 @@
     "Monitoring off.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未在监视。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Überwachung aus."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "監視はオフです。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未在监视。"
           }
         }
       }
@@ -17041,16 +17191,22 @@
     "Open LM Studio": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 LM Studio"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "LM Studio öffnen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LM Studio を開く"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 LM Studio"
           }
         }
       }
@@ -17058,16 +17214,22 @@
     "Open Ollama": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 Ollama"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Ollama öffnen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama を開く"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 Ollama"
           }
         }
       }
@@ -17075,16 +17237,22 @@
     "Server address": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "服务器地址"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Serveradresse"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバーアドレス"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务器地址"
           }
         }
       }
@@ -17092,16 +17260,22 @@
     "Check connection": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检查连接"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Verbindung prüfen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続を確認"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查连接"
           }
         }
       }
@@ -17109,16 +17283,22 @@
     "Apply": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Übernehmen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "適用"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用"
           }
         }
       }
@@ -17126,16 +17306,22 @@
     "API token": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "API 令牌"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "API-Token"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API トークン"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 令牌"
           }
         }
       }
@@ -17143,16 +17329,22 @@
     "Remove": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "移除"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Entfernen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移除"
           }
         }
       }
@@ -17160,16 +17352,22 @@
     "Checking LM Studio…": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在检查 LM Studio…"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "LM Studio wird geprüft…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LM Studio を確認中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在检查 LM Studio…"
           }
         }
       }
@@ -17177,16 +17375,22 @@
     "Connecting to LM Studio…": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在连接 LM Studio…"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Verbindung zu LM Studio wird hergestellt…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LM Studio に接続中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在连接 LM Studio…"
           }
         }
       }
@@ -17194,16 +17398,22 @@
     "Checking Ollama…": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在检查 Ollama…"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Ollama wird geprüft…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama を確認中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在检查 Ollama…"
           }
         }
       }
@@ -17211,16 +17421,22 @@
     "Connecting to Ollama…": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在连接 Ollama…"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Verbindung zu Ollama wird hergestellt…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ollama に接続中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在连接 Ollama…"
           }
         }
       }
@@ -17228,16 +17444,22 @@
     "Loaded models appear in Accounts → Connected and are checked every second. Embedding models are not shown.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已加载的模型会出现在「账号 → 已连接」，每秒检查一次。不显示嵌入模型。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Geladene Modelle erscheinen unter Konten → Verbunden und werden jede Sekunde geprüft. Embedding-Modelle werden nicht angezeigt."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み込まれたモデルは「アカウント」→「接続済み」に表示され、1 秒ごとに確認されます。埋め込みモデルは表示されません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已加载的模型会出现在「账号 → 已连接」，每秒检查一次。不显示嵌入模型。"
           }
         }
       }
@@ -17245,16 +17467,22 @@
     "A token is stored and sent with every request.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已保存令牌，每次请求都会带上。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Ein Token wird gespeichert und mit jeder Anfrage gesendet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トークンを保存し、すべてのリクエストに添えて送信します。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存令牌，每次请求都会带上。"
           }
         }
       }
@@ -17262,16 +17490,22 @@
     "Only needed when LM Studio's server requires a token (Developer → Server Settings). Without one, requests are sent with no Authorization header.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "仅当 LM Studio 服务器要求令牌时才需要（开发者 → 服务器设置）。不填则请求不带 Authorization 头。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Nur nötig, wenn der Server von LM Studio ein Token verlangt (Developer → Server Settings). Ohne Token werden Anfragen ohne Authorization-Header gesendet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LM Studio のサーバーがトークンを要求する場合にのみ必要です（Developer → Server Settings）。設定しない場合、リクエストは Authorization ヘッダーなしで送信されます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅当 LM Studio 服务器要求令牌时才需要（开发者 → 服务器设置）。不填则请求不带 Authorization 头。"
           }
         }
       }
@@ -17279,16 +17513,22 @@
     "Detected models appear in Accounts → Connected. Model loading and unloading is checked every second.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检测到的模型会出现在「账号 → 已连接」。模型加载和卸载每秒检查一次。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Erkannte Modelle erscheinen unter Konten → Verbunden. Laden und Entladen von Modellen wird jede Sekunde geprüft."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検出されたモデルは「アカウント」→「接続済み」に表示されます。モデルの読み込みと解放は 1 秒ごとに確認されます。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检测到的模型会出现在「账号 → 已连接」。模型加载和卸载每秒检查一次。"
           }
         }
       }
@@ -17296,16 +17536,22 @@
     "Measure speed and thinking": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "测量速度与思考"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Geschwindigkeit und Denken messen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "速度と思考を計測"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "测量速度与思考"
           }
         }
       }
@@ -17313,119 +17559,299 @@
     "To measure responses, point your chat client to http://127.0.0.1:11435 and keep Codenotch open.": {
       "extractionState": "manual",
       "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "要测量回复，把聊天客户端指向 http://127.0.0.1:11435，并保持 Codenotch 打开。"
-          }
-        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Um Antworten zu messen, richte deinen Chat-Client auf http://127.0.0.1:11435 und lass Codenotch geöffnet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "応答を計測するには、チャットクライアントの向き先を http://127.0.0.1:11435 にして、Codenotch を開いたままにしてください。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "要测量回复，把聊天客户端指向 http://127.0.0.1:11435，并保持 Codenotch 打开。"
           }
         }
       }
     },
     "Allow phones on this network": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このネットワークのスマートフォンを許可"
+          }
+        }
+      }
     },
     "Your phone reads usage from this Mac over your Wi-Fi. Nothing leaves your network.": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンは Wi-Fi 経由でこの Mac から使用量を読み取ります。ネットワークの外には何も出ません。"
+          }
+        }
+      }
     },
     "Starting…": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "開始中…"
+          }
+        }
+      }
     },
     "Ready on %@:%d": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@:%d で待機中"
+          }
+        }
+      }
     },
     "This Mac isn't on a local network": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この Mac はローカルネットワークに接続していません"
+          }
+        }
+      }
     },
     "Connect a Phone…": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンを接続…"
+          }
+        }
+      }
     },
     "Paired phones": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ペアリング済みのスマートフォン"
+          }
+        }
+      }
     },
     "No phones yet.": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "まだありません。"
+          }
+        }
+      }
     },
     "Active now": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在アクティブ"
+          }
+        }
+      }
     },
     "Paired %@": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ペアリング %@"
+          }
+        }
+      }
     },
     "Remove “%@”?": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「%@」を削除しますか？"
+          }
+        }
+      }
     },
     "It will need to scan a new code to connect again.": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再接続するには、新しいコードを読み取る必要があります。"
+          }
+        }
+      }
     },
     "%@ is connected": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ が接続されました"
+          }
+        }
+      }
     },
     "Done": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        }
+      }
     },
     "Connect another phone": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "別のスマートフォンを接続"
+          }
+        }
+      }
     },
     "Connect your phone": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンを接続"
+          }
+        }
+      }
     },
     "Scan this code with the Codenotch app on your phone.": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンの Codenotch アプリでこのコードを読み取ってください。"
+          }
+        }
+      }
     },
     "Expires in %@": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ で期限切れ"
+          }
+        }
+      }
     },
     "Copied ✓": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コピーしました ✓"
+          }
+        }
+      }
     },
     "Copy Link": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リンクをコピー"
+          }
+        }
+      }
     },
     "1. Open Codenotch on your phone": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. スマートフォンで Codenotch を開く"
+          }
+        }
+      }
     },
     "2. Tap Scan QR Code": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2.「QR コードをスキャン」をタップ"
+          }
+        }
+      }
     },
     "3. Point your phone at this code": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. このコードにスマートフォンを向ける"
+          }
+        }
+      }
     },
     "Your phone must be on the same Wi-Fi as this Mac.": {
       "extractionState": "manual",
-      "localizations": {}
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンは、この Mac と同じ Wi-Fi に接続している必要があります。"
+          }
+        }
+      }
     },
     "Pricing": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "料金"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17437,6 +17863,12 @@
     "Peak pricing · 2× off-peak": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピーク料金 · オフピークの 2 倍"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17448,6 +17880,12 @@
     "Off-peak pricing · baseline": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オフピーク料金 · 基準"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17459,6 +17897,12 @@
     "Next off-peak": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次のオフピーク"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17470,6 +17914,12 @@
     "Next peak": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次のピーク"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17481,6 +17931,12 @@
     "Peak/off-peak pricing": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピーク/オフピーク料金"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17492,6 +17948,12 @@
     "Show DeepSeek pricing": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DeepSeek の料金を表示"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17503,6 +17965,12 @@
     "Shows the current billing phase and the next peak/off-peak change on the DeepSeek usage card.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DeepSeek の使用量カードに、現在の課金フェーズと、次のピーク/オフピークの切り替わりを表示します。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17514,6 +17982,12 @@
     "Peak rule": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピークの規則"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17525,6 +17999,12 @@
     "The schedule is maintained locally because it cannot be read reliably from an official API. Times below are UTC; the card converts the next change to your local time.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "公式 API から確実に読み取れないため、スケジュールはローカルで管理しています。以下の時刻は UTC です。カードでは次の切り替わりが現地時間に変換されます。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17536,6 +18016,12 @@
     "Peak days": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピークの曜日"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17547,6 +18033,12 @@
     "Sun": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "日"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17558,6 +18050,12 @@
     "Mon": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17569,6 +18067,12 @@
     "Tue": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "火"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17580,6 +18084,12 @@
     "Wed": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "水"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17591,6 +18101,12 @@
     "Thu": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "木"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17602,6 +18118,12 @@
     "Fri": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "金"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17613,6 +18135,12 @@
     "Sat": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "土"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17624,6 +18152,12 @@
     "Window 1": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間帯 1"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17635,6 +18169,12 @@
     "Window 2": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間帯 2"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17646,6 +18186,12 @@
     "Window %lld": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "時間帯 %lld"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17657,6 +18203,12 @@
     "Add peak window": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピーク時間帯を追加"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17668,6 +18220,12 @@
     "Remove peak window": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ピーク時間帯を削除"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17679,6 +18237,12 @@
     "Start": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "開始"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17690,6 +18254,12 @@
     "End": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "終了"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17701,6 +18271,12 @@
     "to": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "〜"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17712,6 +18288,12 @@
     "Restore current default rule": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在の既定の規則に戻す"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17723,6 +18305,12 @@
     "When a limit is reached": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上限に達したとき"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17734,6 +18322,12 @@
     "Show notification for session limit": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションの上限を通知"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17745,6 +18339,12 @@
     "Show notification for weekly limit": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限を通知"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17756,6 +18356,12 @@
     "Alert sound": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知サウンド"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17767,6 +18373,12 @@
     "Preview session limit alert": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッション上限の通知をプレビュー"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17778,6 +18390,12 @@
     "Preview weekly limit alert": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間上限の通知をプレビュー"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17789,6 +18407,12 @@
     "Displays a notification card from the side of the notch when a provider's session or weekly usage limit is reached.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスのセッションまたは週間の使用量が上限に達したとき、ノッチの横から通知カードを表示します。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17800,6 +18424,12 @@
     "When a limit resets": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上限がリセットされたとき"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17811,6 +18441,12 @@
     "Show notification from notch": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチから通知を表示"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17822,6 +18458,12 @@
     "Reset sound": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセットのサウンド"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17833,6 +18475,12 @@
     "Preview notification": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知をプレビュー"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
@@ -17844,6 +18492,12 @@
     "Displays a notification card from the side of the notch when a provider's usage limit resets.": {
       "extractionState": "manual",
       "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスの使用量の上限がリセットされたとき、ノッチの横から通知カードを表示します。"
+          }
+        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",

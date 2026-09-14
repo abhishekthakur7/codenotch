@@ -77,8 +77,27 @@ final class PreferencesMigrationTests: XCTestCase {
         XCTAssertFalse(preferences.isConnected("cursor"))
         XCTAssertFalse(preferences.isConnected("glm"))
         XCTAssertFalse(preferences.isConnected("kiro"))
+        XCTAssertFalse(preferences.isConnected("minimax"))
         XCTAssertTrue(preferences.deepSeekPricingEnabled)
         XCTAssertEqual(preferences.deepSeekPricingSchedule, .current)
+    }
+
+    /// MiniMax is discovered like everyone else, and stays off until switched
+    /// on. Claude and Codex are the only families that default on.
+    func testMiniMaxStaysOffAfterReconcile() {
+        let (fresh, name) = makeDefaults()
+        let preferences = Preferences(defaults: fresh)
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "minimax"])
+        XCTAssertEqual(preferences.connectedProviders, ["claude", "codex"])
+        XCTAssertFalse(preferences.isConnected("minimax"))
+        XCTAssertTrue(preferences.isConnected("claude"))
+
+        let again = Preferences(defaults: UserDefaults(suiteName: name)!)
+        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "deepseek", "minimax"])
+        XCTAssertFalse(again.isConnected("minimax"))
+        XCTAssertFalse(again.isConnected("cursor"))
+        XCTAssertFalse(again.isConnected("deepseek"))
+        XCTAssertTrue(again.isConnected("claude"))
     }
 
     /// Kiro is discovered like everyone else, and stays off until switched on.
@@ -101,15 +120,17 @@ final class PreferencesMigrationTests: XCTestCase {
     func testAFirstLaunchSeedsClaudeAndCodexOnceDiscovered() {
         let (fresh, name) = makeDefaults()
         let preferences = Preferences(defaults: fresh)
-        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "claude-work"])
+        preferences.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "minimax", "claude-work"])
         XCTAssertEqual(preferences.connectedProviders, ["claude", "codex", "claude-work"])
         XCTAssertFalse(preferences.isConnected("cursor"))
         XCTAssertFalse(preferences.isConnected("kiro"))
+        XCTAssertFalse(preferences.isConnected("minimax"))
 
         let again = Preferences(defaults: UserDefaults(suiteName: name)!)
-        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "claude-work", "deepseek"])
+        again.reconcile(discoveredIDs: ["claude", "codex", "cursor", "glm", "kiro", "minimax", "claude-work", "deepseek"])
         XCTAssertFalse(again.isConnected("cursor"))
         XCTAssertFalse(again.isConnected("kiro"))
+        XCTAssertFalse(again.isConnected("minimax"))
         XCTAssertFalse(again.isConnected("deepseek"))
         XCTAssertTrue(again.isConnected("claude"))
     }

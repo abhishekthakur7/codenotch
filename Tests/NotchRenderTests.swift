@@ -40,6 +40,9 @@ final class NotchRenderTests: XCTestCase {
             content: NotchRootView(model: model)
                 .frame(width: size.width, height: size.height)
                 .environment(\.codenotchReduceTransparency, reduceTransparency)
+                // The system material is not renderable offscreen; everything
+                // around it is. See TASKS.md, "The hardware's band stays black".
+                .environment(\.codenotchHeadlessGlass, true)
                 // Dark, the scheme the solid style pins its own panel to.
                 //
                 // `Palette.ringTrack` and its neighbours became translucent
@@ -270,10 +273,23 @@ final class NotchRenderTests: XCTestCase {
         }
     }
 
-    /// The glass style reaches the notch whether it is open or closed, as requested.
+    /// The glass style reaches the notch whether it is open or closed, as
+    /// requested: folded, the body fill is turned off and nothing of ours is
+    /// painted in its place.
+    ///
+    /// The system material is left out of the render (see
+    /// `\.codenotchHeadlessGlass`), so this pins the one half that is ours —
+    /// that the fill really did step aside — rather than what glass looks like.
+    ///
+    /// Three cells, where its neighbours render four: the first
+    /// `ImageRenderer` render of a given pixel size in a test method can hand
+    /// back the *previous* method's image at that size, and the method before
+    /// this one paints the same panel size opaque black, so at four cells this
+    /// read 1.0 in the full run and 0 alone. A size no other pixel test asks
+    /// for keeps the hand-me-down out.
     func testTheFoldedPillIsTransparentInTheGlassStyle() {
         for edge in NotchEdge.allCases {
-            let m = model(edge: edge)
+            let m = model(edge: edge, cells: 3)
             m.surfaceStyle = .glass
             m.isExpanded = false
             guard let rep = render(m) else {

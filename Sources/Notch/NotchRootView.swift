@@ -4,6 +4,7 @@ struct NotchRootView: View {
     @ObservedObject var model: NotchViewModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
+    @Environment(\.codenotchHeadlessGlass) private var headlessGlass
 
     var body: some View {
         // Measured rather than assumed: the panel's real size is whatever
@@ -159,10 +160,21 @@ struct NotchRootView: View {
         return ZStack {
             if glassy {
                 if #available(macOS 26.0, *) {
-                    Color.clear
-                        .frame(width: place.panelSize.width, height: place.panelSize.height)
-                        .glassEffect(.regular, in: Rectangle())
-                        .id(model.isExpanded)
+                    // The same layer twice, once without the material: an
+                    // offscreen `ImageRenderer` cannot draw the system glass
+                    // faithfully, so the pixel tests ask for the glass path
+                    // with the material left out and check the parts that are
+                    // ours. See TASKS.md, "The hardware's band stays black".
+                    if headlessGlass {
+                        Color.clear
+                            .frame(width: place.panelSize.width, height: place.panelSize.height)
+                            .id(model.isExpanded)
+                    } else {
+                        Color.clear
+                            .frame(width: place.panelSize.width, height: place.panelSize.height)
+                            .glassEffect(.regular, in: Rectangle())
+                            .id(model.isExpanded)
+                    }
                 }
             }
             

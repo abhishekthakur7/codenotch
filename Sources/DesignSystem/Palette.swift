@@ -84,3 +84,25 @@ extension EnvironmentValues {
     }
 }
 
+private struct CodenotchHeadlessGlassKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
+extension EnvironmentValues {
+    /// Draw the glass path with the system material left out. Tests only; the
+    /// app never sets it.
+    ///
+    /// `ImageRenderer` cannot draw the material faithfully: in a cold process
+    /// it paints `glassEffect` as nothing at all, and once any test has shown
+    /// a live `NotchPanel` it paints it as an opaque flat grey over its ZStack
+    /// siblings for the rest of the process. Either way the pixels say nothing
+    /// about the product. So the glass pixel tests render everything *around*
+    /// the material — the transparent body fill, the opaque hardware band —
+    /// which is the part that is ours to get wrong. See TASKS.md, "The
+    /// hardware's band stays black".
+    var codenotchHeadlessGlass: Bool {
+        get { self[CodenotchHeadlessGlassKey.self] }
+        set { self[CodenotchHeadlessGlassKey.self] = newValue }
+    }
+}
+

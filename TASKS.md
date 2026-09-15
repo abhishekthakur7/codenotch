@@ -1609,8 +1609,9 @@ behind it to sample is not what glass looks like on screen. The one glass
 exception is the hardware's band, below, which is painted the same opaque
 black regardless of style and so needs no desktop to read correctly. The other
 thing the glass style still has to prove headlessly is that the folded pill
-stays opaque black whatever the surface style is; `testTheFoldedPillIsOpaqueInTheGlassStyle`
-pins that rest state.
+paints nothing of its own in the glass style — commit ac1469d made glass
+reach the folded notch — which `testTheFoldedPillIsTransparentInTheGlassStyle`
+pins.
 
 ### The hardware's band stays black
 
@@ -1629,10 +1630,27 @@ Upstream 1.7.0 draws the whole notch two points past the bezel
 strip of glass inside the hole. The band is now `contentInset + bezelBleed /
 sizeScale` deep, which after scaling and the unscaled offset covers exactly
 `contentInset × sizeScale` on screen — the same region the readings are kept
-out of. It only showed in the full run: rendered alone, `ImageRenderer` draws
-glass transparent and the probe skips it; after earlier tests have exercised
-the effect it draws a light material, and
-`testTheHardwaresBandStaysBlackInTheGlassStyle` caught the strip.
+out of. It only showed in the full run, and the reason turned out not to be
+layer order: bisected with `-only-testing` pairs, `ImageRenderer` paints
+`glassEffect` as nothing in a cold process; once any test has shown a live
+`NotchPanel` — in any surface style, painting glass or not — the same
+renderer paints `glassEffect` as an opaque flat grey (136/255, alpha 1) over
+its ZStack siblings for the rest of the process, so the band probe read grey
+although the layer order was right all along. Earlier offscreen renders do not
+trigger it, and `stop()` does not undo it. The fix is the
+`\.codenotchHeadlessGlass` environment flag: it lets the two glass pixel tests
+render the glass path with the system material left out, so they check only
+what is ours — the transparent body fill and the opaque band — since the
+material itself is the system's and is not testable headless.
+
+Within one test process, the first `ImageRenderer` render of a given pixel
+size in a test method can hand back the *previous* test method's image at
+that size: the folded-pill test first read `testReduceTransparencyPaintsTheGlassStyleSolid`'s
+opaque black at four cells, the panel size both tests shared. Warm-up
+renders, fresh models and `.id(UUID())` did not clear it; a panel size no
+other pixel test renders (`cells: 3`) did. The next pixel test should give
+itself a size of its own, or expect the first render of a size it shares
+with another test to be stale.
 
 ### Below macOS 26, and with Reduce transparency on
 

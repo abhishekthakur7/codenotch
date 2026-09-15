@@ -20,6 +20,9 @@ pub fn resolve_auto() -> &'static str {
             if name.starts_with("ru") {
                 return "ru";
             }
+            if name.starts_with("uk") {
+                return "uk";
+            }
         }
     }
     "en"
@@ -90,6 +93,7 @@ pub fn tr(lang: &str, key: &str) -> &'static str {
         ("ja", "open_data") => "データフォルダを開く（ログ / アイコン）",
         ("ko", "open_data") => "데이터 폴더 열기 (로그 / 아이콘)",
         ("ru", "open_data") => "Открыть папку данных (журналы / значки)",
+        ("uk", "open_data") => "Відкрити теку даних (журнали / значки)",
         (_, "open_data") => "Open data folder (logs / icons)",
         ("ja", "refresh") => "使用量を今すぐ更新",
         ("ko", "refresh") => "사용량 지금 새로고침",
@@ -108,14 +112,23 @@ pub fn tr(lang: &str, key: &str) -> &'static str {
         ("ko", "quit") => "종료",
         ("ko", "hooks_missing") => "후크 미설치: 트레이 우클릭 → 후크 설치 (데스크톱판은 자동 폴백)",
         ("ru", "install") => "Установить хуки Claude Code",
+        ("uk", "install") => "Встановити хуки Claude Code",
         ("ru", "uninstall") => "Удалить хуки",
+        ("uk", "uninstall") => "Видалити хуки",
         ("ru", "language") => "Язык",
+        ("uk", "language") => "Мова",
         ("ru", "lang_auto") => "Как в системе",
+        ("uk", "lang_auto") => "Як у системі",
         ("ru", "reset_pos") => "Сбросить положение панели",
+        ("uk", "reset_pos") => "Скинути положення панелі",
         ("ru", "quit") => "Выйти",
+        ("uk", "quit") => "Вийти",
         ("ru", "hooks_missing") => "Хуки не установлены: нажмите правой кнопкой по значку в трее → Установить хуки Claude Code (для настольной версии используется автоматический резервный режим)",
+        ("uk", "hooks_missing") => "Хуки не встановлено: клацніть правою кнопкою по значку в треї → Встановити хуки Claude Code (для настільної версії працює автоматичний запасний режим)",
         ("ru", "autostart") => "Запускать с Windows (в фоне)",
+        ("uk", "autostart") => "Запускати разом із Windows (у фоні)",
         ("ru", "refresh") => "Обновить использование",
+        ("uk", "refresh") => "Оновити використання",
         (_, "install") => "Install Claude Code hooks",
         (_, "uninstall") => "Uninstall hooks",
         (_, "language") => "Language",
@@ -129,36 +142,42 @@ pub fn tr(lang: &str, key: &str) -> &'static str {
         ("ja", "settings") => "設定…",
         ("ko", "settings") => "설정…",
         ("ru", "settings") => "Настройки…",
+        ("uk", "settings") => "Налаштування…",
         (_, "settings") => "Settings…",
 
         ("zh", "tray_icon") => "托盘图标",
         ("ja", "tray_icon") => "トレイアイコン",
         ("ko", "tray_icon") => "트레이 아이콘",
         ("ru", "tray_icon") => "Значок в трее",
+        ("uk", "tray_icon") => "Значок у треї",
         (_, "tray_icon") => "Tray icon",
 
         ("zh", "tray_off") => "默认图标",
         ("ja", "tray_off") => "既定のアイコン",
         ("ko", "tray_off") => "기본 아이콘",
         ("ru", "tray_off") => "Обычный значок",
+        ("uk", "tray_off") => "Звичайний значок",
         (_, "tray_off") => "Plain icon",
 
         ("zh", "tray_numbers") => "数字（最多两项）",
         ("ja", "tray_numbers") => "数字（最大2件）",
         ("ko", "tray_numbers") => "숫자 (최대 2개)",
         ("ru", "tray_numbers") => "Числа (до 2)",
+        ("uk", "tray_numbers") => "Числа (до 2)",
         (_, "tray_numbers") => "Numbers (up to 2)",
 
         ("zh", "tray_bars") => "条形图（多项）",
         ("ja", "tray_bars") => "バー（複数可）",
         ("ko", "tray_bars") => "막대 (여러 개)",
         ("ru", "tray_bars") => "Полосы (больше 2)",
+        ("uk", "tray_bars") => "Смуги (більше 2)",
         (_, "tray_bars") => "Bars (more than 2)",
 
         ("zh", "tray_which") => "显示哪些",
         ("ja", "tray_which") => "対象",
         ("ko", "tray_which") => "표시 대상",
         ("ru", "tray_which") => "Какие провайдеры",
+        ("uk", "tray_which") => "Які провайдери",
         (_, "tray_which") => "Which providers",
 
         _ => "?",
@@ -197,6 +216,37 @@ mod tests {
                 "missing Russian translation for {key}"
             );
             assert_ne!(tr("ru", key), "?", "unknown Russian key {key}");
+        }
+    }
+
+    const UKRAINIAN_KEYS: &[(&str, &str)] = &[
+        ("open_data", "Відкрити теку даних (журнали / значки)"),
+        ("install", "Встановити хуки Claude Code"),
+        ("uninstall", "Видалити хуки"),
+        ("language", "Мова"),
+        ("lang_auto", "Як у системі"),
+        ("reset_pos", "Скинути положення панелі"),
+        ("quit", "Вийти"),
+        ("hooks_missing", "Хуки не встановлено: клацніть правою кнопкою по значку в треї → Встановити хуки Claude Code (для настільної версії працює автоматичний запасний режим)"),
+        ("autostart", "Запускати разом із Windows (у фоні)"),
+        ("refresh", "Оновити використання"),
+        ("settings", "Налаштування…"),
+        ("tray_icon", "Значок у треї"),
+        ("tray_off", "Звичайний значок"),
+        ("tray_numbers", "Числа (до 2)"),
+        ("tray_bars", "Смуги (більше 2)"),
+        ("tray_which", "Які провайдери"),
+    ];
+
+    #[test]
+    fn ukrainian_translates_every_known_key() {
+        for (key, value) in UKRAINIAN_KEYS {
+            assert_eq!(
+                tr("uk", key),
+                *value,
+                "missing Ukrainian translation for {key}"
+            );
+            assert_ne!(tr("uk", key), "?", "unknown Ukrainian key {key}");
         }
     }
 

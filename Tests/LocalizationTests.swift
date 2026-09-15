@@ -10,6 +10,7 @@ final class LocalizationTests: XCTestCase {
     private let german = Locale(identifier: "de")
     private let japanese = Locale(identifier: "ja")
     private let russian = Locale(identifier: "ru")
+    private let ukrainian = Locale(identifier: "uk")
     private let brazilianPortuguese = Locale(identifier: "pt-BR")
     private let english = Locale(identifier: "en")
     private let now = Date(timeIntervalSince1970: 1_787_900_000)
@@ -517,13 +518,43 @@ final class LocalizationTests: XCTestCase {
         )
     }
 
+    // MARK: - Ukrainian
+
+    func testCoreCopyInUkrainian() {
+        XCTAssertEqual(
+            ElapsedCopy.text(since: now.addingTimeInterval(-5), now: now, locale: ukrainian),
+            "щойно"
+        )
+        XCTAssertEqual(
+            ResetCopy.text(for: resetNow.addingTimeInterval(51 * 60), now: resetNow, locale: ukrainian),
+            "Скидання через 51 хв"
+        )
+        XCTAssertEqual(
+            percentWindow(0.12).summary(locale: ukrainian),
+            "Використано 12% · лишилось 88%"
+        )
+        XCTAssertEqual(L10n.t("Always show", locale: ukrainian), "Показувати завжди")
+        XCTAssertEqual(L10n.t("Settings…", locale: ukrainian), "Налаштування…")
+        XCTAssertEqual(
+            L10n.t("Sign in to \("Perplexity")", locale: ukrainian),
+            "Увійти в Perplexity"
+        )
+    }
+
+    func testUkrainianThresholdAlertKeepsArgumentOrder() {
+        XCTAssertEqual(
+            L10n.t("\(80)% of its \("weekly") limit used.", locale: ukrainian),
+            "Використано 80% ліміту «weekly»."
+        )
+    }
+
     /// Every language the picker offers must resolve to a locale the catalog
     /// is filed under — a region-qualified or unshipped identifier silently
     /// serves another language instead.
     func testEveryOfferedLanguageResolves() {
         XCTAssertEqual(
             AppLanguage.allCases.map(\.rawValue),
-            ["system", "en", "fr", "de", "ja", "pt-BR", "ru", "zh-Hans"]
+            ["system", "en", "fr", "de", "ja", "pt-BR", "ru", "zh-Hans", "uk"]
         )
         XCTAssertNil(AppLanguage.system.locale)
         for language in AppLanguage.allCases where language != .system {

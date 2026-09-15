@@ -137,6 +137,13 @@ final class NotchWindowController {
     /// frontmost full-screen app, an always-on notch comes straight back.
     func apply(foldsForFullScreen: Bool) {
         self.foldsForFullScreen = foldsForFullScreen
+        if !foldsForFullScreen {
+            // A fold already in flight captured ignoreAlwaysOn and would land
+            // once more against an always-on notch, even as the setting that
+            // caused it is being switched off.
+            foldWork?.cancel()
+            foldWork = nil
+        }
         handleActiveSpaceOrAppChange()
     }
 
@@ -537,13 +544,20 @@ final class NotchWindowController {
         return CGPoint(x: mouse.x - frame.minX, y: frame.maxY - mouse.y)
     }
 
-    private func cursorMoved() {
+    // Not private: tests drive the hover fold through it, the same way they
+    // drive the event fold through handleActiveSpaceOrAppChange.
+    func cursorMoved() {
         guard let panel, !isOptionDragging else { return }
         let local = localCursor(in: panel.frame)
         let overTooltip = model.hoveredIndex
             .flatMap(tooltipRect(index:))
             .map { model.isExpanded && $0.contains(local) } ?? false
-        setExpanded(liveRect.contains(local) || overTooltip, ignoreAlwaysOn: isFullScreenActive())
+        // The fold setting gates this check as surely as the one in
+        // handleActiveSpaceOrAppChange: left ungated, the hover fold out-votes
+        // "Always show" under a full-screen app while the other path keeps
+        // restoring it — the notch ends up folding on every poll.
+        setExpanded(liveRect.contains(local) || overTooltip,
+                    ignoreAlwaysOn: foldsForFullScreen && isFullScreenActive())
 
         var target: Int?
         if model.isExpanded, notchRect.contains(local) {

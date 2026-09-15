@@ -769,6 +769,30 @@ struct SettingsView: View {
                 }
             }
 
+            Section(L10n.t("Usage Limits")) {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(L10n.t("Watch limit"))
+                        Spacer()
+                        Text("\(Int(preferences.watchLimit * 100))%")
+                    }
+                    Slider(value: $preferences.watchLimit, in: 0.01...0.99)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(L10n.t("Critical limit"))
+                        Spacer()
+                        Text("\(Int(preferences.criticalLimit * 100))%")
+                    }
+                    Slider(value: $preferences.criticalLimit, in: 0.01...1.00)
+                }
+                Button(L10n.t("Reset to defaults")) {
+                    preferences.watchLimit = 0.50
+                    preferences.criticalLimit = 0.70
+                }
+                .padding(.top, 4)
+            }
+
             // Apart from the notch's own group: these are about the app, not
             // the thing it draws on the screen edge.
             Section(L10n.t("App")) {

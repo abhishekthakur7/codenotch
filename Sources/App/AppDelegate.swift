@@ -496,6 +496,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .receive(on: RunLoop.main)
                 .sink { [weak fleet] in fleet?.apply(accentColor: $0) }
                 .store(in: &cancellables)
+            
+            preferences.$watchLimit
+                .combineLatest(preferences.$criticalLimit)
+                .receive(on: RunLoop.main)
+                .sink { [weak fleet] watch, critical in
+                    fleet?.apply(watchLimit: watch, criticalLimit: critical)
+                }
+                .store(in: &cancellables)
 
             preferences.$weeklyRing
                 .receive(on: RunLoop.main)
@@ -753,6 +761,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         fleet.apply(scale: preferences.notchScale)
         fleet.apply(resetTimeFormat: preferences.resetTimeFormat)
         fleet.apply(accentColor: preferences.accentColor)
+        fleet.apply(watchLimit: preferences.watchLimit, criticalLimit: preferences.criticalLimit)
         fleet.apply(weeklyRing: preferences.weeklyRing)
         fleet.apply(showsMoveHandle: preferences.showsMoveHandle)
         fleet.apply(foldsForFullScreen: preferences.foldsForFullScreen)

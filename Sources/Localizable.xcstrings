@@ -19291,6 +19291,22 @@
           }
         }
       }
+    },
+    "Usage Limits": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Watch limit": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Critical limit": {
+      "extractionState": "manual",
+      "localizations": {}
+    },
+    "Reset to defaults": {
+      "extractionState": "manual",
+      "localizations": {}
     }
   },
   "version": "1.0"

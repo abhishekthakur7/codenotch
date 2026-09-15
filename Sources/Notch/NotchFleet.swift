@@ -51,6 +51,8 @@ final class NotchFleet {
     private var displayPreference: DisplayPreference = .followActiveWindow
     private var resetTimeFormat: ResetTimeFormat = .automatic
     private var accentColor: AccentColorChoice = .system
+    private var watchLimit: Double = 0.50
+    private var criticalLimit: Double = 0.70
     /// One choice for the whole fleet, like the edge and the size: a weekly
     /// ring on one display and not another would read as a bug.
     private var weeklyRing: WeeklyRing = .off
@@ -183,10 +185,21 @@ final class NotchFleet {
         }
     }
 
+    func apply(watchLimit: Double, criticalLimit: Double) {
+        self.watchLimit = watchLimit
+        self.criticalLimit = criticalLimit
+        for controller in controllers.values {
+            controller.model.watchLimit = watchLimit
+            controller.model.criticalLimit = criticalLimit
+        }
+    }
+
     func apply(accentColor: AccentColorChoice) {
         self.accentColor = accentColor
         for controller in controllers.values {
             controller.model.accentColor = accentColor
+        controller.model.watchLimit = watchLimit
+        controller.model.criticalLimit = criticalLimit
         }
     }
 
@@ -400,6 +413,8 @@ final class NotchFleet {
         controller.model.sizeScale = scale
         controller.model.resetTimeFormat = resetTimeFormat
         controller.model.accentColor = accentColor
+        controller.model.watchLimit = watchLimit
+        controller.model.criticalLimit = criticalLimit
         controller.model.weeklyRing = weeklyRing
         controller.model.showsMoveHandle = showsMoveHandle
         controller.model.surfaceStyle = surfaceStyle

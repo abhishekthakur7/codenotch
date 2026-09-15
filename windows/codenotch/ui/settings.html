@@ -148,6 +148,8 @@
         <div class="group">
           <div class="item"><span>Show</span><span class="seg" id="seg-show"><button data-v="show">Always show</button><button data-v="hide">Hide</button></span></div>
           <div class="item cap" id="cap-show" data-dynamic></div>
+          <div class="item"><span>Size</span><span class="seg" id="seg-size"><button data-v="0.8">Small</button><button data-v="1">Medium</button><button data-v="1.25">Large</button></span></div>
+          <div class="item cap" id="cap-size" data-dynamic></div>
           <div class="item"><span class="hint">The pill can be dragged up and down the right-hand edge. If it has ended up somewhere you cannot see it — off the bottom of a screen you have unplugged, say — this drops it back into the middle of the edge.</span><button class="btn" id="btn-recentre">Recentre</button></div>
         </div>
         <div class="sec">App</div>
@@ -230,6 +232,10 @@ const RU_STATIC = {
   'Let Claude Code notify Codenotch':'Разрешить Claude Code уведомлять Codenotch',
   'Turning this on adds a few lines to your Claude Code settings file so that Claude Code sends Codenotch a short message when a session starts, when it is working, when it is waiting for your answer, and when it finishes. That is what makes the ring spin and the amber ring pulse.':'При включении в файл настроек Claude Code добавляются строки, чтобы он сообщал Codenotch о начале работы, процессе, ожидании ответа и завершении сеанса. Благодаря этому кольцо вращается, а янтарное кольцо пульсирует.',
   'Notch':'Панель', 'Show':'Показывать', 'Always show':'Всегда показывать', 'Hide':'Скрыть',
+  'Size':'Размер', 'Small':'Маленький', 'Medium':'Средний', 'Large':'Большой',
+  'Takes the least room on the edge. Readable, but not from across the desk.':'Занимает минимум места у края. Читается вблизи, но не издалека.',
+  'The size the notch was drawn at.':'Размер, для которого была отрисована панель.',
+  'Easier to read at a glance, and harder to ignore.':'Легче читать одним взглядом, но сложнее не заметить.',
   'The notch stays open with every reading visible.':'Выемка остаётся открытой, и все данные видны.',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'Чёрная панель у правого края экрана с отдельным кольцом для каждого инструмента. При выключении панель исчезает, но Codenotch продолжает считать использование.',
   'Recentre':'По центру',
@@ -271,6 +277,13 @@ const ZH_STATIC = {
   'Show':'显示',
   'Always show':'始终显示',
   'Hide':'隐藏',
+  'Size':'大小',
+  'Small':'小',
+  'Medium':'中',
+  'Large':'大',
+  'Takes the least room on the edge. Readable, but not from across the desk.':'边缘上占得最少。能读，但隔着桌子就不行。',
+  'The size the notch was drawn at.':'刘海绘制时的尺寸。',
+  'Easier to read at a glance, and harder to ignore.':'一眼更好读，也更难忽视。',
   'The notch stays open with every reading visible.':'刘海保持展开，所有读数都看得见。',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'屏幕右侧边缘的黑色胶囊，每个工具对应一个圆环。关闭它后胶囊会消失；无论哪种情况，Codenotch 都会继续统计你的使用情况。',
   'Recentre':'重新居中',
@@ -321,6 +334,13 @@ const JA_STATIC = {
   'Show':'表示',
   'Always show':'常に表示',
   'Hide':'非表示',
+  'Size':'サイズ',
+  'Small':'小',
+  'Medium':'中',
+  'Large':'大',
+  'Takes the least room on the edge. Readable, but not from across the desk.':'辺で占める場所が最小。読めますが、机の向こうからは無理です。',
+  'The size the notch was drawn at.':'ノッチが本来描かれるサイズ。',
+  'Easier to read at a glance, and harder to ignore.':'ひと目で読みやすく、無視しにくいサイズ。',
   'The notch stays open with every reading visible.':'ノッチは開いたままで、すべての読み取りが見えます。',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'画面の右端にある黒いピルには、ツールごとに1つのリングが表示されます。オフにするとピルは消えますが、どちらにしても Codenotch は使用量のカウントを続けます。',
   'Recentre':'中央に戻す',
@@ -371,6 +391,13 @@ const KO_STATIC = {
   'Show':'표시',
   'Always show':'항상 표시',
   'Hide':'숨기기',
+  'Size':'크기',
+  'Small':'작게',
+  'Medium':'보통',
+  'Large':'크게',
+  'Takes the least room on the edge. Readable, but not from across the desk.':'가장자리에 차지하는 공간이 가장 적습니다. 읽을 수는 있지만 책상 반대편에서는 보이지 않습니다.',
+  'The size the notch was drawn at.':'노치가 처음 디자인된 기본 크기입니다.',
+  'Easier to read at a glance, and harder to ignore.':'한눈에 읽기 쉽고, 무시하고 지나치기 어렵습니다.',
   'The notch stays open with every reading visible.':'노치가 열려 있고 모든 읽기 값이 표시됩니다.',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'화면 오른쪽 가장자리에 있는 검은색 필로, 도구당 하나의 링이 있습니다. 끄면 필이 사라지지만, 어느 쪽이든 Codenotch는 사용량을 계속 계산합니다.',
   'Recentre':'가운데로 되돌리기',
@@ -748,6 +775,39 @@ document.getElementById('seg-tray').addEventListener('click', e => {
   if(tray !== flags.tray) saveFlags(flags.notch, tray);
 });
 
+/* ---- Appearance: size ------------------------------------------------------ */
+const SIZE_WHY = {
+  '0.8': 'Takes the least room on the edge. Readable, but not from across the desk.',
+  '1': 'The size the notch was drawn at.',
+  '1.25': 'Easier to read at a glance, and harder to ignore.'
+};
+let notchSize = 1, sizeBusy = false;
+function renderSize(){
+  for(const b of document.querySelectorAll('#seg-size button')){
+    const on = Number(b.dataset.v) === notchSize;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.disabled = sizeBusy;
+  }
+  const why = SIZE_WHY[String(notchSize)] || '';
+  document.getElementById('cap-size').textContent = ui(why, why);
+}
+document.getElementById('seg-size').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b || b.disabled || Number(b.dataset.v) === notchSize) return;
+  const want = Number(b.dataset.v);
+  sizeBusy = true;
+  notchSize = want;
+  renderSize();
+  invoke('set_scale', { scale: want })
+    .then(v => { notchSize = typeof v === 'number' ? v : want; toast(); })
+    .catch(err => {
+      strip('set_scale failed: ' + errText(err));
+      return call('get_scale', undefined, null).then(v => { if(typeof v === 'number') notchSize = v; });
+    })
+    .then(() => { sizeBusy = false; renderSize(); });
+});
+
 /* ---- Appearance: position ------------------------------------------------ */
 document.getElementById('btn-recentre').addEventListener('click', () => {
   invoke('reset_notch_position')
@@ -784,6 +844,7 @@ document.getElementById('author').addEventListener('click', () => {
 function renderAll(){
   renderAccounts();
   renderFlags();
+  renderSize();
   drawSwitch(document.getElementById('sw-autostart'), autostart);
   document.getElementById('title').textContent = ui(TITLES[curTab], TITLES[curTab]);
 }
@@ -799,6 +860,7 @@ function boot(){
   call('get_antigravity_prefs', undefined, null).then(v => { if(v && typeof v === 'object'){ agPrefs = v; renderAccounts(); } });
   call('get_glyphs', undefined, null).then(g => { if(g && typeof g === 'object'){ glyphs = g; renderAccounts(); } });
   try { window.__TAURI__.event.listen('glyphs', e => { if(e.payload){ glyphs = e.payload; renderAccounts(); } }); } catch(e) { /* the letters stay */ }
+  call('get_scale', undefined, null).then(v => { if(typeof v === 'number') notchSize = v; renderSize(); });
   call('get_ui_flags', undefined, null).then(v => { if(v && typeof v === 'object') flags = readFlags(v); renderFlags(); });
   Promise.all([call('get_lang', undefined, 'auto'), call('get_lang_resolved', undefined, 'en')]).then(([raw, resolved]) => {
     const l = (typeof raw === 'string' && LANGS.indexOf(raw) >= 0) ? raw : 'auto';

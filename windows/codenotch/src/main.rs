@@ -53,11 +53,11 @@ fn resolved_lang(raw: &str) -> String {
     }
 }
 
-/// The size multiplier chosen with the slider, clamped to what the config allows.
+/// The notch size chosen in Settings: Small, Medium or Large, as a multiple of the designed size.
 pub fn ui_scale(app: &AppHandle) -> f64 {
     let st = app.state::<AppState>();
     let c = st.cfg.lock().unwrap();
-    c.scale.clamp(config::SCALE_MIN, config::SCALE_MAX)
+    config::snap_scale(c.scale)
 }
 
 pub fn broadcast(app: &AppHandle) {
@@ -83,14 +83,16 @@ pub fn place_notch(app: &AppHandle) {
         // So the physical size is pinned straight from mon.scale_factor() before placing the
         // window; if it still reports a different scale afterwards, it is pinned once more.
         let ms = mon.scale_factor();
-        let target = tauri::PhysicalSize::new((NOTCH_W * ms).round() as u32, (NOTCH_H * ms).round() as u32);
+        let size = ui_scale(app);
+        let target = tauri::PhysicalSize::new((NOTCH_W * ms * size).round() as u32, (NOTCH_H * ms * size).round() as u32);
         let _ = w.set_size(target);
+        zoom_notch(&w, ms, size);
         // Position from the window's measured physical size — deriving it from the scale factor
         // pushed the window past the right edge at 125 % / 150 % (the ring's right side was clipped).
         let (ww, wh) = w
             .outer_size()
             .map(|s| (s.width as i32, s.height as i32))
-            .unwrap_or(((NOTCH_W * scale) as i32, (NOTCH_H * scale) as i32));
+            .unwrap_or((target.width as i32, target.height as i32));
         let x = mon.position().x + mon.size().width as i32 - ww;
         // Vertical position comes from the configured ratio (the pill can be dragged; it persists), clamped to the monitor
         let ratio = {
@@ -112,7 +114,7 @@ pub fn place_notch(app: &AppHandle) {
         let _ = std::fs::write(
             log,
             format!(
-                "notch placed build={BUILD}: pos=({x},{y}) size=({ww}x{wh}) inner={:?} win_scale={scale} mon_scale={ms} monitor=({},{} {}x{})\n",
+                "notch placed build={BUILD}: pos=({x},{y}) size=({ww}x{wh}) inner={:?} win_scale={scale} mon_scale={ms} notch_size={size} monitor=({},{} {}x{})\n",
                 w.inner_size().map(|s| (s.width, s.height)).unwrap_or((0, 0)),
                 mon.position().x,
                 mon.position().y,
@@ -347,6 +349,26 @@ fn set_click_through(app: &AppHandle, on: bool) {
 
 /// The WebView zoom currently applied (1.0 = uncorrected)
 static ZOOM: Mutex<f64> = Mutex::new(1.0);
+/// The page's devicePixelRatio without that zoom, as last reported; 0 until the page first reports
+static BASE_DPR: Mutex<f64> = Mutex::new(0.0);
+
+/// Keeps the notch page at its designed 360 × 520 CSS px in a window `size` times larger: the
+/// WebView zooms by `size` on top of whatever brings its DPR back to the monitor's scale, so the
+/// rings, text and hover card scale together, as the Mac's size does.
+fn zoom_notch(w: &tauri::WebviewWindow, monitor_scale: f64, size: f64) {
+    let base = match *BASE_DPR.lock().unwrap() {
+        b if b > 0.0 => b,
+        _ => monitor_scale,
+    };
+    let target = monitor_scale * size / base;
+    let mut z = ZOOM.lock().unwrap();
+    if (target - *z).abs() > 0.001 {
+        match w.set_zoom(target) {
+            Ok(()) => *z = target,
+            Err(e) => applog(&format!("notch zoom failed: {e}")),
+        }
+    }
+}
 
 pub fn applog(line: &str) {
     use std::io::Write;
@@ -369,12 +391,14 @@ fn report_dpr(app: AppHandle, dpr: f64, w: f64, h: f64) {
         .ok()
         .flatten()
         .map(|m| m.scale_factor())
-        .unwrap_or_else(|| win.scale_factor().unwrap_or(1.0));
+        .unwrap_or_else(|| win.scale_factor().unwrap_or(1.0))
+        * ui_scale(&app);
     let mut z = ZOOM.lock().unwrap();
     let base = if *z > 0.0 { dpr / *z } else { dpr };
+    *BASE_DPR.lock().unwrap() = base;
     let target = if base > 0.0 { want / base } else { 1.0 };
     applog(&format!(
-        "dpr report: dpr={dpr:.3} viewport={w:.0}x{h:.0} monitor_scale={want:.3} zoom_applied={:.3} -> target_zoom={target:.3}",
+        "dpr report: dpr={dpr:.3} viewport={w:.0}x{h:.0} want_dpr={want:.3} zoom_applied={:.3} -> target_zoom={target:.3}",
         *z
     ));
     // Oscillation guard: at most three corrections per process (if the DPR does not follow the zoom, stop chasing it)
@@ -553,21 +577,18 @@ fn get_scale(app: AppHandle) -> f64 {
     ui_scale(&app)
 }
 
-/// Called by the slider on every move. Only the value is stored here: the page scales the pill
-/// itself with a CSS zoom, so the window is never resized and the hover card holding the slider
-/// keeps its size — otherwise the slider would shrink away from under the cursor mid-drag.
+/// Settings' Small, Medium or Large. The notch window is resized and zoomed around its centre.
 #[tauri::command]
-fn set_scale(app: AppHandle, scale: f64) {
+fn set_scale(app: AppHandle, scale: f64) -> f64 {
     let value = {
         let st = app.state::<AppState>();
         let mut c = st.cfg.lock().unwrap();
-        c.scale = scale.clamp(config::SCALE_MIN, config::SCALE_MAX);
+        c.scale = config::snap_scale(scale);
         config::save(&c);
         c.scale
     };
-    // The notch draws its own size, so it has to be told. Without this the slider in the settings
-    // window saved the value but nothing changed on screen until the app was restarted.
-    let _ = app.emit("scale", value);
+    place_notch(&app);
+    value
 }
 
 // ---------------- tray icon readings ----------------

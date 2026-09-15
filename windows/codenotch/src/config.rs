@@ -1,10 +1,20 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-/// How small the notch may be drawn, as a multiple of its designed size. Below roughly 0.4 the
-/// rings stop being readable at 100 % display scaling.
-pub const SCALE_MIN: f64 = 0.40;
-pub const SCALE_MAX: f64 = 1.00;
+/// The Mac's notch sizes, as multiples of the designed size: Small, Medium, Large.
+pub const SIZES: [f64; 3] = [0.8, 1.0, 1.25];
+
+/// The nearest of `SIZES`, so a scale saved by the old 40–100 % slider still lands on a size that
+/// exists. 0.9, halfway between Small and Medium, counts as Medium.
+pub fn snap_scale(scale: f64) -> f64 {
+    if scale < 0.9 {
+        SIZES[0]
+    } else if scale < 1.125 || !scale.is_finite() {
+        SIZES[1]
+    } else {
+        SIZES[2]
+    }
+}
 
 /// One half of the tray icon, or one ring on the notch: which provider. It shows that provider's
 /// ring, so the tray and the notch can never disagree. (A `window` key from older builds is ignored.)
@@ -33,9 +43,8 @@ pub struct Config {
     /// Vertical position of the notch: the window centre as a fraction of the primary monitor's height (0 = top, 1 = bottom), default 0.5; saved after a drag
     #[serde(default = "default_notch_y")]
     pub notch_y: f64,
-    /// Notch size as a multiple of the designed size (slider at the foot of the hover card).
-    /// Only the pill is scaled — the hover card keeps its size, so the slider does not move
-    /// while it is being dragged.
+    /// Notch size as a multiple of the designed size, one of `SIZES`. The whole notch scales: the
+    /// window grows and its WebView zooms, so the rings, text and hover card keep their proportions.
     #[serde(default = "default_scale")]
     pub scale: f64,
     /// What the tray icon draws: "off" (the plain mark, the previous behaviour and the default),
@@ -183,8 +192,8 @@ pub fn load() -> Config {
         cfg.tray_visible = true;
     }
 
-    // A hand-edited file must not be able to produce an invisible window
-    cfg.scale = cfg.scale.clamp(SCALE_MIN, SCALE_MAX);
+    // The old slider's 40–100 %, or a hand-edited file, lands on one of the three sizes
+    cfg.scale = snap_scale(cfg.scale);
     cfg
 }
 
@@ -195,5 +204,20 @@ pub fn save(cfg: &Config) {
     }
     if let Ok(txt) = serde_json::to_string_pretty(cfg) {
         let _ = std::fs::write(path, txt);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::snap_scale;
+
+    #[test]
+    fn a_saved_scale_snaps_to_the_nearest_size() {
+        assert_eq!(snap_scale(0.4), 0.8);
+        assert_eq!(snap_scale(0.85), 0.8);
+        assert_eq!(snap_scale(0.9), 1.0);
+        assert_eq!(snap_scale(1.0), 1.0);
+        assert_eq!(snap_scale(1.2), 1.25);
+        assert_eq!(snap_scale(3.0), 1.25);
     }
 }

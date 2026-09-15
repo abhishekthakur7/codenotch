@@ -313,6 +313,48 @@ final class NotchRenderTests: XCTestCase {
         }
     }
 
+    /// The other half of the same pixel: where `glass` leaves the surface to
+    /// the system, `darkGlass` puts a wash of ours underneath it, and that wash
+    /// *is* renderable offscreen. So the dim is the one thing about the dark
+    /// glass style a headless test can honestly check.
+    ///
+    /// Five cells, a panel size no other pixel test renders: the first
+    /// `ImageRenderer` render of a given pixel size in a test method can hand
+    /// back the *previous* method's image at that size, and the folded-pill
+    /// test above — which sorts right before this one and expects nothing at
+    /// this very probe — already claims three. A size of its own keeps this
+    /// test's dim out of that one's image.
+    func testTheFoldedPillCarriesTheDimInTheDarkGlassStyle() throws {
+        guard #available(macOS 26.0, *) else {
+            throw XCTSkip("no Liquid Glass below macOS 26, so darkGlass resolves to solid")
+        }
+        for edge in NotchEdge.allCases {
+            let m = model(edge: edge, cells: 5)
+            m.surfaceStyle = .darkGlass
+            m.isExpanded = false
+            guard let rep = render(m) else {
+                XCTFail("\(edge): no image")
+                continue
+            }
+            let place = NotchPlacement(edge: edge, panelSize: m.panelSize)
+            let onBezel = place.point(
+                along: m.slack + m.shapeLength / 2, across: 1
+            )
+            let colour = rep.colorAt(
+                x: min(rep.pixelsWide - 1, max(0, Int(onBezel.x))),
+                y: min(rep.pixelsHigh - 1, max(0, Int(onBezel.y)))
+            )
+            XCTAssertEqual(
+                colour?.alphaComponent ?? 0, 0.60, accuracy: 0.03,
+                "\(edge): the dark glass dim is not drawn beneath the folded pill"
+            )
+            XCTAssertLessThan(
+                colour?.brightnessComponent ?? 1, 0.05,
+                "\(edge): the dark glass dim is not black"
+            )
+        }
+    }
+
     /// Reduce transparency wins over the chosen style: the open notch is
     /// painted solid black even when the preference says glass, the way the
     /// Settings window prefers an opaque fill to its own translucent chrome.
@@ -414,6 +456,22 @@ final class PanelSizingIntegrityTests: XCTestCase {
             XCTAssertNil(window.appearance,
                          "the glass style pinned an appearance instead of inheriting one")
         }
+    }
+
+    /// Dark glass is `Glass.clear` over a black dim of ours, and it must always
+    /// read dark regardless of the Mac's appearance — same pin as solid, so
+    /// `Palette`'s frame hexes hold.
+    func testTheDarkGlassStyleForcesTheDarkAppearance() {
+        let controller = NotchWindowController()
+        controller.model.surfaceStyle = .darkGlass
+        controller.show()
+        defer { controller.stop() }
+
+        guard let window = controller.panelContentViewForTesting?.window else {
+            return XCTFail("no panel")
+        }
+        XCTAssertEqual(window.appearance?.name, .darkAqua,
+                       "the dark glass style left the panel following the Mac's appearance")
     }
 
     /// Reduce transparency means "no see-through chrome", and the window has to

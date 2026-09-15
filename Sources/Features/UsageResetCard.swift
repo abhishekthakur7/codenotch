@@ -13,16 +13,26 @@ struct UsageResetCard: View {
 
     static let cardHeight: CGFloat = Design.px(210)
 
-    private var glassy: Bool { surfaceStyle.effective == .glass && !reduceTransparency }
+    private var glassy: Bool { surfaceStyle.isGlass && !reduceTransparency }
+    /// Clear on glass: anything of ours under it would override the Clear or
+    /// Tinted choice in Appearance settings. `darkGlass` is the one deliberate
+    /// exception, and its dim is drawn behind the glass itself, not here.
     private var surfaceFill: Color { glassy ? .clear : Palette.card }
 
     var body: some View {
         stack
             .background {
+                // `isGlass` is only ever true where `glassEffect` exists; the
+                // availability check is what tells the compiler so.
                 if glassy {
                     if #available(macOS 26.0, *) {
                         Color.clear
-                            .glassEffect(.regular, in: TooltipSilhouette(direction: direction, tailOffset: tailOffset))
+                            .glassEffect(surfaceStyle.glass, in: TooltipSilhouette(direction: direction, tailOffset: tailOffset))
+                            .background {
+                                if let dim = surfaceStyle.glassDim {
+                                    TooltipSilhouette(direction: direction, tailOffset: tailOffset).fill(dim)
+                                }
+                            }
                     }
                 }
             }

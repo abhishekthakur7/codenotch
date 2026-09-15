@@ -604,6 +604,10 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
+                if preferences.weeklyRing != .off {
+                    Toggle(L10n.t("Dashed weekly ring"), isOn: $preferences.weeklyRingDashed)
+                }
+
                 Toggle(L10n.t("Claude daily pace ring"), isOn: $preferences.claudeDailyPaceRing)
                 Text(L10n.t("Claude's main ring shows today's share of the weekly limit — a seventh a day, counted from the weekly reset — instead of the session. The session moves to the thin ring and the card; alerts follow the daily ring."))
                     .font(.caption)

@@ -19,6 +19,7 @@ mod trayicon;
 mod activity;
 mod diag;
 mod watcher;
+mod settings_window;
 
 use std::sync::Mutex;
 use tauri::{AppHandle, Emitter, Manager};
@@ -906,11 +907,7 @@ fn reset_notch_position(app: AppHandle) {
 
 #[tauri::command]
 fn open_settings(app: AppHandle) {
-    if let Some(w) = app.get_webview_window("settings") {
-        let _ = w.show();
-        let _ = w.unminimize();
-        let _ = w.set_focus();
-    }
+    settings_window::open(&app);
 }
 
 pub fn provider_label(id: &str) -> &'static str {
@@ -1092,10 +1089,10 @@ fn main() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            // Launching a freshly built exe while the old one is still running lands here: the new
-            // instance is turned away and what stays on screen is the old process. Say so loudly.
+            // Opening Codenotch again while it runs brings Settings forward, as on the Mac: with the
+            // tray icon hidden it is the way back. Logged too, for a rebuild that was not picked up.
             applog(&format!("single instance: another launch was refused; the running instance is build={BUILD} — quit it from the tray first if you just rebuilt"));
-            let _ = app.emit("notice", format!("Codenotch is already running ({BUILD}) — quit it from the tray before starting a new build"));
+            settings_window::open(app);
         }))
         .manage(AppState {
             store: Mutex::new(Default::default()),
@@ -1146,7 +1143,10 @@ fn main() {
             get_hooks_installed,
             set_hooks_installed,
             reset_notch_position,
-            open_settings
+            open_settings,
+            settings_window::get_system_look,
+            settings_window::quit_app,
+            settings_window::open_author_page
         ])
         .setup(move |app| {
             let handle = app.handle().clone();
@@ -1155,17 +1155,6 @@ fn main() {
                 let _ = w.show();
             }
             tray::setup(&handle)?;
-            // Closing a Tauri window destroys it by default, and a destroyed window cannot be shown
-            // again — which is why Settings opened once and then never again. Hide it instead.
-            if let Some(w) = handle.get_webview_window("settings") {
-                let hide_me = w.clone();
-                w.on_window_event(move |e| {
-                    if let tauri::WindowEvent::CloseRequested { api, .. } = e {
-                        api.prevent_close();
-                        let _ = hide_me.hide();
-                    }
-                });
-            }
             start_tray_updater(handle.clone());
             // Honours the saved switches: a notch hidden last time stays hidden.
             apply_visibility(&handle);

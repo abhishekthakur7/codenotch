@@ -18032,6 +18032,611 @@
           }
         }
       }
+    },
+    "Connect Phone…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォンを接続…"
+          }
+        }
+      }
+    },
+    "Next reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次のリセット"
+          }
+        }
+      }
+    },
+    "Quota is available (0% used)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "割り当てに空きがあります（0% 使用）"
+          }
+        }
+      }
+    },
+    "Resets at": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセット時刻"
+          }
+        }
+      }
+    },
+    "Session limit reached (100% used)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションの上限に到達（100% 使用）"
+          }
+        }
+      }
+    },
+    "Weekly limit reached (100% used)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の上限に到達（100% 使用）"
+          }
+        }
+      }
+    },
+    "Generating": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生成中"
+          }
+        }
+      }
+    },
+    "Prompt": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プロンプト"
+          }
+        }
+      }
+    },
+    "Reading prompt": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プロンプトを読み込み中"
+          }
+        }
+      }
+    },
+    "Sign in to DeepSeek Platform to read your usage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには DeepSeek Platform にサインイン"
+          }
+        }
+      }
+    },
+    "Sign in with kiro-cli to read your usage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量を読み取るには kiro-cli でサインイン"
+          }
+        }
+      }
+    },
+    "Start LM Studio's server to monitor your local models": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデルを監視するには LM Studio のサーバーを起動してください"
+          }
+        }
+      }
+    },
+    "Attached to the bottom screen edge. Option-drag to move left or right.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面の下端に固定されています。⌥ ドラッグで左右に動かせます。"
+          }
+        }
+      }
+    },
+    "Attached to the left-hand screen edge. Option-drag to move up or down.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面の左端に固定されています。⌥ ドラッグで上下に動かせます。"
+          }
+        }
+      }
+    },
+    "Attached to the right-hand screen edge. Option-drag to move up or down.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画面の右端に固定されています。⌥ ドラッグで上下に動かせます。"
+          }
+        }
+      }
+    },
+    "Generate a new code": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新しいコードを生成"
+          }
+        }
+      }
+    },
+    "Pairing code expired": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ペアリングコードの有効期限が切れました"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再試行"
+          }
+        }
+      }
+    },
+    "Code review": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コードレビュー"
+          }
+        }
+      }
+    },
+    "Spark": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spark"
+          }
+        }
+      }
+    },
+    "Run `devin auth login` in a terminal to sign in.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ターミナルで `devin auth login` を実行してサインインしてください。"
+          }
+        }
+      }
+    },
+    "Extra usage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "追加の使用量"
+          }
+        }
+      }
+    },
+    "Extra usage balance": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "追加使用量の残高"
+          }
+        }
+      }
+    },
+    "Weekly quota": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "週間の割り当て"
+          }
+        }
+      }
+    },
+    "No Kimi Code plan on this account": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントに Kimi Code のプランがありません"
+          }
+        }
+      }
+    },
+    "Run kimi and sign in with /login — it writes and refreshes the token this reads.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kimi を実行し、/login でサインインしてください。ここで読み取るトークンが書き出され、更新されます。"
+          }
+        }
+      }
+    },
+    "No Kimi Code usage limits on this account": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアカウントに Kimi Code の使用量の上限がありません"
+          }
+        }
+      }
+    },
+    "Credits": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "クレジット"
+          }
+        }
+      }
+    },
+    "Kiro CLI is not installed": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiro CLI がインストールされていません"
+          }
+        }
+      }
+    },
+    "Overage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "超過分"
+          }
+        }
+      }
+    },
+    "Run kiro-cli login — it writes and refreshes the session this reads.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kiro-cli login を実行してください。ここで読み取るセッションが書き出され、更新されます。"
+          }
+        }
+      }
+    },
+    "Bonus": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ボーナス"
+          }
+        }
+      }
+    },
+    "Kiro CLI reported no usage": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiro CLI は使用量を返しませんでした"
+          }
+        }
+      }
+    },
+    "China": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中国"
+          }
+        }
+      }
+    },
+    "International": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "国際"
+          }
+        }
+      }
+    },
+    "MiniMax reported no usage windows": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MiniMax は使用量の枠を返しませんでした"
+          }
+        }
+      }
+    },
+    "Paste a Coding Plan key in Settings, or Sign in to MiniMax.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定で Coding Plan のキーを貼り付けるか、MiniMax にサインインしてください。"
+          }
+        }
+      }
+    },
+    "Connecting…": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続中…"
+          }
+        }
+      }
+    },
+    "Fold for full-screen apps": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フルスクリーンのアプリでは折りたたむ"
+          }
+        }
+      }
+    },
+    "China mainland": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中国本土"
+          }
+        }
+      }
+    },
+    "Codenotch reads usage from tools already signed in on this Mac — it never asks for your password. Install and sign in to any of Claude Code (the terminal tool, not the Claude app), Cursor (the editor or cursor-agent), Codex, Antigravity, GLM, Grok, OpenCode, Command Code, GitHub Copilot, Kimi Code, Kiro or a Gemini API key (via Gemini CLI, OpenCode or Hermes), and its ring appears in the notch.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch は、この Mac ですでにサインイン済みのツールから使用量を読み取ります。パスワードを尋ねることはありません。Claude Code（Claude アプリではなくターミナルのツール）、Cursor（エディタまたは cursor-agent）、Codex、Antigravity、GLM、Grok、OpenCode、Command Code、GitHub Copilot、Kimi Code、Kiro、または Gemini API キー（Gemini CLI、OpenCode、Hermes 経由）のいずれかをインストールしてサインインすると、そのリングがノッチに現れます。"
+          }
+        }
+      }
+    },
+    "Cookie header (optional)": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cookie ヘッダー（任意）"
+          }
+        }
+      }
+    },
+    "Cookie: …": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cookie: …"
+          }
+        }
+      }
+    },
+    "MiniMax Coding Plan key": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MiniMax Coding Plan のキー"
+          }
+        }
+      }
+    },
+    "Model data": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モデルのデータ"
+          }
+        }
+      }
+    },
+    "Most readings are borrowed from a tool that already holds the account. DeepSeek and MiniMax are the exceptions: clicking Sign in opens a Codenotch window for that account, and signing out here clears only that session and its saved reading.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ほとんどの読み取りは、すでにアカウントを持っているツールから借りています。DeepSeek と MiniMax だけは例外で、「サインイン」をクリックするとそのアカウント用の Codenotch のウインドウが開きます。ここでサインアウトしても、消えるのはそのセッションと保存された読み取りだけです。"
+          }
+        }
+      }
+    },
+    "Phone": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スマートフォン"
+          }
+        }
+      }
+    },
+    "Re-pair your phone after updating": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデート後はスマートフォンを再ペアリングしてください"
+          }
+        }
+      }
+    },
+    "Region": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "地域"
+          }
+        }
+      }
+    },
+    "Show Spark and code review": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spark とコードレビューを表示"
+          }
+        }
+      }
+    },
+    "Show move handle": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移動ハンドルを表示"
+          }
+        }
+      }
+    },
+    "Sign in to MiniMax in Codenotch, or paste a Coding Plan key. A Cookie header is optional. Codenotch never reads a browser's cookies.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codenotch で MiniMax にサインインするか、Coding Plan のキーを貼り付けてください。Cookie ヘッダーは任意です。Codenotch がブラウザの Cookie を読むことはありません。"
+          }
+        }
+      }
+    },
+    "The arc above the notch. Hold it to carry the notch to another edge — Edge above does the same.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ノッチの上にある弧です。長押しすると、ノッチを別の辺へ運べます。上の「配置する辺」でも同じことができます。"
+          }
+        }
+      }
+    },
+    "The notch folds away while a full-screen app is frontmost, and returns when you leave it. Off keeps it in place over full-screen apps.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フルスクリーンのアプリが前面にある間、ノッチは折りたたまれ、離れると戻ります。オフにすると、フルスクリーンのアプリの上でもそのまま表示されます。"
+          }
+        }
+      }
+    },
+    "The ring still follows the main Codex window. Spark and code review stay in the hover card.": {
+      "extractionState": "manual",
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リングは引き続き Codex のメインウインドウに従います。Spark とコードレビューはホバーカードに表示されます。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

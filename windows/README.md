@@ -34,13 +34,29 @@ shows an error or the last reading marked stale. Codenotch does not automate sig
 
 ## Install / build
 
-Prerequisites: Rust (MSVC toolchain), WebView2 runtime (ships with Windows 11).
+Download [`Codenotch-Setup.exe`](https://github.com/vinzdg/codenotch/releases/latest/download/Codenotch-Setup.exe)
+from the latest release. It installs for the current user without administrator rights, puts
+`codenotch-hook.exe` beside the app where **Install hooks** looks for it, and fetches WebView2 if
+Windows does not already have it. The installer is not code-signed, so SmartScreen stops it the
+first time with *Windows protected your PC*: choose **More info**, then **Run anyway**.
+
+To build from source instead — prerequisites: Rust (MSVC toolchain), WebView2 runtime (ships with Windows 11).
 
 ```powershell
 # from this directory (the repo root here; `windows/` inside the upstream repo)
 cargo build --release
 .\target\release\codenotch.exe          # pill appears on the right edge of the primary monitor
 .\target\release\codenotch.exe doctor   # self-diagnosis: credentials, data sources, icons, hooks
+```
+
+To build the installer the way the Windows Package workflow does:
+
+```powershell
+# the hook gets its own target dir, so the bundler never copies it onto itself
+cargo build --release --locked -p codenotch-hook --target-dir target/hook
+cd codenotch
+npx @tauri-apps/cli@2 build --config tauri.bundle.conf.json
+# → ..\target\release\bundle\nsis\Codenotch_<version>_x64-setup.exe
 ```
 
 Tray menu: **Settings…**, **Refresh usage now**, **Quit**. Everything else is in the settings

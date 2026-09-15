@@ -275,6 +275,8 @@ function providers(){
 }
 // Antigravity's "Notch reads" and "Model data", as in the Mac app; chosen in settings
 let agPrefs={limit:'automatic',model:'gemini'};
+// Where the weekly limit's own ring goes, from settings: 'off', 'inside' or 'outside'
+let weeklyRing='off';
 // The tightest metered window, ties going to the lower id so the choice never flickers
 function tightestOf(ws){
   return ws.filter(w=>w.count==null).reduce((a,b)=>!a||b.used>a.used||(b.used===a.used&&b.id<a.id)?b:a,null);
@@ -294,6 +296,17 @@ function headlineOf(snap,id){
   const fam=ws.filter(w=>laneFamily(w)===agPrefs.model), lanes=fam.length?fam:ws;
   if(agPrefs.limit!=='automatic'){ const w=tightestOf(lanes.filter(w=>laneIs(w,agPrefs.limit))); if(w) return w; }
   return tightestOf(lanes.filter(w=>w.used<1))||tightestOf(lanes)||lanes[0];
+}
+// The weekly window each provider reports, or null where there is none: Claude names it seven_day,
+// Codex calls its second window secondary, and Antigravity has one per model family. Cursor has none.
+function weeklyOf(snap,id){
+  const ws=snap.windows.filter(w=>w.count==null); if(!ws.length) return null;
+  const byId=x=>ws.find(w=>w.id===x)||null;
+  if(id==='claude') return byId('seven_day')||byId('weekly_all')||byId('weekly');
+  if(id==='codex') return byId('secondary');
+  if(id==='cursor') return null;
+  const fam=ws.filter(w=>laneFamily(w)===agPrefs.model), lanes=fam.length?fam:ws;
+  return tightestOf(lanes.filter(w=>laneIs(w,'weekly')));
 }
 function staleOf(snap){ if(snap.status==='stale') return true; return snap.fetched_at>0 && (Date.now()-snap.fetched_at)>5*60*1000; }
 let stateSnap={sessions:[],agg:'idle'};
@@ -321,6 +334,16 @@ function renderRing(){
     const h=headlineOf(p.snap,p.id);
     let inner=`<circle cx="28" cy="28" r="22" fill="#2a2a2a"/><circle cx="28" cy="28" r="25" fill="none" stroke="${TRACK}" stroke-width="5"/>`;
     if(h && h.count==null) inner+=svgArc(25,Math.min(h.used,1),tone(h.used),5);
+    if(weeklyRing!=='off'){ // the week, thinner and at its own radius, in its own colour: a session at 12% beside a week at 91% is the case this exists for
+      const wk=weeklyOf(p.snap,p.id);
+      // Inside, it shares the gap with the working indicator, so it stands down while that is showing
+      const taken=weeklyRing==='inside'&&workState(p.id)!=='idle';
+      if(wk&&(!h||wk.id!==h.id)&&!taken){
+        const r=weeklyRing==='inside'?16:31;
+        inner+=`<circle cx="28" cy="28" r="${r}" fill="none" stroke="${TRACK}" stroke-width="2.4" opacity="0.7"/>`
+          +svgArc(r,Math.min(wk.used,1),tone(wk.used),2.4,'opacity="0.85"');
+      }
+    }
     { // thin inner arc: spinning = working, amber pulse = waiting on you (one animation for all four, different sources)
       const ws=workState(p.id);
       if(ws==='running') inner+=`<g class="arc-spin">${svgArc(19,0.28,RUNGREEN,2.5)}</g>`;
@@ -569,6 +592,8 @@ listen('notch_slots',e=>{
   if(card.classList.contains('show')){renderCard();armWatchdog();}
 }).catch(()=>{});
 invoke('get_antigravity_prefs').then(p=>{if(p){agPrefs=p;renderRing();}}).catch(()=>{});
+invoke('get_weekly_ring').then(v=>{if(typeof v==='string'){weeklyRing=v;renderRing();}}).catch(()=>{});
+listen('weekly_ring',e=>{if(typeof e.payload==='string'){weeklyRing=e.payload;renderRing();}}).catch(()=>{});
 listen('antigravity_prefs',e=>{if(e.payload){agPrefs=e.payload;renderRing();}}).catch(()=>{});
 listen('glyphs',e=>{glyphs=e.payload||glyphs;renderRing();if(card.classList.contains('show'))renderCard();}).catch(()=>{});
 listen('activity',e=>{activity=e.payload||activity;renderRing();if(card.classList.contains('show'))renderCard();}).catch(()=>{});

@@ -378,6 +378,7 @@
               <option value="ja">&#26085;&#26412;&#35486;</option>
               <option value="ko">&#54620;&#44397;&#50612;</option>
               <option value="ru">Русский</option>
+              <option value="uk">Українська</option>
             </select>
           </div>
         </div>
@@ -1216,7 +1217,7 @@ const autoSwitch = remoteSwitch('sw-autostart', 'get_autostart', 'set_autostart'
 const hooksSwitch = remoteSwitch('sw-hooks', 'get_hooks_installed', 'set_hooks_installed', 'The Claude Code messages');
 
 /* ---- language ----------------------------------------------------------- */
-const LANGS = ['auto', 'en', 'zh', 'ja', 'ko', 'ru'];
+const LANGS = ['auto', 'en', 'zh', 'ja', 'ko', 'ru', 'uk'];
 document.getElementById('lang').addEventListener('change', e => {
   const previous = e.target.dataset.previous || 'auto';
   const v = LANGS.indexOf(e.target.value) >= 0 ? e.target.value : 'auto';

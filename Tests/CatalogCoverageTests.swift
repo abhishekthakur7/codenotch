@@ -40,6 +40,26 @@ final class CatalogCoverageTests: XCTestCase {
         }
     }
 
+    func testUkrainianCoreCopyIsTranslated() throws {
+        let catalog = try loadCatalog().json
+        let expected = [
+            "just now": "щойно",
+            "Resets in %lld min": "Скидання через %lld хв",
+            "%lld%% Used · %lld%% left": "Використано %lld%% · лишилось %lld%%",
+            "Always show": "Показувати завжди",
+            "Settings…": "Налаштування…",
+            "Sign in to %@": "Увійти в %@",
+            "%lld%% of its %@ limit used.": "Використано %lld%% ліміту «%@»."
+        ]
+
+        for (key, value) in expected {
+            XCTAssertEqual(
+                catalog.strings[key]?.localizations?["uk"]?.stringUnit?.value,
+                value,
+                "missing Ukrainian translation for \(key)"
+            )
+        }
+    }
 
     /// There is deliberately no "language X covers every key" test.
     ///

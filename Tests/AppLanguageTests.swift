@@ -101,4 +101,16 @@ final class AppLanguageTests: XCTestCase {
         L10n.testLocale = nil
         XCTAssertEqual(L10n.locale.identifier, "ru")
     }
+
+    func testUkrainianIsOfferedAndMapsToUk() {
+        XCTAssertTrue(AppLanguage.allCases.contains(.ukrainian))
+        XCTAssertEqual(AppLanguage.ukrainian.title, "Українська")
+        XCTAssertEqual(AppLanguage.ukrainian.locale?.identifier, "uk")
+    }
+
+    func testApplyUkrainianStoresTheOverride() {
+        L10n.apply(.ukrainian)
+        L10n.testLocale = nil
+        XCTAssertEqual(L10n.locale.identifier, "uk")
+    }
 }

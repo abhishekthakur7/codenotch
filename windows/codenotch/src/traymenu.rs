@@ -195,7 +195,9 @@ pub fn label(name: &str, lang: &str) -> String {
 /// header reading 1 % above a line reading 0.5 % is the app contradicting itself.
 pub fn header(provider: &str, reading: Option<f64>, stale_since: Option<u64>, now: u64, lang: &str) -> String {
     let value = reading.map(|f| format!("{}%", pct(f))).unwrap_or_else(|| "—".into());
-    match stale_since {
+    // Under a minute is not worth saying. A provider that re-reads while still flagged stale would
+    // otherwise head every line with "0m ago", which reads as a fault rather than as an age.
+    match stale_since.filter(|since| now.saturating_sub(*since) >= 60_000) {
         Some(since) => format!("{provider} — {value} · {}", ago(since, now, lang)),
         None => format!("{provider} — {value}"),
     }
@@ -334,6 +336,13 @@ mod tests {
         assert_eq!(header("Claude", Some(0.61), None, 0, "en"), "Claude — 61%");
         assert_eq!(header("Claude", Some(0.61), Some(0), 20 * MIN, "en"), "Claude — 61% · 20m ago");
         assert_eq!(header("Cursor", None, None, 0, "en"), "Cursor — —");
+    }
+
+    /// A reading taken seconds ago says nothing about its age, however it is flagged.
+    #[test]
+    fn an_age_under_a_minute_is_left_unsaid() {
+        assert_eq!(header("Claude", Some(0.07), Some(0), 30_000, "en"), "Claude — 7%");
+        assert_eq!(header("Claude", Some(0.07), Some(0), 90_000, "en"), "Claude — 7% · 1m ago");
     }
 
     /// Antigravity reports lanes below one percent; rounding the header to 1 % while the line under

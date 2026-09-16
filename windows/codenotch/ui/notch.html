@@ -101,19 +101,6 @@
   .s-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#b0b0b3;padding:2px 0}
   .s-dot{width:6px;height:6px;border-radius:3px;flex:0 0 auto}
   .s-more{font-size:11px;color:#808080;padding:2px 0}
-  /* Size slider — the last row of the hover card. Only the pill is scaled, so this row keeps its
-     own size and does not move out from under the cursor while it is being dragged. */
-  .c-scale{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #1e1e1e}
-  .c-scale input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:2px;background:#2d2d2d;outline:none}
-  .c-scale input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:#2d2d2d}
-  .c-scale input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:10px;margin-top:-3.5px;border-radius:50%;background:#8a8a8a;cursor:pointer}
-  .c-scale-val{font-size:10px;color:#808080;min-width:30px;text-align:right}
-
-  #notice{
-    position:absolute;left:8px;bottom:6px;right:80px;font-size:10px;color:#808080;
-    background:rgba(0,0,0,.85);border-radius:8px;padding:4px 8px;display:none
-  }
-  #notice.show{display:block}
 </style>
 </head>
 <body>
@@ -202,8 +189,7 @@ const TEXT={
     'Sign in to Codex to see usage.':'Войдите в Codex, чтобы увидеть использование.',
     'Sign in to Antigravity to see usage.':'Войдите в Antigravity, чтобы увидеть использование.',
     'needs your input':'требуется ваш ответ',
-    'Working in':'Работает в',
-    'Notch size':'Размер панели'
+    'Working in':'Работает в'
   },
   zh:{
     'Included usage':'包含用量',
@@ -243,7 +229,6 @@ const TEXT={
     'Sign in to Antigravity to see usage.':'请登录 Antigravity 以查看用量。',
     'needs your input':'等待你的输入',
     'Working in':'工作于',
-    'Notch size':'胶囊尺寸',
   },
 };
 // Kept as patterns rather than exact keys: each one carries a number, a plan name or an error
@@ -359,9 +344,6 @@ function setUiLanguage(lang){
   renderRing();
   if(card&&card.classList.contains('show')) renderCard();
 }
-// Notch size, as a percentage (40…100). Declared here with the rest of the page state so the card
-// renderer can never reference it before it exists.
-let scalePct=100, scaleDragging=false, scaleT=null, scaleSaveT=null;
 // "Is it working?" per provider: Claude from the four-state engine, the others from the activity probe. Returns running | attention | idle
 function workState(id){
   if(id==='claude'){
@@ -553,9 +535,7 @@ function renderCard(){
       html+=moreRow(acts.length-SESSION_ROWS)+`</div>`;
     }
   }
-  html+=`<div class="c-scale"><input id="scale-range" type="range" min="40" max="100" step="5" value="${scalePct}" aria-label="${textCopy('Notch size')}" title="${textCopy('Notch size')}"><span class="c-scale-val" id="scale-val">${scalePct}%</span></div>`;
   c.innerHTML=html;
-  wireScaleRow();
   placeCard();
 }
 // The card follows the hovered cell: vertically centred on it (kept inside the window), tail pointing at it
@@ -602,48 +582,10 @@ function reportHot(){
   const rects=open?[rectOf(pill),rectOf(tail),rectOf(card)]:[rectOf(pill)];
   callq('set_hot',{rects,expanded:open}).catch(()=>{});
 }
-/* ---- Notch size ---------------------------------------------------------
-   The pill alone is scaled, with CSS `zoom` rather than `transform`: the pill is centred by
-   `top:50%; transform:translateY(-50%)`, so assigning to `transform` here would wipe that out and
-   throw the pill to the top of the screen. `zoom` changes the element's laid-out size instead, so
-   the existing centring keeps working and `right:0` keeps it against the edge.
-   The hover card is deliberately left at full size: it holds the slider, and a slider that shrank
-   as it was dragged would slide out from under the cursor. */
-function clampPct(v){const n=Math.round(Number(v));return isFinite(n)?Math.max(40,Math.min(100,n)):100;}
-function applyPillScale(){ if(pill) pill.style.zoom=String(scalePct/100); }
-function applyScale(v){
-  scalePct=clampPct(v);
-  const lab=document.getElementById('scale-val'); if(lab) lab.textContent=scalePct+'%';
-  applyPillScale();                                       // draw it at once; do not wait on Rust
-  // One save when the drag settles, not one per pixel: set_scale writes the config file and
-  // broadcasts an event every time it is called. Same 150ms wait the settings window's slider uses.
-  clearTimeout(scaleSaveT);
-  scaleSaveT=setTimeout(()=>{invoke('set_scale',{scale:scalePct/100}).catch(()=>{});},150); // percent → fraction: 60 becomes 0.60
-  // The pill just changed size, so the hot rectangles the watchdog checks are stale
-  clearTimeout(scaleT);
-  scaleT=setTimeout(()=>{if(card.classList.contains('show')){placeCard();armWatchdog();}},120);
-}
-function wireScaleRow(){
-  const r=document.getElementById('scale-range'); if(!r) return;
-  r.value=String(scalePct);
-  r.addEventListener('input',()=>applyScale(r.value)); // live while dragging, and on arrow keys
-  r.addEventListener('pointerdown',()=>{scaleDragging=true;});
-  r.addEventListener('mousedown',()=>{scaleDragging=true;});
-}
-document.addEventListener('pointerup',()=>{scaleDragging=false;});
-document.addEventListener('pointercancel',()=>{scaleDragging=false;});
-document.addEventListener('mouseup',()=>{scaleDragging=false;});
-function loadScale(){
-  invoke('get_scale').then(v=>{
-    const n=Number(v); if(isFinite(n)&&n>0) scalePct=clampPct(Math.round(n*100));
-    applyPillScale(); wireScaleRow();
-  }).catch(()=>{applyPillScale();});
-}
-
 function armWatchdog(){
   requestAnimationFrame(reportHot); // wait one frame so renderCard's new content is laid out before measuring
 }
-// Viewport fit (pure front-end fallback, independent of Rust): the window is NOTCH_W (360) × primary scale physical px,
+// Viewport fit (pure front-end fallback, independent of Rust): Rust sizes and zooms the window so this page is 360 CSS px wide,
 // so if this page's CSS viewport is not 360 wide the WebView's DPR disagrees with the monitor; CSS zoom pulls the layout back to the design size.
 function fitZoom(){
   const z=innerWidth/360;
@@ -691,17 +633,7 @@ document.addEventListener('mousemove',e=>{
 document.addEventListener('mouseout',e=>{ // relatedTarget null = the cursor left the page
   if(!e.relatedTarget && card.classList.contains('show')){ if(hideLogged++<5) jslog('mouseout left the page -> collapse'); scheduleHide(); }
 });
-listen('pointer_left',()=>{if(scaleDragging)return;clearTimeout(hideTimer);hideCard();}).catch(()=>{});
-// The size can also be changed from the settings window, which is a different window entirely.
-// Ignore it while this page's own slider is being dragged, or the two would fight each other.
-listen('scale',e=>{
-  if(scaleDragging) return;
-  const n=Number(e.payload); if(!isFinite(n)||n<=0) return;
-  scalePct=clampPct(Math.round(n*100));
-  applyPillScale();
-  const r=document.getElementById('scale-range');
-  if(r){r.value=String(scalePct);const lab=document.getElementById('scale-val');if(lab)lab.textContent=scalePct+'%';}
-}).catch(()=>{});
+listen('pointer_left',()=>{clearTimeout(hideTimer);hideCard();}).catch(()=>{});
 // Card content changes change its height -> report the hot rectangles again
 listen('usage',()=>{if(card.classList.contains('show'))armWatchdog();}).catch(()=>{});
 listen('state',()=>{if(card.classList.contains('show'))armWatchdog();}).catch(()=>{});
@@ -739,7 +671,6 @@ listen('cursor',e=>{cursorSnap=e.payload||cursorSnap;renderRing();if(card.classL
 invoke('get_cursor').then(u=>{cursorSnap=u||cursorSnap;renderRing();}).catch(()=>{});
 listen('antigravity',e=>{agSnap=e.payload||agSnap;renderRing();if(card.classList.contains('show'))renderCard();}).catch(()=>{});
 invoke('get_antigravity').then(u=>{agSnap=u||agSnap;renderRing();}).catch(()=>{});
-loadScale();
 invoke('get_notch_slots').then(v=>{if(Array.isArray(v)){notchSlots=v;renderRing();}}).catch(()=>{});
 listen('notch_slots',e=>{
   notchSlots=Array.isArray(e.payload)?e.payload:null;

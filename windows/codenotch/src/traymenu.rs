@@ -162,17 +162,28 @@ pub fn label(name: &str, lang: &str) -> String {
         ("zh", "Included usage") => "包含用量",
         ("zh", "API usage") => "API 用量",
         ("ja", "Current session") => "現在のセッション",
+        ("ja", "Weekly (all models)") => "週間 (すべてのモデル)",
+        ("ja", "Weekly (Opus)") => "週間 (Opus)",
+        ("ja", "Weekly (model-scoped)") => "週間 (モデル別)",
         ("ja", "Weekly limit" | "Weekly Limit") => "週間の上限",
         ("ja", "Monthly limit" | "Monthly Limit") => "月間の上限",
         ("ja", "5-hour Limit" | "5-Hour Limit") => "5 時間の上限",
         ("ja", "Included usage") => "プラン内の使用量",
         ("ja", "API usage") => "API 使用量",
         ("uk", "Current session") => "Поточна сесія",
+        ("uk", "Weekly (all models)") => "Тижневий (усі моделі)",
+        ("uk", "Weekly (Opus)") => "Тижневий (Opus)",
+        ("uk", "Weekly (model-scoped)") => "Тижневий (за моделями)",
         ("uk", "Weekly limit" | "Weekly Limit") => "Тижневий ліміт",
         ("uk", "Monthly limit" | "Monthly Limit") => "Місячний ліміт",
         ("uk", "5-hour Limit" | "5-Hour Limit") => "Ліміт 5 годин",
         ("uk", "Included usage") => "Використання в тарифі",
         ("uk", "API usage") => "Використання API",
+        // Only these three in Korean: the Mac catalog has no Korean, so the names it shares
+        // with the card have nothing to take.
+        ("ko", "Weekly (all models)") => "주간 (모든 모델)",
+        ("ko", "Weekly (Opus)") => "주간 (Opus)",
+        ("ko", "Weekly (model-scoped)") => "주간 (모델별)",
         _ => name,
     };
     translated.into()

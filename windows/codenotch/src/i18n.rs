@@ -96,7 +96,7 @@ pub fn tr(lang: &str, key: &str) -> &'static str {
         ("uk", "open_data") => "Відкрити теку даних (журнали / значки)",
         (_, "open_data") => "Open data folder (logs / icons)",
         ("ja", "refresh_all") => "すべて更新",
-        ("ko", "refresh_all") => "사용량 지금 새로고침",
+        ("ko", "refresh_all") => "모두 새로 고침",
         ("ja", "install") => "Claude Code フックを導入",
         ("ja", "uninstall") => "フックを削除",
         ("ja", "language") => "言語",
@@ -141,12 +141,14 @@ pub fn tr(lang: &str, key: &str) -> &'static str {
 
         ("zh", "waiting") => "正在等待首次读数…",
         ("ja", "waiting") => "最初の読み取りを待っています…",
+        ("ko", "waiting") => "첫 번째 읽기를 기다리는 중…",
         ("ru", "waiting") => "Ожидание первых данных…",
         ("uk", "waiting") => "Очікування першого показника…",
         (_, "waiting") => "Waiting for the first reading…",
 
         ("zh", "quit_app") => "退出 Codenotch",
         ("ja", "quit_app") => "Codenotch を終了",
+        ("ko", "quit_app") => "Codenotch 종료",
         ("ru", "quit_app") => "Выйти из Codenotch",
         ("uk", "quit_app") => "Вийти з Codenotch",
         (_, "quit_app") => "Quit Codenotch",

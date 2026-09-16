@@ -32,6 +32,40 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.12.0",
+                headline: L10n.t("An installer for Windows, Ukrainian, Dark glass, and limits you set yourself."),
+                changes: [
+                    ReleaseNote.Change(
+                        title: L10n.t("Codenotch for Windows, installable"),
+                        detail: L10n.t("Every release now carries Codenotch-Setup.exe, which installs for the current user without administrator rights. It is not signed yet, so Windows asks once. The port also gains the Mac's settings window, Small, Medium and Large sizes, a ring for the weekly limit, and Chinese, Japanese, Korean and Ukrainian.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Українська"),
+                        detail: L10n.t("A seventh language, on the Mac and on Windows.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Dark glass"),
+                        detail: L10n.t("A third surface for the notch, dark whatever the Mac's appearance is set to.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Your own watch and critical limits"),
+                        detail: L10n.t("The points where a ring turns amber and red are yours to move, and the weekly ring can be dashed.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Quieter in the background"),
+                        detail: L10n.t("A provider you have switched off is no longer watched at all, sessions are read from the end of the file rather than the whole of it, and the notch no longer folds on hover when folding for full-screen apps is off.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Windows keeps its Claude reading"),
+                        detail: L10n.t("An expired token is renewed rather than read as a rate limit, the notch no longer takes focus, and it holds still when Windows animation effects are off.")
+                    ),
+                    ReleaseNote.Change(
+                        title: L10n.t("Japanese, complete"),
+                        detail: L10n.t("Every string in the app now has a Japanese translation, and fifty-five strings that newer features never got are translated too.")
+                    ),
+                ]
+            ),
+            ReleaseNote(
                 version: "1.11.0",
                 headline: L10n.t("Kiro and MiniMax, German, a daily pace ring for Claude, and a switch for folding over full-screen apps."),
                 changes: [

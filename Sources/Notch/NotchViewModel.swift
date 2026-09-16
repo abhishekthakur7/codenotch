@@ -185,6 +185,7 @@ final class NotchViewModel: ObservableObject {
     /// Mirrored here for the same reason `accentColor` is: the notch is a
     /// separate window, and it has to redraw the moment Settings changes this.
     @Published var weeklyRing: WeeklyRing = .off
+    @Published var weeklyRingDashed: Bool = false
     /// Whether the move handle is on the notch at all. Mirrored from Settings
     /// like `weeklyRing`.
     @Published var showsMoveHandle = true

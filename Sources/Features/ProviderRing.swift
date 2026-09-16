@@ -33,6 +33,7 @@ struct ProviderRing: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
     @Environment(\.codenotchAccentColor) private var accentColor
+    @Environment(\.weeklyRingDashed) private var weeklyRingDashed
     @State private var spin: Double = 0
 
     private var band: UsageBand {
@@ -122,7 +123,8 @@ struct ProviderRing: View {
                     Circle()
                         .inset(by: inset)
                         .stroke(Palette.ringTrack,
-                                style: StrokeStyle(lineWidth: NotchLayout.weeklyRingStroke))
+                                style: StrokeStyle(lineWidth: NotchLayout.weeklyRingStroke,
+                                                   dash: weeklyRingDashed ? [4, 2] : []))
                         .opacity(reduceTransparency ? 1 : 0.7)
 
                     Circle()
@@ -131,7 +133,8 @@ struct ProviderRing: View {
                         .stroke(
                             weeklyBand.color(accent: accentColor),
                             style: StrokeStyle(lineWidth: NotchLayout.weeklyRingStroke,
-                                               lineCap: .round)
+                                               lineCap: weeklyRingDashed ? .butt : .round,
+                                               dash: weeklyRingDashed ? [4, 2] : [])
                         )
                         .opacity(reduceTransparency ? 1 : 0.8)
                         .rotationEffect(.degrees(-90))
@@ -306,5 +309,16 @@ struct ProviderCell: View {
         guard let ledger = snapshot.localLedger else { return "" }
         let context = snapshot.localContextFraction.map { ", Context \(Percent.text(for: $0))% full" } ?? ""
         return "\(context), Tokens today \(ledger.tokensTodayText), \(ledger.requestsTodayText) requests"
+    }
+}
+
+private struct WeeklyRingDashedKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
+extension EnvironmentValues {
+    var weeklyRingDashed: Bool {
+        get { self[WeeklyRingDashedKey.self] }
+        set { self[WeeklyRingDashedKey.self] = newValue }
     }
 }

@@ -150,6 +150,8 @@
           <div class="item cap" id="cap-show" data-dynamic></div>
           <div class="item"><span>Size</span><span class="seg" id="seg-size"><button data-v="0.8">Small</button><button data-v="1">Medium</button><button data-v="1.25">Large</button></span></div>
           <div class="item cap" id="cap-size" data-dynamic></div>
+          <div class="item"><span>Weekly ring</span><span class="seg" id="seg-weekly"><button data-v="off">Off</button><button data-v="inside">Inside</button><button data-v="outside">Outside</button></span></div>
+          <div class="item cap" id="cap-weekly" data-dynamic></div>
           <div class="item"><span class="hint">The pill can be dragged up and down the right-hand edge. If it has ended up somewhere you cannot see it — off the bottom of a screen you have unplugged, say — this drops it back into the middle of the edge.</span><button class="btn" id="btn-recentre">Recentre</button></div>
         </div>
         <div class="sec">App</div>
@@ -237,6 +239,10 @@ const RU_STATIC = {
   'Takes the least room on the edge. Readable, but not from across the desk.':'Занимает минимум места у края. Читается вблизи, но не издалека.',
   'The size the notch was drawn at.':'Размер, для которого была отрисована панель.',
   'Easier to read at a glance, and harder to ignore.':'Легче читать одним взглядом, но сложнее не заметить.',
+  'Weekly ring':'Недельное кольцо', 'Off':'Выкл.', 'Inside':'Внутри', 'Outside':'Снаружи',
+  'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.':'Одно кольцо на провайдера с основным лимитом. Недельная квота остаётся в карточке при наведении.',
+  'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.':'Тонкое кольцо недельного лимита внутри основного. Оно делит зазор с индикатором работы.',
+  'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.':'Тонкое кольцо недельного лимита вокруг основного, в промежутке между кольцом и краем панели.',
   'The notch stays open with every reading visible.':'Выемка остаётся открытой, и все данные видны.',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'Чёрная панель у правого края экрана с отдельным кольцом для каждого инструмента. При выключении панель исчезает, но Codenotch продолжает считать использование.',
   'Recentre':'По центру',
@@ -285,6 +291,13 @@ const ZH_STATIC = {
   'Takes the least room on the edge. Readable, but not from across the desk.':'边缘上占得最少。能读，但隔着桌子就不行。',
   'The size the notch was drawn at.':'刘海绘制时的尺寸。',
   'Easier to read at a glance, and harder to ignore.':'一眼更好读，也更难忽视。',
+  'Weekly ring':'每周圆环',
+  'Off':'关闭',
+  'Inside':'内侧',
+  'Outside':'外侧',
+  'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.':'每个服务一个圆环，显示主额度。每周额度仍在提示卡里。',
+  'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.':'一条更细的每周额度圆环，画在主环内侧。和工作指示共用那个空隙。',
+  'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.':'一条更细的每周额度圆环，画在主环外侧，圆环和刘海边缘之间的空隙里。',
   'The notch stays open with every reading visible.':'刘海保持展开，所有读数都看得见。',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'屏幕右侧边缘的黑色胶囊，每个工具对应一个圆环。关闭它后胶囊会消失；无论哪种情况，Codenotch 都会继续统计你的使用情况。',
   'Recentre':'重新居中',
@@ -342,6 +355,13 @@ const JA_STATIC = {
   'Takes the least room on the edge. Readable, but not from across the desk.':'辺で占める場所が最小。読めますが、机の向こうからは無理です。',
   'The size the notch was drawn at.':'ノッチが本来描かれるサイズ。',
   'Easier to read at a glance, and harder to ignore.':'ひと目で読みやすく、無視しにくいサイズ。',
+  'Weekly ring':'週間のリング',
+  'Off':'オフ',
+  'Inside':'内側',
+  'Outside':'外側',
+  'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.':'サービスごとに 1 本のリングで主な上限を表示します。週間の枠はホバーカードに残ります。',
+  'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.':'週間の上限を細いリングで主リングの内側に描きます。作業中インジケータと同じ隙間を共有します。',
+  'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.':'週間の上限を細いリングで主リングの外側、リングとノッチの端の間の余白に描きます。',
   'The notch stays open with every reading visible.':'ノッチは開いたままで、すべての読み取りが見えます。',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'画面の右端にある黒いピルには、ツールごとに1つのリングが表示されます。オフにするとピルは消えますが、どちらにしても Codenotch は使用量のカウントを続けます。',
   'Recentre':'中央に戻す',
@@ -399,6 +419,13 @@ const KO_STATIC = {
   'Takes the least room on the edge. Readable, but not from across the desk.':'가장자리에 차지하는 공간이 가장 적습니다. 읽을 수는 있지만 책상 반대편에서는 보이지 않습니다.',
   'The size the notch was drawn at.':'노치가 처음 디자인된 기본 크기입니다.',
   'Easier to read at a glance, and harder to ignore.':'한눈에 읽기 쉽고, 무시하고 지나치기 어렵습니다.',
+  'Weekly ring':'주간 링',
+  'Off':'꺼짐',
+  'Inside':'안쪽',
+  'Outside':'바깥쪽',
+  'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.':'제공자당 하나의 링으로, 주요 제한을 표시합니다. 주간 허용량은 호버 카드에 유지됩니다.',
+  'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.':'주간 제한을 나타내는 더 얇은 링으로, 메인 링 안쪽에 그려집니다. 작동 표시기와 간격을 공유합니다.',
+  'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.':'주간 제한을 나타내는 더 얇은 링으로, 메인 링 주위에 그려지며 링과 노치 가장자리 사이의 여백에 위치합니다.',
   'The notch stays open with every reading visible.':'노치가 열려 있고 모든 읽기 값이 표시됩니다.',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'화면 오른쪽 가장자리에 있는 검은색 필로, 도구당 하나의 링이 있습니다. 끄면 필이 사라지지만, 어느 쪽이든 Codenotch는 사용량을 계속 계산합니다.',
   'Recentre':'가운데로 되돌리기',
@@ -809,6 +836,39 @@ document.getElementById('seg-size').addEventListener('click', e => {
     .then(() => { sizeBusy = false; renderSize(); });
 });
 
+/* ---- Appearance: the weekly ring ------------------------------------------- */
+const WEEKLY_WHY = {
+  off: 'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.',
+  inside: 'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.',
+  outside: 'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.'
+};
+let weeklyRing = 'off', weeklyBusy = false;
+function renderWeekly(){
+  for(const b of document.querySelectorAll('#seg-weekly button')){
+    const on = b.dataset.v === weeklyRing;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.disabled = weeklyBusy;
+  }
+  const why = WEEKLY_WHY[weeklyRing] || '';
+  document.getElementById('cap-weekly').textContent = ui(why, why);
+}
+document.getElementById('seg-weekly').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b || b.disabled || b.dataset.v === weeklyRing) return;
+  const want = b.dataset.v;
+  weeklyBusy = true;
+  weeklyRing = want;
+  renderWeekly();
+  invoke('set_weekly_ring', { placement: want })
+    .then(v => { weeklyRing = typeof v === 'string' ? v : want; toast(); })
+    .catch(err => {
+      strip('set_weekly_ring failed: ' + errText(err));
+      return call('get_weekly_ring', undefined, null).then(v => { if(typeof v === 'string') weeklyRing = v; });
+    })
+    .then(() => { weeklyBusy = false; renderWeekly(); });
+});
+
 /* ---- Appearance: position ------------------------------------------------ */
 document.getElementById('btn-recentre').addEventListener('click', () => {
   invoke('reset_notch_position')
@@ -868,6 +928,7 @@ function renderAll(){
   renderAccounts();
   renderFlags();
   renderSize();
+  renderWeekly();
   drawSwitch(document.getElementById('sw-autostart'), autostart);
   document.getElementById('title').textContent = ui(TITLES[curTab], TITLES[curTab]);
 }
@@ -884,6 +945,7 @@ function boot(){
   call('get_glyphs', undefined, null).then(g => { if(g && typeof g === 'object'){ glyphs = g; renderAccounts(); } });
   try { window.__TAURI__.event.listen('glyphs', e => { if(e.payload){ glyphs = e.payload; renderAccounts(); } }); } catch(e) { /* the letters stay */ }
   call('get_scale', undefined, null).then(v => { if(typeof v === 'number') notchSize = v; renderSize(); });
+  call('get_weekly_ring', undefined, null).then(v => { if(typeof v === 'string') weeklyRing = v; renderWeekly(); });
   call('get_ui_flags', undefined, null).then(v => { if(v && typeof v === 'object') flags = readFlags(v); renderFlags(); });
   Promise.all([call('get_lang', undefined, 'auto'), call('get_lang_resolved', undefined, 'en')]).then(([raw, resolved]) => {
     const l = (typeof raw === 'string' && LANGS.indexOf(raw) >= 0) ? raw : 'auto';

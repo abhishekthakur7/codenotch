@@ -47,6 +47,9 @@ pub struct Config {
     /// window grows and its WebView zooms, so the rings, text and hover card keep their proportions.
     #[serde(default = "default_scale")]
     pub scale: f64,
+    /// Where the weekly limit gets a ring of its own: "off", "inside" or "outside".
+    #[serde(default = "default_weekly_ring")]
+    pub weekly_ring: String,
     /// What the tray icon draws: "off" (the plain mark, the previous behaviour and the default),
     /// "numbers" (up to two readings as digits) or "bars" (a column per reading).
     #[serde(default = "default_tray_mode")]
@@ -89,6 +92,18 @@ fn default_notch_y() -> f64 {
 fn default_scale() -> f64 {
     1.0
 }
+fn default_weekly_ring() -> String {
+    "off".into()
+}
+
+/// A second arc changes how every reading looks, so an unreadable value means off rather than a
+/// guess at what was meant.
+pub fn weekly_ring_or_off(value: &str) -> String {
+    match value {
+        "inside" | "outside" => value.to_string(),
+        _ => default_weekly_ring(),
+    }
+}
 fn yes() -> bool {
     true
 }
@@ -126,6 +141,7 @@ impl Default for Config {
             drag_enabled: false,
             notch_y: default_notch_y(),
             scale: default_scale(),
+            weekly_ring: default_weekly_ring(),
             tray_mode: default_tray_mode(),
             tray_providers: default_tray_providers(),
             tray_slots: Vec::new(), // filled in by load(), from tray_providers
@@ -194,6 +210,7 @@ pub fn load() -> Config {
 
     // The old slider's 40–100 %, or a hand-edited file, lands on one of the three sizes
     cfg.scale = snap_scale(cfg.scale);
+    cfg.weekly_ring = weekly_ring_or_off(&cfg.weekly_ring);
     cfg
 }
 
@@ -209,7 +226,7 @@ pub fn save(cfg: &Config) {
 
 #[cfg(test)]
 mod tests {
-    use super::snap_scale;
+    use super::{snap_scale, weekly_ring_or_off};
 
     #[test]
     fn a_saved_scale_snaps_to_the_nearest_size() {
@@ -219,5 +236,13 @@ mod tests {
         assert_eq!(snap_scale(1.0), 1.0);
         assert_eq!(snap_scale(1.2), 1.25);
         assert_eq!(snap_scale(3.0), 1.25);
+    }
+
+    #[test]
+    fn only_the_two_placements_are_kept() {
+        assert_eq!(weekly_ring_or_off("inside"), "inside");
+        assert_eq!(weekly_ring_or_off("outside"), "outside");
+        assert_eq!(weekly_ring_or_off("Inside"), "off");
+        assert_eq!(weekly_ring_or_off(""), "off");
     }
 }

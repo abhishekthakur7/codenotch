@@ -591,6 +591,30 @@ fn set_scale(app: AppHandle, scale: f64) -> f64 {
     value
 }
 
+/// Where the weekly limit's ring sits, if it is drawn at all.
+#[tauri::command]
+fn get_weekly_ring(app: AppHandle) -> String {
+    let st = app.state::<AppState>();
+    let c = st.cfg.lock().unwrap();
+    c.weekly_ring.clone()
+}
+
+/// Unknown values are refused rather than stored. The notch draws its own rings, so it is told.
+#[tauri::command]
+fn set_weekly_ring(app: AppHandle, placement: String) -> String {
+    let value = {
+        let st = app.state::<AppState>();
+        let mut c = st.cfg.lock().unwrap();
+        if ["off", "inside", "outside"].contains(&placement.as_str()) {
+            c.weekly_ring = placement;
+            config::save(&c);
+        }
+        c.weekly_ring.clone()
+    };
+    let _ = app.emit("weekly_ring", &value);
+    value
+}
+
 // ---------------- tray icon readings ----------------
 
 /// The tightest metered window, ties going to the lower id so the choice never flickers. A `count`
@@ -1146,6 +1170,8 @@ fn main() {
             set_lang,
             get_scale,
             set_scale,
+            get_weekly_ring,
+            set_weekly_ring,
             get_tray_options,
             get_tray_config,
             set_tray_config,

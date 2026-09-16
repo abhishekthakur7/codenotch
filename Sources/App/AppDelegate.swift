@@ -9,7 +9,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var phoneLinkServerStatus: PhoneLinkServerStatus?
     var phoneLinkPairing: PhoneLinkPairing?
     var phoneLinkRegistry: PhoneLinkRegistry?
-    private var monitors: [String: any AgentActivityMonitor] = [:]
+    private var activityCoordinator: ActivityCoordinator?
     private var ollamaRelay: OllamaActivityRelay?
     private var lmstudioMetrics: LMStudioMetrics?
     private var preferences: Preferences?
@@ -690,27 +690,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             refresher.start()
             tokenRefresher = refresher
         }
-        for (id, monitor) in monitors {
-            monitor.sessionsPublisher
-                .receive(on: RunLoop.main)
-                .sink { [weak self, weak fleet] live in
-                    guard let fleet else { return }
-                    fleet.setSessions(providerID: id, sessions: live)
-                    // The publisher delivers on the main run loop, but the
-                    // closure itself is nonisolated — the same assertion the
-                    // notch controller's timers make.
-                    MainActor.assumeIsolated { self?.announceCompletions(sessions: fleet.sessions) }
-                }
-                .store(in: &cancellables)
-            monitor.start()
+        let activity = ActivityCoordinator(monitors: monitors) { [weak self, weak fleet] id, sessions in
+            guard let fleet else { return }
+            fleet.setSessions(providerID: id, sessions: sessions)
+            self?.announceCompletions(sessions: fleet.sessions)
         }
-        // Poll usage hard only while something is actually running — an agent's
-        // session, or a local model reading a prompt or generating.
-        store?.isBusy = { [weak self] in
-            monitors.values.contains { m in m.sessions.contains { $0.state == .busy } }
-                || (self?.lmstudioMetrics?.isBusy ?? false)
+        self.activityCoordinator = activity
+        let monitorIDs = Set(monitors.keys)
+        activity.setEnabled(Set(monitorIDs.filter { preferences.isConnected($0) }))
+        preferences.$connectedProviders
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak activity, weak preferences] _ in
+                guard let preferences else { return }
+                activity?.setEnabled(Set(monitorIDs.filter { preferences.isConnected($0) }))
+            }
+            .store(in: &cancellables)
+        store?.isBusy = { [weak self, weak activity] in
+            (activity?.isBusy ?? false) || (self?.lmstudioMetrics?.isBusy ?? false)
         }
-        self.monitors = monitors
 
         // Applied last, right before the panel goes up: every one of these
         // calls a `NotchFleet.apply(...)` that can trigger `reconcile()` on
@@ -920,7 +918,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         lmstudioMetrics?.stop()
         tokenRefresher?.stop()
         store?.stop()
-        monitors.values.forEach { $0.stop() }
+        activityCoordinator?.stop()
         notchFleet?.stop()
         Task { await phoneLinkServer?.stop() }
     }

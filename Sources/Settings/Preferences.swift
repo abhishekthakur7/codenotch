@@ -248,6 +248,22 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(notchSurfaceStyle.rawValue, forKey: Keys.notchSurfaceStyle) }
     }
 
+    @Published var watchLimit: Double {
+        didSet {
+            let clamped = min(max(watchLimit, 0.01), criticalLimit - 0.01)
+            if clamped != watchLimit { watchLimit = clamped; return }
+            defaults.set(watchLimit, forKey: Keys.watchLimit)
+        }
+    }
+
+    @Published var criticalLimit: Double {
+        didSet {
+            let clamped = min(max(criticalLimit, watchLimit + 0.01), 1.0)
+            if clamped != criticalLimit { criticalLimit = clamped; return }
+            defaults.set(criticalLimit, forKey: Keys.criticalLimit)
+        }
+    }
+
     /// The language the app itself speaks.
     ///
     /// `.system` follows the Mac. Written through `L10n.apply` so the store
@@ -416,6 +432,8 @@ final class Preferences: ObservableObject {
         static let claudeDailyPaceRing = "claudeDailyPaceRing"
         static let showsMoveHandle = "showsMoveHandle"
         static let notchSurfaceStyle = "notchSurfaceStyle"
+        static let watchLimit = "watchLimit"
+        static let criticalLimit = "criticalLimit"
         static let lastSeenVersion = "lastSeenVersion"
         static let order = "providerOrder"
         static let announceSessionEnd = "announceSessionEnd"
@@ -682,6 +700,13 @@ final class Preferences: ObservableObject {
             .flatMap(AccentColorChoice.init(rawValue:)) ?? .system
         self.notchSurfaceStyle = defaults.string(forKey: Keys.notchSurfaceStyle)
             .flatMap(NotchSurfaceStyle.init(rawValue:)) ?? .glass
+        let storedWatchLimit = defaults.object(forKey: Keys.watchLimit) as? Double ?? 0.50
+        let storedCriticalLimit = defaults.object(forKey: Keys.criticalLimit) as? Double ?? 0.70
+        // `didSet` does the clamping, and it does not run for these assignments,
+        // so a stored pair that crossed over is repaired here instead.
+        let critical = min(max(storedCriticalLimit, 0.02), 1.0)
+        self.criticalLimit = critical
+        self.watchLimit = min(max(storedWatchLimit, 0.01), critical - 0.01)
         // Absent means never chosen, which is follow-the-Mac.
         self.language = defaults.string(forKey: L10n.languageDefaultsKey)
             .flatMap(AppLanguage.init(rawValue:)) ?? .system

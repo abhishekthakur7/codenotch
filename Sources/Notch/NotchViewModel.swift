@@ -186,6 +186,8 @@ final class NotchViewModel: ObservableObject {
     /// separate window, and it has to redraw the moment Settings changes this.
     @Published var weeklyRing: WeeklyRing = .off
     @Published var weeklyRingDashed: Bool = false
+    @Published var watchLimit: Double = 0.50
+    @Published var criticalLimit: Double = 0.70
     /// Whether the move handle is on the notch at all. Mirrored from Settings
     /// like `weeklyRing`.
     @Published var showsMoveHandle = true

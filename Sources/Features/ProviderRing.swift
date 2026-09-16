@@ -32,18 +32,24 @@ struct ProviderRing: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.codenotchReduceTransparency) private var reduceTransparency
+    @Environment(\.usageWatchLimit) private var watchLimit
+    @Environment(\.usageCriticalLimit) private var criticalLimit
     @Environment(\.codenotchAccentColor) private var accentColor
     @Environment(\.weeklyRingDashed) private var weeklyRingDashed
     @State private var spin: Double = 0
 
     private var band: UsageBand {
-        isBlocked ? .exhausted : UsageBand.band(for: usedFraction ?? 0)
+        guard !isBlocked else { return .exhausted }
+        return UsageBand.band(for: usedFraction ?? 0, watchLimit: watchLimit, criticalLimit: criticalLimit)
     }
     private var sweep: CGFloat { CGFloat(min(max(usedFraction ?? 0, 0), 1)) }
     private var localSweep: CGFloat { CGFloat(min(max(localContextFraction ?? 1, 0), 1)) }
+    private var primaryColor: Color {
+        isStale ? Palette.textSecondary : band.color(accent: accentColor)
+    }
 
     private var weeklyBand: UsageBand {
-        isBlocked ? .exhausted : UsageBand.band(for: weeklyFraction ?? 0)
+        isBlocked ? .exhausted : UsageBand.band(for: weeklyFraction ?? 0, watchLimit: watchLimit, criticalLimit: criticalLimit)
     }
     private var weeklySweep: CGFloat { CGFloat(min(max(weeklyFraction ?? 0, 0), 1)) }
 

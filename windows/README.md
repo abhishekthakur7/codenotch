@@ -59,10 +59,11 @@ npx @tauri-apps/cli@2 build --config tauri.bundle.conf.json
 # → ..\target\release\bundle\nsis\Codenotch_<version>_x64-setup.exe
 ```
 
-Tray menu: **Settings…**, **Refresh usage now**, **Quit**. Everything else is in the settings
-window: the taskbar icon, which rings the notch shows, its size, start with Windows, the
-language, Claude Code hooks, reset position, and the data folder (`%APPDATA%\codenotch` —
-logs, persisted readings, icon overrides).
+Tray menu: the readings themselves — a line per provider with its headline figure, and under it
+one line per limit window — then **Refresh all**, **Settings…** and **Quit Codenotch**. Clicking a
+provider's line re-reads that provider. Everything else is in the settings window: which rings the
+notch shows, its size, the weekly ring, start with Windows, the language, Claude Code hooks, reset
+position, and the data folder (`%APPDATA%\codenotch` — logs, persisted readings, icon overrides).
 
 ### Icons
 

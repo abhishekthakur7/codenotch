@@ -37,7 +37,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: dtolnay/rust-toolchain@stable
+      # Pinned by commit: this job holds contents: write, and `stable` is a
+      # moving branch that would let the action change under us.
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -58,7 +60,7 @@ jobs:
       # never looks for a hook binary that has not been built.
       - name: Build the installer
         working-directory: windows/codenotch
-        run: npx --yes @tauri-apps/cli@2 build --config tauri.bundle.conf.json -- --locked
+        run: npx --yes @tauri-apps/cli@2.11.4 build --config tauri.bundle.conf.json -- --locked
 
       # The bundler names the file after the version, which would change the
       # URL every release. One fixed name lets the README link to

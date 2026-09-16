@@ -38,10 +38,31 @@ struct CodexRolloutActivity {
         while windowEnd > 0, windows < maxWindows {
             windows += 1
             let windowStart = windowEnd > windowBytes ? windowEnd - windowBytes : 0
-            guard (try? handle.seek(toOffset: windowStart)) != nil,
-                  var window = try? handle.read(upToCount: Int(windowEnd - windowStart))
-            else { return nil }
-            window.append(carried)
+            guard (try? handle.seek(toOffset: windowStart)) != nil else { return nil }
+
+            // `read(upToCount:)` may legally deliver fewer bytes than asked
+            // for, and a window that came back short would silently lose the
+            // lines its tail never reached — and join `carried` to a stretch
+            // of file it does not follow. Read until the window is filled.
+            // An error still fails the scan; hitting EOF early means the
+            // file shrank between the seek and the read (rotation), and what
+            // arrived is still contiguous with `windowStart`.
+            var window = Data()
+            window.reserveCapacity(Int(windowEnd - windowStart))
+            while window.count < Int(windowEnd - windowStart) {
+                guard let chunk = try? handle.read(
+                    upToCount: Int(windowEnd - windowStart) - window.count
+                ) else { return nil }
+                if chunk.isEmpty { break }
+                window.append(chunk)
+            }
+            // `carried` continues the line this window's start cut — but only
+            // when the read reached `windowEnd`, where the fragment begins. A
+            // short window ends somewhere else entirely, and joining the two
+            // would fabricate a line out of unrelated bytes.
+            if window.count == Int(windowEnd - windowStart) {
+                window.append(carried)
+            }
 
             var lines = window.split(separator: UInt8(ascii: "\n"), omittingEmptySubsequences: true)
             carried = windowStart > 0 && !lines.isEmpty ? Data(lines.removeFirst()) : Data()

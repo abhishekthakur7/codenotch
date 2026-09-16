@@ -116,7 +116,9 @@ const listen = window.__TAURI__.event.listen;
 
 /* Colour ramp (upstream palette values) */
 const AMPLE='#00FF88', WATCH='#F2FF00', CRIT='#FF3F00';
-const TRACK='#303030', AMBER='#FFBF00', RUNGREEN='#28E07B';
+// The status arc is neutral on purpose: the ring behind it is coloured by how much of the limit
+// is gone, and a green arc inside it reads as part of that scale. Waiting borrows the warning yellow.
+const TRACK='#303030', INK='#ffffff', DIM='#808080';
 const tone=f=> f>=0.8?CRIT : f>=0.5?WATCH : AMPLE;
 // Whole percents, except where rounding would read as nothing used or nothing left, as the Mac's Percent does
 function smallPct(v){
@@ -456,10 +458,10 @@ function renderRing(){
           +svgArc(r,Math.min(wk.used,1),tone(wk.used),2.4,'opacity="0.85"');
       }
     }
-    { // thin inner arc: spinning = working, amber pulse = waiting on you (one animation for all four, different sources)
+    { // thin inner arc: spinning white = working, yellow pulse = waiting on you (one animation for all four, different sources)
       const ws=workState(p.id);
-      if(ws==='running') inner+=`<g class="arc-spin">${svgArc(19,0.28,RUNGREEN,2.5)}</g>`;
-      else if(ws==='attention') inner+=`<g class="arc-pulse"><circle cx="28" cy="28" r="19" fill="none" stroke="${AMBER}" stroke-width="2.5"/></g>`;
+      if(ws==='running') inner+=`<g class="arc-spin">${svgArc(19,0.28,INK,2.5)}</g>`;
+      else if(ws==='attention') inner+=`<g class="arc-pulse"><circle cx="28" cy="28" r="19" fill="none" stroke="${WATCH}" stroke-width="2.5"/></g>`;
     }
     svg.innerHTML=inner;
     if(p.snap.status==='needsAuth'||p.snap.status==='none') pct.textContent='—';
@@ -496,7 +498,7 @@ function ago(ms){
   return ui().ago(m);
 }
 
-const STATE_DOT={running:RUNGREEN,attention:AMBER,done:'#57c7ff'};
+const STATE_DOT={running:INK,attention:WATCH,done:AMPLE,idle:TRACK};
 // The card is clipped, not scrolled, so rows past this would push its title off the top; the rest are counted, as on the Mac
 const SESSION_ROWS=5;
 function moreRow(n){ return n>0?`<div class="s-more">${ui().andMore(n)}</div>`:''; }
@@ -552,7 +554,7 @@ function renderCard(){
     if(acts.length){
       html+=`<div class="c-sessions">`;
       for(const a of acts.slice(0,SESSION_ROWS)){
-        const col=a.state==='waiting'?AMBER:RUNGREEN;
+        const col=a.state==='waiting'?WATCH:INK;
         html+=`<div class="s-row"><span class="s-dot" style="background:${col}"></span>${esc(a.name)}<span style="color:#808080;margin-left:auto">${esc(textCopy(a.detail))}</span></div>`;
       }
       html+=moreRow(acts.length-SESSION_ROWS)+`</div>`;

@@ -78,13 +78,7 @@ fn handle(app: &AppHandle, id: &str) {
             let a = app.clone();
             std::thread::spawn(move || crate::reload_glyphs(&a));
         }
-        "settings" => {
-            if let Some(w) = app.get_webview_window("settings") {
-                let _ = w.show();
-                let _ = w.unminimize();
-                let _ = w.set_focus();
-            }
-        }
+        "settings" => crate::settings_window::open(app),
         "quit" => app.exit(0),
         _ => {}
     }

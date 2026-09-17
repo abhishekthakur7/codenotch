@@ -876,28 +876,6 @@ document.getElementById('btn-recentre').addEventListener('click', () => {
     .catch(e => strip('reset_notch_position failed: ' + errText(e)));
 });
 
-  function refresh(){
-    return call(getCmd, undefined, null).then(v => {
-      if(typeof v === 'boolean') value = v;
-      setSwitch(id, value, busy);
-      return value;
-    });
-  }
-  if(el) el.addEventListener('click', () => {
-    if(busy || el.hasAttribute('disabled')) return;
-    const want = !value;
-    busy = true;
-    setSwitch(id, want, true);            // moves at once so the click is felt, but stays locked
-    invoke(setCmd, { on: want })
-      .catch(e => strip(label + ' could not be changed: ' + errText(e)))
-      .then(() => { busy = false; return refresh(); })
-      .then(() => { if(value === want) toast(ui('Saved', 'Saved')); });
-  });
-  return { refresh: refresh };
-}
-const autoSwitch = remoteSwitch('sw-autostart', 'get_autostart', 'set_autostart', 'Start with Windows');
-const hooksSwitch = remoteSwitch('sw-hooks', 'get_hooks_installed', 'set_hooks_installed', 'The Claude Code messages');
-
 /* ---- Appearance: language ------------------------------------------------ */
 const LANGS = ['auto', 'en', 'zh', 'ja', 'ko', 'ru', 'uk'];
 document.getElementById('lang').addEventListener('change', e => {

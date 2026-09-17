@@ -104,4 +104,13 @@ final class GrokUsageTests: XCTestCase {
     func testHumanizesTheProductNameTheWayTheModalWritesIt() {
         XCTAssertEqual(GrokUsage.humanize("GrokBuild"), "Grok Build")
     }
+
+    /// The issuer is compared whole: a host that merely begins with
+    /// `auth.x.ai` is someone else's, and its token must not be sent to xAI.
+    func testALookalikeIssuerIsNotTrusted() {
+        XCTAssertFalse(GrokCredentials.isTrusted(key: "https://auth.x.ai.example.com::cli", entry: [:]))
+        XCTAssertFalse(GrokCredentials.isTrusted(key: "https://auth.x.aix::cli", entry: [:]))
+        XCTAssertTrue(GrokCredentials.isTrusted(key: "https://auth.x.ai::cli", entry: [:]))
+        XCTAssertTrue(GrokCredentials.isTrusted(key: "https://auth.x.ai", entry: [:]))
+    }
 }

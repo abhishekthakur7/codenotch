@@ -100,7 +100,9 @@ fn iso_ms(v: Option<&serde_json::Value>) -> Option<u64> {
 }
 
 fn is_trusted(key: &str, entry: &serde_json::Value) -> bool {
-    key.starts_with(TRUSTED_ISSUER)
+    // The issuer is the part before `::`, compared whole: a prefix match also let
+    // `https://auth.x.ai.example.com::id` through.
+    key.split("::").next() == Some(TRUSTED_ISSUER)
         || entry.get("oidc_issuer").and_then(|x| x.as_str()) == Some(TRUSTED_ISSUER)
 }
 
@@ -145,10 +147,10 @@ pub fn probe() -> String {
         return format!("Grok: {} not found (CLI not installed, or not signed in)", p.display());
     }
     match read_credentials() {
+        // No account email: doctor output is what people paste into issues.
         Some(c) => format!(
-            "Grok: session borrowed (token {} chars, account={}, {})",
+            "Grok: session borrowed (token {} chars, {})",
             c.token.len(),
-            c.email.clone().unwrap_or_else(|| "?".into()),
             if c.is_expired() { "expired — run grok login" } else { "live" }
         ),
         None => format!(
@@ -372,6 +374,15 @@ mod tests {
         assert_eq!(c.token, "good");
         assert_eq!(c.email.as_deref(), Some("a@b.c"));
         assert!(!c.is_expired());
+    }
+
+    #[test]
+    fn a_lookalike_issuer_is_not_trusted() {
+        let root: serde_json::Value = serde_json::from_str(
+            r#"{ "https://auth.x.ai.example.com::cli": { "key": "not-xai", "expires_at": "2999-01-01T00:00:00Z" } }"#,
+        )
+        .unwrap();
+        assert!(pick(&root).is_none());
     }
 
     #[test]

@@ -46,6 +46,10 @@ final class NotchWindowController {
     private var clearHoverWork: DispatchWorkItem?
     private var clockTimer: Timer?
     private var cursorTimer: Timer?
+    /// Full-screen state on its own, slower beat. See `startWatchingFullScreen`.
+    private var fullScreenTimer: Timer?
+    private var fullScreenFollowUp: DispatchWorkItem?
+    static let fullScreenPollInterval: TimeInterval = 2
 
     /// Hover in is quick; hover out waits, because the pointer has to cross the
     /// gap between the notch and the card without the card vanishing under it.
@@ -175,6 +179,7 @@ final class NotchWindowController {
     func show() {
         relocate()
         startWatchingCursor()
+        startWatchingFullScreen()
         startClock()
 
         NotificationCenter.default.publisher(
@@ -189,10 +194,7 @@ final class NotchWindowController {
             for: NSWorkspace.activeSpaceDidChangeNotification
         )
         .sink { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.lastFullScreenReading = nil
-                self?.handleActiveSpaceOrAppChange()
-            }
+            MainActor.assumeIsolated { self?.fullScreenMayHaveChanged() }
         }
         .store(in: &cancellables)
 
@@ -200,10 +202,7 @@ final class NotchWindowController {
             for: NSWorkspace.didActivateApplicationNotification
         )
         .sink { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.lastFullScreenReading = nil
-                self?.handleActiveSpaceOrAppChange()
-            }
+            MainActor.assumeIsolated { self?.fullScreenMayHaveChanged() }
         }
         .store(in: &cancellables)
 
@@ -266,6 +265,10 @@ final class NotchWindowController {
         foldWork?.cancel()
         cursorTimer?.invalidate()
         cursorTimer = nil
+        fullScreenTimer?.invalidate()
+        fullScreenTimer = nil
+        fullScreenFollowUp?.cancel()
+        fullScreenFollowUp = nil
         clockTimer?.invalidate()
         mouseMonitors.forEach(NSEvent.removeMonitor)
         mouseMonitors.removeAll()
@@ -551,12 +554,44 @@ final class NotchWindowController {
     /// produces no events at all — so a notch that appears, resizes or is
     /// re-anchored underneath a parked pointer would otherwise sit there with
     /// stale hover state until the user jogged the mouse.
+    /// A space or app switch: answered at once, and once more a moment later,
+    /// because an app that has just come forward is often still animating
+    /// into full screen when the notification arrives.
+    private func fullScreenMayHaveChanged() {
+        lastFullScreenReading = nil
+        handleActiveSpaceOrAppChange()
+        fullScreenFollowUp?.cancel()
+        let followUp = DispatchWorkItem { [weak self] in
+            MainActor.assumeIsolated {
+                self?.lastFullScreenReading = nil
+                self?.handleActiveSpaceOrAppChange()
+            }
+        }
+        fullScreenFollowUp = followUp
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: followUp)
+    }
+
+    /// Full screen that posts no notification — a video going full screen in
+    /// the browser already in front, a game sizing its window to the display —
+    /// is only caught by asking, and asking is a WindowServer round trip.
+    /// It rode the 0.3s cursor poll, which made it three of those a second
+    /// for as long as the app ran. Every two seconds is soon enough for a
+    /// fold nobody is waiting on, and switches are answered by the
+    /// notifications above without waiting for it. (From #202.)
+    private func startWatchingFullScreen() {
+        let poll = Timer(timeInterval: Self.fullScreenPollInterval, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, self.foldsForFullScreen else { return }
+                self.handleActiveSpaceOrAppChange()
+            }
+        }
+        RunLoop.main.add(poll, forMode: .common)
+        fullScreenTimer = poll
+    }
+
     private func startWatchingCursor() {
         let poll = Timer(timeInterval: 0.3, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.handleActiveSpaceOrAppChange()
-                self?.cursorMoved()
-            }
+            MainActor.assumeIsolated { self?.cursorMoved() }
         }
         RunLoop.main.add(poll, forMode: .common)
         cursorTimer = poll

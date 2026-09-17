@@ -835,9 +835,12 @@ final class StaleAfterMarginTests: XCTestCase {
     /// that is the ordinary shape of an idle afternoon, not a fault.
     @MainActor
     func testOneFailedIdleAttemptDoesNotDimTheRing() async throws {
+        // The margin is generous on purpose: the assertion is about one failed
+        // attempt, not about timing, and 0.45s was close enough to the 0.2s
+        // sleep that a loaded CI runner crossed it.
         let store = UsageStore(
             providers: [FailingProvider()],
-            refreshInterval: 0.05, idleRefreshInterval: 0.15, staleAfter: 0.45,
+            refreshInterval: 0.05, idleRefreshInterval: 0.15, staleAfter: 3,
             archive: UsageArchive(defaults: defaults())
         )
         await store.refresh()

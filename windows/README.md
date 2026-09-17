@@ -60,10 +60,11 @@ npx @tauri-apps/cli@2 build --config tauri.bundle.conf.json
 # → ..\target\release\bundle\nsis\Codenotch_<version>_x64-setup.exe
 ```
 
-Tray menu: **Settings…**, **Refresh usage now**, **Quit**. Everything else is in the settings
-window: the taskbar icon, which rings the notch shows, its size, start with Windows, the
-language, Claude Code hooks, reset position, and the data folder (`%APPDATA%\codenotch` —
-logs, persisted readings, icon overrides).
+Tray menu: the readings themselves — a line per provider with its headline figure, and under it
+one line per limit window — then **Refresh all**, **Settings…** and **Quit Codenotch**. Clicking a
+provider's line re-reads that provider. Everything else is in the settings window: which rings the
+notch shows, its size, the weekly ring, start with Windows, the language, Claude Code hooks, reset
+position, and the data folder (`%APPDATA%\codenotch` — logs, persisted readings, icon overrides).
 
 ### Icons
 
@@ -71,6 +72,30 @@ Provider marks are the SVGs from [`@lobehub/icons-static-svg`](https://github.co
 (MIT), embedded unmodified — see `codenotch/glyphs/NOTICE.md`. Drop your own
 `claude|codex|cursor|gemini.svg` (or `.png`) into `%APPDATA%\codenotch\glyphs\` to override.
 The marks remain the trademarks of their owners.
+
+### Translations
+
+Three surfaces draw their own text, so each keeps its own table:
+
+| Surface | Table | Languages today |
+|---|---|---|
+| Tray menu | `codenotch/src/i18n.rs` (`tr`), `codenotch/src/traymenu.rs` (`label`) | en · ru · zh · ja · ko · uk |
+| Hover card | `codenotch/ui/notch.html` (`TEXT`, `PATTERNS`, `UI`) | en · ru · zh |
+| Settings window | `codenotch/ui/settings.html` (`STATIC_TEXT`, `STATUS_TEXT`) | en · ru · zh · ja · ko |
+
+Help is welcome on the gaps, which fall back to English rather than breaking anything:
+
+- the hover card has no Japanese, Korean or Ukrainian;
+- the settings window has no Ukrainian, although the tray menu and the language picker have had it
+  since Ukrainian was added;
+- Korean has none of the window names the Mac's catalog carries — `Current session`, `Weekly limit`,
+  `Monthly limit`, `5-hour Limit`, `Included usage`, `API usage` — because the catalog has no Korean
+  to take them from.
+
+Keys are the exact English string. A string the Mac also shows should be taken from
+`Sources/Localizable.xcstrings` rather than translated afresh, so both platforms word it the same
+way. One catalog feeding all three tables is the intended fix; until then a test in `traymenu.rs`
+fails if the menu and the card stop naming the same window.
 
 ## Layout
 

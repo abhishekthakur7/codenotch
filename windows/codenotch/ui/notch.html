@@ -101,6 +101,48 @@
   .s-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#b0b0b3;padding:2px 0}
   .s-dot{width:6px;height:6px;border-radius:3px;flex:0 0 auto}
   .s-more{font-size:11px;color:#808080;padding:2px 0}
+
+  /* ---- The other three edges -------------------------------------------------
+     The rules above draw the right-hand edge, the original layout and still the default. Each block
+     below mirrors or rotates that one for another edge. Two things stay in JavaScript because they
+     depend on measurement: where the card and the tail sit along the pill (`placeCard`), and, on the
+     flat edges, how far down or up the card clears a pill whose thickness follows its contents.
+
+     The fillets follow one rule on every edge: the radial gradient is centred on the corner of the
+     R×R square *diagonally opposite* the corner where the pill meets the screen, so what stays black
+     is the concave arc between the two. */
+
+  /* Left: the right-hand layout mirrored. */
+  body[data-edge="left"] #pill{right:auto;left:0;border-radius:0 20px 20px 0;border-right:1px solid #2e2e2e;border-left:none}
+  body[data-edge="left"] #pill::before,body[data-edge="left"] #pill::after{right:auto;left:0}
+  body[data-edge="left"] #pill::before{background:radial-gradient(circle at 100% 0, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  body[data-edge="left"] #pill::after{background:radial-gradient(circle at 100% 100%, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  body[data-edge="left"] #card{left:100px;right:10px;margin-left:0;margin-right:auto}
+  body[data-edge="left"] #tail{right:auto;left:69px;clip-path:path('M32 0C32 9 13.44 13.68 0 18C13.44 22.32 32 27 32 36Z')}
+
+  /* Top and bottom: the pill lies flat, so it is a row and its thickness comes from the cells rather
+     than a fixed 70 px column. The card is centred under (or over) the hovered ring by `placeCard`. */
+  body[data-edge="top"] #pill,body[data-edge="bottom"] #pill{
+    right:auto;left:50%;top:auto;transform:translateX(-50%);
+    flex-direction:row;width:auto;height:auto;padding:12px 18px;
+  }
+  body[data-edge="top"] #pill::before,body[data-edge="top"] #pill::after,
+  body[data-edge="bottom"] #pill::before,body[data-edge="bottom"] #pill::after{right:auto;top:auto;bottom:auto}
+  body[data-edge="top"] #pill{top:0;border-radius:0 0 20px 20px;border-top:none}
+  body[data-edge="top"] #pill::before{top:0;left:calc(-1 * var(--fillet));background:radial-gradient(circle at 0 100%, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  body[data-edge="top"] #pill::after{top:0;right:calc(-1 * var(--fillet));background:radial-gradient(circle at 100% 100%, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  body[data-edge="bottom"] #pill{bottom:0;border-radius:20px 20px 0 0;border-bottom:none}
+  body[data-edge="bottom"] #pill::before{bottom:0;left:calc(-1 * var(--fillet));background:radial-gradient(circle at 0 0, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  body[data-edge="bottom"] #pill::after{bottom:0;right:calc(-1 * var(--fillet));background:radial-gradient(circle at 100% 0, transparent calc(var(--fillet) - 1.5px), #2e2e2e calc(var(--fillet) - 0.5px), #000 calc(var(--fillet) + 0.5px))}
+  /* A fixed width here, not the fluid one the upright edges use: `placeCard` measures the card to
+     centre it, and a shrink-to-fit width would change as it moves. 246 is the upstream cap either way. */
+  body[data-edge="top"] #card,body[data-edge="bottom"] #card{
+    left:8px;right:auto;top:0;transform:none;margin-left:0;
+    width:246px;max-height:calc(100% - 150px);
+  }
+  body[data-edge="top"] #tail,body[data-edge="bottom"] #tail{right:auto;width:36px;height:32px}
+  body[data-edge="top"] #tail{clip-path:path('M0 32C9 32 13.68 13.44 18 0C22.32 13.44 27 32 36 32Z')}
+  body[data-edge="bottom"] #tail{clip-path:path('M0 0C9 0 13.68 18.56 18 32C22.32 18.56 27 0 36 0Z')}
 </style>
 </head>
 <body>
@@ -147,6 +189,19 @@ let grokSnap={status:'absent',windows:[],fetched_at:0,note:''};
 let agSnap={status:'absent',windows:[],fetched_at:0,note:''};
 let glyphs={}; // id → {kind:'mark'|'appicon', url}
 let activity=[]; // working state of the non-Claude providers: {provider,state:'busy'|'waiting',name,detail,since}
+/* Which screen edge the notch is pinned to. Rust owns it (it is what placed the window); the page is
+   told so it can mirror or rotate itself to match. 'right' is the default and the pre-edge layout. */
+let notchEdge='right';
+function edgeIsVertical(){ return notchEdge==='left'||notchEdge==='right'; }
+function applyEdge(e){
+  const next=(e==='left'||e==='top'||e==='bottom')?e:'right';
+  if(next===notchEdge) return;
+  notchEdge=next;
+  document.body.dataset.edge=next;
+  // The pill changes shape, so both the hot rectangles and the card's anchor have to be measured again
+  if(card&&card.classList.contains('show')) placeCard();
+  reportHot();
+}
 let uiLang='en';
 // The tray menu already speaks four languages: i18n.rs resolves the user's locale to zh, ja, ko
 // or ru, and main.rs hands the result to this page as `lang_resolved`. The card understood only
@@ -568,18 +623,36 @@ function renderCard(){
   c.innerHTML=html;
   placeCard();
 }
-// The card follows the hovered cell: vertically centred on it (kept inside the window), tail pointing at it
+// The card follows the hovered cell: centred on it along the pill (kept inside the window), tail pointing at it.
+// On the upright edges that means matching its vertical centre; on the flat ones, its horizontal centre,
+// and the card is pushed clear of a pill whose thickness follows the cells it holds.
 function placeCard(){
   const cell=pill.querySelector(`.cell[data-p="${hoverId}"]`)||pill;
   const cr=cell.getBoundingClientRect();
-  const cy=cr.top+cr.height/2;
-  const H=innerHeight, ch=card.offsetHeight||0;
-  let top=Math.round(cy-ch/2); top=Math.max(8,Math.min(top,H-ch-8));
-  card.style.top=top+'px'; card.style.transform='none';
-  // The tail's point on the hovered ring (not the cell, which includes the label below it), kept off the card's rounded corners
-  const rr=(cell.querySelector('.ringwrap')||cell).getBoundingClientRect(), ry=rr.top+rr.height/2;
-  const th=tail.offsetHeight||36, ty=Math.max(top+16+th/2,Math.min(top+ch-16-th/2,ry));
-  tail.style.top=Math.round(ty-th/2)+'px';
+  // The point sits on the ring, not the cell, which includes the label below it
+  const rr=(cell.querySelector('.ringwrap')||cell).getBoundingClientRect();
+  card.style.transform='none';
+  if(edgeIsVertical()){
+    const cy=cr.top+cr.height/2;
+    const H=innerHeight, ch=card.offsetHeight||0;
+    let top=Math.round(cy-ch/2); top=Math.max(8,Math.min(top,H-ch-8));
+    card.style.top=top+'px'; card.style.left='';
+    const ry=rr.top+rr.height/2;
+    const th=tail.offsetHeight||36, ty=Math.max(top+16+th/2,Math.min(top+ch-16-th/2,ry));
+    tail.style.top=Math.round(ty-th/2)+'px'; tail.style.left='';
+  }else{
+    const pr=pill.getBoundingClientRect();
+    const cx=cr.left+cr.width/2;
+    const W=innerWidth, cw=card.offsetWidth||0, ch=card.offsetHeight||0;
+    let left=Math.round(cx-cw/2); left=Math.max(8,Math.min(left,W-cw-8));
+    card.style.left=left+'px';
+    const rx=rr.left+rr.width/2;
+    const tw=tail.offsetWidth||36, tx=Math.max(left+16+tw/2,Math.min(left+cw-16-tw/2,rx));
+    tail.style.left=Math.round(tx-tw/2)+'px';
+    // 30 px of clear gap, the same the upright edges leave, with the tail spanning it 1 px under the pill
+    if(notchEdge==='top'){ card.style.top=Math.round(pr.bottom+30)+'px'; tail.style.top=Math.round(pr.bottom-1)+'px'; }
+    else{ card.style.top=Math.round(pr.top-30-ch)+'px'; tail.style.top=Math.round(pr.top-31)+'px'; }
+  }
 }
 
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
@@ -718,6 +791,10 @@ listen('glyphs',e=>{glyphs=e.payload||glyphs;renderRing();if(card.classList.cont
 listen('activity',e=>{activity=e.payload||activity;renderRing();if(card.classList.contains('show'))renderCard();}).catch(()=>{});
 invoke('get_activity').then(a=>{activity=a||activity;renderRing();}).catch(()=>{});
 invoke('get_glyphs').then(g=>{glyphs=g||glyphs;renderRing();}).catch(()=>{});
+// The edge: pushed on every placement (a drag that snapped elsewhere, or Settings), and asked for once
+// at startup in case the placement happened before this page was listening.
+listen('notch_edge',e=>applyEdge(e.payload)).catch(()=>{});
+invoke('get_notch_edge').then(applyEdge).catch(()=>{});
 invoke('get_codex').then(u=>{codexSnap=u||codexSnap;renderRing();}).catch(()=>{});
 invoke('get_usage').then(u=>{usage=u||usage;renderRing();}).catch(e=>notice('get_usage failed: '+e));
 invoke('get_state').then(s=>{stateSnap=s||stateSnap;setUiLanguage(stateSnap.lang_resolved);renderRing();}).catch(()=>{});

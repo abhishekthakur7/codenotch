@@ -40,9 +40,19 @@ pub struct Config {
     /// Allow dragging + wheel resizing (tray toggle, off by default to prevent accidental drags)
     #[serde(default)]
     pub drag_enabled: bool,
-    /// Vertical position of the notch: the window centre as a fraction of the primary monitor's height (0 = top, 1 = bottom), default 0.5; saved after a drag
+    /// Position of the notch along its edge: the window centre as a fraction of the monitor's height
+    /// (left/right edges) or width (top/bottom edges), 0 = top/left, 1 = bottom/right, default 0.5;
+    /// saved after a drag. Named `notch_y` from when the right edge was the only one, so an existing
+    /// config keeps its place.
     #[serde(default = "default_notch_y")]
     pub notch_y: f64,
+    /// Which screen edge the notch is pinned to: "right" (the default), "left", "top" or "bottom".
+    #[serde(default = "default_notch_edge")]
+    pub notch_edge: String,
+    /// Which monitor the notch lives on, by the system's device name (`\\.\DISPLAY2`). None, or a
+    /// name no longer attached, means the primary monitor — so unplugging a screen cannot strand it.
+    #[serde(default)]
+    pub notch_monitor: Option<String>,
     /// Notch size as a multiple of the designed size, one of `SIZES`. The whole notch scales: the
     /// window grows and its WebView zooms, so the rings, text and hover card keep their proportions.
     #[serde(default = "default_scale")]
@@ -88,6 +98,27 @@ pub struct Config {
 
 fn default_notch_y() -> f64 {
     0.5
+}
+fn default_notch_edge() -> String {
+    "right".into()
+}
+
+/// The four edges, in the order Settings lists them.
+pub const EDGES: [&str; 4] = ["left", "right", "top", "bottom"];
+
+/// An unreadable edge means the right-hand one, the layout every earlier build used.
+pub fn edge_or_right(value: &str) -> String {
+    if EDGES.contains(&value) {
+        value.to_string()
+    } else {
+        "right".into()
+    }
+}
+
+/// True for the edges the notch stands upright on (the pill is a column); false for top and bottom,
+/// where it lies flat (the pill is a row) and the window's width and height swap.
+pub fn edge_is_vertical(edge: &str) -> bool {
+    matches!(edge, "left" | "right")
 }
 fn default_scale() -> f64 {
     1.0
@@ -140,6 +171,8 @@ impl Default for Config {
             bar_w: None,
             drag_enabled: false,
             notch_y: default_notch_y(),
+            notch_edge: default_notch_edge(),
+            notch_monitor: None,
             scale: default_scale(),
             weekly_ring: default_weekly_ring(),
             tray_mode: default_tray_mode(),

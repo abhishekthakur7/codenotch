@@ -60,9 +60,23 @@ npx @tauri-apps/cli@2 build --config tauri.bundle.conf.json
 ```
 
 Tray menu: **Settings…**, **Refresh usage now**, **Quit**. Everything else is in the settings
-window: the taskbar icon, which rings the notch shows, its size, start with Windows, the
-language, Claude Code hooks, reset position, and the data folder (`%APPDATA%\codenotch` —
-logs, persisted readings, icon overrides).
+window: the taskbar icon, which rings the notch shows, its size, which screen edge it sits on
+and which screen, start with Windows, the language, Claude Code hooks, reset position, and the
+data folder (`%APPDATA%\codenotch` — logs, persisted readings, icon overrides).
+
+### Where the notch sits
+
+The notch pins to one edge of one screen. **Appearance → Edge** picks left, right, top or bottom:
+it stands upright on the left and right edges with the hover card opening sideways, and lies flat
+on the top and bottom ones with the card opening below or above. **Appearance → Screen** appears
+once more than one monitor is attached.
+
+Dragging does both at once: pick the pill up, drop it anywhere, and it snaps to the nearest edge
+of the screen it was dropped on — across monitors, and across a change of DPI between them. The
+choice is stored as `notch_edge`, `notch_monitor` (the device name, e.g. `\\.\DISPLAY2`) and
+`notch_y` (the position along the edge, 0–1) in `config.json`. A monitor that is no longer
+attached falls back to the primary one, so unplugging a screen cannot strand the notch off-screen;
+**Recentre** also puts it back on the primary screen's right-hand edge.
 
 ### Icons
 

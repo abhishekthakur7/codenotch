@@ -152,7 +152,13 @@
           <div class="item cap" id="cap-size" data-dynamic></div>
           <div class="item"><span>Weekly ring</span><span class="seg" id="seg-weekly"><button data-v="off">Off</button><button data-v="inside">Inside</button><button data-v="outside">Outside</button></span></div>
           <div class="item cap" id="cap-weekly" data-dynamic></div>
-          <div class="item"><span class="hint">The pill can be dragged up and down the right-hand edge. If it has ended up somewhere you cannot see it — off the bottom of a screen you have unplugged, say — this drops it back into the middle of the edge.</span><button class="btn" id="btn-recentre">Recentre</button></div>
+          <div class="item"><span>Edge</span><span class="seg" id="seg-edge"><button data-v="left">Left</button><button data-v="right">Right</button><button data-v="top">Top</button><button data-v="bottom">Bottom</button></span></div>
+          <div class="item cap" id="cap-edge" data-dynamic></div>
+          <div class="item" id="row-screen" hidden><span>Screen</span>
+            <select id="screen" aria-label="Screen"></select>
+          </div>
+          <div class="item cap" id="cap-screen" data-dynamic hidden></div>
+          <div class="item"><span class="hint">The pill can also be dragged: pick it up and drop it anywhere, and it snaps to the nearest edge of the screen you dropped it on. If it has ended up somewhere you cannot see it — off a screen you have unplugged, say — this puts it back in the middle of the main screen's right-hand edge.</span><button class="btn" id="btn-recentre">Recentre</button></div>
         </div>
         <div class="sec">App</div>
         <div class="group">
@@ -427,6 +433,20 @@ const KO_STATIC = {
   'A thinner ring for the weekly limit, drawn inside the main one. It shares the gap with the working indicator.':'주간 제한을 나타내는 더 얇은 링으로, 메인 링 안쪽에 그려집니다. 작동 표시기와 간격을 공유합니다.',
   'A thinner ring for the weekly limit, drawn around the main one, in the margin between the ring and the notch edge.':'주간 제한을 나타내는 더 얇은 링으로, 메인 링 주위에 그려지며 링과 노치 가장자리 사이의 여백에 위치합니다.',
   'The notch stays open with every reading visible.':'노치가 열려 있고 모든 읽기 값이 표시됩니다.',
+  'Edge':'가장자리',
+  'Left':'왼쪽',
+  'Right':'오른쪽',
+  'Top':'위쪽',
+  'Bottom':'아래쪽',
+  'Screen':'화면',
+  'Main':'주 화면',
+  'Stands upright on the left-hand edge, with the card opening to its right.':'화면 왼쪽 가장자리에 세로로 붙고, 카드는 오른쪽으로 열립니다.',
+  'Stands upright on the right-hand edge, the side it was drawn for.':'화면 오른쪽 가장자리에 세로로 붙습니다. 원래 디자인된 위치입니다.',
+  'Lies flat along the top edge, with the card opening below it.':'화면 위쪽 가장자리에 가로로 눕고, 카드는 아래로 열립니다.',
+  'Lies flat along the bottom edge, with the card opening above it.':'화면 아래쪽 가장자리에 가로로 눕고, 카드는 위로 열립니다.',
+  'Which screen the notch lives on. Dragging it onto another screen sets this too.':'노치를 표시할 화면입니다. 노치를 다른 화면으로 끌어다 놓아도 이 값이 바뀝니다.',
+  'this screen cannot be remembered by name':'이 화면은 이름으로 기억할 수 없습니다',
+  'The pill can also be dragged: pick it up and drop it anywhere, and it snaps to the nearest edge of the screen you dropped it on. If it has ended up somewhere you cannot see it — off a screen you have unplugged, say — this puts it back in the middle of the main screen\'s right-hand edge.':'필을 끌어서 옮길 수도 있습니다. 아무 데나 놓으면 놓은 화면의 가장 가까운 가장자리에 달라붙습니다. 뽑아버린 모니터 쪽 등 보이지 않는 곳으로 가버렸다면, 이 버튼이 주 화면 오른쪽 가장자리 가운데로 되돌립니다.',
   'The black pill against the right-hand edge of the screen, with one ring per tool. Turn it off and the pill disappears; Codenotch keeps counting your usage either way.':'화면 오른쪽 가장자리에 있는 검은색 필로, 도구당 하나의 링이 있습니다. 끄면 필이 사라지지만, 어느 쪽이든 Codenotch는 사용량을 계속 계산합니다.',
   'Recentre':'가운데로 되돌리기',
   'The pill can be dragged up and down the right-hand edge. If it has ended up somewhere you cannot see it — off the bottom of a screen you have unplugged, say — this drops it back into the middle of the edge.':'필은 오른쪽 가장자리를 따라 위아래로 드래그할 수 있습니다. 만약 보이지 않는 곳(예: 연결 해제된 화면의 하단 밖)으로 이동한 경우, 이것을 사용하면 가장자리 중앙으로 다시 가져옵니다.',
@@ -836,6 +856,78 @@ document.getElementById('seg-size').addEventListener('click', e => {
     .then(() => { sizeBusy = false; renderSize(); });
 });
 
+/* ---- Appearance: edge and screen -------------------------------------------
+   The notch stands upright on the left and right edges and lies flat on the top and bottom ones. The
+   screen row only appears once there is more than one to choose between, and a monitor the platform
+   will not name cannot be picked (it has nothing stable to remember), so it is listed disabled. */
+const EDGE_WHY = {
+  left: 'Stands upright on the left-hand edge, with the card opening to its right.',
+  right: 'Stands upright on the right-hand edge, the side it was drawn for.',
+  top: 'Lies flat along the top edge, with the card opening below it.',
+  bottom: 'Lies flat along the bottom edge, with the card opening above it.'
+};
+let notchEdge = 'right', edgeBusy = false;
+function renderEdge(){
+  for(const b of document.querySelectorAll('#seg-edge button')){
+    const on = b.dataset.v === notchEdge;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.disabled = edgeBusy;
+  }
+  const why = EDGE_WHY[notchEdge] || '';
+  document.getElementById('cap-edge').textContent = ui(why, why);
+}
+document.getElementById('seg-edge').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b || b.disabled || b.dataset.v === notchEdge) return;
+  const want = b.dataset.v;
+  edgeBusy = true;
+  notchEdge = want;
+  renderEdge();
+  invoke('set_notch_edge', { edge: want })
+    .then(v => { notchEdge = typeof v === 'string' ? v : want; toast(); })
+    .catch(err => {
+      strip('set_notch_edge failed: ' + errText(err));
+      return call('get_notch_edge', undefined, null).then(v => { if(typeof v === 'string') notchEdge = v; });
+    })
+    .then(() => { edgeBusy = false; renderEdge(); });
+});
+
+let monitors = [];
+function renderScreens(){
+  const row = document.getElementById('row-screen');
+  const cap = document.getElementById('cap-screen');
+  const sel = document.getElementById('screen');
+  const many = monitors.length > 1;
+  row.hidden = !many;
+  cap.hidden = !many;
+  if(!many) return;
+  sel.textContent = '';
+  for(const m of monitors){
+    const o = document.createElement('option');
+    o.value = m.id || '';
+    o.textContent = m.label + (m.primary ? ' · ' + ui('Main', 'Main') : '');
+    if(!m.id) o.disabled = true;
+    if(m.current) o.selected = true;
+    sel.appendChild(o);
+  }
+  const who = monitors.find(m => m.current);
+  const text = 'Which screen the notch lives on. Dragging it onto another screen sets this too.';
+  cap.textContent = ui(text, text) + (who && !who.id ? ' (' + ui('this screen cannot be remembered by name', 'this screen cannot be remembered by name') + ')' : '');
+}
+document.getElementById('screen').addEventListener('change', e => {
+  const want = e.target.value;
+  invoke('set_notch_monitor', { id: want || null })
+    .then(() => { toast(); return refreshScreens(); })
+    .catch(err => { strip('set_notch_monitor failed: ' + errText(err)); return refreshScreens(); });
+});
+function refreshScreens(){
+  return call('get_monitors', undefined, null).then(v => {
+    if(Array.isArray(v)) monitors = v;
+    renderScreens();
+  });
+}
+
 /* ---- Appearance: the weekly ring ------------------------------------------- */
 const WEEKLY_WHY = {
   off: 'One ring per provider, showing the headline limit. The weekly allowance stays in the hover card.',
@@ -872,7 +964,13 @@ document.getElementById('seg-weekly').addEventListener('click', e => {
 /* ---- Appearance: position ------------------------------------------------ */
 document.getElementById('btn-recentre').addEventListener('click', () => {
   invoke('reset_notch_position')
-    .then(() => toast(ui('The notch is back in the middle', 'The notch is back in the middle')))
+    .then(() => {
+      toast(ui('The notch is back in the middle', 'The notch is back in the middle'));
+      // Recentre also puts the edge and the screen back, so the controls above have to follow
+      notchEdge = 'right';
+      renderEdge();
+      return refreshScreens();
+    })
     .catch(e => strip('reset_notch_position failed: ' + errText(e)));
 });
 
@@ -928,6 +1026,8 @@ function renderAll(){
   renderAccounts();
   renderFlags();
   renderSize();
+  renderEdge();
+  renderScreens();
   renderWeekly();
   drawSwitch(document.getElementById('sw-autostart'), autostart);
   document.getElementById('title').textContent = ui(TITLES[curTab], TITLES[curTab]);
@@ -945,6 +1045,8 @@ function boot(){
   call('get_glyphs', undefined, null).then(g => { if(g && typeof g === 'object'){ glyphs = g; renderAccounts(); } });
   try { window.__TAURI__.event.listen('glyphs', e => { if(e.payload){ glyphs = e.payload; renderAccounts(); } }); } catch(e) { /* the letters stay */ }
   call('get_scale', undefined, null).then(v => { if(typeof v === 'number') notchSize = v; renderSize(); });
+  call('get_notch_edge', undefined, null).then(v => { if(typeof v === 'string') notchEdge = v; renderEdge(); });
+  refreshScreens();
   call('get_weekly_ring', undefined, null).then(v => { if(typeof v === 'string') weeklyRing = v; renderWeekly(); });
   call('get_ui_flags', undefined, null).then(v => { if(v && typeof v === 'object') flags = readFlags(v); renderFlags(); });
   Promise.all([call('get_lang', undefined, 'auto'), call('get_lang_resolved', undefined, 'en')]).then(([raw, resolved]) => {
@@ -959,7 +1061,13 @@ function boot(){
 }
 /* Readings and the accent can change while the window is behind something else; coming back to it is
    when the old values are wrong, so that is when they are read again. */
-window.addEventListener('focus', () => { loadLook(); refreshOptions(); });
+window.addEventListener('focus', () => {
+  loadLook();
+  refreshOptions();
+  // A screen can be plugged in, and the pill dragged to another edge, while this window sits behind
+  call('get_notch_edge', undefined, null).then(v => { if(typeof v === 'string') notchEdge = v; renderEdge(); });
+  refreshScreens();
+});
 boot();
 </script>
 </body>

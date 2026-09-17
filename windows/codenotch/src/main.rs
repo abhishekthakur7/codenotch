@@ -1096,10 +1096,19 @@ fn report(r: Result<String, String>) {
     let _ = std::fs::write(log, &msg);
 }
 
+/// The subcommands that print to the parent console; only those may attach to it.
+const CONSOLE_CMDS: [&str; 4] = ["install-hooks", "uninstall-hooks", "autostart", "doctor"];
+
 fn main() {
-    attach_console();
     let args: Vec<String> = std::env::args().collect();
     if let Some(cmd) = args.get(1) {
+        // Attaching on the GUI path too tied the notch to whatever cmd.exe launched it: closing that
+        // window sends CTRL_CLOSE_EVENT to every process on the console, and with no handler the
+        // default action ends the process. The exe is already windows_subsystem = "windows", so the
+        // GUI run wants no console at all.
+        if CONSOLE_CMDS.contains(&cmd.as_str()) {
+            attach_console();
+        }
         match cmd.as_str() {
             "install-hooks" => {
                 report(hooks_install::install());

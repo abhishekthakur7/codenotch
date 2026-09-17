@@ -580,6 +580,25 @@ final class CodexActivityTests: XCTestCase {
         XCTAssertEqual(CodexRolloutActivity.state(from: url), .success)
     }
 
+    /// The boundary falls exactly on a newline: the window's first line is
+    /// whole, and the earlier window's last line ends without its newline.
+    /// Carrying that whole line back glued the two into one line of invalid
+    /// JSON, and the event before the boundary was lost.
+    func testALineEndingExactlyOnTheWindowBoundaryIsNotGluedToTheNext() throws {
+        let event = Data(#"{"type":"event_msg","payload":{"type":"task_complete"}}"#.utf8)
+        var data = filler(970)
+        data.append(event)
+        let newline = data.count           // the event's own newline sits here
+        data.append(UInt8(ascii: "\n"))
+        data.append(filler(Self.windowBytes - 1))
+
+        XCTAssertEqual(data.count - Self.windowBytes, newline,
+                       "the fixture must put the event's newline exactly on the boundary")
+
+        let url = try rollout(data: data)
+        XCTAssertEqual(CodexRolloutActivity.state(from: url), .success)
+    }
+
     /// The tail of a live rollout is often half a line — the writer was
     /// mid-append when the tick landed. It must not eat the event behind it.
     func testAHalfWrittenTailLineDoesNotHideTheEventBehindIt() throws {

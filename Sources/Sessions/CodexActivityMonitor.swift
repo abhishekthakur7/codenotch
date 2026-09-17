@@ -64,8 +64,13 @@ struct CodexRolloutActivity {
                 window.append(carried)
             }
 
+            // A window that opens on a newline was not cut mid-line: its first
+            // line is whole, and the earlier window's last line is the one
+            // missing its newline. Carrying anything back would glue the two.
+            let startsOnALineBreak = window.first == UInt8(ascii: "\n")
             var lines = window.split(separator: UInt8(ascii: "\n"), omittingEmptySubsequences: true)
-            carried = windowStart > 0 && !lines.isEmpty ? Data(lines.removeFirst()) : Data()
+            carried = windowStart > 0 && !startsOnALineBreak && !lines.isEmpty
+                ? Data(lines.removeFirst()) : Data()
 
             for line in lines.reversed() {
                 guard let record = try? JSONSerialization.jsonObject(with: Data(line)) as? [String: Any],

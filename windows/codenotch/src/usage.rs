@@ -29,6 +29,8 @@ const BACKOFF_CAP_SECS: u64 = 900;
 /// only when now + 300 s >= expiresAt, so launching any earlier is a no-op that would be judged a failure
 const RENEW_MARGIN_MS: u64 = 4 * 60 * 1000;
 const RENEW_COOLDOWN_MS: u64 = 10 * 60 * 1000;
+/// A token that did not renew is tried again, each wait twice the last, never more than an hour apart
+const RENEW_RETRY_CAP_MS: u64 = 60 * 60 * 1000;
 const RENEW_TIMEOUT_SECS: u64 = 30;
 const EXPIRED_NOTE: &str = "Credential expired — run claude once in a terminal to renew it";
 
@@ -192,23 +194,29 @@ fn find_cli() -> Option<std::path::PathBuf> {
 }
 
 /// Whether a launch is worth making. Pure, so every branch is testable without a clock or a subprocess
-fn should_renew(expires_at: Option<u64>, now: u64, attempted_for: Option<u64>, last_attempt: Option<u64>) -> bool {
+fn should_renew(
+    expires_at: Option<u64>,
+    now: u64,
+    attempted_for: Option<u64>,
+    last_attempt: Option<u64>,
+    failures: u32,
+) -> bool {
     // Nothing read yet: never launch on a guess
     let Some(exp) = expires_at else { return false };
     // Plenty of time left — also where launching would do nothing, because the CLI's own gate has not opened
     if exp > now + RENEW_MARGIN_MS {
         return false;
     }
-    // One attempt per token: a launch that failed to move the expiry leaves the same value here, and never runs again
-    if attempted_for == Some(exp) {
-        return false;
-    }
-    if let Some(t) = last_attempt {
-        if now.saturating_sub(t) < RENEW_COOLDOWN_MS {
-            return false;
-        }
-    }
-    true
+    let Some(t) = last_attempt else { return true };
+    // A launch that failed to move the expiry leaves the same value here. One failed launch — asleep, offline, a
+    // busy CLI — must not freeze the ring until someone opens a terminal, so the same token is tried again, but
+    // on a doubling wait, so a token that cannot renew does not become a launch every tick
+    let wait = if attempted_for == Some(exp) { retry_wait_ms(failures) } else { RENEW_COOLDOWN_MS };
+    now.saturating_sub(t) >= wait
+}
+
+fn retry_wait_ms(failures: u32) -> u64 {
+    RENEW_COOLDOWN_MS.saturating_mul(1u64 << failures.min(16)).min(RENEW_RETRY_CAP_MS)
 }
 
 /// `claude -p` with a null stdin starts up (which is where it renews an aged token), then exits non-zero for want
@@ -246,6 +254,8 @@ fn run_renewal(cli: &std::path::Path) -> std::io::Result<()> {
 struct Renewer {
     attempted_for: Option<u64>,
     last_attempt: Option<u64>,
+    /// Launches in a row that left `attempted_for` where it was
+    failures: u32,
 }
 
 impl Renewer {
@@ -253,11 +263,15 @@ impl Renewer {
     /// exit status, because refusing the empty prompt is a non-zero exit and a successful renewal at the same time
     fn maybe_renew(&mut self, cred: &Credential) -> Option<bool> {
         let now = now_ms();
-        if !should_renew(cred.expires_at, now, self.attempted_for, self.last_attempt) {
+        if !should_renew(cred.expires_at, now, self.attempted_for, self.last_attempt, self.failures) {
             return None;
+        }
+        if self.attempted_for != cred.expires_at {
+            self.failures = 0;
         }
         self.last_attempt = Some(now);
         self.attempted_for = cred.expires_at;
+        self.failures = self.failures.saturating_add(1);
         let Some(cli) = find_cli() else {
             crate::applog("claude: token about to expire and no standalone claude CLI found to renew it");
             return Some(false);
@@ -516,18 +530,28 @@ mod tests {
 
     #[test]
     fn renews_only_inside_the_margin() {
-        assert!(!should_renew(None, EXP, None, None), "never launch on a guess");
-        assert!(!should_renew(Some(EXP), EXP - RENEW_MARGIN_MS - 1, None, None), "plenty of time left");
-        assert!(should_renew(Some(EXP), EXP - RENEW_MARGIN_MS, None, None));
-        assert!(should_renew(Some(EXP), EXP + 3_600_000, None, None), "already expired still renews");
+        assert!(!should_renew(None, EXP, None, None, 0), "never launch on a guess");
+        assert!(!should_renew(Some(EXP), EXP - RENEW_MARGIN_MS - 1, None, None, 0), "plenty of time left");
+        assert!(should_renew(Some(EXP), EXP - RENEW_MARGIN_MS, None, None, 0));
+        assert!(should_renew(Some(EXP), EXP + 3_600_000, None, None, 0), "already expired still renews");
     }
 
     #[test]
-    fn one_attempt_per_token_and_a_cooldown() {
+    fn a_new_token_waits_out_the_cooldown() {
         let now = EXP + 1;
-        assert!(!should_renew(Some(EXP), now, Some(EXP), None), "same token is never retried");
-        assert!(!should_renew(Some(EXP + 5), now, Some(EXP), Some(now - 1000)), "cooldown holds a new token back");
-        assert!(should_renew(Some(EXP + 5), now, Some(EXP), Some(now - RENEW_COOLDOWN_MS)));
+        assert!(!should_renew(Some(EXP + 5), now, Some(EXP), Some(now - 1000), 1), "cooldown holds a new token back");
+        assert!(should_renew(Some(EXP + 5), now, Some(EXP), Some(now - RENEW_COOLDOWN_MS), 1));
+    }
+
+    #[test]
+    fn a_failed_token_is_retried_on_a_doubling_wait() {
+        let now = EXP + 1;
+        assert!(!should_renew(Some(EXP), now, Some(EXP), Some(now - RENEW_COOLDOWN_MS), 1), "no retry at the plain cooldown");
+        assert!(should_renew(Some(EXP), now, Some(EXP), Some(now - 2 * RENEW_COOLDOWN_MS), 1), "retried after twice the cooldown");
+        assert!(!should_renew(Some(EXP), now, Some(EXP), Some(now - 2 * RENEW_COOLDOWN_MS), 2), "the wait doubles");
+        assert!(should_renew(Some(EXP), now, Some(EXP), Some(now - 4 * RENEW_COOLDOWN_MS), 2));
+        assert!(!should_renew(Some(EXP), now, Some(EXP), Some(now - RENEW_RETRY_CAP_MS + 1), 30), "never a tight loop");
+        assert!(should_renew(Some(EXP), now, Some(EXP), Some(now - RENEW_RETRY_CAP_MS), 30), "but never more than an hour apart");
     }
 
     #[test]

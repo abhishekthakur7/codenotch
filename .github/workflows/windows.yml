@@ -25,6 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # First, and quick: cargo never reads the pages, so a syntax error in
+      # their script stays green through the build and ships as an empty
+      # window. Node is already on the runner.
+      - name: Check the UI pages parse
+        run: node scripts/check-ui-scripts.mjs
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy

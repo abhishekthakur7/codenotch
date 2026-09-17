@@ -12,6 +12,7 @@ mod tray;
 mod usage;
 mod codex;
 mod cursor;
+mod grok;
 mod antigravity;
 mod agy_cli;
 mod glyphs;
@@ -38,6 +39,8 @@ pub struct AppState {
     /// Codex snapshot (same UsageSnapshot shape; status may also be none/absent)
     pub codex: Mutex<usage::UsageSnapshot>,
     pub cursor: Mutex<usage::UsageSnapshot>,
+    /// Grok Build credits, read from the Grok CLI's own session
+    pub grok: Mutex<usage::UsageSnapshot>,
     pub antigravity: Mutex<usage::UsageSnapshot>,
     /// Provider glyph cache, collected at launch and again on a tray refresh
     pub glyphs: Mutex<std::collections::HashMap<String, glyphs::Glyph>>,
@@ -246,6 +249,7 @@ fn refresh_usage(app: AppHandle) {
     usage::request_refresh();
     codex::request_refresh();
     cursor::request_refresh();
+    grok::request_refresh();
     antigravity::request_refresh();
 }
 
@@ -287,6 +291,11 @@ fn open_data_dir() {
 }
 
 #[tauri::command]
+fn get_grok(state: tauri::State<AppState>) -> usage::UsageSnapshot {
+    state.grok.lock().unwrap().clone()
+}
+
+#[tauri::command]
 fn get_cursor(state: tauri::State<AppState>) -> usage::UsageSnapshot {
     state.cursor.lock().unwrap().clone()
 }
@@ -302,6 +311,7 @@ fn open_provider_page(provider: String) {
     let url = match provider.as_str() {
         "codex" => "https://chatgpt.com/#settings/Account",
         "cursor" => "https://cursor.com/dashboard",
+        "grok" => "https://grok.com/?_s=usage",
         "gemini" => "https://antigravity.google",
         _ => "https://claude.ai/settings/usage",
     };
@@ -641,6 +651,7 @@ fn ring_window<'a>(
         "claude" => by_id("session"),
         "codex" => windows.first(),
         "cursor" => by_id("included").or_else(|| by_id("api")),
+        "grok" => by_id("credits").or_else(|| windows.first()),
         _ => antigravity_lane(windows, antigravity_limit, antigravity_model),
     }
 }
@@ -694,6 +705,7 @@ fn snapshot_of(app: &AppHandle, id: &str) -> usage::UsageSnapshot {
     match id {
         "codex" => st.codex.lock().unwrap().clone(),
         "cursor" => st.cursor.lock().unwrap().clone(),
+        "grok" => st.grok.lock().unwrap().clone(),
         "gemini" => st.antigravity.lock().unwrap().clone(),
         _ => st.usage.lock().unwrap().clone(),
     }
@@ -959,13 +971,14 @@ pub fn provider_label(id: &str) -> &'static str {
     match id {
         "codex" => "Codex",
         "cursor" => "Cursor",
+        "grok" => "Grok",
         "gemini" => "Antigravity",
         _ => "Claude",
     }
 }
 
 /// Every provider the tray menu can offer, in the order the notch shows them.
-pub const TRAY_PROVIDER_IDS: [&str; 4] = ["claude", "codex", "cursor", "gemini"];
+pub const TRAY_PROVIDER_IDS: [&str; 5] = ["claude", "codex", "cursor", "grok", "gemini"];
 
 /// Draws the icon and writes the tooltip. Shared by the polling thread and by the settings window,
 /// so a change made in settings shows up at once rather than on the next poll.
@@ -1145,6 +1158,7 @@ fn main() {
             usage: Mutex::new(usage::load_persisted()),
             codex: Mutex::new(codex::load_persisted()),
             cursor: Mutex::new(cursor::load_persisted()),
+            grok: Mutex::new(grok::load_persisted()),
             antigravity: Mutex::new(antigravity::load_persisted()),
             glyphs: Mutex::new(Default::default()),
             activity: Mutex::new(Vec::new()),
@@ -1154,6 +1168,7 @@ fn main() {
             get_usage,
             get_codex,
             get_cursor,
+            get_grok,
             get_antigravity,
             get_glyphs,
             get_activity,
@@ -1210,6 +1225,7 @@ fn main() {
             usage::start(handle.clone());
             codex::start(handle.clone());
             cursor::start(handle.clone());
+            grok::start(handle.clone());
             antigravity::start(handle.clone());
             activity::start(handle.clone());
             // Collecting glyphs may read icon resources out of a few executables; do it off the main thread and push when done

@@ -273,6 +273,14 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// Unused rate-limit resets on this Codex account, listed by the same
     /// backend as usage.
     var resetCredits: CodexResetCredits? = nil
+
+    /// Whether the Codex tooltip has a reset-credit section to draw.
+    ///
+    /// The endpoint can successfully return an empty result. That is data,
+    /// but it is not useful card content and must not reserve layout space.
+    var hasAvailableResetCredits: Bool {
+        (resetCredits?.availableCount ?? 0) > 0
+    }
     /// Provider-owned online usage detail, such as DeepSeek's API key/model
     /// breakdown and daily token/cost series.
     var usageDetail: ProviderUsageDetail? = nil

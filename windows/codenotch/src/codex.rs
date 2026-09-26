@@ -40,15 +40,6 @@ const POLL_SECS: u64 = 300; // Preserve the upstream cadence; a tray refresh int
 const TAIL_BYTES: u64 = 256 * 1024;
 const CURRENT_FOR_MS: u64 = 5 * 60 * 1000;
 const ENDPOINT: &str = "https://chatgpt.com/backend-api/wham/usage";
-// Override user-level exporters for this one subprocess. Codex's metrics
-// exporter otherwise defaults to Statsig.
-const APP_SERVER_ARGS: &[&str] = &[
-    "-c", "otel.exporter=none",
-    "-c", "otel.metrics_exporter=none",
-    "-c", "otel.trace_exporter=none",
-    "-c", "analytics.enabled=false",
-    "app-server",
-];
 const BACKOFF_MIN_SECS: u64 = 60; // wait at least this long after a 429; Retry-After only raises it
 
 static REFRESH: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
@@ -561,7 +552,7 @@ fn read_app_server() -> Option<UsageSnapshot> {
     use std::io::{BufRead, BufReader, Write};
     use std::process::{Command, Stdio};
     let mut command = Command::new(native_codex()?);
-    command.args(APP_SERVER_ARGS).stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::null());
+    command.arg("app-server").stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::null());
     #[cfg(windows)]
     { use std::os::windows::process::CommandExt; command.creation_flags(0x0800_0000); }
     let mut child = command.spawn().ok()?;

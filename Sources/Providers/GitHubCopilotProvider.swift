@@ -122,11 +122,6 @@ struct GitHubCopilotCredentials: Sendable {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: executable)
         process.arguments = ["auth", "token", "--hostname", "github.com"]
-        var environment = ProcessInfo.processInfo.environment
-        environment["GH_TELEMETRY"] = "false"
-        environment["DO_NOT_TRACK"] = "1"
-        environment["GH_NO_UPDATE_NOTIFIER"] = "1"
-        process.environment = environment
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = FileHandle.nullDevice

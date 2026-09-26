@@ -119,8 +119,6 @@ struct KiroCLI: Sendable {
         // is what `--no-interactive` is for.
         environment["TERM"] = "dumb"
         environment["KIRO_CHAT_UI"] = "classic"
-        environment["DO_NOT_TRACK"] = "1"
-        environment["OTEL_SDK_DISABLED"] = "true"
 
         let process = Process()
         process.executableURL = binary

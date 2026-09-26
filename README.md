@@ -290,10 +290,8 @@ manually when you want to update.
 
 ## Telemetry
 
-Codenotch has no analytics or crash-reporting client. It disables optional
-telemetry for the Claude Code, GitHub CLI, and Codex subprocesses it starts.
-Claude Code's feature-gated per-model weekly usage line may then be absent.
-Other installed provider CLIs follow their own telemetry settings. Provider
+Codenotch has no analytics or crash-reporting client of its own. Provider
+CLIs that Codenotch invokes keep their normal telemetry settings. Provider
 API requests used to display quotas remain separate from telemetry.
 
 ## Building

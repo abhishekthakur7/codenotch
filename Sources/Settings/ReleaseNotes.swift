@@ -24,7 +24,7 @@ struct ReleaseNote: Equatable {
 
 /// The release history the app ships with.
 ///
-/// Written here rather than fetched from the appcast: it has to be there on a
+/// Bundled with the app so it is available locally on a
 /// first launch with no network, and it belongs to the build it describes.
 /// Bumping `MARKETING_VERSION` without adding an entry is caught by
 /// `testTheCurrentVersionHasANote`.

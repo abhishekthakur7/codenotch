@@ -249,6 +249,19 @@ final class ClaudeUsageCLITests: XCTestCase {
         XCTAssertFalse(ClaudeUsageCLI.arguments.contains("--mcp-config"))
     }
 
+    func testItDisablesTelemetryEvenWhenInheritedAsEnabled() {
+        let environment = ClaudeUsageCLI.withoutTelemetry([
+            "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+            "CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL": "1"
+        ])
+        XCTAssertEqual(environment["CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"], "1")
+        XCTAssertEqual(environment["DISABLE_TELEMETRY"], "1")
+        XCTAssertEqual(environment["DISABLE_ERROR_REPORTING"], "1")
+        XCTAssertEqual(environment["CLAUDE_CODE_ENABLE_TELEMETRY"], "0")
+        XCTAssertEqual(environment["OTEL_SDK_DISABLED"], "true")
+        XCTAssertNil(environment["CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL"])
+    }
+
     // MARK: - Where it is found
 
     /// npm is how most people install Claude Code, and under a Node version

@@ -98,9 +98,7 @@ run: build
 # and copy it to /Applications. For a contributor who wants a permanent copy
 # without the notarized release path. Gatekeeper may ask for a one-time
 # right-click → Open on the first launch when the build is not Developer ID
-# signed. The app embeds Sparkle, and macOS rejects a bundle whose framework
-# and binary carry different Team IDs, so the whole bundle is signed with one
-# identity rather than left unsigned.
+# signed. The bundle is signed with one identity rather than left unsigned.
 install: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Release $(DEV_SIGN) build
@@ -184,7 +182,7 @@ dmg: archive
 	codesign --force --sign "Developer ID Application" --timestamp $(DMG)
 	@# The app is inside the dmg now. Leaving the loose copies around is how
 	@# three spare "Codenotch" entries end up in Spotlight; everything
-	@# downstream (notarize, verify, appcast) works from the dmg alone.
+	@# downstream (notarize, verify) works from the dmg alone.
 	rm -rf $(RELEASE_DIR)/stage $(RELEASE_DIR)/$(APP_NAME).app
 
 # Submits and waits. `--wait` blocks until Apple answers, which is usually a
@@ -193,45 +191,10 @@ notarize: dmg
 	xcrun notarytool submit $(DMG) --keychain-profile $(NOTARY_PROFILE) --wait
 	xcrun stapler staple $(DMG)
 
-# Sparkle ships its tools inside the resolved package artifacts.
-SPARKLE_BIN = $(shell dirname $$(find $$HOME/Library/Developer/Xcode/DerivedData/Codenotch-*/SourcePackages/artifacts/sparkle -name generate_appcast 2>/dev/null | head -1))
-
-# The feed customers' copies poll. Signs each update with the EdDSA private key
-# in the login keychain — Sparkle installs nothing that key did not sign, so a
-# compromised host cannot push code.
-#
-# Writes into docs/, which GitHub Pages serves. The dmg goes there too, so the
-# URL the appcast advertises is the one the file actually sits at — a mismatch
-# is the usual reason an update downloads and then fails to verify.
-# NOT docs/ — that holds the design frames and specs, and GitHub Pages serves
-# whatever it is pointed at. Publishing from there would put the whole design
-# history on the public web alongside the download.
-PAGES_DIR := site
-# Where the dmg actually sits. The enclosure URL the appcast advertises has to
-# match it exactly, or an update downloads and then fails to verify.
-DOWNLOAD_PREFIX := https://hivinz.com/
-
-appcast: $(DMG)
-	@test -n "$(SPARKLE_BIN)" || (echo "Sparkle tools not found — run make build first" && exit 1)
-	mkdir -p $(PAGES_DIR)
-	@# Rebuilt from what is actually in the folder, never merged into the old
-	@# one. The dmg keeps a constant name, so only one build can exist at a
-	@# time — but generate_appcast preserves entries it already knows, and left
-	@# the previous version advertised at a URL now serving a different file,
-	@# with a signature that could never verify.
-	rm -f $(PAGES_DIR)/appcast.xml
-	cp $(DMG) $(PAGES_DIR)/
-	$(SPARKLE_BIN)/generate_appcast $(PAGES_DIR) --download-url-prefix $(DOWNLOAD_PREFIX)
-	@echo "Publish by committing $(PAGES_DIR)/ and pushing."
-
-release: notarize verify-release appcast
+release: notarize verify-release
 	@echo "Notarized: $(DMG)"
 
-# The GitHub release page is where someone who has never installed the app
-# looks first; the appcast feed is only ever read by copies already running.
-# The same notarized dmg belongs in both, and until it was in both the release
-# pages carried no assets at all — leaving a full Xcode install as the only way
-# to try the app.
+# The GitHub release page carries the notarized dmg for manual installation.
 #
 # Deliberately not part of `release`: every other target here is local, and
 # this one writes to the remote. Run it once `make release` has finished and
@@ -263,8 +226,8 @@ verify-release:
 #
 # Ad-hoc rather than unsigned: an arm64 binary carrying no signature at all will
 # not execute, and the bundle needs one coherent signature across the app and
-# the Sparkle framework inside it or Gatekeeper rejects the whole thing before
-# it ever offers an "Open Anyway".
+# Gatekeeper rejects a completely unsigned arm64 binary before it ever offers
+# an "Open Anyway" option.
 #
 # Why this is not how releases ship, and what someone running one gives up: the
 # ad-hoc identity is regenerated on every build, so the download is not
@@ -276,9 +239,6 @@ CI_DIR     := build/ci
 CI_DERIVED := $(CI_DIR)/DerivedData
 CI_APP     := $(CI_DERIVED)/Build/Products/Release/$(APP_NAME).app
 CI_DMG     := $(CI_DIR)/$(APP_NAME)-$(VERSION)-unsigned.dmg
-# Absolute: xcodebuild resolves CODE_SIGN_ENTITLEMENTS against the project
-# directory, not the working directory.
-CI_ENTITLEMENTS := $(CURDIR)/$(CI_DIR)/adhoc.entitlements
 
 .PHONY: build-ci dmg-ci
 
@@ -291,35 +251,10 @@ build-ci: gen
 	@# Same reason as `archive`: without this, every build leaves spare
 	@# "Codenotch" entries in Spotlight next to the installed app.
 	@touch build/.metadata_never_index
-	@# The one entitlement an ad-hoc build cannot do without. The hardened
-	@# runtime turns on library validation, which will only load a library
-	@# whose Team ID matches the process's — and an ad-hoc signature carries
-	@# no Team ID at all, so the app and the Sparkle framework beside it can
-	@# never be shown to match. The build looks fine and `codesign --verify
-	@# --deep --strict` passes, because each signature *is* valid; it is dyld
-	@# that refuses, and only at launch:
-	@#
-	@#   Library not loaded: @rpath/Sparkle.framework/Versions/B/Sparkle
-	@#   ... not valid for use in process: mapping process and mapped file
-	@#   (non-platform) have different Team IDs
-	@#
-	@# which macOS reports to the user as "Codenotch cannot be opened because
-	@# of a problem". A Developer ID build has no such trouble: one identity
-	@# signs the app and re-signs the framework, so the Team IDs do match, and
-	@# this is the single difference that has to be relaxed to make up for not
-	@# holding that identity. The hardened runtime otherwise stays on, so a
-	@# preview behaves like the release it previews.
-	printf '%s\n' \
-		'<?xml version="1.0" encoding="UTF-8"?>' \
-		'<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' \
-		'<plist version="1.0"><dict>' \
-		'<key>com.apple.security.cs.disable-library-validation</key><true/>' \
-		'</dict></plist>' > $(CI_ENTITLEMENTS)
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Release -derivedDataPath $(CI_DERIVED) \
 		CODE_SIGN_IDENTITY="-" CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM="" \
 		CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=YES \
-		CODE_SIGN_ENTITLEMENTS="$(CI_ENTITLEMENTS)" \
 		build
 	@# Xcode adds `com.apple.security.get-task-allow` to any non-distribution
 	@# signature. It lets another process attach to and read the memory of an
@@ -327,12 +262,8 @@ build-ci: gen
 	@# on the machine that built it, not something to hand to a stranger who
 	@# downloaded a build. `-exportArchive` drops it, but that is precisely the
 	@# step needing the Developer ID identity, so the signature is replaced
-	@# here instead, carrying the one entitlement above and nothing else.
-	@#
-	@# The outer bundle only: the framework beside it keeps the signature it
-	@# was built with, and re-sealing the app recomputes its hashes anyway.
-	codesign --force --options runtime --entitlements $(CI_ENTITLEMENTS) \
-		--sign - $(CI_APP)
+	@# here instead, with no entitlements.
+	codesign --force --options runtime --sign - $(CI_APP)
 	@# Proof rather than assumption, because this is invisible until someone
 	@# thinks to look: fail the build if the entitlement came back.
 	@codesign -d --entitlements - --xml $(CI_APP) 2>/dev/null \
@@ -341,8 +272,8 @@ build-ci: gen
 
 # A disk image for the same reason releases ship one, plus one specific to CI:
 # GitHub's artifact upload zips whatever it is given and drops symlinks and the
-# executable bit on the way, which takes an .app bundle apart — the framework
-# inside it is symlinks. A dmg arrives as a single opaque file instead.
+# executable bit on the way, which takes an .app bundle apart. A dmg arrives
+# as a single opaque file instead.
 dmg-ci: build-ci
 	@command -v create-dmg >/dev/null || (echo "brew install create-dmg" && exit 1)
 	rm -rf $(CI_DIR)/stage

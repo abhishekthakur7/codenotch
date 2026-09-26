@@ -285,10 +285,16 @@ the icon comes back. Its menu has the full readings either way.
 
 ## Updates
 
-Codenotch updates itself. [Sparkle](https://sparkle-project.org) checks daily
-and installs in the background without prompting; Settings says so and can
-switch it off. Every update is EdDSA-signed, so nothing installs that wasn't
-built and signed by the maintainer.
+Codenotch does not check for or download updates. Install a newer release
+manually when you want to update.
+
+## Telemetry
+
+Codenotch has no analytics or crash-reporting client. It disables optional
+telemetry for the Claude Code, GitHub CLI, and Codex subprocesses it starts.
+Claude Code's feature-gated per-model weekly usage line may then be absent.
+Other installed provider CLIs follow their own telemetry settings. Provider
+API requests used to display quotas remain separate from telemetry.
 
 ## Building
 
@@ -298,8 +304,8 @@ make run                # generate, build, launch a Debug build
 make test               # unit tests
 ```
 
-No signing identity is required for either. `make release` — which archives,
-notarizes, and produces a signed auto-update feed — needs a Developer ID
+No signing identity is required for either. `make release` — which archives
+and notarizes the disk image — needs a Developer ID
 certificate and an App Store Connect notary profile, and is only ever run by
 the maintainer to cut an official release. See
 [CONTRIBUTING.md](CONTRIBUTING.md). CI runs the same unit tests unsigned via

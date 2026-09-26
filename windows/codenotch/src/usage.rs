@@ -320,6 +320,7 @@ fn run_renewal(cli: &std::path::Path, dir: &Path) -> std::io::Result<()> {
             cmd.env_remove(k.as_ref());
         }
     }
+    crate::claude_auth::disable_nonessential_traffic(&mut cmd);
     // Which account gets renewed is said here, never inherited: CLAUDE_CONFIG_DIR is not CLAUDE_CODE_*, so it
     // survives the loop above, and a Codenotch started from a shell pointed at another account used to renew
     // that one while the account on screen stayed expired.

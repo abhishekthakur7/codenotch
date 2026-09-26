@@ -199,8 +199,7 @@
           <div class="item"><span>Open Codenotch at login</span><button class="switch" id="sw-autostart" role="switch" aria-checked="false" aria-label="Open Codenotch at login"></button></div>
           <div class="item cap">Codenotch opens by itself every time you sign in to this computer, and waits quietly in the background until a coding session starts. Turn it off and you have to open Codenotch yourself.</div>
           <div class="item"><span>Version</span><span class="value" id="about-version" data-dynamic>0.3.0</span></div>
-          <div class="item"><span>Updates</span><span class="value" id="update-status" data-dynamic></span><button class="btn" id="btn-update" data-dynamic>Check for updates</button></div>
-          <div class="item cap">Codenotch looks for a new version shortly after it starts, and can install it for you. The download comes from GitHub, and its signature is checked before anything is run.</div>
+          <div class="item cap">This local build does not check for or download updates.</div>
         </div>
         <div class="group">
           <div class="item"><span>Data folder</span><button class="btn" id="btn-data">Open folder</button></div>
@@ -1551,39 +1550,6 @@ document.getElementById('author').addEventListener('click', () => {
   catch(e) { /* the built-in number stays */ }
 })();
 
-/* ---- updates --------------------------------------------------------------
-   Never a dialogue and never a badge: an update the user has not asked about is
-   a line of text next to the version, and a check that failed says so where it
-   was asked for rather than interrupting anything. */
-const updBtn = document.getElementById('btn-update');
-const updStatus = document.getElementById('update-status');
-/* The state arrives before the language does, so the row keeps it and is drawn again by renderAll */
-let updState = null;
-function renderUpdate(st){
-  st = updState = st || {};
-  const busy = !!(st.checking || st.installing);
-  updBtn.disabled = busy;
-  if(st.installing){ updStatus.textContent = ui('Installing…', 'Installing…'); updBtn.textContent = ui('Update', 'Update'); return; }
-  if(st.checking){ updStatus.textContent = ui('Checking…', 'Checking…'); updBtn.textContent = ui('Check for updates', 'Check for updates'); return; }
-  if(st.available){
-    // The version is a number, so it is shown as one rather than translated into a sentence.
-    updStatus.textContent = st.available;
-    updBtn.textContent = ui('Update', 'Update');
-    return;
-  }
-  updStatus.textContent = st.message ? ui('Could not check for updates', 'Could not check for updates')
-                                     : ui('Up to date', 'Up to date');
-  updBtn.textContent = ui('Check for updates', 'Check for updates');
-}
-updBtn.addEventListener('click', () => {
-  const available = updStatus.textContent && updBtn.textContent === ui('Update', 'Update');
-  invoke(available ? 'install_update' : 'check_for_update')
-    .catch(e => strip('update failed: ' + errText(e)));
-});
-invoke('get_update_state').then(renderUpdate).catch(() => {});
-try { window.__TAURI__.event.listen('update_state', e => renderUpdate(e.payload)); }
-catch(e) { /* the row still answers the button */ }
-
 /* ---- start ---------------------------------------------------------------- */
 function renderAll(){
   renderAccounts();
@@ -1597,7 +1563,6 @@ function renderAll(){
   drawSwitch(document.getElementById('sw-autostart'), autostart);
   drawSwitch(document.getElementById('sw-move'), moveHandle);
   drawSwitch(document.getElementById('sw-adaptive'), adaptivePill);
-  if(updState) renderUpdate(updState);
   document.getElementById('title').textContent = ui(TITLES[curTab], TITLES[curTab]);
 }
 function boot(){

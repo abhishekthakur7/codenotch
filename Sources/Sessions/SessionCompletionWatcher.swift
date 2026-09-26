@@ -32,8 +32,7 @@ struct SessionCompletionWatcher {
     ///
     /// Every session already running when Codenotch launches arrives with no
     /// history, and treating that as a transition would ring once per session
-    /// on every start — including a restart in the middle of the night after a
-    /// Sparkle update. The first pass only records.
+    /// on every start. The first pass only records.
     private var hasSeeded = false
 
     /// Feed the monitors' current view; get back what just changed.

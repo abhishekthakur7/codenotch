@@ -47,11 +47,21 @@ struct ClaudeUsageCLI: Sendable {
     /// feature-gate host only. (`--mcp-config '{}'` is not an option: the flag
     /// is variadic and swallows `/usage` as a second config path.)
     ///
-    /// Telemetry is deliberately left on. `DISABLE_TELEMETRY` and
-    /// `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also stop the feature-gate
-    /// fetch, and the per-model weekly line (`Current week (Fable)`) is behind
-    /// one of those gates: with either set, `/usage` no longer prints it.
+    /// The subprocess disables nonessential traffic below. Claude Code also
+    /// uses that traffic for feature flags, so a gated per-model weekly line
+    /// may be absent from the resulting /usage output.
     static let arguments = ["--print", "--no-session-persistence", "--strict-mcp-config", "/usage"]
+
+    static func withoutTelemetry(_ inherited: [String: String]) -> [String: String] {
+        var environment = inherited
+        environment["CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"] = "1"
+        environment["DISABLE_TELEMETRY"] = "1"
+        environment["DISABLE_ERROR_REPORTING"] = "1"
+        environment["CLAUDE_CODE_ENABLE_TELEMETRY"] = "0"
+        environment["OTEL_SDK_DISABLED"] = "true"
+        environment.removeValue(forKey: "CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL")
+        return environment
+    }
 
     /// Where `/usage` is run from: one directory, kept for the life of the
     /// install.
@@ -215,7 +225,7 @@ struct ClaudeUsageCLI: Sendable {
         // from. See `scratchDirectory` for why it is the same one every time.
         let scratch = try scratchDirectory()
 
-        var environment = ProcessInfo.processInfo.environment
+        var environment = withoutTelemetry(ProcessInfo.processInfo.environment)
         // Only for a named profile. Pointing the variable at `~/.claude`
         // explicitly is not the same as leaving it unset — Claude Code reads
         // `.claude.json` from beside the home directory when it is unset and

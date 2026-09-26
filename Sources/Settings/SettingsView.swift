@@ -445,7 +445,6 @@ struct SettingsView: View {
     /// effect the next time the edge changed.
     let resetPosition: () -> Void
     let quit: () -> Void
-    @ObservedObject var updater: Updater
     var ollamaRelay: OllamaActivityRelay? = nil
     var lmstudioMetrics: LMStudioMetrics? = nil
     var usageStore: UsageStore? = nil
@@ -613,21 +612,11 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 6) {
                 SettingsQuitRow(quit: quit)
                 HStack(spacing: 8) {
-                    Text("Codenotch \(updater.currentVersion)")
+                    Text("Codenotch \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?")")
                         .font(.system(size: 11, weight: .regular))
                         .foregroundStyle(.white.opacity(0.32))
                     Spacer(minLength: 0)
-                    // Only once a check has found a newer version. Sparkle
-                    // downloads it in the background either way; this is for
-                    // someone who would rather have it now than on next launch.
-                    if case .found(let newer) = updater.outcome {
-                        Button(L10n.t("Update")) { updater.checkNow() }
-                            .buttonStyle(SettingsButtonStyle(kind: .prominent, compact: true))
-                            .help(L10n.t("Version \(newer) is available"))
-                            .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                    }
                 }
-                .animation(.easeOut(duration: 0.2), value: updater.outcome)
                 .padding(.horizontal, 10)
             }
             .padding(.horizontal, 10)
@@ -1322,9 +1311,7 @@ struct SettingsView: View {
         .formStyle(.grouped)
     }
 
-    // Startup and updates together: both are about what Codenotch does
-    // without being asked, and one switch under its own header looked
-    // like an oversight rather than a section.
+    // Local startup preferences.
     private var generalPane: some View {
         Form {
             // No title on the group: the pane's own header above already
@@ -1338,39 +1325,9 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Toggle(L10n.t("Install updates automatically"), isOn: Binding(
-                    get: { updater.automatic },
-                    set: { updater.automatic = $0 }
-                ))
-
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    // Disclosed rather than merely silent. An app that updates
-                    // itself unprompted *and* reads other apps' credentials is
-                    // exactly the shape security tooling flags; saying so, with
-                    // a way to switch it off, is the difference between a
-                    // background updater and something that looks like it is
-                    // hiding.
-                    Text(L10n.t("Version \(updater.currentVersion). Updates install in the background and apply next time Codenotch starts."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                    Button(L10n.t("Check now")) { updater.checkNow() }
-                        .controlSize(.small)
-                }
-
-                // Says what happened, where the user is already looking.
-                // Sparkle's own answer to a failed check is a modal reading
-                // "an error occurred in retrieving update information", which
-                // names no cause and offers nothing to do about it.
-                if let message = updater.outcome.message {
-                    Text(message)
-                        .font(.caption)
-                        .foregroundStyle(
-                            updater.outcome == .unreachable ? .orange : .secondary
-                        )
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                Text(L10n.t("This local build does not check for or download updates."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             // An ordinary row here, not a bar pinned across every pane —

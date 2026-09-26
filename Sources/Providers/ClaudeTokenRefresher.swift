@@ -220,13 +220,13 @@ final class ClaudeTokenRefresher: ObservableObject {
         let process = Process()
         process.executableURL = cli
         process.arguments = Self.arguments
+        var environment = ClaudeUsageCLI.withoutTelemetry(ProcessInfo.processInfo.environment)
         // The same fixed directory `/usage` runs from, never the app's own.
         if let scratch = try? ClaudeUsageCLI.scratchDirectory() {
             process.currentDirectoryURL = scratch
-            var environment = ProcessInfo.processInfo.environment
             environment["PWD"] = scratch.path
-            process.environment = environment
         }
+        process.environment = environment
         process.standardInput = FileHandle.nullDevice
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice

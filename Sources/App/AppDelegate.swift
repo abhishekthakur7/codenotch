@@ -16,8 +16,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var preferences: Preferences?
     private var settings: SettingsWindowController?
     private var whatsNew: WhatsNewWindowController?
-    /// Held for the life of the app: releasing it stops the scheduled checks.
-    private var updater: Updater?
     private var thresholdNotifier: ThresholdNotifier?
     private var resetWatcher: UsageResetWatcher?
     private var limitWatcher: UsageLimitWatcher?
@@ -216,9 +214,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 store?.providerAuthenticationChanged(providerID: "minimax")
             }
 
-            let updater = Updater()
-            self.updater = updater
-
             let relay = OllamaActivityRelay()
             self.ollamaRelay = relay
             // A single publisher chain exceeds Swift's type-checking time limit.
@@ -358,7 +353,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 // forward; a snapshot here is what made a switched account keep
                 // showing the old address until the app restarted.
                 providers: { [weak store] in store?.providerSummaries ?? [] },
-                updater: updater,
                 signOut: { [weak store] in store?.signOut(providerID: $0) },
                 signIn: { [weak store] in store?.signIn(providerID: $0) ?? false },
                 switchAccount: { [weak store] in
@@ -400,7 +394,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // What changed, once per version — including on a fresh install,
             // where it is the introduction.
             let whatsNew = WhatsNewWindowController(
-                preferences: preferences, version: updater.currentVersion
+                preferences: preferences,
+                version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
             )
             self.whatsNew = whatsNew
 

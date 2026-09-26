@@ -1138,7 +1138,7 @@ final class Preferences: ObservableObject {
     /// Nothing but the app itself can clean that up, so the app has to offer it.
     ///
     /// Not tied to uninstalling: a reinstall is indistinguishable from an
-    /// update, and wiping data on every Sparkle update would be catastrophic.
+    /// update, and wiping data on every app update would be catastrophic.
     /// It has to be something the user asks for.
     static func eraseAllData() {
         let bundleID = Bundle.main.bundleIdentifier ?? "com.vinz.codenotch"

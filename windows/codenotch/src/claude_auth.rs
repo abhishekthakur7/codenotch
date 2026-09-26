@@ -34,6 +34,17 @@ pub fn usage_succeeded() {
     if !BUSY.load(Ordering::Acquire) { message().clear(); }
 }
 
+/// Keep Codenotch-launched Claude processes from sending optional telemetry,
+/// error reports, or background update traffic.
+pub fn disable_nonessential_traffic(cmd: &mut Command) {
+    cmd.env("CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC", "1")
+        .env("DISABLE_TELEMETRY", "1")
+        .env("DISABLE_ERROR_REPORTING", "1")
+        .env("CLAUDE_CODE_ENABLE_TELEMETRY", "0")
+        .env("OTEL_SDK_DISABLED", "true")
+        .env_remove("CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL");
+}
+
 // No interpolated shell input: even paths containing apostrophes arrive in env.
 const LOGIN_SCRIPT: &str = "$Host.UI.RawUI.WindowTitle = 'Codenotch - Claude sign-in'; Write-Host 'Complete sign-in in your browser. Paste any code in this window.'; & $env:CODENOTCH_CLAUDE_CLI auth login --claudeai; $loginResult = $LASTEXITCODE; if ($loginResult -eq 0) { Write-Host 'Sign-in complete. Codenotch will refresh automatically.'; Start-Sleep -Seconds 2 } else { Write-Host 'Sign-in failed or cancelled. Retry from Codenotch.'; Start-Sleep -Seconds 8 }; exit $loginResult";
 
@@ -51,6 +62,7 @@ fn login_command(cli: &std::path::Path) -> Result<Command, String> {
             cmd.env_remove(&key);
         }
     }
+    disable_nonessential_traffic(&mut cmd);
     #[cfg(windows)] {
         use std::os::windows::process::CommandExt;
         cmd.creation_flags(0x0000_0010); // visible console only after a user's click
@@ -103,6 +115,21 @@ pub fn start_login() -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn spawned_claude_has_telemetry_disabled() {
+        let mut cmd = Command::new("claude");
+        disable_nonessential_traffic(&mut cmd);
+        let env: std::collections::HashMap<_, _> = cmd.get_envs()
+            .map(|(key, value)| (key.to_string_lossy().into_owned(),
+                                  value.map(|v| v.to_string_lossy().into_owned())))
+            .collect();
+        assert_eq!(env.get("CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"), Some(&Some("1".into())));
+        assert_eq!(env.get("DISABLE_TELEMETRY"), Some(&Some("1".into())));
+        assert_eq!(env.get("DISABLE_ERROR_REPORTING"), Some(&Some("1".into())));
+        assert_eq!(env.get("CLAUDE_CODE_ENABLE_TELEMETRY"), Some(&Some("0".into())));
+        assert_eq!(env.get("OTEL_SDK_DISABLED"), Some(&Some("true".into())));
+        assert_eq!(env.get("CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL"), Some(&None));
+    }
     #[test]
     fn gate_excludes_login_and_renewal_and_releases_on_drop() {
         let guard = try_acquire().unwrap();

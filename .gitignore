@@ -1,6 +1,11 @@
 .DS_Store
 build/
 DerivedData/
+*.dmg
+*.pkg
+*.xcarchive
+*.dSYM
+*.app
 *.xcodeproj
 *.xcworkspace
 !*.xcworkspace/contents.xcworkspacedata

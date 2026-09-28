@@ -50,9 +50,7 @@ promotion deadline, or number of resets is hardcoded into the provider.
 
 Malformed reset data must not prevent ordinary usage windows from displaying.
 Expiry is also checked when rendering remembered snapshots. Existing Codex
-copy, localization keys, and layout dimensions are reused; Windows remains
-unchanged because it has no corresponding reset-credit card or Desktop cache
-reader.
+copy, localization keys, and layout dimensions are reused.
 
 Regression coverage includes parsing, eligibility, grant timing, spent and
 malformed responses, cache key alternation, account isolation, cache age,

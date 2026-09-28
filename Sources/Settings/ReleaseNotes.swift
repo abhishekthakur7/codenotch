@@ -87,7 +87,7 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("한국어 and Oʻzbekcha"),
-                        detail: L10n.t("Korean is the most completely translated language in the app, on the Mac and on Windows. Uzbek joins in Latin script. The release notes you are reading were the last thing missing from several languages, and are now in the catalogue too.")
+                        detail: L10n.t("Korean is the most completely translated language in the app. Uzbek joins in Latin script. The release notes you are reading were the last thing missing from several languages, and are now in the catalogue too.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Rings that know whose account they are"),
@@ -101,15 +101,11 @@ enum ReleaseNotes {
                         title: L10n.t("The menu bar shows more"),
                         detail: L10n.t("Weekly usage beside the five-hour window, and its own switch reachable from the menu bar itself.")
                     ),
-                    ReleaseNote.Change(
-                        title: L10n.t("A lighter Windows notch"),
-                        detail: L10n.t("A Theme row — System, Light or Dark — that the notch, the settings window and the drag overlay all follow. Português (Brasil) joins the Windows port, and the move handle stays on screen while you drag it.")
-                    ),
                 ]
             ),
             ReleaseNote(
                 version: "1.16.0",
-                headline: L10n.t("Windows updates itself, five-hour limits in the menu bar, and a notch you can fold away."),
+                headline: L10n.t("Five-hour limits in the menu bar, clearer glass, and every Antigravity account."),
                 changes: [
                     ReleaseNote.Change(
                         title: L10n.t("Five-hour limits in the menu bar"),
@@ -124,26 +120,14 @@ enum ReleaseNotes {
                         detail: L10n.t("Tooltip copy keeps its footing on Liquid Glass in dark mode, where a pale desktop behind it used to wash the secondary lines out.")
                     ),
                     ReleaseNote.Change(
-                        title: L10n.t("Windows keeps itself up to date"),
-                        detail: L10n.t("It looks for a new version shortly after it starts and can install one for you, checking the download's signature first. Until now a Windows install stayed on the build it was installed from.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("A Windows notch that moves"),
-                        detail: L10n.t("Carry it between monitors by its handle, slide it along an edge with Alt held down, and fold it to a pill when it is not in use, as Show on hover does on the Mac.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("Z.AI and every Claude account on Windows"),
-                        detail: L10n.t("A ring for the Z.AI Coding Plan, one for each Claude account rather than only the default one, and Claude sign-in from the card itself.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("日本語, and Russian notch placement"),
-                        detail: L10n.t("The release notes read in Japanese, and the Windows notch placement settings in Russian.")
+                        title: L10n.t("日本語"),
+                        detail: L10n.t("The release notes now read in Japanese.")
                     ),
                 ]
             ),
             ReleaseNote(
                 version: "1.15.0",
-                headline: L10n.t("QianwenAI reads again, fewer false alerts, and a steadier Windows notch."),
+                headline: L10n.t("QianwenAI reads again, with fewer false alerts."),
                 changes: [
                     ReleaseNote.Change(
                         title: L10n.t("QianwenAI reads again"),
@@ -158,10 +142,6 @@ enum ReleaseNotes {
                         detail: L10n.t("Grok shows as working during grok -p runs, not only in its own window.")
                     ),
                     ReleaseNote.Change(
-                        title: L10n.t("The Windows notch stays clear of the taskbar"),
-                        detail: L10n.t("It sits inside the work area and finds its edge again when the taskbar moves, and its rings dim when a reading is old, with rounded ends, as on the Mac.")
-                    ),
-                    ReleaseNote.Change(
                         title: L10n.t("Smaller fixes"),
                         detail: L10n.t("Checking for updates can no longer hang on \"Checking…\", a small context reading still draws an arc, Claude's account file is only read again when it changes, and the Traditional Chinese uses Taiwan's own words.")
                     ),
@@ -169,7 +149,7 @@ enum ReleaseNotes {
             ),
             ReleaseNote(
                 version: "1.14.0",
-                headline: L10n.t("A new Settings, QianwenAI, Traditional Chinese, and a Windows notch you can carry to any edge."),
+                headline: L10n.t("A new Settings, QianwenAI, and Traditional Chinese."),
                 changes: [
                     ReleaseNote.Change(
                         title: L10n.t("A new Settings"),
@@ -181,11 +161,7 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("繁體中文, and every language complete"),
-                        detail: L10n.t("Traditional Chinese on the Mac and Windows, picked up automatically in Taiwan and Hong Kong, and Simplified Chinese and Ukrainian now cover every string.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("The Windows notch, carried anywhere"),
-                        detail: L10n.t("Drag it by its handle to any edge, open Settings from its orb, click a ring to read it again or right-click for more, and the hover card stays clear of the taskbar.")
+                        detail: L10n.t("Traditional Chinese is picked up automatically in Taiwan and Hong Kong, and Simplified Chinese and Ukrainian now cover every string.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Fresh logos"),
@@ -211,25 +187,17 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Smaller fixes"),
-                        detail: L10n.t("Kiro reads usage from newer kiro-cli versions, GLM Start Plan says why it has no usage, a Claude account with no published limits says so instead of waiting, and the Windows notch clears a stuck waiting card after a day.")
+                        detail: L10n.t("Kiro reads usage from newer kiro-cli versions, GLM Start Plan says why it has no usage, and a Claude account with no published limits says so instead of waiting.")
                     ),
                 ]
             ),
             ReleaseNote(
                 version: "1.13.0",
-                headline: L10n.t("Much lighter on your battery, Grok and screen edges on Windows, and a Windows Settings window that opens again."),
+                headline: L10n.t("Much lighter on your battery, with better Codex readings and Ghostty tabs."),
                 changes: [
                     ReleaseNote.Change(
                         title: L10n.t("Lighter on the battery"),
                         detail: L10n.t("Codenotch idles at a fraction of the CPU it used, and moving the pointer costs less than half as much. The working spinner is drawn by the system instead of redrawing the notch every frame, and full-screen apps are checked every two seconds rather than on every movement.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("Windows Settings opens again"),
-                        detail: L10n.t("In 1.12.0 the Settings window on Windows opened empty. It is fixed, and a check now stops that kind of mistake from shipping.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("Grok, any screen edge, and readings in the tray on Windows"),
-                        detail: L10n.t("Grok joins the Windows notch, the notch can sit on any edge of any monitor, and the tray menu shows each provider's readings.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Ghostty tabs"),
@@ -237,21 +205,17 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Smaller fixes"),
-                        detail: L10n.t("Codex sessions are read from the end of the file instead of all of it, the Codex card hides an empty reset-credits section, and a Claude token on Windows that fails to renew is retried instead of freezing the card.")
+                        detail: L10n.t("Codex sessions are read from the end of the file instead of all of it, and the Codex card hides an empty reset-credits section.")
                     ),
                 ]
             ),
             ReleaseNote(
                 version: "1.12.0",
-                headline: L10n.t("An installer for Windows, Ukrainian, Dark glass, and limits you set yourself."),
+                headline: L10n.t("Ukrainian, Dark glass, and limits you set yourself."),
                 changes: [
                     ReleaseNote.Change(
-                        title: L10n.t("Codenotch for Windows, installable"),
-                        detail: L10n.t("Every release now carries Codenotch-Setup.exe, which installs for the current user without administrator rights. It is not signed yet, so Windows asks once. The port also gains the Mac's settings window, Small, Medium and Large sizes, a ring for the weekly limit, and Chinese, Japanese, Korean and Ukrainian.")
-                    ),
-                    ReleaseNote.Change(
                         title: L10n.t("Українська"),
-                        detail: L10n.t("A seventh language, on the Mac and on Windows.")
+                        detail: L10n.t("A seventh language for the app.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Dark glass"),
@@ -264,10 +228,6 @@ enum ReleaseNotes {
                     ReleaseNote.Change(
                         title: L10n.t("Quieter in the background"),
                         detail: L10n.t("A provider you have switched off is no longer watched at all, sessions are read from the end of the file rather than the whole of it, and the notch no longer folds on hover when folding for full-screen apps is off.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("Windows keeps its Claude reading"),
-                        detail: L10n.t("An expired token is renewed rather than read as a rate limit, the notch no longer takes focus, and it holds still when Windows animation effects are off.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Japanese, complete"),
@@ -309,7 +269,7 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Smaller fixes"),
-                        detail: L10n.t("New providers stay off until you switch them on, the recenter button gives clearer feedback, hovering is ignored while Option-dragging, the Codex completion sound keeps its setting, and the Windows rings and hover card match the Mac's.")
+                        detail: L10n.t("New providers stay off until you switch them on, the recenter button gives clearer feedback, hovering is ignored while Option-dragging, and the Codex completion sound keeps its setting.")
                     ),
                 ]
             ),
@@ -327,7 +287,7 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Русский"),
-                        detail: L10n.t("A fifth language, on the Mac and on Windows.")
+                        detail: L10n.t("A fifth language for the app.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Quit from Settings"),
@@ -335,11 +295,7 @@ enum ReleaseNotes {
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("A web page cannot reach Codenotch's local servers"),
-                        detail: L10n.t("The Ollama relay and the Windows event server now refuse browser requests from other sites, and raw responses are kept out of the system log. Reading DeepSeek also checks the page's address exactly, where a lookalike domain could have passed before.")
-                    ),
-                    ReleaseNote.Change(
-                        title: L10n.t("Windows"),
-                        detail: L10n.t("Diagnostics print the shape of a value rather than the value, so nothing sensitive lands in a report, and the port's build is checked on every change.")
+                        detail: L10n.t("The Ollama relay now refuses browser requests from other sites, and raw responses are kept out of the system log. Reading DeepSeek also checks the page's address exactly, where a lookalike domain could have passed before.")
                     ),
                     ReleaseNote.Change(
                         title: L10n.t("Smaller fixes"),

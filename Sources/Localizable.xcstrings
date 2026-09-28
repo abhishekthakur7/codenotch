@@ -43153,52 +43153,6 @@
         }
       }
     },
-    "Kiro reads usage from newer kiro-cli versions, GLM Start Plan says why it has no usage, a Claude account with no published limits says so instead of waiting, and the Windows notch clears a stuck waiting card after a day.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kiro が新しい kiro-cli のバージョンからも使用量を読み取り、GLM Start Plan は使用量が無い理由を表示し、公表された上限のない Claude アカウントは待機せずにその旨を表示し、Windows 版のノッチは固まった待機カードを 1 日後に解消します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "최신 kiro-cli 버전에서도 Kiro 사용량을 읽고, GLM Start Plan은 사용량이 없는 이유를 표시합니다. 공개된 한도가 없는 Claude 계정은 대기하는 대신 그 사실을 알리며, Windows 노치는 하루가 지나면 멈춘 응답 대기 카드를 정리합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kiro membaca penggunaan dari versi kiro-cli yang lebih baru, GLM Start Plan menjelaskan mengapa tidak ada penggunaan, akun Claude tanpa batas yang dipublikasikan memberikan penjelasan alih-alih terus menunggu, dan notch Windows menghapus kartu tunggu yang macet setelah satu hari."
-          }
-        }
-      }
-    },
-    "Much lighter on your battery, Grok and screen edges on Windows, and a Windows Settings window that opens again.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "バッテリーへの負荷が大幅に軽くなり、Windows 版に Grok と画面の辺の選択が加わり、Windows の設定ウインドウがまた開くようになりました。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "배터리 사용량을 크게 줄이고 Windows에 Grok과 가장자리 배치를 추가했으며 설정 창이 다시 열리도록 수정했습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jauh lebih hemat baterai, Grok dan penempatan tepi layar di Windows, serta jendela Pengaturan Windows yang dapat dibuka kembali."
-          }
-        }
-      }
-    },
     "Lighter on the battery": {
       "extractionState": "manual",
       "localizations": {
@@ -43241,98 +43195,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Codenotch menggunakan jauh lebih sedikit CPU saat siaga, dan pergerakan kursor menggunakan daya kurang dari setengahnya. Spinner aktivitas digambar oleh sistem alih-alih menggambar ulang seluruh notch setiap frame, dan aplikasi layar penuh diperiksa setiap dua detik alih-alih pada setiap gerakan kursor."
-          }
-        }
-      }
-    },
-    "Windows Settings opens again": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows の設定がまた開くように"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 설정 창 열기 수정"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pengaturan Windows dapat dibuka kembali"
-          }
-        }
-      }
-    },
-    "In 1.12.0 the Settings window on Windows opened empty. It is fixed, and a check now stops that kind of mistake from shipping.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1.12.0 では Windows の設定ウインドウが空で開いていました。修正し、この種の不具合が出荷されないよう検査も追加しました。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1.12.0에서 Windows 설정 창이 빈 화면으로 열리던 문제를 수정했습니다. 같은 종류의 오류가 배포되지 않도록 검사도 추가했습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pada versi 1.12.0, jendela Pengaturan di Windows terbuka dalam keadaan kosong. Masalah ini telah diperbaiki, dan pemeriksaan otomatis kini mencegah kesalahan serupa terulang."
-          }
-        }
-      }
-    },
-    "Grok, any screen edge, and readings in the tray on Windows": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 版に Grok、任意の画面の辺、トレイでの読み取り表示"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows에 Grok, 모든 가장자리 배치, 트레이 사용량 표시 추가"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grok, penempatan di tepi layar mana pun, dan pembacaan di tray Windows"
-          }
-        }
-      }
-    },
-    "Grok joins the Windows notch, the notch can sit on any edge of any monitor, and the tray menu shows each provider's readings.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grok が Windows のノッチに加わり、ノッチはどのモニタのどの辺にも置けるようになり、トレイのメニューに各サービスの読み取りが表示されます。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 노치에 Grok을 추가하고, 모든 모니터의 원하는 가장자리에 노치를 배치할 수 있도록 했습니다. 트레이 메뉴에는 제공자별 측정값을 표시합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grok bergabung ke notch Windows, notch dapat ditempatkan di tepi monitor mana pun, dan menu tray menampilkan data masing-masing penyedia."
           }
         }
       }
@@ -43383,98 +43245,6 @@
         }
       }
     },
-    "Codex sessions are read from the end of the file instead of all of it, the Codex card hides an empty reset-credits section, and a Claude token on Windows that fails to renew is retried instead of freezing the card.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Codex のセッションはファイル全体ではなく末尾から読み取り、Codex のカードは空のリセットクレジット欄を隠し、Windows で更新に失敗した Claude のトークンはカードを固まらせず再試行します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Codex 세션을 파일 전체 대신 끝부분에서 읽고, Codex 카드에서 비어 있는 재설정 크레딧 영역을 숨깁니다. Windows에서 Claude 토큰 갱신이 실패해도 카드가 멈추지 않고 재시도합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sesi Codex dibaca dari akhir file alih-alih seluruh isinya, kartu Codex menyembunyikan bagian kredit reset yang kosong, dan token Claude di Windows yang gagal diperbarui akan dicoba kembali alih-alih membekukan kartu."
-          }
-        }
-      }
-    },
-    "An installer for Windows, Ukrainian, Dark glass, and limits you set yourself.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 版のインストーラー、ウクライナ語、ダークガラス、そして自分で決めるしきい値。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 설치 프로그램, 우크라이나어, 어두운 유리, 직접 정하는 사용량 표시 기준을 추가합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Penginstal untuk Windows, Bahasa Ukraina, Dark glass, dan batas yang dapat Anda sesuaikan sendiri."
-          }
-        }
-      }
-    },
-    "Codenotch for Windows, installable": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 版 Codenotch をインストール可能に"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "설치 가능한 Windows용 Codenotch"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Codenotch untuk Windows, kini dapat diinstal"
-          }
-        }
-      }
-    },
-    "Every release now carries Codenotch-Setup.exe, which installs for the current user without administrator rights. It is not signed yet, so Windows asks once. The port also gains the Mac's settings window, Small, Medium and Large sizes, a ring for the weekly limit, and Chinese, Japanese, Korean and Ukrainian.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "すべてのリリースに Codenotch-Setup.exe が付くようになりました。管理者権限なしで現在のユーザー向けにインストールします。まだ署名されていないため、Windows が一度確認します。移植版には Mac と同じ設定ウインドウ、小・中・大のサイズ、週間上限のリング、そして中国語・日本語・韓国語・ウクライナ語も加わりました。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "모든 릴리스에 Codenotch-Setup.exe를 포함합니다. 관리자 권한 없이 현재 사용자용으로 설치하며, 아직 서명되지 않아 Windows가 한 번 확인을 요청합니다. Windows 버전에도 Mac과 같은 설정 창, 작게·중간·크게 크기, 주간 한도 링, 중국어·일본어·한국어·우크라이나어를 추가합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Setiap rilis kini menyertakan Codenotch-Setup.exe, yang dapat dipasang untuk pengguna saat ini tanpa hak administrator. Aplikasi porting ini juga mendapatkan jendela pengaturan versi Mac, ukuran Kecil, Sedang, dan Besar, ring untuk batas mingguan, serta Bahasa Mandarin, Jepang, Korea, dan Ukraina."
-          }
-        }
-      }
-    },
     "Українська": {
       "extractionState": "manual",
       "localizations": {
@@ -43494,29 +43264,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Українська"
-          }
-        }
-      }
-    },
-    "A seventh language, on the Mac and on Windows.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "7 つ目の言語。Mac でも Windows でも使えます。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mac과 Windows에서 일곱 번째 언어를 지원합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa ketujuh, tersedia di Mac dan di Windows."
           }
         }
       }
@@ -43632,52 +43379,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Penyedia yang Anda matikan tidak lagi dipantau sama sekali, sesi dibaca dari akhir file alih-alih seluruhnya, dan notch tidak lagi melipat saat hover saat opsi melipat untuk aplikasi layar penuh dinonaktifkan."
-          }
-        }
-      }
-    },
-    "Windows keeps its Claude reading": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 版が Claude の読み取りを保持"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows에서 Claude 측정값 유지"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows mempertahankan data Claude miliknya"
-          }
-        }
-      }
-    },
-    "An expired token is renewed rather than read as a rate limit, the notch no longer takes focus, and it holds still when Windows animation effects are off.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "期限切れのトークンはレート制限とみなさず更新するようになり、ノッチがフォーカスを奪わなくなり、Windows のアニメーション効果がオフのときは動かずに留まります。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "만료된 토큰을 요청 제한으로 오인하지 않고 갱신하며, 노치가 포커스를 빼앗지 않습니다. Windows 애니메이션 효과를 끄면 노치도 움직이지 않습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Token yang kedaluwarsa diperbarui alih-alih dianggap sebagai batas laju, notch tidak lagi mengambil fokus jendela, dan posisinya tetap stabil saat efek animasi Windows dimatikan."
           }
         }
       }
@@ -44050,29 +43751,6 @@
         }
       }
     },
-    "New providers stay off until you switch them on, the recenter button gives clearer feedback, hovering is ignored while Option-dragging, the Codex completion sound keeps its setting, and the Windows rings and hover card match the Mac's.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新しいサービスはオンにするまでオフのままになり、「中央に戻す」の反応が分かりやすくなり、⌥ ドラッグ中はホバーを無視し、Codex の完了音が設定を保持し、Windows 版のリングとホバーカードが Mac 版と揃いました。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "새 제공자는 직접 켤 때까지 꺼진 상태를 유지합니다. 가운데로 되돌리기 버튼의 피드백을 개선하고 Option 키를 누른 채 드래그하는 동안 마우스 올림을 무시합니다. Codex 완료 소리 설정을 유지하며 Windows의 링과 호버 카드를 Mac에 맞췄습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Penyedia baru tetap nonaktif hingga Anda menyalakannya, tombol pusatkan memberikan umpan balik yang lebih jelas, efek hover diabaikan saat Option-drag, suara penyelesaian Codex mempertahankan pengaturannya, dan ring serta kartu hover Windows kini selaras dengan versi Mac."
-          }
-        }
-      }
-    },
     "Tells you when a limit resets or runs out, speaks Russian, and reads Kimi.": {
       "extractionState": "manual",
       "localizations": {
@@ -44211,29 +43889,6 @@
         }
       }
     },
-    "A fifth language, on the Mac and on Windows.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5 つ目の言語。Mac でも Windows でも使えます。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mac과 Windows에서 다섯 번째 언어를 지원합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa kelima, tersedia di Mac dan di Windows."
-          }
-        }
-      }
-    },
     "Quit from Settings": {
       "extractionState": "manual",
       "localizations": {
@@ -44299,75 +43954,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Halaman web tidak dapat mengakses server lokal Codenotch"
-          }
-        }
-      }
-    },
-    "The Ollama relay and the Windows event server now refuse browser requests from other sites, and raw responses are kept out of the system log. Reading DeepSeek also checks the page's address exactly, where a lookalike domain could have passed before.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ollama のリレーと Windows のイベントサーバーが、他サイトからのブラウザのリクエストを拒否するようになりました。生の応答もシステムログに残しません。DeepSeek の読み取りでもページのアドレスを厳密に確認します。以前は似せたドメインが通り得ました。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ollama 릴레이와 Windows 이벤트 서버는 다른 사이트에서 오는 브라우저 요청을 거부하고, 원시 응답을 시스템 로그에 남기지 않습니다. DeepSeek 조회 시에도 페이지 주소를 정확히 검사해 이전에는 통과할 수 있었던 유사 도메인을 차단합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Relai Ollama dan server event Windows kini menolak permintaan peramban dari situs lain, dan respons mentah tidak dicatat ke log sistem. Pembacaan DeepSeek juga memeriksa alamat halaman secara presisi untuk mencegah domain tiruan."
-          }
-        }
-      }
-    },
-    "Windows": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows"
-          }
-        }
-      }
-    },
-    "Diagnostics print the shape of a value rather than the value, so nothing sensitive lands in a report, and the port's build is checked on every change.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "診断情報では値そのものではなく値の形を出力するので、機微な内容がレポートに残りません。移植版のビルドも変更のたびに検証されます。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "진단 정보에는 실제 값 대신 값의 구조를 출력해 민감한 정보가 보고서에 남지 않게 합니다. Windows 버전도 변경할 때마다 빌드를 검사합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnostik mencetak format nilai alih-alih isi nilainya, sehingga tidak ada informasi sensitif yang masuk ke laporan, dan build versi porting diperiksa pada setiap perubahan."
           }
         }
       }
@@ -47692,23 +47278,6 @@
         }
       }
     },
-    "Windows updates itself, five-hour limits in the menu bar, and a notch you can fold away.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 자동 업데이트, 메뉴 막대의 5시간 한도 표시, 접을 수 있는 노치를 추가합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows memperbarui dirinya sendiri, batas lima jam di bar menu, dan notch yang bisa Anda sembunyikan."
-          }
-        }
-      }
-    },
     "Five-hour limits in the menu bar": {
       "extractionState": "manual",
       "localizations": {
@@ -47807,165 +47376,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teks tooltip tetap jelas di atas Liquid Glass dalam mode gelap, saat latar desktop pucat di belakangnya dulu membuat baris sekunder sulit terlihat."
-          }
-        }
-      }
-    },
-    "Windows keeps itself up to date": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 자동 업데이트"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows selalu diperbarui secara otomatis"
-          }
-        }
-      }
-    },
-    "It looks for a new version shortly after it starts and can install one for you, checking the download's signature first. Until now a Windows install stayed on the build it was installed from.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "시작 직후 새 버전을 확인하고 다운로드 서명을 검증한 뒤 자동으로 설치할 수 있습니다. 이전에는 Windows 설치본이 처음 설치한 버전에 머물렀습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ini mencari versi baru tak lama setelah dijalankan dan dapat memasangnya untuk Anda, setelah terlebih dahulu memeriksa tanda tangan unduhan. Sampai sekarang, instalasi Windows tetap menggunakan build asalnya."
-          }
-        }
-      }
-    },
-    "A Windows notch that moves": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이동 가능한 Windows 노치"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch Windows yang dapat berpindah"
-          }
-        }
-      }
-    },
-    "Carry it between monitors by its handle, slide it along an edge with Alt held down, and fold it to a pill when it is not in use, as Show on hover does on the Mac.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "핸들로 모니터 사이를 옮기고, Alt 키를 누른 채 가장자리를 따라 이동할 수 있습니다. 사용하지 않을 때는 Mac의 ‘마우스를 올리면 표시’처럼 작은 필로 접을 수 있습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pindahkan di antara monitor melalui gagangnya, geser di sepanjang tepi sambil menahan Alt, dan lipat menjadi bentuk pil saat tidak digunakan, seperti yang dilakukan Show on hover di Mac."
-          }
-        }
-      }
-    },
-    "Z.AI and every Claude account on Windows": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows에서 Z.AI와 모든 Claude 계정 지원"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Z.AI dan setiap akun Claude di Windows"
-          }
-        }
-      }
-    },
-    "A ring for the Z.AI Coding Plan, one for each Claude account rather than only the default one, and Claude sign-in from the card itself.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Z.AI Coding Plan 링을 추가하고 기본 계정뿐 아니라 모든 Claude 계정에 개별 링을 표시합니다. 카드에서 직접 Claude에 로그인할 수도 있습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cincin untuk Z.AI Coding Plan, satu untuk setiap akun Claude, bukan hanya akun default, serta kemampuan masuk ke Claude langsung dari kartunya."
-          }
-        }
-      }
-    },
-    "日本語, and Russian notch placement": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "日本語 및 러시아어 노치 배치 설정"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa Jepang, dan penempatan notch dalam bahasa Rusia"
-          }
-        }
-      }
-    },
-    "The release notes read in Japanese, and the Windows notch placement settings in Russian.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "릴리스 노트를 일본어로, Windows 노치 배치 설정을 러시아어로 제공합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Catatan rilis dapat dibaca dalam bahasa Jepang, dan pengaturan penempatan notch Windows tersedia dalam bahasa Rusia."
-          }
-        }
-      }
-    },
-    "QianwenAI reads again, fewer false alerts, and a steadier Windows notch.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "QianwenAI 조회를 복구하고 잘못된 알림을 줄였으며 Windows 노치의 동작을 안정화했습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "QianwenAI kembali dapat membaca, lebih sedikit peringatan palsu, dan notch Windows yang lebih stabil."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "QianwenAIの読み取りが復旧し、誤通知が減り、Windowsノッチがより安定しました。"
           }
         }
       }
@@ -48085,75 +47495,6 @@
         }
       }
     },
-    "The Windows notch stays clear of the taskbar": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 노치가 작업 표시줄을 피하도록 개선"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch Windows tetap tidak bertumpang tindih dengan taskbar"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windowsノッチがタスクバーと重ならないように"
-          }
-        }
-      }
-    },
-    "It sits inside the work area and finds its edge again when the taskbar moves, and its rings dim when a reading is old, with rounded ends, as on the Mac.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "작업 영역 안에 배치하고 작업 표시줄이 이동하면 가장자리를 다시 찾습니다. Mac처럼 링 끝을 둥글게 표시하며 측정값이 오래되면 흐리게 표시합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch ini berada di dalam area kerja dan kembali menemukan tepinya saat taskbar berpindah, sementara cincin-cincinnya meredup saat hasil pembacaan sudah lama, dengan ujung-ujung membulat, seperti di Mac."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ノッチは作業領域内に収まり、タスクバーが移動すると端を再び見つけます。読み取りが古くなるとリングが暗くなり、Macと同じように端が丸く表示されます。"
-          }
-        }
-      }
-    },
-    "A new Settings, QianwenAI, Traditional Chinese, and a Windows notch you can carry to any edge.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "새로운 설정, QianwenAI, 중국어 번체, 원하는 가장자리로 옮길 수 있는 Windows 노치를 추가합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pengaturan baru, QianwenAI, bahasa Tionghoa Tradisional, dan notch Windows yang dapat dipindahkan ke tepi mana pun."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新しい設定、QianwenAI、繁体字中国語、そしてどの端にも移動できるWindowsノッチ。"
-          }
-        }
-      }
-    },
     "A new Settings": {
       "extractionState": "manual",
       "localizations": {
@@ -48265,75 +47606,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "繁体字中国語、そしてすべての言語に対応"
-          }
-        }
-      }
-    },
-    "Traditional Chinese on the Mac and Windows, picked up automatically in Taiwan and Hong Kong, and Simplified Chinese and Ukrainian now cover every string.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mac과 Windows에 중국어 번체를 추가해 대만과 홍콩에서 자동으로 선택합니다. 중국어 간체와 우크라이나어도 모든 문자열을 번역했습니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa Tionghoa Tradisional di Mac dan Windows, dipilih otomatis di Taiwan dan Hong Kong, serta bahasa Tionghoa Sederhana dan bahasa Ukraina kini mencakup semua teks."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MacとWindowsで繁体字中国語に対応し、台湾と香港では自動的に選択されます。簡体字中国語とウクライナ語もすべての文字列をカバーしました。"
-          }
-        }
-      }
-    },
-    "The Windows notch, carried anywhere": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Windows 노치를 원하는 곳으로 이동"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch Windows, dapat dipindahkan ke mana saja"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "どこにでも移動できるWindowsノッチ"
-          }
-        }
-      }
-    },
-    "Drag it by its handle to any edge, open Settings from its orb, click a ring to read it again or right-click for more, and the hover card stays clear of the taskbar.": {
-      "extractionState": "manual",
-      "localizations": {
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "핸들을 드래그해 원하는 가장자리로 옮기고, 구체 버튼으로 설정을 열 수 있습니다. 링을 클릭하면 다시 조회하고 오른쪽 버튼을 클릭하면 추가 메뉴를 엽니다. 호버 카드는 작업 표시줄을 피해서 표시합니다."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seret melalui pegangannya ke tepi mana pun, buka Pengaturan dari bulatannya, klik indikator untuk membacanya kembali atau klik kanan untuk opsi lainnya, dan kartu saat diarahkan tetap tidak menghalangi bilah tugas."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ハンドルをドラッグしてどの端にも移動でき、オーブから設定を開けます。リングをクリックすると再読み込みし、右クリックでその他の操作を行えます。ホバーカードはタスクバーと重なりません。"
           }
         }
       }
@@ -48590,23 +47862,6 @@
         }
       }
     },
-    "Korean is the most completely translated language in the app, on the Mac and on Windows. Uzbek joins in Latin script. The release notes you are reading were the last thing missing from several languages, and are now in the catalogue too.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Korean is the most completely translated language in the app, on the Mac and on Windows. Uzbek joins in Latin script. The release notes you are reading were the last thing missing from several languages, and are now in the catalogue too."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa Korea adalah bahasa dengan terjemahan paling lengkap di aplikasi ini, baik di Mac maupun Windows. Bahasa Uzbek hadir dalam aksara Latin. Catatan rilis yang sedang Anda baca adalah bagian terakhir yang belum tersedia dalam beberapa bahasa, dan kini juga sudah ada di katalog."
-          }
-        }
-      }
-    },
     "Rings that know whose account they are": {
       "extractionState": "manual",
       "localizations": {
@@ -48705,40 +47960,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Penggunaan mingguan di samping jendela lima jam, serta sakelar tersendiri yang dapat diakses langsung dari bar menu."
-          }
-        }
-      }
-    },
-    "A lighter Windows notch": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A lighter Windows notch"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notch Windows yang lebih ringan"
-          }
-        }
-      }
-    },
-    "A Theme row — System, Light or Dark — that the notch, the settings window and the drag overlay all follow. Português (Brasil) joins the Windows port, and the move handle stays on screen while you drag it.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A Theme row — System, Light or Dark — that the notch, the settings window and the drag overlay all follow. Português (Brasil) joins the Windows port, and the move handle stays on screen while you drag it."
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Baris Tema — Sistem, Terang, atau Gelap — yang diikuti oleh notch, jendela pengaturan, dan overlay saat menyeret. Português (Brasil) ditambahkan ke port Windows, dan pegangan pemindahan tetap terlihat di layar saat Anda menyeretnya."
           }
         }
       }
@@ -49847,6 +49068,51 @@
           }
         }
       }
+    },
+    "Korean is the most completely translated language in the app. Uzbek joins in Latin script. The release notes you are reading were the last thing missing from several languages, and are now in the catalogue too.": {
+      "extractionState": "manual"
+    },
+    "Five-hour limits in the menu bar, clearer glass, and every Antigravity account.": {
+      "extractionState": "manual"
+    },
+    "日本語": {
+      "extractionState": "manual"
+    },
+    "The release notes now read in Japanese.": {
+      "extractionState": "manual"
+    },
+    "QianwenAI reads again, with fewer false alerts.": {
+      "extractionState": "manual"
+    },
+    "A new Settings, QianwenAI, and Traditional Chinese.": {
+      "extractionState": "manual"
+    },
+    "Traditional Chinese is picked up automatically in Taiwan and Hong Kong, and Simplified Chinese and Ukrainian now cover every string.": {
+      "extractionState": "manual"
+    },
+    "Kiro reads usage from newer kiro-cli versions, GLM Start Plan says why it has no usage, and a Claude account with no published limits says so instead of waiting.": {
+      "extractionState": "manual"
+    },
+    "Much lighter on your battery, with better Codex readings and Ghostty tabs.": {
+      "extractionState": "manual"
+    },
+    "Codex sessions are read from the end of the file instead of all of it, and the Codex card hides an empty reset-credits section.": {
+      "extractionState": "manual"
+    },
+    "Ukrainian, Dark glass, and limits you set yourself.": {
+      "extractionState": "manual"
+    },
+    "A seventh language for the app.": {
+      "extractionState": "manual"
+    },
+    "New providers stay off until you switch them on, the recenter button gives clearer feedback, hovering is ignored while Option-dragging, and the Codex completion sound keeps its setting.": {
+      "extractionState": "manual"
+    },
+    "A fifth language for the app.": {
+      "extractionState": "manual"
+    },
+    "The Ollama relay now refuses browser requests from other sites, and raw responses are kept out of the system log. Reading DeepSeek also checks the page's address exactly, where a lookalike domain could have passed before.": {
+      "extractionState": "manual"
     }
   },
   "version": "1.0"

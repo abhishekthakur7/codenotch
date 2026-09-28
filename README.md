@@ -46,19 +46,6 @@ If macOS says the app is *damaged*, that is the quarantine flag rather than a ba
 Universal binary. macOS 15 or later. To build and install a copy from source
 instead, see [Building](#building).
 
-## Windows
-
-[![Download for Windows](docs/design/download-windows.svg)](../../releases/latest/download/Codenotch-Setup.exe)
-
-A Windows port — Rust/Tauri 2, same design and providers — lives in [`windows/`](windows/README.md).
-The button is the installer itself, named `Codenotch-Setup.exe` in every release for the same
-reason the dmg keeps one name. It installs for the current user without administrator rights,
-and fetches WebView2 if Windows does not already have it.
-
-The installer is not code-signed, so the first time it runs SmartScreen says *Windows protected
-your PC*. Choose **More info**, then **Run anyway**. Every Windows change also leaves an
-installer on its [Windows Package run](../../actions/workflows/windows-package.yml).
-
 ## Connect your phone
 
 The Codenotch phone app (iOS and Android) can show the same usage

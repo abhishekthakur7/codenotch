@@ -447,8 +447,6 @@ int g_debuglevel = DEBUGLEVEL;
 #ifndef STATIC_BMI2
 #  if defined(__BMI2__)
 #    define STATIC_BMI2 1
-#  elif defined(_MSC_VER) && defined(__AVX2__)
-#    define STATIC_BMI2 1 /* MSVC does not have a BMI2 specific flag, but every CPU that supports AVX2 also supports BMI2 */
 #  endif
 #endif
 
@@ -463,7 +461,7 @@ int g_debuglevel = DEBUGLEVEL;
 #  if ((defined(__clang__) && __has_attribute(__target__)) \
       || (defined(__GNUC__) \
           && (__GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))) \
-      && (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)) \
+      && (defined(__i386__) || defined(__x86_64__)) \
       && !defined(__BMI2__)
 #    define DYNAMIC_BMI2 1
 #  else
@@ -475,7 +473,7 @@ int g_debuglevel = DEBUGLEVEL;
  * Only enable assembly for GNU C compatible compilers,
  * because other platforms may not support GAS assembly syntax.
  *
- * Only enable assembly for Linux / MacOS / Win32, other platforms may
+ * Only enable assembly for Linux and macOS; other platforms may
  * work, but they haven't been tested. This could likely be
  * extended to BSD systems.
  *
@@ -483,7 +481,7 @@ int g_debuglevel = DEBUGLEVEL;
  * 100% of code to be instrumented to work.
  */
 #if defined(__GNUC__)
-#  if defined(__linux__) || defined(__linux) || defined(__APPLE__) || defined(_WIN32)
+#  if defined(__linux__) || defined(__linux) || defined(__APPLE__)
 #    if ZSTD_MEMORY_SANITIZER
 #      define ZSTD_ASM_SUPPORTED 0
 #    elif ZSTD_DATAFLOW_SANITIZER
@@ -554,8 +552,6 @@ int g_debuglevel = DEBUGLEVEL;
 
 #if defined(__GNUC__) || defined(__IAR_SYSTEMS_ICC__)
 #  define FORCE_INLINE_ATTR __attribute__((always_inline))
-#elif defined(_MSC_VER)
-#  define FORCE_INLINE_ATTR __forceinline
 #else
 #  define FORCE_INLINE_ATTR
 #endif
@@ -567,16 +563,6 @@ int g_debuglevel = DEBUGLEVEL;
 
 #endif
 
-/**
-  On MSVC qsort requires that functions passed into it use the __cdecl calling conversion(CC).
-  This explicitly marks such functions as __cdecl so that the code will still compile
-  if a CC other than __cdecl has been made the default.
-*/
-#if  defined(_MSC_VER)
-#  define WIN_CDECL __cdecl
-#else
-#  define WIN_CDECL
-#endif
 
 /* UNUSED_ATTR tells the compiler it is okay if the function is unused. */
 #if defined(__GNUC__) || defined(__IAR_SYSTEMS_ICC__)
@@ -624,23 +610,17 @@ int g_debuglevel = DEBUGLEVEL;
 #  define MEM_STATIC static inline UNUSED_ATTR
 #elif defined (__cplusplus) || (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) /* C99 */)
 #  define MEM_STATIC static inline
-#elif defined(_MSC_VER)
-#  define MEM_STATIC static __inline
 #else
 #  define MEM_STATIC static  /* this version may generate warnings for unused static functions; disable the relevant warning */
 #endif
 #endif
 
 /* force no inlining */
-#ifdef _MSC_VER
-#  define FORCE_NOINLINE static __declspec(noinline)
-#else
 #  if defined(__GNUC__) || defined(__IAR_SYSTEMS_ICC__)
 #    define FORCE_NOINLINE static __attribute__((__noinline__))
 #  else
 #    define FORCE_NOINLINE static
 #  endif
-#endif
 
 
 /* target attribute */
@@ -662,11 +642,7 @@ int g_debuglevel = DEBUGLEVEL;
 #  define PREFETCH_L1(ptr)  do { (void)(ptr); } while (0)  /* disabled */
 #  define PREFETCH_L2(ptr)  do { (void)(ptr); } while (0)  /* disabled */
 #else
-#  if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_I86)) && !defined(_M_ARM64EC)  /* _mm_prefetch() is not defined outside of x86/x64 */
-#    include <mmintrin.h>   /* https://msdn.microsoft.com/fr-fr/library/84szxsww(v=vs.90).aspx */
-#    define PREFETCH_L1(ptr)  _mm_prefetch((const char*)(ptr), _MM_HINT_T0)
-#    define PREFETCH_L2(ptr)  _mm_prefetch((const char*)(ptr), _MM_HINT_T1)
-#  elif defined(__GNUC__) && ( (__GNUC__ >= 4) || ( (__GNUC__ == 3) && (__GNUC_MINOR__ >= 1) ) )
+#  if defined(__GNUC__) && ( (__GNUC__ >= 4) || ( (__GNUC__ == 3) && (__GNUC_MINOR__ >= 1) ) )
 #    define PREFETCH_L1(ptr)  __builtin_prefetch((ptr), 0 /* rw==read */, 3 /* locality */)
 #    define PREFETCH_L2(ptr)  __builtin_prefetch((ptr), 0 /* rw==read */, 2 /* locality */)
 #  elif defined(__aarch64__)
@@ -723,24 +699,16 @@ int g_debuglevel = DEBUGLEVEL;
 #endif
 
 /* disable warnings */
-#ifdef _MSC_VER    /* Visual Studio */
-#  include <intrin.h>                    /* For Visual 2005 */
-#  pragma warning(disable : 4100)        /* disable: C4100: unreferenced formal parameter */
-#  pragma warning(disable : 4127)        /* disable: C4127: conditional expression is constant */
-#  pragma warning(disable : 4204)        /* disable: C4204: non-constant aggregate initializer */
-#  pragma warning(disable : 4214)        /* disable: C4214: non-int bitfields */
-#  pragma warning(disable : 4324)        /* disable: C4324: padded structure */
-#endif
 
 /* compile time determination of SIMD support */
 #if !defined(ZSTD_NO_INTRINSICS)
 #  if defined(__AVX2__)
 #    define ZSTD_ARCH_X86_AVX2
 #  endif
-#  if defined(__SSE2__) || defined(_M_X64) || (defined (_M_IX86) && defined(_M_IX86_FP) && (_M_IX86_FP >= 2))
+#  if defined(__SSE2__)
 #    define ZSTD_ARCH_X86_SSE2
 #  endif
-#  if defined(__ARM_NEON) || defined(_M_ARM64)
+#  if defined(__ARM_NEON)
 #    define ZSTD_ARCH_ARM_NEON
 #  endif
 #
@@ -807,8 +775,8 @@ MEM_STATIC int ZSTD_isPower2(size_t u) {
  */
 
 #ifndef ZSTD_ALIGNOF
-# if defined(__GNUC__) || defined(_MSC_VER)
-/* covers gcc, clang & MSVC */
+# if defined(__GNUC__)
+/* covers GCC and Clang */
 /* note : this section must come first, before C11,
  * due to a limitation in the kernel source generator */
 #  define ZSTD_ALIGNOF(T) __alignof(T)
@@ -831,8 +799,6 @@ MEM_STATIC int ZSTD_isPower2(size_t u) {
 #  define ZSTD_ALIGNED(a) __attribute__((aligned(a)))
 # elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201112L) /* C11 */
 #  define ZSTD_ALIGNED(a) _Alignas(a)
-#elif defined(_MSC_VER)
-#  define ZSTD_ALIGNED(n) __declspec(align(n))
 # else
    /* this compiler will require its own alignment instruction */
 #  define ZSTD_ALIGNED(...)
@@ -912,16 +878,6 @@ unsigned char* ZSTD_maybeNullPtrAdd(unsigned char* ptr, ptrdiff_t add)
     return add > 0 ? ptr + add : ptr;
 }
 
-/* Issue #3240 reports an ASAN failure on an llvm-mingw build. Out of an
- * abundance of caution, disable our custom poisoning on mingw. */
-#ifdef __MINGW32__
-#ifndef ZSTD_ASAN_DONT_POISON_WORKSPACE
-#define ZSTD_ASAN_DONT_POISON_WORKSPACE 1
-#endif
-#ifndef ZSTD_MSAN_DONT_POISON_WORKSPACE
-#define ZSTD_MSAN_DONT_POISON_WORKSPACE 1
-#endif
-#endif
 
 #if ZSTD_MEMORY_SANITIZER && !defined(ZSTD_MSAN_DONT_POISON_WORKSPACE)
 /* Not all platforms that support msan provide sanitizers/msan_interface.h.
@@ -995,10 +951,7 @@ void __asan_unpoison_memory_region(void const volatile *addr, size_t size);
 /*-****************************************
 *  Compiler specifics
 ******************************************/
-#if defined(_MSC_VER)   /* Visual Studio */
-#   include <stdlib.h>  /* _byteswap_ulong */
-#   include <intrin.h>  /* _byteswap_* */
-#elif defined(__ICCARM__)
+#if defined(__ICCARM__)
 #   include <intrinsics.h>
 #endif
 
@@ -1119,10 +1072,6 @@ MEM_STATIC unsigned MEM_isLittleEndian(void)
     return 1;
 #elif defined(__clang__) && __BIG_ENDIAN__
     return 0;
-#elif defined(_MSC_VER) && (_M_X64 || _M_IX86)
-    return 1;
-#elif defined(__DMC__) && defined(_M_IX86)
-    return 1;
 #elif defined(__IAR_SYSTEMS_ICC__) && __LITTLE_ENDIAN__
     return 1;
 #else
@@ -1212,9 +1161,7 @@ MEM_STATIC U32 MEM_swap32_fallback(U32 in)
 
 MEM_STATIC U32 MEM_swap32(U32 in)
 {
-#if defined(_MSC_VER)     /* Visual Studio */
-    return _byteswap_ulong(in);
-#elif (defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 403)) \
+#if (defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 403)) \
   || (defined(__clang__) && __has_builtin(__builtin_bswap32))
     return __builtin_bswap32(in);
 #elif defined(__ICCARM__)
@@ -1238,9 +1185,7 @@ MEM_STATIC U64 MEM_swap64_fallback(U64 in)
 
 MEM_STATIC U64 MEM_swap64(U64 in)
 {
-#if defined(_MSC_VER)     /* Visual Studio */
-    return _byteswap_uint64(in);
-#elif (defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 403)) \
+#if (defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 403)) \
   || (defined(__clang__) && __has_builtin(__builtin_bswap64))
     return __builtin_bswap64(in);
 #else
@@ -1435,7 +1380,7 @@ extern "C" {
    /* Backwards compatibility with old macro name */
 #  ifdef ZSTDERRORLIB_VISIBILITY
 #    define ZSTDERRORLIB_VISIBLE ZSTDERRORLIB_VISIBILITY
-#  elif defined(__GNUC__) && (__GNUC__ >= 4) && !defined(__MINGW32__)
+#  elif defined(__GNUC__) && (__GNUC__ >= 4)
 #    define ZSTDERRORLIB_VISIBLE __attribute__ ((visibility ("default")))
 #  else
 #    define ZSTDERRORLIB_VISIBLE
@@ -1443,20 +1388,14 @@ extern "C" {
 #endif
 
 #ifndef ZSTDERRORLIB_HIDDEN
-#  if defined(__GNUC__) && (__GNUC__ >= 4) && !defined(__MINGW32__)
+#  if defined(__GNUC__) && (__GNUC__ >= 4)
 #    define ZSTDERRORLIB_HIDDEN __attribute__ ((visibility ("hidden")))
 #  else
 #    define ZSTDERRORLIB_HIDDEN
 #  endif
 #endif
 
-#if defined(ZSTD_DLL_EXPORT) && (ZSTD_DLL_EXPORT==1)
-#  define ZSTDERRORLIB_API __declspec(dllexport) ZSTDERRORLIB_VISIBLE
-#elif defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)
-#  define ZSTDERRORLIB_API __declspec(dllimport) ZSTDERRORLIB_VISIBLE /* It isn't required but allows to generate better code, saving a function pointer load from the IAT and an indirect jump.*/
-#else
-#  define ZSTDERRORLIB_API ZSTDERRORLIB_VISIBLE
-#endif
+#define ZSTDERRORLIB_API ZSTDERRORLIB_VISIBLE
 
 /*-*********************************************
  *  Error codes list
@@ -1532,8 +1471,6 @@ ZSTDERRORLIB_API const char* ZSTD_getErrorString(ZSTD_ErrorCode code);   /**< Sa
 #  define ERR_STATIC static __attribute__((unused))
 #elif defined (__cplusplus) || (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) /* C99 */)
 #  define ERR_STATIC static inline
-#elif defined(_MSC_VER)
-#  define ERR_STATIC static __inline
 #else
 #  define ERR_STATIC static  /* this version may generate warnings for unused static functions; disable the relevant warning */
 #endif
@@ -1549,7 +1486,7 @@ typedef ZSTD_ErrorCode ERR_enum;
 /*-****************************************
 *  Error codes handling
 ******************************************/
-#undef ERROR   /* already defined on Visual Studio */
+#undef ERROR
 #define ERROR(name) ZSTD_ERROR(name)
 #define ZSTD_ERROR(name) ((size_t)-PREFIX(name))
 
@@ -1688,15 +1625,7 @@ void _force_has_format_string(const char *format, ...) {
 /*-*****************************************
 *  FSE_PUBLIC_API : control library symbols visibility
 ******************************************/
-#if defined(FSE_DLL_EXPORT) && (FSE_DLL_EXPORT==1) && defined(__GNUC__) && (__GNUC__ >= 4)
-#  define FSE_PUBLIC_API __attribute__ ((visibility ("default")))
-#elif defined(FSE_DLL_EXPORT) && (FSE_DLL_EXPORT==1)   /* Visual expected */
-#  define FSE_PUBLIC_API __declspec(dllexport)
-#elif defined(FSE_DLL_IMPORT) && (FSE_DLL_IMPORT==1)
-#  define FSE_PUBLIC_API __declspec(dllimport) /* It isn't required but allows to generate better code, saving a function pointer load from the IAT and an indirect jump.*/
-#else
-#  define FSE_PUBLIC_API
-#endif
+#define FSE_PUBLIC_API
 
 /*------   Version   ------*/
 #define FSE_VERSION_MAJOR    0
@@ -1952,19 +1881,7 @@ MEM_STATIC unsigned ZSTD_countTrailingZeros32_fallback(U32 val)
 MEM_STATIC unsigned ZSTD_countTrailingZeros32(U32 val)
 {
     assert(val != 0);
-#if defined(_MSC_VER)
-#  if STATIC_BMI2
-    return (unsigned)_tzcnt_u32(val);
-#  else
-    if (val != 0) {
-        unsigned long r;
-        _BitScanForward(&r, val);
-        return (unsigned)r;
-    } else {
-        __assume(0); /* Should not reach this code path */
-    }
-#  endif
-#elif defined(__GNUC__) && (__GNUC__ >= 4)
+#if defined(__GNUC__) && (__GNUC__ >= 4)
     return (unsigned)__builtin_ctz(val);
 #elif defined(__ICCARM__)
     return (unsigned)__builtin_ctz(val);
@@ -1993,19 +1910,7 @@ MEM_STATIC unsigned ZSTD_countLeadingZeros32_fallback(U32 val)
 MEM_STATIC unsigned ZSTD_countLeadingZeros32(U32 val)
 {
     assert(val != 0);
-#if defined(_MSC_VER)
-#  if STATIC_BMI2
-    return (unsigned)_lzcnt_u32(val);
-#  else
-    if (val != 0) {
-        unsigned long r;
-        _BitScanReverse(&r, val);
-        return (unsigned)(31 - r);
-    } else {
-        __assume(0); /* Should not reach this code path */
-    }
-#  endif
-#elif defined(__GNUC__) && (__GNUC__ >= 4)
+#if defined(__GNUC__) && (__GNUC__ >= 4)
     return (unsigned)__builtin_clz(val);
 #elif defined(__ICCARM__)
     return (unsigned)__builtin_clz(val);
@@ -2017,19 +1922,7 @@ MEM_STATIC unsigned ZSTD_countLeadingZeros32(U32 val)
 MEM_STATIC unsigned ZSTD_countTrailingZeros64(U64 val)
 {
     assert(val != 0);
-#if defined(_MSC_VER) && defined(_WIN64)
-#  if STATIC_BMI2
-    return (unsigned)_tzcnt_u64(val);
-#  else
-    if (val != 0) {
-        unsigned long r;
-        _BitScanForward64(&r, val);
-        return (unsigned)r;
-    } else {
-        __assume(0); /* Should not reach this code path */
-    }
-#  endif
-#elif defined(__GNUC__) && (__GNUC__ >= 4) && defined(__LP64__)
+#if defined(__GNUC__) && (__GNUC__ >= 4) && defined(__LP64__)
     return (unsigned)__builtin_ctzll(val);
 #elif defined(__ICCARM__)
     return (unsigned)__builtin_ctzll(val);
@@ -2049,19 +1942,7 @@ MEM_STATIC unsigned ZSTD_countTrailingZeros64(U64 val)
 MEM_STATIC unsigned ZSTD_countLeadingZeros64(U64 val)
 {
     assert(val != 0);
-#if defined(_MSC_VER) && defined(_WIN64)
-#  if STATIC_BMI2
-    return (unsigned)_lzcnt_u64(val);
-#  else
-    if (val != 0) {
-        unsigned long r;
-        _BitScanReverse64(&r, val);
-        return (unsigned)(63 - r);
-    } else {
-        __assume(0); /* Should not reach this code path */
-    }
-#  endif
-#elif defined(__GNUC__) && (__GNUC__ >= 4)
+#if defined(__GNUC__) && (__GNUC__ >= 4)
     return (unsigned)(__builtin_clzll(val));
 #elif defined(__ICCARM__)
     return (unsigned)(__builtin_clzll(val));
@@ -2262,7 +2143,7 @@ MEM_STATIC size_t BIT_initCStream(BIT_CStream_t* bitC,
 FORCE_INLINE_TEMPLATE BitContainerType BIT_getLowerBits(BitContainerType bitContainer, U32 const nbBits)
 {
 #if STATIC_BMI2 && !defined(ZSTD_NO_INTRINSICS)
-#  if (defined(__x86_64__) || defined(_M_X64)) && !defined(__ILP32__)
+#  if (defined(__x86_64__)) && !defined(__ILP32__)
     return _bzhi_u64(bitContainer, nbBits);
 #  else
     DEBUG_STATIC_ASSERT(sizeof(bitContainer) == sizeof(U32));
@@ -2414,7 +2295,7 @@ FORCE_INLINE_TEMPLATE BitContainerType BIT_getMiddleBits(BitContainerType bitCon
      * such cpus old (pre-Haswell, 2013) and their performance is not of that
      * importance.
      */
-#if defined(__x86_64__) || defined(_M_X64)
+#if defined(__x86_64__)
     return (bitContainer >> (start & regMask)) & ((((U64)1) << nbBits) - 1);
 #else
     return (bitContainer >> (start & regMask)) & BIT_mask[nbBits];
@@ -3993,9 +3874,6 @@ size_t FSE_decompress_wksp_bmi2(void* dst, size_t dstCapacity, const void* cSrc,
 
 /**** skipping file: mem.h ****/
 
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
 
 typedef struct {
     U32 f1c;
@@ -4009,59 +3887,7 @@ MEM_STATIC ZSTD_cpuid_t ZSTD_cpuid(void) {
     U32 f1d = 0;
     U32 f7b = 0;
     U32 f7c = 0;
-#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
-#if !defined(_M_X64) || !defined(__clang__) || __clang_major__ >= 16
-    int reg[4];
-    __cpuid((int*)reg, 0);
-    {
-        int const n = reg[0];
-        if (n >= 1) {
-            __cpuid((int*)reg, 1);
-            f1c = (U32)reg[2];
-            f1d = (U32)reg[3];
-        }
-        if (n >= 7) {
-            __cpuidex((int*)reg, 7, 0);
-            f7b = (U32)reg[1];
-            f7c = (U32)reg[2];
-        }
-    }
-#else
-    /* Clang compiler has a bug (fixed in https://reviews.llvm.org/D101338) in
-     * which the `__cpuid` intrinsic does not save and restore `rbx` as it needs
-     * to due to being a reserved register. So in that case, do the `cpuid`
-     * ourselves. Clang supports inline assembly anyway.
-     */
-    U32 n;
-    __asm__(
-        "pushq %%rbx\n\t"
-        "cpuid\n\t"
-        "popq %%rbx\n\t"
-        : "=a"(n)
-        : "a"(0)
-        : "rcx", "rdx");
-    if (n >= 1) {
-      U32 f1a;
-      __asm__(
-          "pushq %%rbx\n\t"
-          "cpuid\n\t"
-          "popq %%rbx\n\t"
-          : "=a"(f1a), "=c"(f1c), "=d"(f1d)
-          : "a"(1)
-          :);
-    }
-    if (n >= 7) {
-      __asm__(
-          "pushq %%rbx\n\t"
-          "cpuid\n\t"
-          "movq %%rbx, %%rax\n\t"
-          "popq %%rbx"
-          : "=a"(f7b), "=c"(f7c)
-          : "a"(7), "c"(0)
-          : "rdx");
-    }
-#endif
-#elif defined(__i386__) && defined(__PIC__) && !defined(__clang__) && defined(__GNUC__)
+#if defined(__i386__) && defined(__PIC__) && !defined(__clang__) && defined(__GNUC__)
     /* The following block like the normal cpuid branch below, but gcc
      * reserves ebx for use of its pic register so we must specially
      * handle the save and restore to avoid clobbering the register
@@ -4093,7 +3919,7 @@ MEM_STATIC ZSTD_cpuid_t ZSTD_cpuid(void) {
           : "a"(7), "c"(0)
           : "edx");
     }
-#elif defined(__x86_64__) || defined(_M_X64) || defined(__i386__)
+#elif defined(__x86_64__) || defined(__i386__)
     U32 n;
     __asm__("cpuid" : "=a"(n) : "a"(0) : "ebx", "ecx", "edx");
     if (n >= 1) {
@@ -4259,7 +4085,7 @@ extern "C" {
    /* Backwards compatibility with old macro name */
 #  ifdef ZSTDLIB_VISIBILITY
 #    define ZSTDLIB_VISIBLE ZSTDLIB_VISIBILITY
-#  elif defined(__GNUC__) && (__GNUC__ >= 4) && !defined(__MINGW32__)
+#  elif defined(__GNUC__) && (__GNUC__ >= 4)
 #    define ZSTDLIB_VISIBLE __attribute__ ((visibility ("default")))
 #  else
 #    define ZSTDLIB_VISIBLE
@@ -4267,20 +4093,14 @@ extern "C" {
 #endif
 
 #ifndef ZSTDLIB_HIDDEN
-#  if defined(__GNUC__) && (__GNUC__ >= 4) && !defined(__MINGW32__)
+#  if defined(__GNUC__) && (__GNUC__ >= 4)
 #    define ZSTDLIB_HIDDEN __attribute__ ((visibility ("hidden")))
 #  else
 #    define ZSTDLIB_HIDDEN
 #  endif
 #endif
 
-#if defined(ZSTD_DLL_EXPORT) && (ZSTD_DLL_EXPORT==1)
-#  define ZSTDLIB_API __declspec(dllexport) ZSTDLIB_VISIBLE
-#elif defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)
-#  define ZSTDLIB_API __declspec(dllimport) ZSTDLIB_VISIBLE /* It isn't required but allows to generate better code, saving a function pointer load from the IAT and an indirect jump.*/
-#else
-#  define ZSTDLIB_API ZSTDLIB_VISIBLE
-#endif
+#define ZSTDLIB_API ZSTDLIB_VISIBLE
 
 /* Deprecation warnings :
  * Should these warnings be a problem, it is generally possible to disable them,
@@ -4296,8 +4116,6 @@ extern "C" {
 #    define ZSTD_DEPRECATED(message) __attribute__((deprecated(message)))
 #  elif defined(__GNUC__) && (__GNUC__ >= 3)
 #    define ZSTD_DEPRECATED(message) __attribute__((deprecated))
-#  elif defined(_MSC_VER)
-#    define ZSTD_DEPRECATED(message) __declspec(deprecated(message))
 #  else
 #    pragma message("WARNING: You need to implement ZSTD_DEPRECATED for this compiler")
 #    define ZSTD_DEPRECATED(message)
@@ -5465,13 +5283,7 @@ extern "C" {
 
 /* This can be overridden externally to hide static symbols. */
 #ifndef ZSTDLIB_STATIC_API
-#  if defined(ZSTD_DLL_EXPORT) && (ZSTD_DLL_EXPORT==1)
-#    define ZSTDLIB_STATIC_API __declspec(dllexport) ZSTDLIB_VISIBLE
-#  elif defined(ZSTD_DLL_IMPORT) && (ZSTD_DLL_IMPORT==1)
-#    define ZSTDLIB_STATIC_API __declspec(dllimport) ZSTDLIB_VISIBLE
-#  else
-#    define ZSTDLIB_STATIC_API ZSTDLIB_VISIBLE
-#  endif
+#  define ZSTDLIB_STATIC_API ZSTDLIB_VISIBLE
 #endif
 
 /****************************************************************************************
@@ -7754,8 +7566,6 @@ ZSTDLIB_STATIC_API size_t ZSTD_insertBlock    (ZSTD_DCtx* dctx, const void* bloc
 #    define XXH_PUBLIC_API static __inline __attribute__((unused))
 #  elif defined (__cplusplus) || (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) /* C99 */)
 #    define XXH_PUBLIC_API static inline
-#  elif defined(_MSC_VER)
-#    define XXH_PUBLIC_API static __inline
 #  else
      /* note: this version may generate warnings for unused static functions */
 #    define XXH_PUBLIC_API static
@@ -7863,15 +7673,7 @@ ZSTDLIB_STATIC_API size_t ZSTD_insertBlock    (ZSTD_DCtx* dctx, const void* bloc
 
 /*! @brief Marks a global symbol. */
 #if !defined(XXH_INLINE_ALL) && !defined(XXH_PRIVATE_API)
-#  if defined(WIN32) && defined(_MSC_VER) && (defined(XXH_IMPORT) || defined(XXH_EXPORT))
-#    ifdef XXH_EXPORT
-#      define XXH_PUBLIC_API __declspec(dllexport)
-#    elif XXH_IMPORT
-#      define XXH_PUBLIC_API __declspec(dllimport)
-#    endif
-#  else
 #    define XXH_PUBLIC_API   /* do nothing */
-#  endif
 #endif
 
 #ifdef XXH_NAMESPACE
@@ -7937,17 +7739,8 @@ ZSTDLIB_STATIC_API size_t ZSTD_insertBlock    (ZSTD_DCtx* dctx, const void* bloc
 *  Compiler specifics
 ***************************************/
 
-/* specific declaration modes for Windows */
 #if !defined(XXH_INLINE_ALL) && !defined(XXH_PRIVATE_API)
-#  if defined(WIN32) && defined(_MSC_VER) && (defined(XXH_IMPORT) || defined(XXH_EXPORT))
-#    ifdef XXH_EXPORT
-#      define XXH_PUBLIC_API __declspec(dllexport)
-#    elif XXH_IMPORT
-#      define XXH_PUBLIC_API __declspec(dllimport)
-#    endif
-#  else
 #    define XXH_PUBLIC_API   /* do nothing */
-#  endif
 #endif
 
 #if defined (__GNUC__)
@@ -9095,8 +8888,6 @@ struct XXH64_state_s {
 #  define XXH_ALIGN(n)      alignas(n)
 #elif defined(__GNUC__)
 #  define XXH_ALIGN(n)      __attribute__ ((aligned(n)))
-#elif defined(_MSC_VER)
-#  define XXH_ALIGN(n)      __declspec(align(n))
 #else
 #  define XXH_ALIGN(n)   /* disabled */
 #endif
@@ -9690,8 +9481,7 @@ XXH3_128bits_reset_withSecretandSeed(XXH_NOESCAPE XXH3_state_t* statePtr,
 #ifndef XXH_FORCE_ALIGN_CHECK  /* can be defined externally */
    /* don't check on sizeopt, x86, aarch64, or arm when unaligned access is available */
 #  if XXH_SIZE_OPT >= 1 || \
-      defined(__i386)  || defined(__x86_64__) || defined(__aarch64__) || defined(__ARM_FEATURE_UNALIGNED) \
-   || defined(_M_IX86) || defined(_M_X64)     || defined(_M_ARM64)    || defined(_M_ARM) /* visual */
+      defined(__i386)  || defined(__x86_64__) || defined(__aarch64__) || defined(__ARM_FEATURE_UNALIGNED)
 #    define XXH_FORCE_ALIGN_CHECK 0
 #  else
 #    define XXH_FORCE_ALIGN_CHECK 1
@@ -9803,9 +9593,6 @@ static void* XXH_memcpy(void* dest, const void* src, size_t size)
 /* *************************************
 *  Compiler Specific Options
 ***************************************/
-#ifdef _MSC_VER /* Visual Studio warning fix */
-#  pragma warning(disable : 4127) /* disable: C4127: conditional expression is constant */
-#endif
 
 #if XXH_NO_INLINE_HINTS  /* disable inlining hints */
 #  if defined(__GNUC__) || defined(__clang__)
@@ -9818,9 +9605,6 @@ static void* XXH_memcpy(void* dest, const void* src, size_t size)
 #elif defined(__GNUC__) || defined(__clang__)
 #  define XXH_FORCE_INLINE static __inline__ __attribute__((always_inline, unused))
 #  define XXH_NO_INLINE static __attribute__((noinline))
-#elif defined(_MSC_VER)  /* Visual Studio */
-#  define XXH_FORCE_INLINE static __forceinline
-#  define XXH_NO_INLINE static __declspec(noinline)
 #elif defined (__cplusplus) \
   || (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L))   /* C99 */
 #  define XXH_FORCE_INLINE static inline
@@ -10059,8 +9843,7 @@ static xxh_u32 XXH_read32(const void* memPtr)
  * Try to detect endianness automatically, to avoid the nonstandard behavior
  * in `XXH_isLittleEndian()`
  */
-#  if defined(_WIN32) /* Windows is always little endian */ \
-     || defined(__LITTLE_ENDIAN__) \
+#  if defined(__LITTLE_ENDIAN__) \
      || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 #    define XXH_CPU_LITTLE_ENDIAN 1
 #  elif defined(__BIG_ENDIAN__) \
@@ -10132,9 +9915,6 @@ static int XXH_isLittleEndian(void)
 #if XXH_HAS_BUILTIN(__builtin_unreachable)
 #  define XXH_UNREACHABLE() __builtin_unreachable()
 
-#elif defined(_MSC_VER)
-#  define XXH_UNREACHABLE() __assume(0)
-
 #else
 #  define XXH_UNREACHABLE()
 #endif
@@ -10162,10 +9942,6 @@ static int XXH_isLittleEndian(void)
                                && XXH_HAS_BUILTIN(__builtin_rotateleft64)
 #  define XXH_rotl32 __builtin_rotateleft32
 #  define XXH_rotl64 __builtin_rotateleft64
-/* Note: although _rotl exists for minGW (GCC under windows), performance seems poor */
-#elif defined(_MSC_VER)
-#  define XXH_rotl32(x,r) _rotl(x,r)
-#  define XXH_rotl64(x,r) _rotl64(x,r)
 #else
 #  define XXH_rotl32(x,r) (((x) << (r)) | ((x) >> (32 - (r))))
 #  define XXH_rotl64(x,r) (((x) << (r)) | ((x) >> (64 - (r))))
@@ -10179,9 +9955,7 @@ static int XXH_isLittleEndian(void)
  * @param x The 32-bit integer to byteswap.
  * @return @p x, byteswapped.
  */
-#if defined(_MSC_VER)     /* Visual Studio */
-#  define XXH_swap32 _byteswap_ulong
-#elif XXH_GCC_VERSION >= 403
+#if XXH_GCC_VERSION >= 403
 #  define XXH_swap32 __builtin_bswap32
 #else
 static xxh_u32 XXH_swap32 (xxh_u32 x)
@@ -10714,9 +10488,7 @@ static xxh_u64 XXH_read64(const void* memPtr)
 
 #endif   /* XXH_FORCE_DIRECT_MEMORY_ACCESS */
 
-#if defined(_MSC_VER)     /* Visual Studio */
-#  define XXH_swap64 _byteswap_uint64
-#elif XXH_GCC_VERSION >= 403
+#if XXH_GCC_VERSION >= 403
 #  define XXH_swap64 __builtin_bswap64
 #else
 static xxh_u64 XXH_swap64(xxh_u64 x)
@@ -11118,7 +10890,6 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
 #  define XXH_RESTRICT   restrict
 #elif (defined (__GNUC__) && ((__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))) \
    || (defined (__clang__)) \
-   || (defined (_MSC_VER) && (_MSC_VER >= 1400)) \
    || (defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 1300))
 /*
  * There are a LOT more compilers that recognize __restrict but this
@@ -11156,8 +10927,6 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
 #    include <arm_sve.h>
 #  endif
 #  if defined(__ARM_NEON__) || defined(__ARM_NEON) \
-   || (defined(_M_ARM) && _M_ARM >= 7) \
-   || defined(_M_ARM64) || defined(_M_ARM64EC) \
    || (defined(__wasm_simd128__) && XXH_HAS_INCLUDE(<arm_neon.h>)) /* WASM SIMD128 via SIMDe */
 #    define inline __inline__  /* circumvent a clang bug */
 #    include <arm_neon.h>
@@ -11169,9 +10938,6 @@ XXH_PUBLIC_API XXH64_hash_t XXH64_hashFromCanonical(XXH_NOESCAPE const XXH64_can
 #  endif
 #endif
 
-#if defined(_MSC_VER)
-#  include <intrin.h>
-#endif
 
 /*
  * One goal of XXH3 is to make it fast on both 32-bit and 64-bit, while
@@ -11276,7 +11042,7 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
     XXH_SSE2   = 1,  /*!<
                       * SSE2 for Pentium 4, Opteron, all x86_64.
                       *
-                      * @note SSE2 is also guaranteed on Windows 10, macOS, and
+                      * @note SSE2 is guaranteed on macOS and
                       * Android x86.
                       */
     XXH_AVX2   = 2,  /*!< AVX2 for Haswell and Bulldozer */
@@ -11317,10 +11083,9 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 #    define XXH_VECTOR XXH_SVE
 #  elif ( \
         defined(__ARM_NEON__) || defined(__ARM_NEON) /* gcc */ \
-     || defined(_M_ARM) || defined(_M_ARM64) || defined(_M_ARM64EC) /* msvc */ \
      || (defined(__wasm_simd128__) && XXH_HAS_INCLUDE(<arm_neon.h>)) /* wasm simd128 via SIMDe */ \
    ) && ( \
-        defined(_WIN32) || defined(__LITTLE_ENDIAN__) /* little endian only */ \
+        defined(__LITTLE_ENDIAN__) /* little endian only */ \
     || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) \
    )
 #    define XXH_VECTOR XXH_NEON
@@ -11328,7 +11093,7 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 #    define XXH_VECTOR XXH_AVX512
 #  elif defined(__AVX2__)
 #    define XXH_VECTOR XXH_AVX2
-#  elif defined(__SSE2__) || defined(_M_X64) || (defined(_M_IX86_FP) && (_M_IX86_FP == 2))
+#  elif defined(__SSE2__)
 #    define XXH_VECTOR XXH_SSE2
 #  elif (defined(__PPC64__) && defined(__POWER8_VECTOR__)) \
      || (defined(__s390x__) && defined(__VEC__)) \
@@ -11341,11 +11106,7 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 
 /* __ARM_FEATURE_SVE is only supported by GCC & Clang. */
 #if (XXH_VECTOR == XXH_SVE) && !defined(__ARM_FEATURE_SVE)
-#  ifdef _MSC_VER
-#    pragma warning(once : 4606)
-#  else
 #    warning "__ARM_FEATURE_SVE isn't supported. Use SCALAR instead."
-#  endif
 #  undef XXH_VECTOR
 #  define XXH_VECTOR XXH_SCALAR
 #endif
@@ -11534,7 +11295,7 @@ XXH_vmlal_high_u32(uint64x2_t acc, uint32x4_t lhs, uint32x4_t rhs)
  * @see XXH3_accumulate_512_neon()
  */
 # ifndef XXH3_NEON_LANES
-#  if (defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64) || defined(_M_ARM64EC)) \
+#  if (defined(__aarch64__) || defined(__arm64__)) \
    && !defined(__APPLE__) && XXH_SIZE_OPT <= 0
 #   define XXH3_NEON_LANES 6
 #  else
@@ -11701,9 +11462,6 @@ do { \
 #else
 #  if XXH_SIZE_OPT >= 1
 #    define XXH_PREFETCH(ptr) (void)(ptr)
-#  elif defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))  /* _mm_prefetch() not defined outside of x86/x64 */
-#    include <mmintrin.h>   /* https://msdn.microsoft.com/fr-fr/library/84szxsww(v=vs.90).aspx */
-#    define XXH_PREFETCH(ptr)  _mm_prefetch((const char*)(ptr), _MM_HINT_T0)
 #  elif defined(__GNUC__) && ( (__GNUC__ >= 4) || ( (__GNUC__ == 3) && (__GNUC_MINOR__ >= 1) ) )
 #    define XXH_PREFETCH(ptr)  __builtin_prefetch((ptr), 0 /* rw==read */, 3 /* locality */)
 #  else
@@ -11753,11 +11511,6 @@ static const xxh_u64 PRIME_MX2 = 0x9FB21C651E98DF25ULL;  /*!< 0b1001111110110010
  *
  * Implemented as a macro.
  *
- * Wraps `__emulu` on MSVC x86 because it tends to call `__allmul` when it doesn't
- * need to (but it shouldn't need to anyways, it is about 7 instructions to do
- * a 64x64 multiply...). Since we know that this will _always_ emit `MULL`, we
- * use that instead of the normal method.
- *
  * If you are compiling for platforms like Thumb-1 and don't have a better option,
  * you may also want to write your own long multiply routine here.
  *
@@ -11769,8 +11522,6 @@ XXH_mult32to64(xxh_u64 x, xxh_u64 y)
 {
    return (x & 0xFFFFFFFF) * (y & 0xFFFFFFFF);
 }
-#elif defined(_MSC_VER) && defined(_M_IX86)
-#    define XXH_mult32to64(x, y) __emulu((unsigned)(x), (unsigned)(y))
 #else
 /*
  * Downcast + upcast is usually better than masking on older compilers like
@@ -11785,7 +11536,7 @@ XXH_mult32to64(xxh_u64 x, xxh_u64 y)
 /*!
  * @brief Calculates a 64->128-bit long multiply.
  *
- * Uses `__uint128_t` and `_umul128` if available, otherwise uses a scalar
+ * Uses `__uint128_t` if available, otherwise uses a scalar
  * version.
  *
  * @param lhs , rhs The 64-bit integers to be multiplied
@@ -11810,47 +11561,12 @@ XXH_mult64to128(xxh_u64 lhs, xxh_u64 rhs)
      * https://github.com/Cyan4973/xxHash/issues/211#issuecomment-515575677
      */
 #if (defined(__GNUC__) || defined(__clang__)) && !defined(__wasm__) \
-    && defined(__SIZEOF_INT128__) \
-    || (defined(_INTEGRAL_MAX_BITS) && _INTEGRAL_MAX_BITS >= 128)
+    && defined(__SIZEOF_INT128__)
 
     __uint128_t const product = (__uint128_t)lhs * (__uint128_t)rhs;
     XXH128_hash_t r128;
     r128.low64  = (xxh_u64)(product);
     r128.high64 = (xxh_u64)(product >> 64);
-    return r128;
-
-    /*
-     * MSVC for x64's _umul128 method.
-     *
-     * xxh_u64 _umul128(xxh_u64 Multiplier, xxh_u64 Multiplicand, xxh_u64 *HighProduct);
-     *
-     * This compiles to single operand MUL on x64.
-     */
-#elif (defined(_M_X64) || defined(_M_IA64)) && !defined(_M_ARM64EC)
-
-#ifndef _MSC_VER
-#   pragma intrinsic(_umul128)
-#endif
-    xxh_u64 product_high;
-    xxh_u64 const product_low = _umul128(lhs, rhs, &product_high);
-    XXH128_hash_t r128;
-    r128.low64  = product_low;
-    r128.high64 = product_high;
-    return r128;
-
-    /*
-     * MSVC for ARM64's __umulh method.
-     *
-     * This compiles to the same MUL + UMULH as GCC/Clang's __uint128_t method.
-     */
-#elif defined(_M_ARM64) || defined(_M_ARM64EC)
-
-#ifndef _MSC_VER
-#   pragma intrinsic(__umulh)
-#endif
-    XXH128_hash_t r128;
-    r128.low64  = lhs * rhs;
-    r128.high64 = __umulh(lhs, rhs);
     return r128;
 
 #else
@@ -12609,13 +12325,7 @@ XXH_FORCE_INLINE XXH_TARGET_SSE2 void XXH3_initCustomSecret_sse2(void* XXH_RESTR
     (void)(&XXH_writeLE64);
     {   int const nbRounds = XXH_SECRET_DEFAULT_SIZE / sizeof(__m128i);
 
-#       if defined(_MSC_VER) && defined(_M_IX86) && _MSC_VER < 1900
-        /* MSVC 32bit mode does not support _mm_set_epi64x before 2015 */
-        XXH_ALIGN(16) const xxh_i64 seed64x2[2] = { (xxh_i64)seed64, (xxh_i64)(0U - seed64) };
-        __m128i const seed = _mm_load_si128((__m128i const*)seed64x2);
-#       else
         __m128i const seed = _mm_set_epi64x((xxh_i64)(0U - seed64), (xxh_i64)seed64);
-#       endif
         int i;
 
         const void* const src16 = XXH3_kSecret;
@@ -13754,7 +13464,7 @@ XXH3_update(XXH3_state_t* XXH_RESTRICT const state,
     {   const xxh_u8* const bEnd = input + len;
         const unsigned char* const secret = (state->extSecret == NULL) ? state->customSecret : state->extSecret;
 #if defined(XXH3_STREAM_USE_STACK) && XXH3_STREAM_USE_STACK >= 1
-        /* For some reason, gcc and MSVC seem to suffer greatly
+        /* Some compilers seem to suffer greatly
          * when operating accumulators directly into state.
          * Operating into stack space seems to enable proper optimization.
          * clang, on the other hand, doesn't seem to need this trick */
@@ -14556,9 +14266,9 @@ XXH3_generateSecret_fromSeed(XXH_NOESCAPE void* secretBuffer, XXH64_hash_t seed)
  */
 #if !defined(ZSTD_HAVE_WEAK_SYMBOLS) && \
     defined(__GNUC__) && defined(__ELF__) && \
-    (defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || \
-     defined(_M_IX86) || defined(__aarch64__) || defined(__riscv)) && \
-    !defined(__APPLE__) && !defined(_WIN32) && !defined(__MINGW32__) && \
+    (defined(__x86_64__) || defined(__i386__) || \
+     defined(__aarch64__) || defined(__riscv)) && \
+    !defined(__APPLE__) && \
     !defined(__CYGWIN__) && !defined(_AIX)
 #  define ZSTD_HAVE_WEAK_SYMBOLS 1
 #else

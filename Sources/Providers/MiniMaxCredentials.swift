@@ -435,7 +435,6 @@ enum MiniMaxCredentials {
         let afterOK = after.isEmpty
             || after.first!.isWhitespace
             || after.hasPrefix("-")
-            || after.hasPrefix(".exe")
         guard afterOK else { return false }
         let before = lower[..<range.lowerBound]
         guard let last = before.last(where: { !$0.isWhitespace }) else { return true }

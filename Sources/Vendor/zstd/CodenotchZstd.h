@@ -4,8 +4,9 @@
 // amalgamation, and it carries the whole of `zstd.h` inside itself rather than
 // shipping it as a header — so there is no header to include. Declaring only
 // what is called keeps the vendored surface to four functions instead of the
-// 150 kB of public API the real `zstd.h` would add, and keeps the vendored `.c`
-// pristine: it is never edited, so re-generating it is a straight overwrite.
+// 150 kB of public API the real `zstd.h` would add. The vendored `.c` has
+// platform-specific branches pruned for this macOS app; see README.md before
+// regenerating it.
 //
 // Copied verbatim from `lib/zstd.h` of the same pinned release — see README.md
 // for the version and how to regenerate. The declarations are ABI-frozen (zstd

@@ -115,10 +115,8 @@ extension NSColor {
         )
     }
 
-    /// A linear per-channel sRGB lerp — the same arithmetic the Windows ramp does in JS, kept
-    /// deliberately simple rather than going through `blended(withFraction:of:)`, whose
-    /// blending colour space is not something either side of a Mac/Windows parity claim
-    /// should depend on.
+    /// A linear per-channel sRGB lerp. Keep the colour space explicit rather than
+    /// relying on `blended(withFraction:of:)`.
     func blendedByChannel(with other: NSColor, fraction: CGFloat) -> NSColor {
         guard let a = usingColorSpace(.sRGB), let b = other.usingColorSpace(.sRGB) else { return self }
         func lerp(_ x: CGFloat, _ y: CGFloat) -> CGFloat { x + (y - x) * fraction }

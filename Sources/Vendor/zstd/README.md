@@ -20,7 +20,7 @@ declarations in `CodenotchZstd.h`. Nothing compresses.
 | Release tarball | `zstd-1.5.7.tar.gz`, sha256 `eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3` |
 | Source archive | `v1.5.7.tar.gz`, sha256 `37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3` (the hash Homebrew's `zstd` formula pins, checked as an independent second source; `lib/` is byte-identical between the two tarballs) |
 | Licence | BSD-3-Clause — `LICENSE` beside this file. Upstream dual-licences BSD-3-Clause **or** GPLv2; BSD-3-Clause is the option taken. |
-| Local edits | none. `zstddeclib.c` is byte-for-byte what the generator below produced. |
+| Local edits | Platform-specific branches and references outside the macOS build were pruned from `zstddeclib.c`. The decoder logic is otherwise unchanged. |
 
 ## Regenerating
 
@@ -31,10 +31,12 @@ cd build/single_file_libs
 python3 ./combine.py -r ../../lib -x legacy/zstd_legacy.h -o zstddeclib.c zstddeclib-in.c
 ```
 
-That is exactly what upstream's own `create_single_file_decoder.sh` runs. Copy
-the result over `zstddeclib.c`, copy the release's `LICENSE` over `LICENSE`,
-update the table above, and re-check `CodenotchZstd.h` against the release's
-`lib/zstd.h`.
+That is what upstream's own `create_single_file_decoder.sh` runs. Before
+copying the result over `zstddeclib.c`, prune platform-specific branches and
+references outside the macOS build, keeping the Clang paths and generic
+fallbacks. Check the result with `clang -fsyntax-only -std=c11 zstddeclib.c`.
+Copy the release's `LICENSE` over `LICENSE`, update the table above, and
+re-check `CodenotchZstd.h` against the release's `lib/zstd.h`.
 
 `-x legacy/zstd_legacy.h` drops support for frames written by zstd 0.x, which
 nothing has produced for a decade. Dropping it, and taking the decoder rather

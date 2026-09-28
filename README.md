@@ -286,11 +286,14 @@ API requests used to display quotas remain separate from telemetry.
 ```sh
 brew install xcodegen create-dmg   # once
 make run                # generate, build, launch a Debug build
+make install            # build a Release app, install in /Applications, and launch it
 make test               # unit tests
 ```
 
-No signing identity is required for either. `make release` — which archives
-and notarizes the disk image — needs a Developer ID
+No Apple Developer signing identity is required for these local commands.
+`make install` needs permission to write to `/Applications`.
+
+`make release` — which archives and notarizes the disk image — needs a Developer ID
 certificate and an App Store Connect notary profile, and is only ever run by
 the maintainer to cut an official release. See
 [CONTRIBUTING.md](CONTRIBUTING.md). CI runs the same unit tests unsigned via

@@ -283,18 +283,32 @@ API requests used to display quotas remain separate from telemetry.
 
 ## Building
 
+With full Xcode, install XcodeGen once, then use the Xcode targets:
+
 ```sh
-brew install xcodegen create-dmg   # once
+brew install xcodegen   # once
 make run                # generate, build, launch a Debug build
 make install            # build a Release app, install in /Applications, and launch it
 make test               # unit tests
 ```
 
-No Apple Developer signing identity is required for these local commands.
+With only Apple Command Line Tools, run the same install command. No Xcode,
+XcodeGen, or Homebrew installation is needed:
+
+```sh
+make install
+```
+
+When `xcodebuild` is unavailable, `make build`, `make run`, and `make install`
+use SwiftPM and the Command Line Tools to build and package the app. The first
+build downloads the pinned SwiftNIO dependency. `make test` needs full Xcode.
+The CLI build checks SwiftUI support in the selected SDK before compiling;
+`SDKROOT` can select another installed macOS SDK if needed.
+No Apple Developer signing identity is required for local builds.
 `make install` needs permission to write to `/Applications`.
 
 `make release` — which archives and notarizes the disk image — needs a Developer ID
-certificate and an App Store Connect notary profile, and is only ever run by
+certificate, an App Store Connect notary profile, and `create-dmg`. It is run by
 the maintainer to cut an official release. See
 [CONTRIBUTING.md](CONTRIBUTING.md). CI runs the same unit tests unsigned via
 `make test-ci`.

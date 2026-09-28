@@ -13,6 +13,7 @@ SCHEME  := Codenotch
 RESOLVED_PACKAGES := $(PROJECT)/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 ARCH    ?= $(shell uname -m)
 DEST    ?= platform=macOS,arch=$(ARCH)
+XCODEBUILD_AVAILABLE := $(shell xcodebuild -version >/dev/null 2>&1 && echo yes)
 
 # Debug signs itself when the maintainer's Developer ID certificate isn't in
 # the keychain, which is every machine but the maintainer's — so a contributor
@@ -61,9 +62,14 @@ gen:
 	mkdir -p $(dir $(RESOLVED_PACKAGES))
 	cp Package.resolved $(RESOLVED_PACKAGES)
 
+ifeq ($(XCODEBUILD_AVAILABLE),yes)
 build: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Debug $(DEV_SIGN) build
+else
+build:
+	sh Scripts/build-clt.sh build
+endif
 
 test: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
@@ -86,19 +92,22 @@ verify-deps:
 		exit 1; \
 	}
 
+ifeq ($(XCODEBUILD_AVAILABLE),yes)
 run: build
 	@APP=$$(xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Debug -showBuildSettings 2>/dev/null \
 		| awk -F' = ' '/ BUILT_PRODUCTS_DIR/ {print $$2; exit}')/Codenotch.app; \
 	pkill -x Codenotch 2>/dev/null; sleep 0.5; \
 	open "$$APP"
+else
+run:
+	sh Scripts/build-clt.sh run
+endif
 
-# Build a Release .app, sign it with whatever identity is available (Developer
-# ID, Apple Development, or ad-hoc — the same auto-detection as `DEV_SIGN`),
-# and copy it to /Applications. For a contributor who wants a permanent copy
-# without the notarized release path. Gatekeeper may ask for a one-time
-# right-click → Open on the first launch when the build is not Developer ID
-# signed. The bundle is signed with one identity rather than left unsigned.
+# Build a Release .app and copy it to /Applications. Xcode uses the available
+# signing identity; the Command Line Tools path signs ad-hoc. Gatekeeper may
+# ask for a one-time right-click → Open when the build is not Developer ID signed.
+ifeq ($(XCODEBUILD_AVAILABLE),yes)
 install: gen
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination '$(DEST)' \
 		-configuration Release $(DEV_SIGN) build
@@ -108,6 +117,10 @@ install: gen
 	pkill -x Codenotch || true; \
 	cp -R "$$APP" /Applications/; \
 	open /Applications/Codenotch.app
+else
+install:
+	sh Scripts/build-clt.sh install
+endif
 
 clean:
 	rm -rf build DerivedData $(PROJECT)

@@ -1,4 +1,7 @@
 import Foundation
+#if SWIFT_PACKAGE
+import CodenotchZstd
+#endif
 
 /// Claude's own limits, read out of Claude Desktop's HTTP cache.
 ///
